@@ -1,0 +1,17 @@
+{
+    "Author": "Omie",
+    "Name": "Infinite Roleplay",
+    "Punchline": "An all around roleplay plugin.",
+    "Description": "/infinite to open window",
+    "InternalName": "infiniteRoleplay",
+    "ApplicableVersion": "any",
+    "RepoUrl": "https://github.com/xivdev/Penumbra",
+    "Tags": [
+        "infinite",
+        "roleplay",
+        "rp",
+        "statsheets"
+    ],
+    "DalamudApiLevel": 8,
+    "IconUrl": "http://i.imgur.com/j1Qgzx9.png"
+}
