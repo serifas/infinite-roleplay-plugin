@@ -1,0 +1,15 @@
+{
+    "Author": "Omie",
+    "Name": "Infinite Roleplay",
+    "Punchline": "An all around roleplay plugin.",
+    "Description": "/infinite to open window",
+    "InternalName": "infiniteRoleplay",
+    "ApplicableVersion": "any",
+    "Tags": [
+        "infinite",
+        "roleplay",
+        "rp",
+        "statsheets"
+    ],
+    "IconUrl": "http://i.imgur.com/j1Qgzx9.png"
+}
