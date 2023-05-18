@@ -433,6 +433,11 @@ namespace InfiniteRoleplay.Windows
                     ImGui.TextColored(new Vector4(1, 1, 1, 1), chaoticEvilVal.ToString());
                     #endregion
 
+                    #endregion
+                    if (ImGui.Button("Save Bio"))
+                    {
+
+                    }
                 }
 
 
@@ -440,12 +445,7 @@ namespace InfiniteRoleplay.Windows
 
 
 
-                #endregion
 
-                if (ImGui.Button("Save Bio"))
-                {
-
-                }
 
             }
             if (addAvatar == true)
@@ -485,47 +485,47 @@ namespace InfiniteRoleplay.Windows
             
             if (alignmentName == "lawfulgood")
             {
-                if(add){ if(availablePercentage > 0){ availablePercentage -= 1; lawfulGoodWidthVal += 1; lawfulGoodVal += 1;}}
+                if(add){ if(availablePercentage > 0 && lawfulGoodVal < 10){ availablePercentage -= 1; lawfulGoodWidthVal += 1; lawfulGoodVal += 1;}}
                 else{ if(lawfulGoodWidthVal > 0) { availablePercentage += 1; lawfulGoodWidthVal -= 1; lawfulGoodVal -= 1;}}
             }
             if (alignmentName == "neutralgood")
             {
-                if (add) { if (availablePercentage > 0) { availablePercentage -= 1; neutralGoodWidthVal += 1; neutralGoodVal += 1; } }
+                if (add) { if (availablePercentage > 0 && neutralGoodVal < 10) { availablePercentage -= 1; neutralGoodWidthVal += 1; neutralGoodVal += 1; } }
                 else { if (neutralGoodWidthVal > 0) { availablePercentage += 1; neutralGoodWidthVal -= 1; neutralGoodVal -= 1; } }
             }
             if (alignmentName == "chaoticgood")
             {
-                if (add) { if (availablePercentage > 0) { availablePercentage -= 1; chaoticGoodWidthVal += 1; chaoticGoodVal += 1; } }
+                if (add) { if (availablePercentage > 0 && chaoticGoodVal < 10) { availablePercentage -= 1; chaoticGoodWidthVal += 1; chaoticGoodVal += 1; } }
                 else { if (chaoticGoodWidthVal > 0) { availablePercentage += 1; chaoticGoodWidthVal -= 1; chaoticGoodVal -= 1; } }
             }
             if (alignmentName == "lawfulneutral")
             {
-                if (add) { if (availablePercentage > 0) { availablePercentage -= 1; lawfulNeutralWidthVal += 1; lawfulNeutralVal += 1; } }
+                if (add) { if (availablePercentage > 0 && lawfulNeutralVal < 10) { availablePercentage -= 1; lawfulNeutralWidthVal += 1; lawfulNeutralVal += 1; } }
                 else { if (lawfulNeutralWidthVal > 0) { availablePercentage += 1; lawfulNeutralWidthVal -= 1; lawfulNeutralVal -= 1; } }
             }
             if (alignmentName == "trueneutral")
             {
-                if (add) { if (availablePercentage > 0) { availablePercentage -= 1; trueNeutralWidthVal += 1; trueNeutralVal += 1; } }
+                if (add) { if (availablePercentage > 0 && trueNeutralVal < 10) { availablePercentage -= 1; trueNeutralWidthVal += 1; trueNeutralVal += 1; } }
                 else { if (trueNeutralWidthVal > 0) { availablePercentage += 1; trueNeutralWidthVal -= 1; trueNeutralVal -= 1; } }
             }
             if (alignmentName == "chaoticneutral")
             {
-                if (add) { if (availablePercentage > 0) { availablePercentage -= 1; chaoticNeutralWidthVal += 1; chaoticNeutralVal += 1; } }
+                if (add) { if (availablePercentage > 0 && chaoticNeutralVal < 10) { availablePercentage -= 1; chaoticNeutralWidthVal += 1; chaoticNeutralVal += 1; } }
                 else { if (chaoticNeutralWidthVal > 0) { availablePercentage += 1; chaoticNeutralWidthVal -= 1; chaoticNeutralVal -= 1; } }
             }
             if (alignmentName == "lawfulevil")
             {
-                if (add) { if (availablePercentage > 0) { availablePercentage -= 1; lawfulEvilWidthVal += 1; lawfulEvilVal += 1; } }
+                if (add) { if (availablePercentage > 0 && lawfulEvilVal < 10) { availablePercentage -= 1; lawfulEvilWidthVal += 1; lawfulEvilVal += 1; } }
                 else { if (lawfulEvilWidthVal > 0) { availablePercentage += 1; lawfulEvilWidthVal -= 1; lawfulEvilVal -= 1; } }
             }
             if (alignmentName == "neutralevil")
             {
-                if (add) { if (availablePercentage > 0) { availablePercentage -= 1; neutralEvilWidthVal += 1; neutralEvilVal += 1; } }
+                if (add) { if (availablePercentage > 0 && neutralEvilVal < 10) { availablePercentage -= 1; neutralEvilWidthVal += 1; neutralEvilVal += 1; } }
                 else { if (neutralEvilWidthVal > 0) { availablePercentage += 1; neutralEvilWidthVal -= 1; neutralEvilVal -= 1; } }
             }
             if (alignmentName == "chaoticevil")
             {
-                if (add) { if (availablePercentage > 0) { availablePercentage -= 1; chaoticEvilWidthVal += 1; chaoticEvilVal += 1; } }
+                if (add) { if (availablePercentage > 0 && chaoticEvilVal < 10) { availablePercentage -= 1; chaoticEvilWidthVal += 1; chaoticEvilVal += 1; } }
                 else { if (chaoticEvilWidthVal > 0) { availablePercentage += 1; chaoticEvilWidthVal -= 1; chaoticEvilVal -= 1; } }
             }
 
