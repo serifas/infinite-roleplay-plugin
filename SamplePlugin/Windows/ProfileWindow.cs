@@ -209,9 +209,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.TextColored(new Vector4(1, 1, 0, 1), "ALIGNMENT:");
                     ImGui.SameLine();
                     ImGui.Text(this.availablePercentage + " Points Available:");
-
+                #region ALIGNMENTS
+                    #region LAWFUL GOOD
                     //LAWFUL GOOD
-                    ImGui.Image(this.lawfulGood.ImGuiHandle, new Vector2(50, 50));
+                    ImGui.Image(this.lawfulGood.ImGuiHandle, new Vector2(32, 32));
                     if (ImGui.IsItemHovered())
                     {
                         ImGui.SetTooltip("LAWFUL GOOD:\n" +
@@ -228,9 +229,11 @@ namespace InfiniteRoleplay.Windows
                     ImGui.Image(this.lawfulGoodBar.ImGuiHandle, new Vector2(lawfulGoodWidth * 30, 20));
                     ImGui.SameLine();
                     ImGui.TextColored(new Vector4(1, 1, 1, 1), lawfulGoodVal.ToString() );
+                    #endregion
 
+                    #region NEUTRAL GOOD
                     // NEUTRAL GOOD
-                    ImGui.Image(this.neutralGood.ImGuiHandle, new Vector2(50, 50));
+                    ImGui.Image(this.neutralGood.ImGuiHandle, new Vector2(32, 32));
                     if (ImGui.IsItemHovered())
                     {
                         ImGui.SetTooltip("NEUTRAL GOOD:\n" +
@@ -249,9 +252,11 @@ namespace InfiniteRoleplay.Windows
                     ImGui.Image(this.neutralGoodBar.ImGuiHandle, new Vector2(neutralGoodWidth * 30, 20));
                     ImGui.SameLine();
                     ImGui.TextColored(new Vector4(1, 1, 1, 1), neutralGoodVal.ToString());
+                    #endregion
 
+                    #region CHAOTIC GOOD
                     // CHAOTIC GOOD
-                    ImGui.Image(this.chaoticGood.ImGuiHandle, new Vector2(50, 50));
+                    ImGui.Image(this.chaoticGood.ImGuiHandle, new Vector2(32, 32));
                     if (ImGui.IsItemHovered())
                     {
                         ImGui.SetTooltip("CHAOTIC GOOD:\n" +
@@ -271,9 +276,11 @@ namespace InfiniteRoleplay.Windows
                     ImGui.Image(this.chaoticGoodBar.ImGuiHandle, new Vector2(chaoticGoodWidth * 30, 20));
                     ImGui.SameLine();
                     ImGui.TextColored(new Vector4(1, 1, 1, 1), chaoticGoodVal.ToString());
+                    #endregion
 
+                    #region LAWFUL NEUTRAL
                     // LAWFUL NEUTRAL
-                    ImGui.Image(this.lawfulNeutral.ImGuiHandle, new Vector2(50, 50));
+                    ImGui.Image(this.lawfulNeutral.ImGuiHandle, new Vector2(32, 32));
                     if (ImGui.IsItemHovered())
                     {
                         ImGui.SetTooltip("LAWFUL NEUTRAL:\n" +
@@ -293,9 +300,68 @@ namespace InfiniteRoleplay.Windows
                         ImGui.Image(this.lawfulNeutralBar.ImGuiHandle, new Vector2(lawfulNeutralWidth * 30, 20));
                         ImGui.SameLine();
                         ImGui.TextColored(new Vector4(1, 1, 1, 1), lawfulNeutralVal.ToString());
+                    #endregion
+
+                    #region TRUE NEUTRAL
+                    // CHAOTIC GOOD
+                    ImGui.Image(this.trueNeutral.ImGuiHandle, new Vector2(32, 32));
+                    if (ImGui.IsItemHovered())
+                    {
+                        ImGui.SetTooltip("TRUE NEUTRAL:\n" +
+                                        "    True Neutral characters don’t like to take sides.\n" +
+                                        "    They are pragmatic rather than emotional in their actions, \n" +
+                                        "    choosing the response which makes the most sense for them in each situation. " +
+                                        "\n" +
+                                        "    Neutral characters don’t believe in upholding the rules and laws of society, but nor \n" +
+                                        "    do they feel the need to rebel against them. There will be times when a Neutral character \n" +
+                                        "    has to make a choice between siding with Good or Evil, perhaps casting the deciding vote \n" +
+                                        "    in a party. They will make a choice in these situations, usually siding with whichever causes \n" +
+                                        "    them the least hassle, or they stand to gain the most from. ");
                     }
+                    ImGui.SameLine();
+                    if (ImGui.ImageButton(this.trueNeutralPlus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("trueneutral", true); }
+                    ImGui.SameLine();
+                    if (ImGui.ImageButton(this.trueNeutralMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("trueneutral", false); }
+                    ImGui.SameLine();
+                    ImGui.Image(this.trueNeutralBar.ImGuiHandle, new Vector2(trueNeutralWidth * 30, 20));
+                    ImGui.SameLine();
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), trueNeutralVal.ToString());
+                    #endregion
+
+                    #region CHAOTIC NEUTRAL
+                    // CHAOTIC GOOD
+                    ImGui.Image(this.chaoticNeutral.ImGuiHandle, new Vector2(32, 32));
+                    if (ImGui.IsItemHovered())
+                    {
+                        ImGui.SetTooltip("CHAOTIC NEUTRAL:\n" +
+                                        "    Chaotic Neutral characters are free spirits. \n" +
+                                        "    They do what they want but don’t seek to disrupt the usual norms and laws of society. \n" +
+                                        "    These individuals don’t like being told what to do, following traditions, \n" +
+                                        "    or being controlled. That said, they will not work to change these restrictions,\n" +
+                                        "    instead, they will just try to avoid them in the first place.\n" +
+                                        "    Their need to be free is the most important thing. ");
+                    }
+                    ImGui.SameLine();
+                    if (ImGui.ImageButton(this.chaoticNeutralPlus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("chaoticneutral", true); }
+                    ImGui.SameLine();
+                    if (ImGui.ImageButton(this.chaoticNeutralMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("chaoticneutral", false); }
+                    ImGui.SameLine();
+                    ImGui.Image(this.chaoticNeutralBar.ImGuiHandle, new Vector2(chaoticNeutralWidth * 30, 20));
+                    ImGui.SameLine();
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), chaoticNeutralVal.ToString());
+                    #endregion
+
+
                 }
-                ImGui.SameLine();
+
+
+
+
+
+
+                #endregion
+            }
+            ImGui.SameLine();
                 if(addAvatar == true)
                 {
                     addAvatar = false;
@@ -317,6 +383,10 @@ namespace InfiniteRoleplay.Windows
             if (chaoticGoodWidth > chaoticGoodWidthVal) { chaoticGoodWidth -= 0.1f; }
             if (lawfulNeutralWidth < lawfulNeutralWidthVal) { lawfulNeutralWidth += 0.1f; }
             if (lawfulNeutralWidth > lawfulNeutralWidthVal) { lawfulNeutralWidth -= 0.1f; }
+            if (trueNeutralWidth < trueNeutralWidthVal) { trueNeutralWidth += 0.1f; }
+            if (trueNeutralWidth > trueNeutralWidthVal) { trueNeutralWidth -= 0.1f; }
+            if (chaoticNeutralWidth < chaoticNeutralWidthVal) { chaoticNeutralWidth += 0.1f; }
+            if (chaoticNeutralWidth > chaoticNeutralWidthVal) { chaoticNeutralWidth -= 0.1f; }
         }
         public void ModAlignment(string alignmentName, bool add) 
         {
@@ -339,7 +409,17 @@ namespace InfiniteRoleplay.Windows
             if (alignmentName == "lawfulneutral")
             {
                 if (add) { if (availablePercentage > 0) { availablePercentage -= 10; lawfulNeutralWidthVal += 1; lawfulNeutralVal += 10; } }
-                else { if (chaoticGoodWidthVal > 0) { availablePercentage += 10; lawfulNeutralWidthVal -= 1; lawfulNeutralVal -= 10; } }
+                else { if (lawfulNeutralWidthVal > 0) { availablePercentage += 10; lawfulNeutralWidthVal -= 1; lawfulNeutralVal -= 10; } }
+            }
+            if (alignmentName == "trueneutral")
+            {
+                if (add) { if (availablePercentage > 0) { availablePercentage -= 10; trueNeutralWidthVal += 1; trueNeutralVal += 10; } }
+                else { if (trueNeutralWidthVal > 0) { availablePercentage += 10; trueNeutralWidthVal -= 1; trueNeutralVal -= 10; } }
+            }
+            if (alignmentName == "chaoticneutral")
+            {
+                if (add) { if (availablePercentage > 0) { availablePercentage -= 10; chaoticNeutralWidthVal += 1; chaoticNeutralVal += 10; } }
+                else { if (chaoticNeutralWidthVal > 0) { availablePercentage += 10; chaoticNeutralWidthVal -= 1; chaoticNeutralVal -= 10; } }
             }
 
         }
