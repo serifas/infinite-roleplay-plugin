@@ -23,6 +23,7 @@ using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using UpdateTest;
 using ImGuiScene;
+using Dalamud.Game.ClientState;
 
 namespace InfiniteRoleplay
 {
@@ -34,20 +35,22 @@ namespace InfiniteRoleplay
         public string Name => "Infinite Plugin";
         private const string CommandName = "/infinite";
         private DalamudPluginInterface PluginInterface { get; init; }
-
+        private ClientState clientState { get; init; }
         private CommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("InfinitePlugin");
         public bool status = false;
         public Dictionary<int, string> characters = new Dictionary<int, string>();
         public Plugin(
-           
+
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
+            [RequiredVersion("1.0")] ClientState ClientState,
             [RequiredVersion("1.0")] CommandManager commandManager)
         {
             try
             {
                 Dalamud.Initialize(pluginInterface);
+               
             }
             catch
             {
@@ -56,9 +59,9 @@ namespace InfiniteRoleplay
             this.PluginInterface = pluginInterface;
             this.CommandManager = commandManager;
             this.PluginInterfacePub = pluginInterface;
+            this.clientState = ClientState; 
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(this.PluginInterface);
-
 
 
 
@@ -116,7 +119,7 @@ namespace InfiniteRoleplay
 
             string name = "";
             this.WindowSystem.AddWindow(new SystemsWindow(this));
-            this.WindowSystem.AddWindow(new ProfileWindow(this, this.PluginInterface, AvatarHolder, 
+            this.WindowSystem.AddWindow(new ProfileWindow(this, clientState.LocalPlayer, this.PluginInterface, AvatarHolder, 
                                                                 lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil, 
                                                                 lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar,
                                                                 lawfulGoodPlus, neutralGoodPlus, chaoticGoodPlus, lawfulNeutralPlus, trueNeutralPlus, chaoticNeutralPlus, lawfulEvilPlus, neutralEvilPlus, chaoticEvilPlus,

@@ -16,8 +16,10 @@ namespace InfiniteRoleplay;
 
 public class Dalamud
 {
-    public static void Initialize( DalamudPluginInterface pluginInterface )
+    public static void Initialize( DalamudPluginInterface pluginInterface)
         => pluginInterface.Create< Dalamud >();
+        
+           
 
         // @formatter:off
         [PluginService][RequiredVersion("1.0")] public static DalamudPluginInterface PluginInterface { get; private set; } = null!;

@@ -39,6 +39,8 @@ using static Uno.CompositionConfiguration;
 using System.Windows.Markup;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using System.Threading.Channels;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -47,6 +49,8 @@ namespace InfiniteRoleplay.Windows
         private readonly ConcurrentDictionary<string, string> _startPaths = new();
         private Plugin plugin;
 
+
+        private PlayerCharacter playerCharacter;
         private DalamudPluginInterface pg;
         private FileDialogManager _fileDialogManager;
         private FileDialogService _fileDialogService;
@@ -86,10 +90,10 @@ namespace InfiniteRoleplay.Windows
         private TextureWrap lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar;
         private TextureWrap lawfulGoodPlus, neutralGoodPlus, chaoticGoodPlus, lawfulNeutralPlus, trueNeutralPlus, chaoticNeutralPlus, lawfulEvilPlus, neutralEvilPlus, chaoticEvilPlus;
         private TextureWrap lawfulGoodMinus, neutralGoodMinus, chaoticGoodMinus, lawfulNeutralMinus, trueNeutralMinus, chaoticNeutralMinus, lawfulEvilMinus, neutralEvilMinus, chaoticEvilMinus;
-        
-        
-        
-        public ProfileWindow(Plugin plugin, DalamudPluginInterface Interface, TextureWrap avatarHolder,
+
+
+
+        public ProfileWindow(Plugin plugin, PlayerCharacter playerChar, DalamudPluginInterface Interface, TextureWrap avatarHolder,
                              //alignment icon
                              TextureWrap lawfulgood, TextureWrap neutralgood, TextureWrap chaoticgood,
                              TextureWrap lawfulneutral, TextureWrap trueneutral, TextureWrap chaoticneutral,
@@ -126,7 +130,7 @@ namespace InfiniteRoleplay.Windows
             this.lawfulGood = lawfulgood; this.neutralGood = neutralgood; this.chaoticGood = chaoticgood;
             this.lawfulNeutral = lawfulneutral; this.trueNeutral = trueneutral; this.chaoticNeutral = chaoticneutral;
             this.lawfulEvil = lawfulevil; this.neutralEvil = neutralevil; this.chaoticEvil = chaoticevil;
-
+        
             //bars
             this.lawfulGoodBar = lawfulgoodBar; this.neutralGoodBar = neutralgoodBar; this.chaoticGoodBar = chaoticgoodBar;
             this.lawfulNeutralBar = lawfulneutralBar; this.trueNeutralBar = trueneutralBar; this.chaoticNeutralBar = chaoticneutralBar;
@@ -139,14 +143,15 @@ namespace InfiniteRoleplay.Windows
             this.lawfulGoodMinus = lawfulgoodMinus; this.neutralGoodMinus = neutralgoodMinus; this.chaoticGoodMinus = chaoticgoodMinus;
             this.lawfulNeutralMinus = lawfulneutralMinus; this.trueNeutralMinus = trueneutralMinus; this.chaoticNeutralMinus = chaoticneutralMinus;
             this.lawfulEvilMinus = lawfulevilMinus; this.neutralEvilMinus = neutralevilMinus; this.chaoticEvilMinus = chaoticevilMinus;
-
+            this.playerCharacter = playerChar;
         }
         public override void Draw()
         {
             _fileDialogManager.Draw();
             //LoadFileSelection();
-            if (ImGui.Button("Add Profile", new Vector2(100,20))) { addProfile = true; }
-           
+            Vector2 addProfileBtnScale = new Vector2(playerCharacter.Name.ToString().Length * 20, 20);
+            if (ImGui.Button("Add Profile for " + playerCharacter.Name, addProfileBtnScale)) { addProfile = true; }
+            
             if (addProfile == true)
             {
                 ImGui.Spacing();
@@ -182,7 +187,7 @@ namespace InfiniteRoleplay.Windows
                     //name input
                     ImGui.Text("Name:   ");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##playername", $"Character Name (The name of the character you are currently playing as)", ref characterAddName, 100);
+                    ImGui.InputTextWithHint("##playername", $"Character Name (The name or nickname of the character you are currently playing as)", ref characterAddName, 100);
                     //race input
                     ImGui.Text("Race:    ");
                     ImGui.SameLine();
