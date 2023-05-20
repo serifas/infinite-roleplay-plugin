@@ -599,23 +599,7 @@ public class InfiniteSheet : Dalamud.Interface.Windowing.Window, IDisposable
 
                 if (ImGui.Button("Create Character"))
                 {
-                    if (abilityCount == 0)
-                    {
-                        DataSender.CreateSheetProfile(Plugin.Configuration.username, PlayerName, CharacterName, this.avatarBytes, this.avatarBytes.Length, Race, Age, Height, Weight, health, strength, senses, hardiness, intelligence, nimbleness, eminence, "","","","","","");
-                    }
-                    if (abilityCount == 1)
-                    {
-                        DataSender.CreateSheetProfile(Plugin.Configuration.username, PlayerName, CharacterName, this.avatarBytes, this.avatarBytes.Length, Race, Age, Height, Weight, health, strength, senses, hardiness, intelligence, nimbleness, eminence, Ability1Name, "", "", Ability1Description, "", "");
-
-                    }
-                    if (abilityCount == 2)
-                    {
-                        DataSender.CreateSheetProfile(Plugin.Configuration.username, PlayerName, CharacterName, this.avatarBytes, this.avatarBytes.Length, Race, Age, Height, Weight, health, strength, senses, hardiness, intelligence, nimbleness, eminence, Ability1Name, Ability2Name, "", Ability1Description, Ability2Description, "");
-                    }
-                    if (abilityCount == 3)
-                    {
-                        DataSender.CreateSheetProfile(Plugin.Configuration.username, PlayerName, CharacterName, this.avatarBytes, this.avatarBytes.Length, Race, Age, Height, Weight, health, strength, senses, hardiness, intelligence, nimbleness, eminence, Ability1Name, Ability2Name, Ability3Name, Ability1Description, Ability2Description, Ability3Description);
-                    }
+                
                 }
 
                 ImGui.Unindent(55);

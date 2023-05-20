@@ -25,6 +25,7 @@ namespace UpdateTest
         CSendRulebookPage = 7,
         CSendSheetVerify = 8,
         CSendSystemStats = 9,
+        CCreateProfileBio = 10,
     }
     public class DataSender
     {
@@ -86,6 +87,48 @@ namespace UpdateTest
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
+        public static void CreateProfile(string username, string playerName, string playerServer)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CCreateProfile);
+            buffer.WriteString(username);
+            buffer.WriteString(playerName);
+            buffer.WriteString(playerServer);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+        public static void CreateProfileBio(string playerName, string playerServer, byte[] avatarBytes, string name, string race, string gender, int age, 
+                                            string height, string weight, string atFirstGlance, 
+                                            int lawful_good, int neutral_good, int chaotic_good, 
+                                            int lawful_neutral, int true_neutral, int chaotic_neutral, 
+                                            int lawful_evil, int neutral_evil, int chaotic_evil)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CCreateProfileBio);
+            buffer.WriteString(playerName);
+            buffer.WriteString(playerServer);
+            buffer.WriteInteger(avatarBytes.Length);
+            buffer.WriteBytes(avatarBytes);
+            buffer.WriteString(name);
+            buffer.WriteString(race);
+            buffer.WriteString(gender);
+            buffer.WriteInteger(age);
+            buffer.WriteString(height);
+            buffer.WriteString(weight);
+            buffer.WriteString(atFirstGlance);
+            buffer.WriteInteger(lawful_good);
+            buffer.WriteInteger(neutral_good);
+            buffer.WriteInteger(chaotic_good);
+            buffer.WriteInteger(lawful_neutral);
+            buffer.WriteInteger(true_neutral);
+            buffer.WriteInteger(chaotic_neutral);
+            buffer.WriteInteger(lawful_evil);
+            buffer.WriteInteger(neutral_evil);
+            buffer.WriteInteger(chaotic_evil);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+
         public static void SendRulebookPage(string username, string title)
         {
             var buffer = new ByteBuffer();
@@ -111,37 +154,7 @@ namespace UpdateTest
 
         }
 
-        public static void CreateSheetProfile(string username, string playername, string charactername, byte[] avatarBytes, int avatarBytesLength, string race, string age, string height, string  weight, int health, int strength, int senses, int hardiness, int intelligence, int nimbleness, int eminence, string ability1Name, string ability2Name, string ability3Name, string ability1Desc, string ability2Desc, string ability3Desc)
-        {
-            
-                var buffer = new ByteBuffer();
-                buffer.WriteInteger((int)ClientPackets.CCreateProfile);
-                buffer.WriteString(username);
-                buffer.WriteString(playername);
-                buffer.WriteString(charactername);
-                buffer.WriteString(race);
-                buffer.WriteString(age);
-                buffer.WriteString(height);
-                buffer.WriteString(weight);
-                buffer.WriteInteger(health);
-                buffer.WriteInteger(senses);
-                buffer.WriteInteger(strength);
-                buffer.WriteInteger(hardiness);
-                buffer.WriteInteger(intelligence);
-                buffer.WriteInteger(nimbleness);
-                buffer.WriteInteger(eminence);
-                buffer.WriteString(ability1Name);
-                buffer.WriteString(ability2Name);
-                buffer.WriteString(ability3Name);
-                buffer.WriteString(ability1Desc);
-                buffer.WriteString(ability2Desc);
-                buffer.WriteString(ability3Desc);
-                buffer.WriteInteger(avatarBytesLength);
-                buffer.WriteBytes(avatarBytes);
-                ClientTCP.SendData(buffer.ToArray());
-                buffer.Dispose();
-         
-        }
+        
         public static void UpdateSheetStatus(int sheetID, int status)
         {
 

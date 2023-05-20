@@ -41,6 +41,8 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using System.Threading.Channels;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using Dalamud.Game.ClientState.Objects.SubKinds;
+using System.Drawing;
+using Dalamud.Game;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -90,7 +92,7 @@ namespace InfiniteRoleplay.Windows
         private TextureWrap lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar;
         private TextureWrap lawfulGoodPlus, neutralGoodPlus, chaoticGoodPlus, lawfulNeutralPlus, trueNeutralPlus, chaoticNeutralPlus, lawfulEvilPlus, neutralEvilPlus, chaoticEvilPlus;
         private TextureWrap lawfulGoodMinus, neutralGoodMinus, chaoticGoodMinus, lawfulNeutralMinus, trueNeutralMinus, chaoticNeutralMinus, lawfulEvilMinus, neutralEvilMinus, chaoticEvilMinus;
-
+        
 
 
         public ProfileWindow(Plugin plugin, PlayerCharacter playerChar, DalamudPluginInterface Interface, TextureWrap avatarHolder,
@@ -126,6 +128,8 @@ namespace InfiniteRoleplay.Windows
             this.configuration = plugin.Configuration;
             this._fileDialogManager = new FileDialogManager();
             this.avatarImg = avatarHolder;
+            System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "profile_avis/avatar_holder.png"));
+            this.avatarBytes = ImageToByteArray(image1);
             //alignment icons
             this.lawfulGood = lawfulgood; this.neutralGood = neutralgood; this.chaoticGood = chaoticgood;
             this.lawfulNeutral = lawfulneutral; this.trueNeutral = trueneutral; this.chaoticNeutral = chaoticneutral;
@@ -145,12 +149,21 @@ namespace InfiniteRoleplay.Windows
             this.lawfulEvilMinus = lawfulevilMinus; this.neutralEvilMinus = neutralevilMinus; this.chaoticEvilMinus = chaoticevilMinus;
             this.playerCharacter = playerChar;
         }
+        public byte[] ImageToByteArray(System.Drawing.Image imageIn)
+        {
+            using (var ms = new MemoryStream())
+            {
+                imageIn.Save(ms, imageIn.RawFormat);
+                return ms.ToArray();
+            }
+        }
         public override void Draw()
         {
             _fileDialogManager.Draw();
             //LoadFileSelection();
-            Vector2 addProfileBtnScale = new Vector2(playerCharacter.Name.ToString().Length * 20, 20);
-            if (ImGui.Button("Add Profile for " + playerCharacter.Name, addProfileBtnScale)) { addProfile = true; }
+            
+            //Vector2 addProfileBtnScale = new Vector2(playerCharacter.Name.ToString().Length * 20, 20);
+            if (ImGui.Button("Add Profile", new Vector2(100, 20))) {  addProfile = true; DataSender.CreateProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString()); }
             
             if (addProfile == true)
             {
@@ -171,8 +184,8 @@ namespace InfiniteRoleplay.Windows
                 if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add a gallery section to your profile"); }
 
             }
-            
-
+            bool warning = false;
+            bool success = false;
             if (ImGui.BeginChild("PROFILE"))
             {
                 if(addBio== true)
@@ -437,11 +450,26 @@ namespace InfiniteRoleplay.Windows
                     int formattedChaoticEvilVal = chaoticEvilVal / 10;
                     ImGui.TextColored(new Vector4(1, 1, 1, 1), chaoticEvilVal.ToString());
                     #endregion
-
+                   
                     #endregion
                     if (ImGui.Button("Save Bio"))
                     {
+                        if(characterAddName == string.Empty || characterAddRace == string.Empty || characterAddGender == string.Empty || characterAddAge == string.Empty ||
+                        characterAddHeight == string.Empty || characterAddWeight == string.Empty || characterAddAfg == string.Empty)
+                        {
+                            Dispose();
+                            warning = true;                            
+                        }
 
+                        DataSender.CreateProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), avatarBytes, characterAddName.Replace("'", "''"),
+                                                    characterAddRace.Replace("'", "''"), characterAddGender.Replace("'", "''"), int.Parse(characterAddAge), characterAddHeight.Replace("'", "''"), characterAddWeight.Replace("'", "''"), characterAddAfg.Replace("'", "''"),
+                                                    lawfulGoodVal, neutralGoodVal, chaoticGoodVal, lawfulNeutralVal, trueNeutralVal, chaoticNeutralVal, lawfulEvilVal, neutralEvilVal, chaoticEvilVal);
+
+                    }
+
+                    if (warning == true)
+                    {
+                        ImGui.TextColored(new Vector4(1, 0, 0, 1), "Please fill out all text fields");
                     }
                 }
 
@@ -451,8 +479,8 @@ namespace InfiniteRoleplay.Windows
 
 
 
-
             }
+           
             if (addAvatar == true)
                 {
                     addAvatar = false;
