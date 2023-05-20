@@ -26,6 +26,7 @@ namespace UpdateTest
         CSendSheetVerify = 8,
         CSendSystemStats = 9,
         CCreateProfileBio = 10,
+        CSelfBan = 11,
     }
     public class DataSender
     {
@@ -94,6 +95,14 @@ namespace UpdateTest
             buffer.WriteString(username);
             buffer.WriteString(playerName);
             buffer.WriteString(playerServer);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+        public static void BanMe(string username, string playerName, string playerServer)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CSelfBan);
+            buffer.WriteString(username);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }

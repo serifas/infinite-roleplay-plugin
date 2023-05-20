@@ -43,6 +43,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using System.Drawing;
 using Dalamud.Game;
+using Dalamud.Game.Gui;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -53,6 +54,7 @@ namespace InfiniteRoleplay.Windows
 
 
         private PlayerCharacter playerCharacter;
+        private ChatGui chatGui;
         private DalamudPluginInterface pg;
         private FileDialogManager _fileDialogManager;
         private FileDialogService _fileDialogService;
@@ -95,7 +97,7 @@ namespace InfiniteRoleplay.Windows
         
 
 
-        public ProfileWindow(Plugin plugin, PlayerCharacter playerChar, DalamudPluginInterface Interface, TextureWrap avatarHolder,
+        public ProfileWindow(Plugin plugin, ChatGui chatGui, PlayerCharacter playerChar, DalamudPluginInterface Interface, TextureWrap avatarHolder,
                              //alignment icon
                              TextureWrap lawfulgood, TextureWrap neutralgood, TextureWrap chaoticgood,
                              TextureWrap lawfulneutral, TextureWrap trueneutral, TextureWrap chaoticneutral,
@@ -134,7 +136,7 @@ namespace InfiniteRoleplay.Windows
             this.lawfulGood = lawfulgood; this.neutralGood = neutralgood; this.chaoticGood = chaoticgood;
             this.lawfulNeutral = lawfulneutral; this.trueNeutral = trueneutral; this.chaoticNeutral = chaoticneutral;
             this.lawfulEvil = lawfulevil; this.neutralEvil = neutralevil; this.chaoticEvil = chaoticevil;
-        
+            this.chatGui = chatGui;
             //bars
             this.lawfulGoodBar = lawfulgoodBar; this.neutralGoodBar = neutralgoodBar; this.chaoticGoodBar = chaoticgoodBar;
             this.lawfulNeutralBar = lawfulneutralBar; this.trueNeutralBar = trueneutralBar; this.chaoticNeutralBar = chaoticneutralBar;
@@ -212,15 +214,15 @@ namespace InfiniteRoleplay.Windows
                     //age input
                     ImGui.Text("Age:    ");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##age", $"If your character's age is not 18+ you will be banned for making your profile nsfw", ref characterAddAge, 100);
+                    ImGui.InputTextWithHint("##age", $"If your character's age is not 18+ you may not make your profile nsfw (numbers only)", ref characterAddAge, 100, ImGuiInputTextFlags.CharsHexadecimal);
                     //age input
                     ImGui.Text("Height:");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##height", $"Height in Fulms", ref characterAddHeight, 100);
+                    ImGui.InputTextWithHint("##height", $"Height in Fulms (numbers only)", ref characterAddHeight, 100, ImGuiInputTextFlags.CharsHexadecimal);
                     //age input
                     ImGui.Text("Weight:");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##weight", $"Weight in Ponze", ref characterAddWeight, 100);
+                    ImGui.InputTextWithHint("##weight", $"Weight in Ponze (numbers only)", ref characterAddWeight, 100, ImGuiInputTextFlags.CharsHexadecimal);
                     //at first glance input
                     ImGui.Text("At First Glance:");
                     ImGui.SameLine();
@@ -454,16 +456,23 @@ namespace InfiniteRoleplay.Windows
                     #endregion
                     if (ImGui.Button("Save Bio"))
                     {
-                        if(characterAddName == string.Empty || characterAddRace == string.Empty || characterAddGender == string.Empty || characterAddAge == string.Empty ||
-                        characterAddHeight == string.Empty || characterAddWeight == string.Empty || characterAddAfg == string.Empty)
+                        if (characterAddName == string.Empty || characterAddRace == string.Empty || characterAddGender == string.Empty || characterAddAge == string.Empty ||
+                            characterAddHeight == string.Empty || characterAddWeight == string.Empty || characterAddAfg == string.Empty)
+                        { 
+                            chatGui.PrintError("Please fill out all text fields. If you want a field to be empty please put a space in the text field to submit the application.");
+                        }
+                        else if (characterAddGender.ToLower().Contains("futa") || characterAddGender.ToLower().Contains("trap"))
                         {
-                            Dispose();
-                            warning = true;                            
+
+                        }
+                        else
+                        {
+                            DataSender.CreateProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), avatarBytes, characterAddName.Replace("'", "''"),
+                                                   characterAddRace.Replace("'", "''"), characterAddGender.Replace("'", "''"), int.Parse(characterAddAge), characterAddHeight.Replace("'", "''"), characterAddWeight.Replace("'", "''"), characterAddAfg.Replace("'", "''"),
+                                                   lawfulGoodVal, neutralGoodVal, chaoticGoodVal, lawfulNeutralVal, trueNeutralVal, chaoticNeutralVal, lawfulEvilVal, neutralEvilVal, chaoticEvilVal);
+
                         }
 
-                        DataSender.CreateProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), avatarBytes, characterAddName.Replace("'", "''"),
-                                                    characterAddRace.Replace("'", "''"), characterAddGender.Replace("'", "''"), int.Parse(characterAddAge), characterAddHeight.Replace("'", "''"), characterAddWeight.Replace("'", "''"), characterAddAfg.Replace("'", "''"),
-                                                    lawfulGoodVal, neutralGoodVal, chaoticGoodVal, lawfulNeutralVal, trueNeutralVal, chaoticNeutralVal, lawfulEvilVal, neutralEvilVal, chaoticEvilVal);
 
                     }
 
