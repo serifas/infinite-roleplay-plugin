@@ -19,6 +19,6 @@
         "DownloadLinkInstall": "https://github.com/xivdev/Penumbra/releases/download/0.7.0.10/Penumbra.zip",
         "DownloadLinkTesting": "https://github.com/xivdev/Penumbra/releases/download/0.7.0.10/Penumbra.zip",
         "DownloadLinkUpdate": "https://github.com/xivdev/Penumbra/releases/download/0.7.0.10/Penumbra.zip",
-        "IconUrl": "https://raw.githubusercontent.com/xivdev/Penumbra/master/images/icon.png"
+        "IconUrl": "https://github.com/serifas/infinite-roleplay-plugin/blob/main/SamplePlugin/UI%20Images/irp.png"
     }
 ]
