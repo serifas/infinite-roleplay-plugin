@@ -16,9 +16,9 @@
         "LoadPriority": 69420,
         "LoadRequiredState": 2,
         "LoadSync": true,
-        "DownloadLinkInstall": "https://github.com/xivdev/Penumbra/releases/download/0.7.0.10/Penumbra.zip",
-        "DownloadLinkTesting": "https://github.com/xivdev/Penumbra/releases/download/0.7.0.10/Penumbra.zip",
-        "DownloadLinkUpdate": "https://github.com/xivdev/Penumbra/releases/download/0.7.0.10/Penumbra.zip",
+        "DownloadLinkInstall": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/InfiniteRoleplay.zip",
+        "DownloadLinkTesting": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/InfiniteRoleplay.zip",
+        "DownloadLinkUpdate": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/InfiniteRoleplay.zip",
         "IconUrl": "https://github.com/serifas/infinite-roleplay-plugin/blob/main/SamplePlugin/UI%20Images/irp.png"
     }
 ]
