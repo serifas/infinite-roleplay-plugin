@@ -17,7 +17,7 @@ namespace UpdateTest
         public static TcpClient clientSocket;
         private static NetworkStream myStream;
         private static byte[] recBuffer;
-        private static string server = "47.158.189.242";
+        private static string server = "127.0.0.1";
         private static int port = 5392;
         public static void InitializingNetworking(bool start)
         {
