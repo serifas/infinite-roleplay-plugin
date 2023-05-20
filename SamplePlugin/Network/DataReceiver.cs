@@ -187,8 +187,6 @@ namespace UpdateTest
             int status = buffer.ReadInt();
             buffer.Dispose();
             plugin.loggedIn = true;
-            plugin.WindowSystem.GetWindow("LOGIN").IsOpen = false;
-            plugin.WindowSystem.GetWindow("OPTIONS").IsOpen = true;
              if(status == -1)
              {
                  plugin.loggedIn = false;

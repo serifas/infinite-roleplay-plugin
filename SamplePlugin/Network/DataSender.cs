@@ -26,7 +26,8 @@ namespace UpdateTest
         CSendSheetVerify = 8,
         CSendSystemStats = 9,
         CCreateProfileBio = 10,
-        CSelfBan = 11,
+        CBanAccount = 11,
+        CStrikeAccount = 12,
     }
     public class DataSender
     {
@@ -98,11 +99,12 @@ namespace UpdateTest
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void BanMe(string username, string playerName, string playerServer)
+        public static void StrikeAccount(string senderName, string receiverName)
         {
             var buffer = new ByteBuffer();
-            buffer.WriteInteger((int)ClientPackets.CSelfBan);
-            buffer.WriteString(username);
+            buffer.WriteInteger((int)ClientPackets.CStrikeAccount);
+            buffer.WriteString(senderName);
+            buffer.WriteString(receiverName);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }

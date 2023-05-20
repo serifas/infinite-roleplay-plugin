@@ -456,14 +456,15 @@ namespace InfiniteRoleplay.Windows
                     #endregion
                     if (ImGui.Button("Save Bio"))
                     {
-                        if (characterAddName == string.Empty || characterAddRace == string.Empty || characterAddGender == string.Empty || characterAddAge == string.Empty ||
+                        if (characterAddGender.ToLower().Contains("futa") || characterAddGender.ToLower().Contains("trap"))
+                        {
+                            chatGui.PrintError("Your account " + "'" + configuration.username + "' is banned");
+                            DataSender.StrikeAccount(configuration.username, configuration.username);
+                        }
+                        else if (characterAddName == string.Empty || characterAddRace == string.Empty || characterAddGender == string.Empty || characterAddAge == string.Empty ||
                             characterAddHeight == string.Empty || characterAddWeight == string.Empty || characterAddAfg == string.Empty)
                         { 
                             chatGui.PrintError("Please fill out all text fields. If you want a field to be empty please put a space in the text field to submit the application.");
-                        }
-                        else if (characterAddGender.ToLower().Contains("futa") || characterAddGender.ToLower().Contains("trap"))
-                        {
-
                         }
                         else
                         {
