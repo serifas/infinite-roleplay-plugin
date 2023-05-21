@@ -52,7 +52,7 @@ public class ValidityChecker
         }
         catch( Exception e )
         {
-            Penumbra.Log.Error( $"Could not check for dev plugin Penumbra:\n{e}" );
+           // Penumbra.Log.Error( $"Could not check for dev plugin Penumbra:\n{e}" );
             return true;
         }
 #else
@@ -68,7 +68,7 @@ public class ValidityChecker
         var ret = checkedDirectory?.Equals( "installedPlugins", StringComparison.OrdinalIgnoreCase ) ?? false;
         if( !ret )
         {
-            Penumbra.Log.Error( $"Penumbra is not correctly installed. Application loaded from \"{pi.AssemblyLocation.Directory!.FullName}\"." );
+          //  Penumbra.Log.Error( $"Penumbra is not correctly installed. Application loaded from \"{pi.AssemblyLocation.Directory!.FullName}\"." );
         }
 
         return !ret;
