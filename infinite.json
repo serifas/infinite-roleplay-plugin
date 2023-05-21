@@ -1,24 +1,23 @@
 [
     {
-        "Author": "Lynie",
-        "Name": "Infinite Roleplay",
-        "Description": "Tool for creating and sharing roleplay profiles, stat and combat systems, events and more.",
-        "InternalName": "Infinite Roleplay",
-        "AssemblyVersion": "0.7.0.10",
-        "TestingAssemblyVersion": "0.7.0.10",
-        "RepoUrl": "https://github.com/serifas/infinite-roleplay-plugin",
+        "Author": "darkarchon",
+        "Name": "Mare Synchronos",
+        "InternalName": "MareSynchronos",
+        "AssemblyVersion": "0.8.42",
+        "Description": "This plugin will synchronize your Penumbra mods and current Glamourer state with other paired clients automatically.",
         "ApplicableVersion": "any",
+        "RepoUrl": "https://github.com/Penumbra-Sync/client",
+        "Tags": [
+          "customization"
+        ],
         "DalamudApiLevel": 8,
+        "LoadPriority": 0,
+        "IconUrl": "https://raw.githubusercontent.com/Penumbra-Sync/repo/main/MareSynchronos/images/icon.png",
+        "Punchline": "Let others see you as you see yourself.",
         "IsHide": "False",
         "IsTestingExclusive": "False",
-        "DownloadCount": 0,
-        "LastUpdate": 0,
-        "LoadPriority": 69420,
-        "LoadRequiredState": 2,
-        "LoadSync": true,
-        "DownloadLinkInstall": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/Infinite.zip",
-        "DownloadLinkTesting": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/Infinite.zip",
-        "DownloadLinkUpdate": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/Infinite.zip",
-        "IconUrl": "https://github.com/serifas/infinite-roleplay-plugin/blob/main/SamplePlugin/UI%20Images/irp.png"
-    }
+        "DownloadLinkInstall": "https://files.maresynchronos.com/release/0.8.42.zip",
+        "DownloadLinkTesting": "https://files.maresynchronos.com/release/0.8.42.zip",
+        "DownloadLinkUpdate": "https://files.maresynchronos.com/release/0.8.42.zip"
+      }
 ]
