@@ -3,7 +3,7 @@
         "Author": "Lynie",
         "Name": "Infinite Roleplay",
         "Description": "Tool for creating and sharing roleplay profiles, stat and combat systems, events and more.",
-        "InternalName": "Infinite",
+        "InternalName": "InfiniteRoleplay",
         "AssemblyVersion": "0.7.0.10",
         "TestingAssemblyVersion": "0.7.0.10",
         "RepoUrl": "https://github.com/serifas/infinite-roleplay-plugin",
@@ -16,9 +16,9 @@
         "LoadPriority": 69420,
         "LoadRequiredState": 2,
         "LoadSync": true,
-        "DownloadLinkInstall": "https://infinite-roleplay.net/static/assets/repo/Infinite.zip",
-        "DownloadLinkTesting": "https://infinite-roleplay.net/static/assets/repo/Infinite.zip",
-        "DownloadLinkUpdate": "https://infinite-roleplay.net/static/assets/repo/Infinite.zip",
+        "DownloadLinkInstall": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/InfiniteRoleplay.zip",
+        "DownloadLinkTesting": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/InfiniteRoleplay.zip",
+        "DownloadLinkUpdate": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/InfiniteRoleplay.zip",
         "IconUrl": "https://github.com/serifas/infinite-roleplay-plugin/blob/main/SamplePlugin/UI%20Images/irp.png"
     }
 ]

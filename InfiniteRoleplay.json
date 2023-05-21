@@ -1,23 +1,25 @@
-{
-  "Author": "Omie",
-  "Name": "Infinite Roleplay",
-  "InternalName": "InfiniteRoleplay",
-  "AssemblyVersion": "0.0.0.1",
-  "Description": "/infinite to open window",
-  "ApplicableVersion": "any",
-  "RepoUrl": "https://github.com/serifas/infinite-roleplay-plugin",
-  "Tags": [
-    "infinite",
-    "roleplay",
-    "rp",
-    "statsheets"
-  ],
-  "DalamudApiLevel": 8,
-  "LoadRequiredState": 0,
-  "LoadSync": false,
-  "CanUnloadAsync": false,
-  "LoadPriority": 0,
-  "IconUrl": "http://i.imgur.com/j1Qgzx9.png",
-  "Punchline": "An all around roleplay plugin.",
-  "AcceptsFeedback": true
-}
+[
+    {
+        "Author": "Lynie",
+        "Name": "Infinite Roleplay",
+        "Description": "Tool for creating and sharing roleplay profiles, stat and combat systems, events and more.",
+        "InternalName": "InfiniteRoleplay",
+        "AssemblyVersion": "0.7.0.10",
+        "TestingAssemblyVersion": "0.7.0.10",
+        "RepoUrl": "https://github.com/serifas/infinite-roleplay-plugin",
+        "ApplicableVersion": "any",
+        "DalamudApiLevel": 8,
+        "IsHide": "False",
+        "IsTestingExclusive": "False",
+        "DownloadCount": 0,
+        "LastUpdate": 0,
+        "LoadPriority": 69420,
+        "LoadRequiredState": 2,
+        "LoadSync": true,
+        "DownloadLinkInstall": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/InfiniteRoleplay.zip",
+        "DownloadLinkTesting": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/InfiniteRoleplay.zip",
+        "DownloadLinkUpdate": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/InfiniteRoleplay.zip",
+        "IconUrl": "https://github.com/serifas/infinite-roleplay-plugin/blob/main/SamplePlugin/UI%20Images/irp.png"
+    }
+]
+
