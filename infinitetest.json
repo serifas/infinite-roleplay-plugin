@@ -16,9 +16,9 @@
         "LoadPriority": 69420,
         "LoadRequiredState": 2,
         "LoadSync": true,
-        "DownloadLinkInstall": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/testlatest.zip",
-        "DownloadLinkTesting": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/testlatest.zip",
-        "DownloadLinkUpdate": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/testlatest.zip",
+        "DownloadLinkInstall": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/latesttest.zip",
+        "DownloadLinkTesting": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/latesttest.zip",
+        "DownloadLinkUpdate": "https://github.com/serifas/infinite-roleplay-plugin/raw/main/latesttest.zip",
         "IconUrl": "https://github.com/serifas/infinite-roleplay-plugin/blob/main/SamplePlugin/UIImages/irp.png"
     }
 ]
