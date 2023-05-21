@@ -3,7 +3,7 @@
         "Author": "Lynie",
         "Name": "Infinite Roleplay",
         "Description": "Tool for creating and sharing roleplay profiles, stat and combat systems, events and more.",
-        "InternalName": "Infinite Roleplay",
+        "InternalName": "Infinite",
         "AssemblyVersion": "0.7.0.10",
         "TestingAssemblyVersion": "0.7.0.10",
         "RepoUrl": "https://github.com/serifas/infinite-roleplay-plugin",
