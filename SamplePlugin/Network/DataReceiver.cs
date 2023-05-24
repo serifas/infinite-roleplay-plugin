@@ -1,7 +1,9 @@
 
+using Dalamud.Interface.Windowing;
 using FFXIVClientStructs.FFXIV.Common.Math;
 using InfiniteRoleplay;
 using InfiniteRoleplay.Utils;
+using InfiniteRoleplay.Windows;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,10 +26,17 @@ namespace UpdateTest
         SWelcomeMessage = 1,
         SRecLoginStatus = 2,
         SRecAccPermissions = 3,
+        SRecProfileBio = 4,
+        SRecExistingProfile = 5,
+        SSendProfile = 20,
+        SDoneSending = 21,
+        SNoProfileBio = 22,
     }
     class DataReceiver
     {
         public static string accountStatus = "status...";
+        public static bool ExistingProfileData = false;
+        public static bool ExistingBioData = false;
         public static Vector4 accounStatusColor = new Vector4(255, 255, 255, 255);
         public static Plugin plugin;
         public static Dictionary<int, string> characters = new Dictionary<int, string>();
@@ -89,8 +98,7 @@ namespace UpdateTest
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             int ruleBookPageID = buffer.ReadInt();
-            string ruleBookPageTitle = buffer.ReadString();
-            
+            string ruleBookPageTitle = buffer.ReadString();           
             
             pages.Add(ruleBookPageID, ruleBookPageTitle);
             
@@ -138,6 +146,9 @@ namespace UpdateTest
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             buffer.Dispose();
+            ExistingProfileData = true;
+            
+            plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
           
         }
         public static void NoProfile(byte[] data)
@@ -145,9 +156,10 @@ namespace UpdateTest
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
-            buffer.Dispose();
-          
+            buffer.Dispose();          
             loggedIn = true;
+            ExistingProfileData = false;
+            plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
         }
         public static void ReceiveProfile(byte[] data)
         {
@@ -207,93 +219,39 @@ namespace UpdateTest
              }
 
         }
+        public static void ReceiveProfileBio(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+
+            int avatarLen = buffer.ReadInt();
+            byte[] avatarBytes = buffer.ReadBytes(avatarLen);
+            string name = buffer.ReadString();
+            string race = buffer.ReadString();
+            string gender = buffer.ReadString();
+            int age = buffer.ReadInt();
+            string height = buffer.ReadString();
+            string weight = buffer.ReadString();
+            string atFirstGlance = buffer.ReadString();
+            int lawful_good = buffer.ReadInt();
+            int neutral_good = buffer.ReadInt();
+            int chaotic_good = buffer.ReadInt();
+            int lawful_neutral = buffer.ReadInt();
+            int true_neutral = buffer.ReadInt();
+            int chaotic_neutral = buffer.ReadInt();
+            int lawful_evil = buffer.ReadInt();
+            int neutral_evil = buffer.ReadInt();
+            int chaotic_evil = buffer.ReadInt();
+            ExistingBioData = true;
+            plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
+            buffer.Dispose();
+
+        }
         
-        public static void AccountInfo(byte[] data)
-        {
-            var buffer = new ByteBuffer();
-            buffer.WriteBytes(data);
-            var packetID = buffer.ReadInt();
-            int sheetID = buffer.ReadInt();
-            string player_name = buffer.ReadString();
-            string character_name = buffer.ReadString();
-            int avLength = buffer.ReadInt();
-            byte[] avatarBytes = buffer.ReadBytes(avLength);
-            string race = buffer.ReadString();
-            string age = buffer.ReadString();
-            string height = buffer.ReadString();
-            string weight = buffer.ReadString();
-            int health = buffer.ReadInt();
-            int senses = buffer.ReadInt();
-            int strength = buffer.ReadInt();
-            int hardiness = buffer.ReadInt();
-            int intelligence = buffer.ReadInt();
-            int nimbleness = buffer.ReadInt();
-            int eminence = buffer.ReadInt();
-            string ability_1 = buffer.ReadString();
-            string ability_2 = buffer.ReadString();
-            string ability_3 = buffer.ReadString();
-            string ability_1_description = buffer.ReadString();
-            string ability_2_description = buffer.ReadString();
-            string ability_3_description = buffer.ReadString();
-            int verification_status = buffer.ReadInt();
-            buffer.Dispose();
-            if (sheetID != 0)
-            {
+        
 
-                string character = sheetID + "," + player_name + "," + character_name + "," + race + "," + age + "," + height + "," + weight + "," + health + "," + senses + "," + strength + "," + hardiness + "," + intelligence + "," + nimbleness + "," + eminence + "," + ability_1 + "," + ability_2 + "," + ability_3 + "," + ability_1_description + "," + ability_2_description + "," + ability_3_description;
-                if (!characters.ContainsKey(sheetID))
-                {
-                    characters.Add(sheetID, character);
-                    characterAvatars.Add(sheetID, avatarBytes);
-                    characterVerificationStatuses.Add(sheetID, verification_status);
-                }
-            }
-      
-        }
-
-        public static void UserProfileDataAdmin(byte[] data)
-        {
-            var buffer = new ByteBuffer();
-            buffer.WriteBytes(data);
-            var packetID = buffer.ReadInt();
-            int sheetID = buffer.ReadInt();
-            string player_name = buffer.ReadString();
-            string character_name = buffer.ReadString();
-            int avLength = buffer.ReadInt();
-            byte[] avatarBytes = buffer.ReadBytes(avLength);
-            string race = buffer.ReadString();
-            string age = buffer.ReadString();
-            string height = buffer.ReadString();
-            string weight = buffer.ReadString();
-            int health = buffer.ReadInt();
-            int senses = buffer.ReadInt();
-            int strength = buffer.ReadInt();
-            int hardiness = buffer.ReadInt();
-            int intelligence = buffer.ReadInt();
-            int nimbleness = buffer.ReadInt();
-            int eminence = buffer.ReadInt();
-            string ability_1 = buffer.ReadString();
-            string ability_2 = buffer.ReadString();
-            string ability_3 = buffer.ReadString();
-            string ability_1_description = buffer.ReadString();
-            string ability_2_description = buffer.ReadString();
-            string ability_3_description = buffer.ReadString();
-            int verification_status = buffer.ReadInt();
-            buffer.Dispose();
-            if (sheetID != 0)
-            {
-                string character = sheetID + "," + player_name + "," + character_name + "," + race + "," + age + "," + height + "," + weight + "," + health + "," + senses + "," + strength + "," + hardiness + "," + intelligence + "," + nimbleness + "," + eminence + "," + ability_1 + "," + ability_2 + "," + ability_3 + "," + ability_1_description + "," + ability_2_description + "," + ability_3_description + "," + verification_status;
-                if (!adminCharacters.ContainsKey(sheetID))
-                {
-                    adminCharacters.Add(sheetID, character);
-                    adminCharacterAvatars.Add(sheetID, avatarBytes);
-                }
-                else
-                {
-                    adminCharacters[sheetID] = character;
-                }
-            }
-        }
+        
 
     }
 }

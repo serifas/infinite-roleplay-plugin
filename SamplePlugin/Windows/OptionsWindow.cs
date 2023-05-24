@@ -22,6 +22,7 @@ using Dalamud.Interface.ImGuiFileDialog;
 using ImGuiNET;
 using ImGuiScene;
 using static Lumina.Data.Files.ScdFile;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -42,8 +43,12 @@ namespace InfiniteRoleplay.Windows
         public static bool WindowOpen;
         public string msg;
 
+        private PlayerCharacter playerCharacter;
+
         private bool _showFileDialogError = false;
-        public OptionsWindow(Plugin plugin, DalamudPluginInterface Interface) : base(
+
+
+        public OptionsWindow(Plugin plugin, DalamudPluginInterface Interface, PlayerCharacter playerCharacter) : base(
        "OPTIONS", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
             this.SizeConstraints = new WindowSizeConstraints
@@ -61,15 +66,16 @@ namespace InfiniteRoleplay.Windows
             this.groupsImage = Interface.UiBuilder.LoadImage(groupsImagePath);
             this.systemsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "common/systems.png");
             this.systemsImage = Interface.UiBuilder.LoadImage(systemsImagePath);
-
+            this.playerCharacter = playerCharacter;
 
         }
         public override void Draw()
         {
+            ImGui.Text("Working");
             if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
             {
-                plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
-                //  DataSender.FetchProfiles(this.plugin.Configuration.username);
+                DataSender.FetchProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name);
+              
             }
             if (ImGui.IsItemHovered())
             {

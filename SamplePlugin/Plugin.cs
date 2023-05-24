@@ -131,7 +131,7 @@ namespace InfiniteRoleplay
             this.WindowSystem.AddWindow(new Rulebook(this));
             this.WindowSystem.AddWindow(new LoginWindow(this));
             //this.WindowSystem.AddWindow(new SystemsWindow(this));
-            this.WindowSystem.AddWindow(new OptionsWindow(this, this.PluginInterface));
+            this.WindowSystem.AddWindow(new OptionsWindow(this, this.PluginInterface, clientState.LocalPlayer));
             this.WindowSystem.AddWindow(new MessageBox(this));
             this.WindowSystem.AddWindow(new AdminWindow(this, this.PluginInterface));
             this.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)

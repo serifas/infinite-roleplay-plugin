@@ -81,11 +81,13 @@ namespace UpdateTest
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void FetchProfiles(string username)
+        public static void FetchProfile(string username, string characterName, string world)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CFetchProfiles);
             buffer.WriteString(username);
+            buffer.WriteString(characterName);
+            buffer.WriteString(world);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
