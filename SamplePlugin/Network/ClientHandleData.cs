@@ -23,6 +23,8 @@ namespace UpdateTest
                 packets.Add((int)ServerPackets.SRecLoginStatus, DataReceiver.LoginAuthenticated);
                 packets.Add((int)ServerPackets.SRecAccPermissions, DataReceiver.RecPermissions);
                 packets.Add((int)ServerPackets.SRecProfileBio, DataReceiver.ReceiveProfileBio);
+                packets.Add((int)ServerPackets.SNoProfileBio, DataReceiver.NoProfileBio);
+                packets.Add((int)ServerPackets.SNoProfile, DataReceiver.NoProfile);
                 packets.Add((int)ServerPackets.SRecExistingProfile, DataReceiver.ExistingProfile);
             }
             else

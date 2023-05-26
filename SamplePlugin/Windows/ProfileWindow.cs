@@ -44,6 +44,8 @@ using Dalamud.Game.ClientState.Objects.SubKinds;
 using System.Drawing;
 using Dalamud.Game;
 using Dalamud.Game.Gui;
+using Image = SixLabors.ImageSharp.Image;
+using System.Xml.Linq;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -84,7 +86,15 @@ namespace InfiniteRoleplay.Windows
         public bool ExistingOOC;
         public bool ExistingGallery;
         public bool ExistingProfile;
-
+        public static int lawfulGoodEditVal,
+                          neutralGoodEditVal,
+                          chaoticGoodEditVal,
+                          lawfulNeutralEditVal,
+                          trueNeutralEditVal,
+                          chaoticNeutralEditVal,
+                          lawfulEvilEditVal,
+                          neutralEvilEditVal,
+                          chaoticEvilEditVal;
         public byte[] avatarBytes;
         public byte[] existingAvatarBytes;
         public int availablePercentage = 50;
@@ -92,13 +102,20 @@ namespace InfiniteRoleplay.Windows
         private GameFontHandle _Font;
         //BIO VARS
         private TextureWrap avatarImg, currentAvatarImg;
-        public static string characterAddName = "" , characterEditName = "",
-                             characterAddRace = "",  characterEditRace = "",
-                             characterAddGender = "",characterEditGender = "",
-                             characterAddAge = "",   characterEditAge = "",
-                             characterAddAfg = "",   characterEditAfg = "",
-                             characterAddHeight = "",characterEditHeight = "",
-                             characterAddWeight = "", characterEditWeight = "";
+        public static string characterAddName = "",
+                                characterAddRace = "",
+                                characterAddGender = "",
+                                characterAddAge = "",
+                                characterAddAfg = "",
+                                characterAddHeight = "",
+                                characterAddWeight = "",
+                                characterEditName = "",
+                                characterEditRace = "",
+                                characterEditGender = "",
+                                characterEditAge = "",
+                                characterEditAfg = "",
+                                characterEditHeight = "",
+                                characterEditWeight = "";
         public static string fileName = "";
         private readonly FileDialogManager _manager;
         private bool _isOpen;
@@ -169,7 +186,7 @@ namespace InfiniteRoleplay.Windows
             this.lawfulNeutralMinus = lawfulneutralMinus; this.trueNeutralMinus = trueneutralMinus; this.chaoticNeutralMinus = chaoticneutralMinus;
             this.lawfulEvilMinus = lawfulevilMinus; this.neutralEvilMinus = neutralevilMinus; this.chaoticEvilMinus = chaoticevilMinus;
             this.playerCharacter = playerChar;
-            
+
         }
         public byte[] ImageToByteArray(System.Drawing.Image imageIn)
         {
@@ -524,6 +541,7 @@ namespace InfiniteRoleplay.Windows
 
                 if (editBio == true)
                 {
+                    this.currentAvatarImg = pg.UiBuilder.LoadImage(existingAvatarBytes);
                     ImGui.Image(this.currentAvatarImg.ImGuiHandle, new Vector2(100, 100));
 
                     if (ImGui.Button("Edit Avatar"))
@@ -582,7 +600,7 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     ImGui.Image(this.lawfulGoodBar.ImGuiHandle, new Vector2(lawfulGoodWidth * 30, 20));
                     ImGui.SameLine();
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), currentLawfulGood.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), lawfulGoodEditVal.ToString());
                     #endregion
 
                     #region NEUTRAL GOOD
@@ -605,7 +623,7 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     ImGui.Image(this.neutralGoodBar.ImGuiHandle, new Vector2(neutralGoodWidth * 30, 20));
                     ImGui.SameLine();
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), currentNeutralGood.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), neutralGoodEditVal.ToString());
                     #endregion
 
                     #region CHAOTIC GOOD
@@ -630,7 +648,7 @@ namespace InfiniteRoleplay.Windows
                     ImGui.Image(this.chaoticGoodBar.ImGuiHandle, new Vector2(chaoticGoodWidth * 30, 20));
                     ImGui.SameLine();
                     int formattedChaoticGoodVal = chaoticGoodVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), currentChaoticGood.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), chaoticGoodEditVal.ToString());
                     #endregion
 
                     #region LAWFUL NEUTRAL
@@ -655,7 +673,7 @@ namespace InfiniteRoleplay.Windows
                     ImGui.Image(this.lawfulNeutralBar.ImGuiHandle, new Vector2(lawfulNeutralWidth * 30, 20));
                     ImGui.SameLine();
                     int formattedLawfulNeutralVal = lawfulNeutralVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), currentLawfulNeutral.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), lawfulGoodEditVal.ToString());
                     #endregion
 
                     #region TRUE NEUTRAL
@@ -682,7 +700,7 @@ namespace InfiniteRoleplay.Windows
                     ImGui.Image(this.trueNeutralBar.ImGuiHandle, new Vector2(trueNeutralWidth * 30, 20));
                     ImGui.SameLine();
                     int formattedTrueNeutralVal = trueNeutralVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), currentTrueNeutral.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), trueNeutralEditVal.ToString());
                     #endregion
 
                     #region CHAOTIC NEUTRAL
@@ -706,7 +724,7 @@ namespace InfiniteRoleplay.Windows
                     ImGui.Image(this.chaoticNeutralBar.ImGuiHandle, new Vector2(chaoticNeutralWidth * 30, 20));
                     ImGui.SameLine();
                     int formattedChaoticNeutralVal = chaoticNeutralVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), currentChaoticNeutral.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), chaoticNeutralEditVal.ToString());
                     #endregion
 
                     #region LAWFUL EVIL
@@ -732,7 +750,7 @@ namespace InfiniteRoleplay.Windows
                     ImGui.Image(this.lawfulEvilBar.ImGuiHandle, new Vector2(lawfulEvilWidth * 30, 20));
                     ImGui.SameLine();
                     int formattedLawfulEvilVal = lawfulEvilVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), currentLawfulEvil.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), lawfulEvilEditVal.ToString());
                     #endregion
 
                     #region NEUTRAL EVIL
@@ -757,7 +775,7 @@ namespace InfiniteRoleplay.Windows
                     ImGui.Image(this.neutralEvilBar.ImGuiHandle, new Vector2(neutralEvilWidth * 30, 20));
                     ImGui.SameLine();
                     int formattedNeutralEvilVal = neutralEvilVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), currentNeutralEvil.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), neutralEvilEditVal.ToString());
                     #endregion
 
                     #region CHAOTIC EVIL
@@ -780,7 +798,7 @@ namespace InfiniteRoleplay.Windows
                     ImGui.Image(this.chaoticEvilBar.ImGuiHandle, new Vector2(chaoticEvilWidth * 30, 20));
                     ImGui.SameLine();
                     int formattedChaoticEvilVal = chaoticEvilVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), currentChaoticEvil.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), chaoticEvilEditVal.ToString());
                     #endregion
 
                     #endregion
@@ -798,9 +816,9 @@ namespace InfiniteRoleplay.Windows
                         }
                         else
                         {
-                            DataSender.CreateProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), avatarBytes, characterAddName.Replace("'", "''"),
-                                                   characterAddRace.Replace("'", "''"), characterAddGender.Replace("'", "''"), int.Parse(characterAddAge), characterAddHeight.Replace("'", "''"), characterAddWeight.Replace("'", "''"), characterAddAfg.Replace("'", "''"),
-                                                   lawfulGoodVal, neutralGoodVal, chaoticGoodVal, lawfulNeutralVal, trueNeutralVal, chaoticNeutralVal, lawfulEvilVal, neutralEvilVal, chaoticEvilVal);
+                            DataSender.EditProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), avatarBytes, characterEditName.Replace("'", "''"),
+                                                   characterEditRace.Replace("'", "''"), characterEditGender.Replace("'", "''"), int.Parse(characterEditAge), characterEditHeight.Replace("'", "''"), characterEditWeight.Replace("'", "''"), characterEditAfg.Replace("'", "''"),
+                                                   lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal);
 
                         }
 
@@ -821,6 +839,11 @@ namespace InfiniteRoleplay.Windows
                     addAvatar = false;
                 AddAvatar();
             }
+            if(editAvatar == true)
+            {
+                editAvatar = false;
+                EditAvatar();
+            }
 
         }
         public void Dispose()
@@ -831,6 +854,9 @@ namespace InfiniteRoleplay.Windows
         {
             ExistingProfile = DataReceiver.ExistingProfileData;
             ExistingBio = DataReceiver.ExistingBioData;
+            existingAvatarBytes = DataReceiver.currentAvatar;
+
+
             if (lawfulGoodWidth < lawfulGoodWidthVal) { lawfulGoodWidth += 0.1f; }
             if (lawfulGoodWidth > lawfulGoodWidthVal) { lawfulGoodWidth -= 0.1f; }
             if (neutralGoodWidth < neutralGoodWidthVal) { neutralGoodWidth += 0.1f; }
@@ -852,7 +878,7 @@ namespace InfiniteRoleplay.Windows
         }
         public int AvailablePercentageLeft(int lawful_good, int neutral_good, int chaotic_good, int lawful_neutral, int true_neutral, int chaotic_neutral, int lawful_evil, int neutral_evil, int chaotic_evil)
         {
-            int PercentageUsed = lawful_good + neutral_good + chaotic_good + lawful_neutral + chaotic_neutral + lawful_evil + neutral_evil + chaotic_evil;
+            int PercentageUsed = lawful_good + neutral_good + chaotic_good + lawful_neutral + true_neutral + chaotic_neutral + lawful_evil + neutral_evil + chaotic_evil;
             int percentageLeft = availablePercentage - PercentageUsed;
             return percentageLeft;
         }
@@ -861,50 +887,146 @@ namespace InfiniteRoleplay.Windows
             
             if (alignmentName == "lawfulgood")
             {
-                if(add){ if(availablePercentage > 0 && lawfulGoodVal < 10){ availablePercentage -= 1; lawfulGoodWidthVal += 1; lawfulGoodVal += 1;}}
-                else{ if(lawfulGoodWidthVal > 0) { availablePercentage += 1; lawfulGoodWidthVal -= 1; lawfulGoodVal -= 1;}}
+                if(ExistingBio == true)
+                {
+                    if (add) { if (availablePercentage > 0 && lawfulGoodEditVal < 10) { availablePercentage -= 1; lawfulGoodWidthVal += 1; lawfulGoodEditVal += 1;  } }
+                    else { if (lawfulGoodWidthVal > 0) { availablePercentage += 1; lawfulGoodWidthVal -= 1; lawfulGoodEditVal -= 1; } }
+                }
+                else
+                {
+                    if (add) { if (availablePercentage > 0 && lawfulGoodVal < 10) { availablePercentage -= 1; lawfulGoodWidthVal += 1; lawfulGoodVal += 1; } }
+                    else { if (lawfulGoodWidthVal > 0) { availablePercentage += 1; lawfulGoodWidthVal -= 1; lawfulGoodVal -= 1; } }
+                }
+           
             }
             if (alignmentName == "neutralgood")
             {
-                if (add) { if (availablePercentage > 0 && neutralGoodVal < 10) { availablePercentage -= 1; neutralGoodWidthVal += 1; neutralGoodVal += 1; } }
-                else { if (neutralGoodWidthVal > 0) { availablePercentage += 1; neutralGoodWidthVal -= 1; neutralGoodVal -= 1; } }
+                if(ExistingBio == true)
+                {
+                    if (add) { if (availablePercentage > 0 && neutralGoodEditVal < 10) { availablePercentage -= 1; neutralGoodWidthVal += 1; neutralGoodEditVal += 1; } }
+                    else { if (neutralGoodWidthVal > 0) { availablePercentage += 1; neutralGoodWidthVal -= 1; neutralGoodEditVal -= 1; } }
+                }
+                else
+                {
+                    if (add) { if (availablePercentage > 0 && neutralGoodVal < 10) { availablePercentage -= 1; neutralGoodWidthVal += 1; neutralGoodVal += 1; } }
+                    else { if (neutralGoodWidthVal > 0) { availablePercentage += 1; neutralGoodWidthVal -= 1; neutralGoodVal -= 1; } }
+                }
             }
             if (alignmentName == "chaoticgood")
             {
-                if (add) { if (availablePercentage > 0 && chaoticGoodVal < 10) { availablePercentage -= 1; chaoticGoodWidthVal += 1; chaoticGoodVal += 1; } }
-                else { if (chaoticGoodWidthVal > 0) { availablePercentage += 1; chaoticGoodWidthVal -= 1; chaoticGoodVal -= 1; } }
+                if(ExistingBio == true)
+                {
+                    if (add) { if (availablePercentage > 0 && chaoticGoodEditVal < 10) { availablePercentage -= 1; chaoticGoodWidthVal += 1; chaoticGoodEditVal += 1; } }
+                    else { if (chaoticGoodWidthVal > 0) { availablePercentage += 1; chaoticGoodWidthVal -= 1; chaoticGoodEditVal -= 1; } }
+                }
+                else
+                {
+                    if (add) { if (availablePercentage > 0 && chaoticGoodVal < 10) { availablePercentage -= 1; chaoticGoodWidthVal += 1; chaoticGoodVal += 1; } }
+                    else { if (chaoticGoodWidthVal > 0) { availablePercentage += 1; chaoticGoodWidthVal -= 1; chaoticGoodVal -= 1; } }
+                }
+         
             }
             if (alignmentName == "lawfulneutral")
             {
-                if (add) { if (availablePercentage > 0 && lawfulNeutralVal < 10) { availablePercentage -= 1; lawfulNeutralWidthVal += 1; lawfulNeutralVal += 1; } }
-                else { if (lawfulNeutralWidthVal > 0) { availablePercentage += 1; lawfulNeutralWidthVal -= 1; lawfulNeutralVal -= 1; } }
+                if (ExistingBio == true)
+                {
+                    if (add) { if (availablePercentage > 0 && lawfulNeutralEditVal < 10) { availablePercentage -= 1; lawfulNeutralWidthVal += 1; lawfulNeutralEditVal += 1; } }
+                    else { if (lawfulNeutralWidthVal > 0) { availablePercentage += 1; lawfulNeutralWidthVal -= 1; lawfulNeutralEditVal -= 1; } }
+                }
+                else
+                {
+                    if (add) { if (availablePercentage > 0 && lawfulNeutralVal < 10) { availablePercentage -= 1; lawfulNeutralWidthVal += 1; lawfulNeutralVal += 1; } }
+                    else { if (lawfulNeutralWidthVal > 0) { availablePercentage += 1; lawfulNeutralWidthVal -= 1; lawfulNeutralVal -= 1; } }
+                }
+               
             }
             if (alignmentName == "trueneutral")
             {
-                if (add) { if (availablePercentage > 0 && trueNeutralVal < 10) { availablePercentage -= 1; trueNeutralWidthVal += 1; trueNeutralVal += 1; } }
-                else { if (trueNeutralWidthVal > 0) { availablePercentage += 1; trueNeutralWidthVal -= 1; trueNeutralVal -= 1; } }
+                if (ExistingBio == true)
+                {
+                    if (add) { if (availablePercentage > 0 && trueNeutralVal < 10) { availablePercentage -= 1; trueNeutralWidthVal += 1; trueNeutralEditVal += 1; } }
+                    else { if (trueNeutralWidthVal > 0) { availablePercentage += 1; trueNeutralWidthVal -= 1; trueNeutralEditVal -= 1; } }
+                }
+                else
+                {
+                    if (add) { if (availablePercentage > 0 && trueNeutralVal < 10) { availablePercentage -= 1; trueNeutralWidthVal += 1; trueNeutralVal += 1; } }
+                    else { if (trueNeutralWidthVal > 0) { availablePercentage += 1; trueNeutralWidthVal -= 1; trueNeutralVal -= 1; } }
+                }
+               
             }
             if (alignmentName == "chaoticneutral")
             {
-                if (add) { if (availablePercentage > 0 && chaoticNeutralVal < 10) { availablePercentage -= 1; chaoticNeutralWidthVal += 1; chaoticNeutralVal += 1; } }
-                else { if (chaoticNeutralWidthVal > 0) { availablePercentage += 1; chaoticNeutralWidthVal -= 1; chaoticNeutralVal -= 1; } }
+                if (ExistingBio == true)
+                {
+                    if (add) { if (availablePercentage > 0 && chaoticNeutralVal < 10) { availablePercentage -= 1; chaoticNeutralWidthVal += 1; chaoticNeutralEditVal += 1; } }
+                    else { if (chaoticNeutralWidthVal > 0) { availablePercentage += 1; chaoticNeutralWidthVal -= 1; chaoticNeutralEditVal -= 1; } }
+                }
+                else
+                {
+                    if (add) { if (availablePercentage > 0 && chaoticNeutralVal < 10) { availablePercentage -= 1; chaoticNeutralWidthVal += 1; chaoticNeutralVal += 1; } }
+                    else { if (chaoticNeutralWidthVal > 0) { availablePercentage += 1; chaoticNeutralWidthVal -= 1; chaoticNeutralVal -= 1; } }
+                }
+              
             }
             if (alignmentName == "lawfulevil")
             {
-                if (add) { if (availablePercentage > 0 && lawfulEvilVal < 10) { availablePercentage -= 1; lawfulEvilWidthVal += 1; lawfulEvilVal += 1; } }
-                else { if (lawfulEvilWidthVal > 0) { availablePercentage += 1; lawfulEvilWidthVal -= 1; lawfulEvilVal -= 1; } }
+                if (ExistingBio == true)
+                {
+                    if (add) { if (availablePercentage > 0 && lawfulEvilVal < 10) { availablePercentage -= 1; lawfulEvilWidthVal += 1; lawfulEvilEditVal += 1; } }
+                    else { if (lawfulEvilWidthVal > 0) { availablePercentage += 1; lawfulEvilWidthVal -= 1; lawfulEvilEditVal -= 1; } }
+                }
+                else
+                {
+                    if (add) { if (availablePercentage > 0 && lawfulEvilVal < 10) { availablePercentage -= 1; lawfulEvilWidthVal += 1; lawfulEvilVal += 1; } }
+                    else { if (lawfulEvilWidthVal > 0) { availablePercentage += 1; lawfulEvilWidthVal -= 1; lawfulEvilVal -= 1; } }
+                }
+               
             }
             if (alignmentName == "neutralevil")
             {
-                if (add) { if (availablePercentage > 0 && neutralEvilVal < 10) { availablePercentage -= 1; neutralEvilWidthVal += 1; neutralEvilVal += 1; } }
-                else { if (neutralEvilWidthVal > 0) { availablePercentage += 1; neutralEvilWidthVal -= 1; neutralEvilVal -= 1; } }
+                if (ExistingBio == true)
+                {
+                    if (add) { if (availablePercentage > 0 && neutralEvilVal < 10) { availablePercentage -= 1; neutralEvilWidthVal += 1; neutralEvilEditVal += 1; } }
+                    else { if (neutralEvilWidthVal > 0) { availablePercentage += 1; neutralEvilWidthVal -= 1; neutralEvilEditVal -= 1; } }
+                }
+                else
+                {
+                    if (add) { if (availablePercentage > 0 && neutralEvilVal < 10) { availablePercentage -= 1; neutralEvilWidthVal += 1; neutralEvilVal += 1; } }
+                    else { if (neutralEvilWidthVal > 0) { availablePercentage += 1; neutralEvilWidthVal -= 1; neutralEvilVal -= 1; } }
+                }
+                
             }
             if (alignmentName == "chaoticevil")
             {
-                if (add) { if (availablePercentage > 0 && chaoticEvilVal < 10) { availablePercentage -= 1; chaoticEvilWidthVal += 1; chaoticEvilVal += 1; } }
-                else { if (chaoticEvilWidthVal > 0) { availablePercentage += 1; chaoticEvilWidthVal -= 1; chaoticEvilVal -= 1; } }
+                if (ExistingBio == true)
+                {
+                    if (add) { if (availablePercentage > 0 && chaoticEvilVal < 10) { availablePercentage -= 1; chaoticEvilWidthVal += 1; chaoticEvilEditVal += 1; } }
+                    else { if (chaoticEvilWidthVal > 0) { availablePercentage += 1; chaoticEvilWidthVal -= 1; chaoticEvilEditVal -= 1; } }
+                }
+                else
+                {
+                    if (add) { if (availablePercentage > 0 && chaoticEvilVal < 10) { availablePercentage -= 1; chaoticEvilWidthVal += 1; chaoticEvilVal += 1; } }
+                    else { if (chaoticEvilWidthVal > 0) { availablePercentage += 1; chaoticEvilWidthVal -= 1; chaoticEvilVal -= 1; } }
+                }
+              
             }
 
+        }
+        public void EditAvatar()
+        {
+            _fileDialogManager.OpenFileDialog("Select Avatar", "Image{.png,.jpg}", (s, f) =>
+            {
+                if (!s)
+                    return;
+                string AvatarPath = f[0].ToString();
+                var avatarImage = Path.GetFullPath(AvatarPath);
+
+                this.avatarBytes = File.ReadAllBytes(AvatarPath);
+                DataReceiver.currentAvatar = this.avatarBytes;
+                this.currentAvatarImg = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarImage);
+
+
+            }, 0, null, this.configuration.AlwaysOpenDefaultImport);
         }
         public void AddAvatar()
         {
@@ -916,7 +1038,7 @@ namespace InfiniteRoleplay.Windows
                     var avatarImage = Path.GetFullPath(AvatarPath);
 
                     this.avatarImg = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarImage);
-
+                    
                     this.avatarBytes = File.ReadAllBytes(AvatarPath);
 
             }, 0, null, this.configuration.AlwaysOpenDefaultImport);

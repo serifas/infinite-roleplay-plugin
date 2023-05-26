@@ -28,6 +28,7 @@ namespace UpdateTest
         CCreateProfileBio = 10,
         CBanAccount = 11,
         CStrikeAccount = 12,
+        CEditProfileBio = 13,
     }
     public class DataSender
     {
@@ -107,6 +108,38 @@ namespace UpdateTest
             buffer.WriteInteger((int)ClientPackets.CStrikeAccount);
             buffer.WriteString(senderName);
             buffer.WriteString(receiverName);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+
+        public static void EditProfileBio(string playerName, string playerServer, byte[] avatarBytes, string name, string race, string gender, int age,
+                                            string height, string weight, string atFirstGlance,
+                                            int lawful_good, int neutral_good, int chaotic_good,
+                                            int lawful_neutral, int true_neutral, int chaotic_neutral,
+                                            int lawful_evil, int neutral_evil, int chaotic_evil)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CEditProfileBio);
+            buffer.WriteString(playerName);
+            buffer.WriteString(playerServer);
+            buffer.WriteInteger(avatarBytes.Length);
+            buffer.WriteBytes(avatarBytes);
+            buffer.WriteString(name);
+            buffer.WriteString(race);
+            buffer.WriteString(gender);
+            buffer.WriteInteger(age);
+            buffer.WriteString(height);
+            buffer.WriteString(weight);
+            buffer.WriteString(atFirstGlance);
+            buffer.WriteInteger(lawful_good);
+            buffer.WriteInteger(neutral_good);
+            buffer.WriteInteger(chaotic_good);
+            buffer.WriteInteger(lawful_neutral);
+            buffer.WriteInteger(true_neutral);
+            buffer.WriteInteger(chaotic_neutral);
+            buffer.WriteInteger(lawful_evil);
+            buffer.WriteInteger(neutral_evil);
+            buffer.WriteInteger(chaotic_evil);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }

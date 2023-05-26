@@ -15,6 +15,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using UpdateTest;
+using Windows.Devices.HumanInterfaceDevice;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace UpdateTest
@@ -31,11 +32,18 @@ namespace UpdateTest
         SSendProfile = 20,
         SDoneSending = 21,
         SNoProfileBio = 22,
+        SNoProfile = 23,
     }
     class DataReceiver
     {
         public static string accountStatus = "status...";
         public static bool ExistingProfileData = false;
+        public static byte[] currentAvatar;
+        public static int lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, 
+                          lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, 
+                          lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal;
+        public static string currentName, currentRace, currentGender,currentAge, currentHeight,currentWeight,currentAfg;
+
         public static bool ExistingBioData = false;
         public static Vector4 accounStatusColor = new Vector4(255, 255, 255, 255);
         public static Plugin plugin;
@@ -149,16 +157,26 @@ namespace UpdateTest
             ExistingProfileData = true;
             
             plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
-          
+
         }
         public static void NoProfile(byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
-            buffer.Dispose();          
+            buffer.Dispose();
             loggedIn = true;
             ExistingProfileData = false;
+            plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
+        }
+        public static void NoProfileBio(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            buffer.Dispose();
+            loggedIn = true;
+            ExistingBioData = false;
             plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
         }
         public static void ReceiveProfile(byte[] data)
@@ -243,8 +261,23 @@ namespace UpdateTest
             int lawful_evil = buffer.ReadInt();
             int neutral_evil = buffer.ReadInt();
             int chaotic_evil = buffer.ReadInt();
+            ProfileWindow.characterEditName = name; ProfileWindow.characterEditRace = race; ProfileWindow.characterEditGender = gender;
+            ProfileWindow.characterEditAge = age.ToString(); ProfileWindow.characterEditHeight = height; ProfileWindow.characterEditWeight = weight.ToString(); 
+            ProfileWindow.characterEditAfg = atFirstGlance;
+
+            ProfileWindow.lawfulGoodEditVal = lawful_good;
+            ProfileWindow.neutralGoodEditVal = neutral_good;
+            ProfileWindow.chaoticGoodEditVal = chaotic_good;
+            ProfileWindow.lawfulNeutralEditVal = lawful_neutral;
+            ProfileWindow.trueNeutralEditVal = true_neutral;
+            ProfileWindow.chaoticNeutralEditVal = chaotic_neutral;
+            ProfileWindow.lawfulEvilEditVal =  lawful_evil;
+            ProfileWindow.neutralEvilEditVal = neutral_evil;
+            ProfileWindow.chaoticEvilEditVal = chaotic_evil;
+
+
+            currentAvatar = avatarBytes;
             ExistingBioData = true;
-            plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
             buffer.Dispose();
 
         }
