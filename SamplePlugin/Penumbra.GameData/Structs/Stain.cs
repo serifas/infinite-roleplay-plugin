@@ -29,9 +29,9 @@ public readonly struct Stain
     private static uint SeColorToRgba(uint color)
         => ((color & 0xFF) << 16) | ((color >> 16) & 0xFF) | (color & 0xFF00) | 0xFF000000;
 
-    public Stain(Lumina.Excel.GeneratedSheets.Stain stain)
+    /*public Stain(Lumina.Excel.GeneratedSheets.Stain stain)
         : this(stain.Name.ToDalamudString().ToString(), SeColorToRgba(stain.Color), (byte)stain.RowId, stain.Unknown4)
-    { }
+    { }*/
 
     internal Stain(string name, uint dye, byte index, bool gloss)
     {

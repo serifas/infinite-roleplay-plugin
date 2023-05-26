@@ -60,6 +60,7 @@ namespace InfiniteRoleplay.Windows
         private FileDialogService _fileDialogService;
 #pragma warning disable CS0169 // The field 'ProfileWindow.profilesImage' is never used
         private TextureWrap profilesImage;
+        
 #pragma warning restore CS0169 // The field 'ProfileWindow.profilesImage' is never used
         public Configuration configuration;
         public static bool WindowOpen;
@@ -147,6 +148,7 @@ namespace InfiniteRoleplay.Windows
             this.configuration = plugin.Configuration;
             this._fileDialogManager = new FileDialogManager();
             this.avatarImg = avatarHolder;
+            
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "profile_avis/avatar_holder.png"));
             this.avatarBytes = ImageToByteArray(image1);
             //alignment icons
@@ -233,7 +235,7 @@ namespace InfiniteRoleplay.Windows
                 if(addBio == true)
                 {
                     ImGui.Image(this.avatarImg.ImGuiHandle, new Vector2(100, 100));
-
+                    
                     if (ImGui.Button("Add Avatar"))
                     {
                         addAvatar = true;
