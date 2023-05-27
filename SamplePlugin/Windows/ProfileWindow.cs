@@ -70,7 +70,10 @@ namespace InfiniteRoleplay.Windows
         public static bool editBio = false;
         public static bool addHooks = false;
         public static bool editHooks = false;
-        public static bool addStory = false;
+        public static bool addStory = false; 
+        private string[] HookContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
+   
+
         public static bool editStory = false;
         public static bool addOOC = false;
         public static bool editOOC = false;
@@ -82,6 +85,7 @@ namespace InfiniteRoleplay.Windows
         public static bool editProfile = false;
         public bool ExistingBio;
         public bool ExistingHooks;
+        public int hookCount;
         public bool ExistingStory;
         public bool ExistingOOC;
         public bool ExistingGallery;
@@ -238,15 +242,15 @@ namespace InfiniteRoleplay.Windows
             if (editProfile == true)
             {
                 ImGui.Spacing();
-                if(ExistingBio == true) { if (ImGui.Button("Edit Bio", new Vector2(100, 20))) { editBio = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your bio."); } } else { if (ImGui.Button("Add Bio", new Vector2(100, 20))) { addBio = true; } }               
+                if(ExistingBio == true) { if (ImGui.Button("Edit Bio", new Vector2(100, 20))) { ClearUI(); editBio = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your bio."); } } else { if (ImGui.Button("Add Bio", new Vector2(100, 20))) { ClearUI(); addBio = true; } }               
                 ImGui.SameLine();
-                if (ExistingHooks == true) { if (ImGui.Button("Edit Hooks", new Vector2(100, 20))) { editHooks = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Hooks."); } } else { if (ImGui.Button("Add Hooks", new Vector2(100, 20))) { addHooks = true; } }
+                if (ExistingHooks == true) { if (ImGui.Button("Edit Hooks", new Vector2(100, 20))) { ClearUI(); editHooks = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Hooks."); } } else { if (ImGui.Button("Add Hooks", new Vector2(100, 20))) { ClearUI(); addHooks = true; } }
                 ImGui.SameLine();
-                if (ExistingStory == true) { if (ImGui.Button("Edit Story", new Vector2(100, 20))) { editStory = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Story."); } } else { if (ImGui.Button("Add Story", new Vector2(100, 20))) { addStory = true; } }
+                if (ExistingStory == true) { if (ImGui.Button("Edit Story", new Vector2(100, 20))) { ClearUI(); editStory = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Story."); } } else { if (ImGui.Button("Add Story", new Vector2(100, 20))) { ClearUI(); addStory = true; } }
                 ImGui.SameLine();
-                if (ExistingOOC == true) { if (ImGui.Button("Edit OOC Info", new Vector2(100, 20))) { editOOC = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your OOC Info."); } } else { if (ImGui.Button("Add OOC Info", new Vector2(100, 20))) { addOOC = true; } }
+                if (ExistingOOC == true) { if (ImGui.Button("Edit OOC Info", new Vector2(100, 20))) { ClearUI(); editOOC = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your OOC Info."); } } else { if (ImGui.Button("Add OOC Info", new Vector2(100, 20))) { ClearUI(); addOOC = true; } }
                 ImGui.SameLine();
-                if (ExistingGallery == true) { if (ImGui.Button("Edit Gallery", new Vector2(100, 20))) { editGallery = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Gallery."); } } else { if (ImGui.Button("Add Gallery", new Vector2(100, 20))) { addGallery = true; } }
+                if (ExistingGallery == true) { if (ImGui.Button("Edit Gallery", new Vector2(100, 20))) { ClearUI(); editGallery = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Gallery."); } } else { if (ImGui.Button("Add Gallery", new Vector2(100, 20))) { ClearUI(); addGallery = true; } }
                
             }
             bool warning = false;
@@ -542,7 +546,7 @@ namespace InfiniteRoleplay.Windows
 
                     
                 }
-                if (editBio == true)
+                if(editBio == true)
                 {
                     this.currentAvatarImg = pg.UiBuilder.LoadImage(existingAvatarBytes);
                     ImGui.Image(this.currentAvatarImg.ImGuiHandle, new Vector2(100, 100));
@@ -829,7 +833,28 @@ namespace InfiniteRoleplay.Windows
 
 
                 }
+                if(addHooks == true)
+                {
+                    if (ImGui.Button("Add Hook"))
+                    {
+                        hookCount++;
+                    }
 
+                    for (int i = 0; i < hookCount; i++)
+                    {
+                        ImGui.InputTextMultiline("##content" + i, ref HookContent[i], 3000, new Vector2(450, 100));
+                    }
+                    if(ImGui.Button("Submit Hooks"))
+                    {
+                        for(int i= 0; i < hookCount; i++)
+                        {
+                            int index = i + 1;
+                            DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, index, HookContent[i]);
+                        }
+                        
+                    }
+                }
+                
             }
            
             if (addAvatar == true)
@@ -843,6 +868,19 @@ namespace InfiniteRoleplay.Windows
                 EditAvatar();
             }
 
+        }
+        public void ClearUI()
+        {
+            addBio = false;
+            editBio = false;
+            addHooks = false; 
+            editHooks = false;
+            addStory = false;
+            editStory = false;
+            addOOC = false;
+            editOOC = false;
+            addGallery = false;
+            editGallery = false;
         }
         public void Dispose()
         {

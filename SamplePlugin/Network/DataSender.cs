@@ -29,6 +29,7 @@ namespace UpdateTest
         CBanAccount = 11,
         CStrikeAccount = 12,
         CEditProfileBio = 13,
+        CSendHooks = 14,
     }
     public class DataSender
     {
@@ -194,7 +195,18 @@ namespace UpdateTest
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
+        public static void SendHooks(string charactername, string characterworld, int hookID, string hook)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CSendHooks);
+            buffer.WriteString(charactername);
+            buffer.WriteString(characterworld);
+            buffer.WriteInteger(hookID);
+            buffer.WriteString(hook);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
 
+        }
         public static void CreateProfile(string username, string charactername, byte[] avatarBytes, int avatarBytesLength, string race, string age, string height, string weight, string afg, string hooks, string story, string url)
         {
 
