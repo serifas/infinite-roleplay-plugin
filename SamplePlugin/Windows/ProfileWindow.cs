@@ -62,7 +62,7 @@ namespace InfiniteRoleplay.Windows
         private FileDialogService _fileDialogService;
 #pragma warning disable CS0169 // The field 'ProfileWindow.profilesImage' is never used
         private TextureWrap profilesImage;
-        
+
 #pragma warning restore CS0169 // The field 'ProfileWindow.profilesImage' is never used
         public Configuration configuration;
         public static bool WindowOpen;
@@ -95,8 +95,10 @@ namespace InfiniteRoleplay.Windows
                           lawfulEvilEditVal,
                           neutralEvilEditVal,
                           chaoticEvilEditVal;
-        public byte[] avatarBytes;
-        public byte[] existingAvatarBytes;
+        private int[] alignmentVals, alignmentEditVals = new int[] { };
+        private float[] alignmentWidthVals = new float[] { };
+        private string[] alignmentNames = new string[]{};
+        public byte[] avatarBytes, existingAvatarBytes;
         public int availablePercentage = 50;
         //Font Vars
         private GameFontHandle _Font;
@@ -186,7 +188,10 @@ namespace InfiniteRoleplay.Windows
             this.lawfulNeutralMinus = lawfulneutralMinus; this.trueNeutralMinus = trueneutralMinus; this.chaoticNeutralMinus = chaoticneutralMinus;
             this.lawfulEvilMinus = lawfulevilMinus; this.neutralEvilMinus = neutralevilMinus; this.chaoticEvilMinus = chaoticevilMinus;
             this.playerCharacter = playerChar;
-
+            this.alignmentVals = new int[9] { lawfulGoodVal, neutralGoodVal, chaoticGoodVal, lawfulNeutralVal, trueNeutralVal, chaoticNeutralVal, lawfulEvilVal, neutralEvilVal, chaoticEvilVal };
+            this.alignmentEditVals = new int[9] { lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal };
+            this.alignmentWidthVals = new float[9] { lawfulGoodWidthVal, neutralGoodWidthVal, chaoticGoodWidthVal, lawfulNeutralWidthVal, trueNeutralWidthVal, chaoticNeutralWidthVal, lawfulEvilWidthVal, neutralEvilWidthVal, chaoticEvilWidthVal };
+            this.alignmentNames = new string[9] { "lawfulgood", "neutralgood", "chaoticgood", "lawfulneutral", "trueneutral", "chaoticneutral", "lawfulevil", "neutralevil", "chaoticevil" };
         }
         public byte[] ImageToByteArray(System.Drawing.Image imageIn)
         {
@@ -307,10 +312,9 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.lawfulGoodMinus.ImGuiHandle, new Vector2(20, 20))){ ModAlignment("lawfulgood", false);}
                     ImGui.SameLine();
-                    ImGui.Image(this.lawfulGoodBar.ImGuiHandle, new Vector2(lawfulGoodWidth * 30, 20));
+                    ImGui.Image(this.lawfulGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[0] * 30, 20));
                     ImGui.SameLine();
-                    int formattedLawfulGoodVal = lawfulGoodVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), lawfulGoodVal.ToString() );
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[0].ToString() );
                     #endregion
 
                     #region NEUTRAL GOOD
@@ -331,10 +335,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.neutralGoodMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("neutralgood", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.neutralGoodBar.ImGuiHandle, new Vector2(neutralGoodWidth * 30, 20));
+                    ImGui.Image(this.neutralGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[1] * 30, 20));
                     ImGui.SameLine();
                     int formattedNeutralGoodVal = neutralGoodVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), neutralGoodVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[1].ToString());
                     #endregion
 
                     #region CHAOTIC GOOD
@@ -356,10 +360,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.chaoticGoodMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("chaoticgood", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.chaoticGoodBar.ImGuiHandle, new Vector2(chaoticGoodWidth * 30, 20));
+                    ImGui.Image(this.chaoticGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[2] * 30, 20));
                     ImGui.SameLine();
                     int formattedChaoticGoodVal = chaoticGoodVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), chaoticGoodVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[2].ToString());
                     #endregion
 
                     #region LAWFUL NEUTRAL
@@ -381,10 +385,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.lawfulNeutralMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("lawfulneutral", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.lawfulNeutralBar.ImGuiHandle, new Vector2(lawfulNeutralWidth * 30, 20));
+                    ImGui.Image(this.lawfulNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[3] * 30, 20));
                     ImGui.SameLine();
                     int formattedLawfulNeutralVal = lawfulNeutralVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), lawfulNeutralVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[3].ToString());
                     #endregion
 
                     #region TRUE NEUTRAL
@@ -408,10 +412,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.trueNeutralMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("trueneutral", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.trueNeutralBar.ImGuiHandle, new Vector2(trueNeutralWidth * 30, 20));
+                    ImGui.Image(this.trueNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[4] * 30, 20));
                     ImGui.SameLine();
                     int formattedTrueNeutralVal = trueNeutralVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), trueNeutralVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[4].ToString());
                     #endregion
 
                     #region CHAOTIC NEUTRAL
@@ -432,10 +436,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.chaoticNeutralMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("chaoticneutral", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.chaoticNeutralBar.ImGuiHandle, new Vector2(chaoticNeutralWidth * 30, 20));
+                    ImGui.Image(this.chaoticNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[5] * 30, 20));
                     ImGui.SameLine();
                     int formattedChaoticNeutralVal = chaoticNeutralVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), chaoticNeutralVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[5].ToString());
                     #endregion
 
                     #region LAWFUL EVIL
@@ -458,10 +462,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.lawfulEvilMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("lawfulevil", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.lawfulEvilBar.ImGuiHandle, new Vector2(lawfulEvilWidth * 30, 20));
+                    ImGui.Image(this.lawfulEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[6] * 30, 20));
                     ImGui.SameLine();
                     int formattedLawfulEvilVal = lawfulEvilVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), lawfulEvilVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[6].ToString());
                     #endregion
 
                     #region NEUTRAL EVIL
@@ -483,10 +487,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.neutralEvilMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("neutralevil", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.neutralEvilBar.ImGuiHandle, new Vector2(neutralEvilWidth * 30, 20));
+                    ImGui.Image(this.neutralEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[7] * 30, 20));
                     ImGui.SameLine();
                     int formattedNeutralEvilVal = neutralEvilVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), neutralEvilVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[7].ToString());
                     #endregion
 
                     #region CHAOTIC EVIL
@@ -506,10 +510,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.chaoticEvilMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("chaoticevil", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.chaoticEvilBar.ImGuiHandle, new Vector2(chaoticEvilWidth * 30, 20));
+                    ImGui.Image(this.chaoticEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[8] * 30, 20));
                     ImGui.SameLine();
                     int formattedChaoticEvilVal = chaoticEvilVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), chaoticEvilVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[8].ToString());
                     #endregion
                    
                     #endregion
@@ -529,7 +533,7 @@ namespace InfiniteRoleplay.Windows
                         {
                             DataSender.CreateProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), avatarBytes, characterAddName.Replace("'", "''"),
                                                    characterAddRace.Replace("'", "''"), characterAddGender.Replace("'", "''"), int.Parse(characterAddAge), characterAddHeight.Replace("'", "''"), characterAddWeight.Replace("'", "''"), characterAddAfg.Replace("'", "''"),
-                                                   lawfulGoodVal, neutralGoodVal, chaoticGoodVal, lawfulNeutralVal, trueNeutralVal, chaoticNeutralVal, lawfulEvilVal, neutralEvilVal, chaoticEvilVal);
+                                                   alignmentVals[0], alignmentVals[1], alignmentVals[2], alignmentVals[3], alignmentVals[4], alignmentVals[5], alignmentVals[6], alignmentVals[7], alignmentVals[8]);
 
                         }
 
@@ -598,9 +602,9 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.lawfulGoodMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("lawfulgood", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.lawfulGoodBar.ImGuiHandle, new Vector2(lawfulGoodWidth * 30, 20));
+                    ImGui.Image(this.lawfulGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[0] * 30, 20));
                     ImGui.SameLine();
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), lawfulGoodEditVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[0].ToString());
                     #endregion
 
                     #region NEUTRAL GOOD
@@ -621,9 +625,9 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.neutralGoodMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("neutralgood", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.neutralGoodBar.ImGuiHandle, new Vector2(neutralGoodWidth * 30, 20));
+                    ImGui.Image(this.neutralGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[1] * 30, 20));
                     ImGui.SameLine();
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), neutralGoodEditVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[1].ToString());
                     #endregion
 
                     #region CHAOTIC GOOD
@@ -645,10 +649,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.chaoticGoodMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("chaoticgood", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.chaoticGoodBar.ImGuiHandle, new Vector2(chaoticGoodWidth * 30, 20));
+                    ImGui.Image(this.chaoticGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[2] * 30, 20));
                     ImGui.SameLine();
                     int formattedChaoticGoodVal = chaoticGoodVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), chaoticGoodEditVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[2].ToString());
                     #endregion
 
                     #region LAWFUL NEUTRAL
@@ -670,10 +674,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.lawfulNeutralMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("lawfulneutral", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.lawfulNeutralBar.ImGuiHandle, new Vector2(lawfulNeutralWidth * 30, 20));
+                    ImGui.Image(this.lawfulNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[3]* 30, 20));
                     ImGui.SameLine();
                     int formattedLawfulNeutralVal = lawfulNeutralVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), lawfulGoodEditVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[3].ToString());
                     #endregion
 
                     #region TRUE NEUTRAL
@@ -697,10 +701,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.trueNeutralMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("trueneutral", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.trueNeutralBar.ImGuiHandle, new Vector2(trueNeutralWidth * 30, 20));
+                    ImGui.Image(this.trueNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[4] * 30, 20));
                     ImGui.SameLine();
                     int formattedTrueNeutralVal = trueNeutralVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), trueNeutralEditVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[4].ToString());
                     #endregion
 
                     #region CHAOTIC NEUTRAL
@@ -721,10 +725,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.chaoticNeutralMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("chaoticneutral", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.chaoticNeutralBar.ImGuiHandle, new Vector2(chaoticNeutralWidth * 30, 20));
+                    ImGui.Image(this.chaoticNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[5] * 30, 20));
                     ImGui.SameLine();
                     int formattedChaoticNeutralVal = chaoticNeutralVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), chaoticNeutralEditVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[5].ToString());
                     #endregion
 
                     #region LAWFUL EVIL
@@ -747,10 +751,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.lawfulEvilMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("lawfulevil", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.lawfulEvilBar.ImGuiHandle, new Vector2(lawfulEvilWidth * 30, 20));
+                    ImGui.Image(this.lawfulEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[6] * 30, 20));
                     ImGui.SameLine();
                     int formattedLawfulEvilVal = lawfulEvilVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), lawfulEvilEditVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[6].ToString());
                     #endregion
 
                     #region NEUTRAL EVIL
@@ -772,10 +776,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.neutralEvilMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("neutralevil", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.neutralEvilBar.ImGuiHandle, new Vector2(neutralEvilWidth * 30, 20));
+                    ImGui.Image(this.neutralEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[7] * 30, 20));
                     ImGui.SameLine();
                     int formattedNeutralEvilVal = neutralEvilVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), neutralEvilEditVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[7].ToString());
                     #endregion
 
                     #region CHAOTIC EVIL
@@ -795,10 +799,10 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.chaoticEvilMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("chaoticevil", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.chaoticEvilBar.ImGuiHandle, new Vector2(chaoticEvilWidth * 30, 20));
+                    ImGui.Image(this.chaoticEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[8] * 30, 20));
                     ImGui.SameLine();
                     int formattedChaoticEvilVal = chaoticEvilVal / 10;
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), chaoticEvilEditVal.ToString());
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[8].ToString());
                     #endregion
 
                     #endregion
@@ -809,16 +813,16 @@ namespace InfiniteRoleplay.Windows
                             chatGui.PrintError("Your account " + "'" + configuration.username + "' received a strike, if you continue to post offensive conent you may be banned.");
                             DataSender.StrikeAccount(configuration.username, configuration.username);
                         }
-                        else if (characterAddName == string.Empty || characterAddRace == string.Empty || characterAddGender == string.Empty || characterAddAge == string.Empty ||
-                            characterAddHeight == string.Empty || characterAddWeight == string.Empty || characterAddAfg == string.Empty)
+                        else if (characterEditName == string.Empty || characterEditRace == string.Empty || characterEditGender == string.Empty || characterEditAge == string.Empty ||
+                            characterEditHeight == string.Empty || characterEditWeight == string.Empty || characterEditAfg == string.Empty)
                         {
                             chatGui.PrintError("Please fill out all text fields. If you want a field to be empty please put a space in the text field to submit the application.");
                         }
                         else
                         {
-                            DataSender.EditProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), avatarBytes, characterEditName.Replace("'", "''"),
+                            DataSender.EditProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), existingAvatarBytes, characterEditName.Replace("'", "''"),
                                                    characterEditRace.Replace("'", "''"), characterEditGender.Replace("'", "''"), int.Parse(characterEditAge), characterEditHeight.Replace("'", "''"), characterEditWeight.Replace("'", "''"), characterEditAfg.Replace("'", "''"),
-                                                   lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal);
+                                                   alignmentEditVals[0], alignmentEditVals[1], alignmentEditVals[2], alignmentEditVals[3], alignmentEditVals[4], alignmentEditVals[5], alignmentEditVals[6], alignmentEditVals[7], alignmentEditVals[8]);
 
                         }
 
@@ -855,26 +859,23 @@ namespace InfiniteRoleplay.Windows
             ExistingProfile = DataReceiver.ExistingProfileData;
             ExistingBio = DataReceiver.ExistingBioData;
             existingAvatarBytes = DataReceiver.currentAvatar;
+            lawfulGoodEditVal = DataReceiver.lawfulGoodEditVal;
+            if (editBio == true)
+            {
+                for (int i = 0; i < alignmentWidthVals.Length; i++)
+                {
+                    if (alignmentWidthVals[i] < alignmentEditVals[i]) { alignmentWidthVals[i] += 0.1f; }
+                    if (alignmentWidthVals[i] > alignmentEditVals[i]) { alignmentWidthVals[i] -= 0.1f; }
+                }
+            }
+            if (addBio == true) {
+                for (int i = 0; i < alignmentWidthVals.Length; i++)
+                {
+                    if (alignmentWidthVals[i] < alignmentVals[i]) { alignmentWidthVals[i] += 0.1f; }
+                    if (alignmentWidthVals[i] > alignmentVals[i]) { alignmentWidthVals[i] -= 0.1f; }
+                }
+            }
 
-
-            if (lawfulGoodWidth < lawfulGoodWidthVal) { lawfulGoodWidth += 0.1f; }
-            if (lawfulGoodWidth > lawfulGoodWidthVal) { lawfulGoodWidth -= 0.1f; }
-            if (neutralGoodWidth < neutralGoodWidthVal) { neutralGoodWidth += 0.1f; }
-            if (neutralGoodWidth > neutralGoodWidthVal) { neutralGoodWidth -= 0.1f; }
-            if (chaoticGoodWidth < chaoticGoodWidthVal) { chaoticGoodWidth += 0.1f; }
-            if (chaoticGoodWidth > chaoticGoodWidthVal) { chaoticGoodWidth -= 0.1f; }
-            if (lawfulNeutralWidth < lawfulNeutralWidthVal) { lawfulNeutralWidth += 0.1f; }
-            if (lawfulNeutralWidth > lawfulNeutralWidthVal) { lawfulNeutralWidth -= 0.1f; }
-            if (trueNeutralWidth < trueNeutralWidthVal) { trueNeutralWidth += 0.1f; }
-            if (trueNeutralWidth > trueNeutralWidthVal) { trueNeutralWidth -= 0.1f; }
-            if (chaoticNeutralWidth < chaoticNeutralWidthVal) { chaoticNeutralWidth += 0.1f; }
-            if (chaoticNeutralWidth > chaoticNeutralWidthVal) { chaoticNeutralWidth -= 0.1f; }
-            if (lawfulEvilWidth < lawfulEvilWidthVal) { lawfulEvilWidth += 0.1f; }
-            if (lawfulEvilWidth > lawfulEvilWidthVal) { lawfulEvilWidth -= 0.1f; }
-            if (neutralEvilWidth < neutralEvilWidthVal) { neutralEvilWidth += 0.1f; }
-            if (neutralEvilWidth > neutralEvilWidthVal) { neutralEvilWidth -= 0.1f; }
-            if (chaoticEvilWidth < chaoticEvilWidthVal) { chaoticEvilWidth += 0.1f; }
-            if (chaoticEvilWidth > chaoticEvilWidthVal) { chaoticEvilWidth -= 0.1f; }
         }
         public int AvailablePercentageLeft(int lawful_good, int neutral_good, int chaotic_good, int lawful_neutral, int true_neutral, int chaotic_neutral, int lawful_evil, int neutral_evil, int chaotic_evil)
         {
@@ -884,132 +885,52 @@ namespace InfiniteRoleplay.Windows
         }
         public void ModAlignment(string alignmentName, bool add) 
         {
-            
-            if (alignmentName == "lawfulgood")
+            for(int i =0; i < alignmentNames.Length; i++)
             {
-                if(ExistingBio == true)
+                if (alignmentNames[i] == alignmentName)
                 {
-                    if (add) { if (availablePercentage > 0 && lawfulGoodEditVal < 10) { availablePercentage -= 1; lawfulGoodWidthVal += 1; lawfulGoodEditVal += 1;  } }
-                    else { if (lawfulGoodWidthVal > 0) { availablePercentage += 1; lawfulGoodWidthVal -= 1; lawfulGoodEditVal -= 1; } }
+                    if(ExistingBio == true)
+                    {
+                        if (add)
+                        {
+                            if(availablePercentage > 0 && alignmentEditVals[i] < 10)
+                            {
+                                availablePercentage -= 1;
+                                alignmentEditVals[i] += 1;
+                            }
+                        }
+                        else
+                        {
+                            if (alignmentEditVals[i] > 0)
+                            {
+                                availablePercentage +=1;
+                                alignmentEditVals[i] -= 1;
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        if (add)
+                        {
+                            if (availablePercentage > 0 && alignmentVals[i] < 10)
+                            {
+                                availablePercentage -= 1;
+                                alignmentVals[i] += 1;
+                            }
+                        }
+                        else
+                        {
+                            if (alignmentVals[i] > 0)
+                            {
+                                availablePercentage += 1;
+                                alignmentVals[i] -= 1;
+                            }
+                        }
+                    }
                 }
-                else
-                {
-                    if (add) { if (availablePercentage > 0 && lawfulGoodVal < 10) { availablePercentage -= 1; lawfulGoodWidthVal += 1; lawfulGoodVal += 1; } }
-                    else { if (lawfulGoodWidthVal > 0) { availablePercentage += 1; lawfulGoodWidthVal -= 1; lawfulGoodVal -= 1; } }
-                }
-           
             }
-            if (alignmentName == "neutralgood")
-            {
-                if(ExistingBio == true)
-                {
-                    if (add) { if (availablePercentage > 0 && neutralGoodEditVal < 10) { availablePercentage -= 1; neutralGoodWidthVal += 1; neutralGoodEditVal += 1; } }
-                    else { if (neutralGoodWidthVal > 0) { availablePercentage += 1; neutralGoodWidthVal -= 1; neutralGoodEditVal -= 1; } }
-                }
-                else
-                {
-                    if (add) { if (availablePercentage > 0 && neutralGoodVal < 10) { availablePercentage -= 1; neutralGoodWidthVal += 1; neutralGoodVal += 1; } }
-                    else { if (neutralGoodWidthVal > 0) { availablePercentage += 1; neutralGoodWidthVal -= 1; neutralGoodVal -= 1; } }
-                }
-            }
-            if (alignmentName == "chaoticgood")
-            {
-                if(ExistingBio == true)
-                {
-                    if (add) { if (availablePercentage > 0 && chaoticGoodEditVal < 10) { availablePercentage -= 1; chaoticGoodWidthVal += 1; chaoticGoodEditVal += 1; } }
-                    else { if (chaoticGoodWidthVal > 0) { availablePercentage += 1; chaoticGoodWidthVal -= 1; chaoticGoodEditVal -= 1; } }
-                }
-                else
-                {
-                    if (add) { if (availablePercentage > 0 && chaoticGoodVal < 10) { availablePercentage -= 1; chaoticGoodWidthVal += 1; chaoticGoodVal += 1; } }
-                    else { if (chaoticGoodWidthVal > 0) { availablePercentage += 1; chaoticGoodWidthVal -= 1; chaoticGoodVal -= 1; } }
-                }
-         
-            }
-            if (alignmentName == "lawfulneutral")
-            {
-                if (ExistingBio == true)
-                {
-                    if (add) { if (availablePercentage > 0 && lawfulNeutralEditVal < 10) { availablePercentage -= 1; lawfulNeutralWidthVal += 1; lawfulNeutralEditVal += 1; } }
-                    else { if (lawfulNeutralWidthVal > 0) { availablePercentage += 1; lawfulNeutralWidthVal -= 1; lawfulNeutralEditVal -= 1; } }
-                }
-                else
-                {
-                    if (add) { if (availablePercentage > 0 && lawfulNeutralVal < 10) { availablePercentage -= 1; lawfulNeutralWidthVal += 1; lawfulNeutralVal += 1; } }
-                    else { if (lawfulNeutralWidthVal > 0) { availablePercentage += 1; lawfulNeutralWidthVal -= 1; lawfulNeutralVal -= 1; } }
-                }
-               
-            }
-            if (alignmentName == "trueneutral")
-            {
-                if (ExistingBio == true)
-                {
-                    if (add) { if (availablePercentage > 0 && trueNeutralVal < 10) { availablePercentage -= 1; trueNeutralWidthVal += 1; trueNeutralEditVal += 1; } }
-                    else { if (trueNeutralWidthVal > 0) { availablePercentage += 1; trueNeutralWidthVal -= 1; trueNeutralEditVal -= 1; } }
-                }
-                else
-                {
-                    if (add) { if (availablePercentage > 0 && trueNeutralVal < 10) { availablePercentage -= 1; trueNeutralWidthVal += 1; trueNeutralVal += 1; } }
-                    else { if (trueNeutralWidthVal > 0) { availablePercentage += 1; trueNeutralWidthVal -= 1; trueNeutralVal -= 1; } }
-                }
-               
-            }
-            if (alignmentName == "chaoticneutral")
-            {
-                if (ExistingBio == true)
-                {
-                    if (add) { if (availablePercentage > 0 && chaoticNeutralVal < 10) { availablePercentage -= 1; chaoticNeutralWidthVal += 1; chaoticNeutralEditVal += 1; } }
-                    else { if (chaoticNeutralWidthVal > 0) { availablePercentage += 1; chaoticNeutralWidthVal -= 1; chaoticNeutralEditVal -= 1; } }
-                }
-                else
-                {
-                    if (add) { if (availablePercentage > 0 && chaoticNeutralVal < 10) { availablePercentage -= 1; chaoticNeutralWidthVal += 1; chaoticNeutralVal += 1; } }
-                    else { if (chaoticNeutralWidthVal > 0) { availablePercentage += 1; chaoticNeutralWidthVal -= 1; chaoticNeutralVal -= 1; } }
-                }
-              
-            }
-            if (alignmentName == "lawfulevil")
-            {
-                if (ExistingBio == true)
-                {
-                    if (add) { if (availablePercentage > 0 && lawfulEvilVal < 10) { availablePercentage -= 1; lawfulEvilWidthVal += 1; lawfulEvilEditVal += 1; } }
-                    else { if (lawfulEvilWidthVal > 0) { availablePercentage += 1; lawfulEvilWidthVal -= 1; lawfulEvilEditVal -= 1; } }
-                }
-                else
-                {
-                    if (add) { if (availablePercentage > 0 && lawfulEvilVal < 10) { availablePercentage -= 1; lawfulEvilWidthVal += 1; lawfulEvilVal += 1; } }
-                    else { if (lawfulEvilWidthVal > 0) { availablePercentage += 1; lawfulEvilWidthVal -= 1; lawfulEvilVal -= 1; } }
-                }
-               
-            }
-            if (alignmentName == "neutralevil")
-            {
-                if (ExistingBio == true)
-                {
-                    if (add) { if (availablePercentage > 0 && neutralEvilVal < 10) { availablePercentage -= 1; neutralEvilWidthVal += 1; neutralEvilEditVal += 1; } }
-                    else { if (neutralEvilWidthVal > 0) { availablePercentage += 1; neutralEvilWidthVal -= 1; neutralEvilEditVal -= 1; } }
-                }
-                else
-                {
-                    if (add) { if (availablePercentage > 0 && neutralEvilVal < 10) { availablePercentage -= 1; neutralEvilWidthVal += 1; neutralEvilVal += 1; } }
-                    else { if (neutralEvilWidthVal > 0) { availablePercentage += 1; neutralEvilWidthVal -= 1; neutralEvilVal -= 1; } }
-                }
-                
-            }
-            if (alignmentName == "chaoticevil")
-            {
-                if (ExistingBio == true)
-                {
-                    if (add) { if (availablePercentage > 0 && chaoticEvilVal < 10) { availablePercentage -= 1; chaoticEvilWidthVal += 1; chaoticEvilEditVal += 1; } }
-                    else { if (chaoticEvilWidthVal > 0) { availablePercentage += 1; chaoticEvilWidthVal -= 1; chaoticEvilEditVal -= 1; } }
-                }
-                else
-                {
-                    if (add) { if (availablePercentage > 0 && chaoticEvilVal < 10) { availablePercentage -= 1; chaoticEvilWidthVal += 1; chaoticEvilVal += 1; } }
-                    else { if (chaoticEvilWidthVal > 0) { availablePercentage += 1; chaoticEvilWidthVal -= 1; chaoticEvilVal -= 1; } }
-                }
-              
-            }
+
 
         }
         public void EditAvatar()
@@ -1021,8 +942,8 @@ namespace InfiniteRoleplay.Windows
                 string AvatarPath = f[0].ToString();
                 var avatarImage = Path.GetFullPath(AvatarPath);
 
-                this.avatarBytes = File.ReadAllBytes(AvatarPath);
-                DataReceiver.currentAvatar = this.avatarBytes;
+                this.existingAvatarBytes = File.ReadAllBytes(AvatarPath);
+                DataReceiver.currentAvatar = this.existingAvatarBytes;
                 this.currentAvatarImg = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarImage);
 
 

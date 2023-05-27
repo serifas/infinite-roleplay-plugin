@@ -265,7 +265,7 @@ namespace UpdateTest
             ProfileWindow.characterEditAge = age.ToString(); ProfileWindow.characterEditHeight = height; ProfileWindow.characterEditWeight = weight.ToString(); 
             ProfileWindow.characterEditAfg = atFirstGlance;
 
-            ProfileWindow.lawfulGoodEditVal = lawful_good;
+            lawfulGoodEditVal = lawful_good;
             ProfileWindow.neutralGoodEditVal = neutral_good;
             ProfileWindow.chaoticGoodEditVal = chaotic_good;
             ProfileWindow.lawfulNeutralEditVal = lawful_neutral;
