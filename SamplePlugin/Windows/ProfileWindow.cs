@@ -95,7 +95,7 @@ namespace InfiniteRoleplay.Windows
                           lawfulEvilEditVal,
                           neutralEvilEditVal,
                           chaoticEvilEditVal;
-        private int[] alignmentVals, alignmentEditVals = new int[] { };
+        public static int[] alignmentVals, alignmentEditVals = new int[] { };
         private float[] alignmentWidthVals = new float[] { };
         private string[] alignmentNames = new string[]{};
         public byte[] avatarBytes, existingAvatarBytes;
@@ -188,8 +188,8 @@ namespace InfiniteRoleplay.Windows
             this.lawfulNeutralMinus = lawfulneutralMinus; this.trueNeutralMinus = trueneutralMinus; this.chaoticNeutralMinus = chaoticneutralMinus;
             this.lawfulEvilMinus = lawfulevilMinus; this.neutralEvilMinus = neutralevilMinus; this.chaoticEvilMinus = chaoticevilMinus;
             this.playerCharacter = playerChar;
-            this.alignmentVals = new int[9] { lawfulGoodVal, neutralGoodVal, chaoticGoodVal, lawfulNeutralVal, trueNeutralVal, chaoticNeutralVal, lawfulEvilVal, neutralEvilVal, chaoticEvilVal };
-            this.alignmentEditVals = new int[9] { lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal };
+            alignmentVals = new int[9] { lawfulGoodVal, neutralGoodVal, chaoticGoodVal, lawfulNeutralVal, trueNeutralVal, chaoticNeutralVal, lawfulEvilVal, neutralEvilVal, chaoticEvilVal };
+            alignmentEditVals = new int[9] { lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal };
             this.alignmentWidthVals = new float[9] { lawfulGoodWidthVal, neutralGoodWidthVal, chaoticGoodWidthVal, lawfulNeutralWidthVal, trueNeutralWidthVal, chaoticNeutralWidthVal, lawfulEvilWidthVal, neutralEvilWidthVal, chaoticEvilWidthVal };
             this.alignmentNames = new string[9] { "lawfulgood", "neutralgood", "chaoticgood", "lawfulneutral", "trueneutral", "chaoticneutral", "lawfulevil", "neutralevil", "chaoticevil" };
         }
@@ -282,11 +282,11 @@ namespace InfiniteRoleplay.Windows
                     //age input
                     ImGui.Text("Height:");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##height", $"Height in Fulms (numbers only)", ref characterAddHeight, 100, ImGuiInputTextFlags.CharsHexadecimal);
+                    ImGui.InputTextWithHint("##height", $"Height in Fulms (numbers only)", ref characterAddHeight, 100);
                     //age input
                     ImGui.Text("Weight:");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##weight", $"Weight in Ponze (numbers only)", ref characterAddWeight, 100, ImGuiInputTextFlags.CharsHexadecimal);
+                    ImGui.InputTextWithHint("##weight", $"Weight in Ponze (numbers only)", ref characterAddWeight, 100);
                     //at first glance input
                     ImGui.Text("At First Glance:");
                     ImGui.SameLine();
@@ -542,7 +542,6 @@ namespace InfiniteRoleplay.Windows
 
                     
                 }
-
                 if (editBio == true)
                 {
                     this.currentAvatarImg = pg.UiBuilder.LoadImage(existingAvatarBytes);
@@ -801,7 +800,6 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     ImGui.Image(this.chaoticEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[8] * 30, 20));
                     ImGui.SameLine();
-                    int formattedChaoticEvilVal = chaoticEvilVal / 10;
                     ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[8].ToString());
                     #endregion
 
@@ -832,10 +830,6 @@ namespace InfiniteRoleplay.Windows
 
                 }
 
-
-
-
-
             }
            
             if (addAvatar == true)
@@ -860,6 +854,9 @@ namespace InfiniteRoleplay.Windows
             ExistingBio = DataReceiver.ExistingBioData;
             existingAvatarBytes = DataReceiver.currentAvatar;
             lawfulGoodEditVal = DataReceiver.lawfulGoodEditVal;
+
+            
+
             if (editBio == true)
             {
                 for (int i = 0; i < alignmentWidthVals.Length; i++)

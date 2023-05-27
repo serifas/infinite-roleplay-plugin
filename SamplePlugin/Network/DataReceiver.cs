@@ -265,15 +265,15 @@ namespace UpdateTest
             ProfileWindow.characterEditAge = age.ToString(); ProfileWindow.characterEditHeight = height; ProfileWindow.characterEditWeight = weight.ToString(); 
             ProfileWindow.characterEditAfg = atFirstGlance;
 
-            lawfulGoodEditVal = lawful_good;
-            ProfileWindow.neutralGoodEditVal = neutral_good;
-            ProfileWindow.chaoticGoodEditVal = chaotic_good;
-            ProfileWindow.lawfulNeutralEditVal = lawful_neutral;
-            ProfileWindow.trueNeutralEditVal = true_neutral;
-            ProfileWindow.chaoticNeutralEditVal = chaotic_neutral;
-            ProfileWindow.lawfulEvilEditVal =  lawful_evil;
-            ProfileWindow.neutralEvilEditVal = neutral_evil;
-            ProfileWindow.chaoticEvilEditVal = chaotic_evil;
+            ProfileWindow.alignmentEditVals[0] = lawful_good;
+            ProfileWindow.alignmentEditVals[1] = neutral_good;
+            ProfileWindow.alignmentEditVals[2] = chaotic_good;
+            ProfileWindow.alignmentEditVals[3] = lawful_neutral;
+            ProfileWindow.alignmentEditVals[4] = true_neutral;
+            ProfileWindow.alignmentEditVals[5] = chaotic_neutral;
+            ProfileWindow.alignmentEditVals[6] =  lawful_evil;
+            ProfileWindow.alignmentEditVals[7] = neutral_evil;
+            ProfileWindow.alignmentEditVals[8] = chaotic_evil;
 
 
             currentAvatar = avatarBytes;
