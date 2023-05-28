@@ -196,12 +196,12 @@ namespace UpdateTest
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void RequestTargetProfile(string name, string worldname)
+        public static void RequestTargetProfile(string targetPlayerName, string targetPlayerWorld)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.SRequestTargetProfile);
-            buffer.WriteString(name);
-            buffer.WriteString(worldname);
+            buffer.WriteString(targetPlayerName);
+            buffer.WriteString(targetPlayerWorld);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }

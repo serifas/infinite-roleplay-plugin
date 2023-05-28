@@ -31,6 +31,7 @@ using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using Uno.UI.DataBinding;
 using Windows.Storage.Pickers.Provider;
 using Dalamud.Game;
+using System.Runtime;
 
 namespace InfiniteRoleplay
 {
@@ -39,13 +40,14 @@ namespace InfiniteRoleplay
         public bool loggedIn;
         public bool targeted = false;
         public string socketStatus;
-        public DalamudPluginInterface PluginInterfacePub;
+        public DalamudPluginInterface PluginInterfacePub; 
         public string Name => "Infinite Plugin";
         private const string CommandName = "/infinite";
         private DalamudPluginInterface PluginInterface { get; init; }
 
         public TargetManager targetManager { get; init; }
         private ClientState clientState { get; init; }
+        private SortedList<string, string> targetedPlayers = new SortedList<string, string>();
         private ChatGui chatgui { get; init; }
         private Framework framework { get; init; }
         private CommandManager CommandManager { get; init; }
@@ -81,7 +83,7 @@ namespace InfiniteRoleplay
             this.framework = framework;
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(this.PluginInterface);
-            this.framework.Update += OnUpdate;
+            this.framework.Update += Update;
 
             TextureWrap AvatarHolder = this.PluginInterface.UiBuilder.LoadImage(Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "profile_avis/avatar_holder.png"));
             TextureWrap lawfulGoodMinus = this.PluginInterface.UiBuilder.LoadImage(Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "alignments/-.png"));
@@ -168,30 +170,40 @@ namespace InfiniteRoleplay
 
         public void Dispose()
         {
+            framework.Update -= Update;
             this.WindowSystem.RemoveAllWindows();
             this.CommandManager.RemoveHandler(CommandName);
 
             ClientHandleData.InitializePackets(false);
             ClientTCP.InitializingNetworking(false);
         }
-
-        public void OnUpdate(Framework framework)
+        public void Update(Framework framework)
         {
-            var chara = targetManager.Target as PlayerCharacter;
-            if (chara != null)
+            var targetPlayer = targetManager.Target as PlayerCharacter;
+            if (targetPlayer != null)
             {
-                string world = chara.HomeWorld.GameData.Name.ToString();
-                string name = chara.Name.ToString();
-                if(!targeted)
+                string world = targetPlayer.HomeWorld.GameData.Name.ToString();
+                string name = targetPlayer.Name.ToString();
+                if(targeted == false)
                 {
-                    DataSender.RequestTargetProfile(name, world);
+                    SendTargetInfoRequest(name, world, true);
                     targeted = true;
                 }
             }
-            if(chara == null)
+            if(targetPlayer == null)
             {
                 targeted = false;
             }
+        }
+        public void SendTargetInfoRequest(string targetPlayerName, string targetPlayerWorld, bool triggered)
+        {
+            targeted = true;
+            if (triggered == true)
+            {
+                triggered = false;
+                DataSender.RequestTargetProfile(targetPlayerName, targetPlayerWorld);
+            }
+            
         }
         private void OnCommand(string command, string args)
         {
