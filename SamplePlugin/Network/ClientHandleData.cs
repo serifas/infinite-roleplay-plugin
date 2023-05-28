@@ -26,6 +26,9 @@ namespace UpdateTest
                 packets.Add((int)ServerPackets.SNoProfileBio, DataReceiver.NoProfileBio);
                 packets.Add((int)ServerPackets.SNoProfile, DataReceiver.NoProfile);
                 packets.Add((int)ServerPackets.SRecExistingProfile, DataReceiver.ExistingProfile);
+                packets.Add((int)ServerPackets.SSendProfileHook, DataReceiver.ReceiveProfileHooks);
+                packets.Add((int)ServerPackets.SSendNoProfileHooks, DataReceiver.NoProfileHooks);
+
             }
             else
             {

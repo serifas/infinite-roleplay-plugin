@@ -70,9 +70,9 @@ namespace InfiniteRoleplay.Windows
         public static bool editBio = false;
         public static bool addHooks = false;
         public static bool editHooks = false;
-        public static bool addStory = false; 
-        private string[] HookContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-   
+        public static bool addStory = false;
+        public static string[] HookContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
+        public static string[] HookEditContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
 
         public static bool editStory = false;
         public static bool addOOC = false;
@@ -84,8 +84,10 @@ namespace InfiniteRoleplay.Windows
         public static bool addProfile = false;
         public static bool editProfile = false;
         public bool ExistingBio;
-        public bool ExistingHooks;
-        public int hookCount;
+        public static bool ExistingHooks;
+        public static int hookCount;
+        public static int hookEditCount;
+        public static string[] hooks;
         public bool ExistingStory;
         public bool ExistingOOC;
         public bool ExistingGallery;
@@ -209,13 +211,13 @@ namespace InfiniteRoleplay.Windows
         {
             _fileDialogManager.Draw();
             //LoadFileSelection();
-            
+
             //Vector2 addProfileBtnScale = new Vector2(playerCharacter.Name.ToString().Length * 20, 20);
-            if(this.ExistingProfile == true)
+            if (this.ExistingProfile == true)
             {
                 if (ImGui.Button("Edit Profile", new Vector2(100, 20))) { editProfile = true; }
             }
-            if(this.ExistingProfile == false) 
+            if (this.ExistingProfile == false)
             {
                 if (ImGui.Button("Add Profile", new Vector2(100, 20))) { addProfile = true; DataSender.CreateProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString()); }
             }
@@ -242,7 +244,7 @@ namespace InfiniteRoleplay.Windows
             if (editProfile == true)
             {
                 ImGui.Spacing();
-                if(ExistingBio == true) { if (ImGui.Button("Edit Bio", new Vector2(100, 20))) { ClearUI(); editBio = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your bio."); } } else { if (ImGui.Button("Add Bio", new Vector2(100, 20))) { ClearUI(); addBio = true; } }               
+                if (ExistingBio == true) { if (ImGui.Button("Edit Bio", new Vector2(100, 20))) { ClearUI(); editBio = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your bio."); } } else { if (ImGui.Button("Add Bio", new Vector2(100, 20))) { ClearUI(); addBio = true; } }
                 ImGui.SameLine();
                 if (ExistingHooks == true) { if (ImGui.Button("Edit Hooks", new Vector2(100, 20))) { ClearUI(); editHooks = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Hooks."); } } else { if (ImGui.Button("Add Hooks", new Vector2(100, 20))) { ClearUI(); addHooks = true; } }
                 ImGui.SameLine();
@@ -251,17 +253,17 @@ namespace InfiniteRoleplay.Windows
                 if (ExistingOOC == true) { if (ImGui.Button("Edit OOC Info", new Vector2(100, 20))) { ClearUI(); editOOC = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your OOC Info."); } } else { if (ImGui.Button("Add OOC Info", new Vector2(100, 20))) { ClearUI(); addOOC = true; } }
                 ImGui.SameLine();
                 if (ExistingGallery == true) { if (ImGui.Button("Edit Gallery", new Vector2(100, 20))) { ClearUI(); editGallery = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Gallery."); } } else { if (ImGui.Button("Add Gallery", new Vector2(100, 20))) { ClearUI(); addGallery = true; } }
-               
+
             }
             bool warning = false;
             bool success = false;
             int currentAvailablePointsLeft = AvailablePercentageLeft(currentLawfulGood, currentNeutralGood, currentChaoticGood, currentLawfulNeutral, currentTrueNeutral, currentChaoticNeutral, currentLawfulEvil, currentNeutralEvil, currentChaoticEvil);
             if (ImGui.BeginChild("PROFILE"))
             {
-                if(addBio == true)
+                if (addBio == true)
                 {
                     ImGui.Image(this.avatarImg.ImGuiHandle, new Vector2(100, 100));
-                    
+
                     if (ImGui.Button("Add Avatar"))
                     {
                         addAvatar = true;
@@ -299,7 +301,7 @@ namespace InfiniteRoleplay.Windows
                     ImGui.TextColored(new Vector4(1, 1, 0, 1), "ALIGNMENT:");
                     ImGui.SameLine();
                     ImGui.Text(this.availablePercentage + " Points Available:");
-                #region ALIGNMENTS
+                    #region ALIGNMENTS
                     #region LAWFUL GOOD
                     //LAWFUL GOOD
                     ImGui.Image(this.lawfulGood.ImGuiHandle, new Vector2(32, 32));
@@ -312,13 +314,13 @@ namespace InfiniteRoleplay.Windows
                                         "    and they aim to be an upstanding citizen.");
                     }
                     ImGui.SameLine();
-                    if (ImGui.ImageButton(this.lawfulGoodPlus.ImGuiHandle, new Vector2(20, 20))){ ModAlignment("lawfulgood", true);}
+                    if (ImGui.ImageButton(this.lawfulGoodPlus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("lawfulgood", true); }
                     ImGui.SameLine();
-                    if (ImGui.ImageButton(this.lawfulGoodMinus.ImGuiHandle, new Vector2(20, 20))){ ModAlignment("lawfulgood", false);}
+                    if (ImGui.ImageButton(this.lawfulGoodMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("lawfulgood", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.lawfulGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[0] * 30, 20));
                     ImGui.SameLine();
-                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[0].ToString() );
+                    ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[0].ToString());
                     #endregion
 
                     #region NEUTRAL GOOD
@@ -519,7 +521,7 @@ namespace InfiniteRoleplay.Windows
                     int formattedChaoticEvilVal = chaoticEvilVal / 10;
                     ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[8].ToString());
                     #endregion
-                   
+
                     #endregion
                     if (ImGui.Button("Save Bio"))
                     {
@@ -530,7 +532,7 @@ namespace InfiniteRoleplay.Windows
                         }
                         else if (characterAddName == string.Empty || characterAddRace == string.Empty || characterAddGender == string.Empty || characterAddAge == string.Empty ||
                             characterAddHeight == string.Empty || characterAddWeight == string.Empty || characterAddAfg == string.Empty)
-                        { 
+                        {
                             chatGui.PrintError("Please fill out all text fields. If you want a field to be empty please put a space in the text field to submit the application.");
                         }
                         else
@@ -544,9 +546,9 @@ namespace InfiniteRoleplay.Windows
 
                     }
 
-                    
+
                 }
-                if(editBio == true)
+                if (editBio == true)
                 {
                     this.currentAvatarImg = pg.UiBuilder.LoadImage(existingAvatarBytes);
                     ImGui.Image(this.currentAvatarImg.ImGuiHandle, new Vector2(100, 100));
@@ -677,7 +679,7 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.ImageButton(this.lawfulNeutralMinus.ImGuiHandle, new Vector2(20, 20))) { ModAlignment("lawfulneutral", false); }
                     ImGui.SameLine();
-                    ImGui.Image(this.lawfulNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[3]* 30, 20));
+                    ImGui.Image(this.lawfulNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[3] * 30, 20));
                     ImGui.SameLine();
                     int formattedLawfulNeutralVal = lawfulNeutralVal / 10;
                     ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[3].ToString());
@@ -833,7 +835,7 @@ namespace InfiniteRoleplay.Windows
 
 
                 }
-                if(addHooks == true)
+                if (addHooks == true)
                 {
                     if (ImGui.Button("Add Hook"))
                     {
@@ -844,30 +846,56 @@ namespace InfiniteRoleplay.Windows
                     {
                         ImGui.InputTextMultiline("##content" + i, ref HookContent[i], 3000, new Vector2(450, 100));
                     }
-                    if(ImGui.Button("Submit Hooks"))
+                    if (ImGui.Button("Submit Hooks"))
                     {
-                        for(int i= 0; i < hookCount; i++)
+                        for (int i = 0; i < hookCount; i++)
                         {
                             int index = i + 1;
                             DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, index, HookContent[i]);
                         }
-                        
+
                     }
                 }
-                
-            }
-           
-            if (addAvatar == true)
+                if (editHooks == true)
+                {
+                    if (ImGui.Button("Add Hook"))
+                    {
+                        hookCount++;
+                    }
+                    for (int h = 0; h < hookEditCount; h++)
+                    {
+                        ImGui.InputTextMultiline("##hookedit" + h, ref HookEditContent[h], 3000, new Vector2(450, 100));
+                    }
+                    for(int i = 0; i < hookCount; i++)
+                    {
+                        ImGui.InputTextMultiline("##hook" + i, ref HookContent[i], 3000, new Vector2(450, 100));
+                    }
+                    if (ImGui.Button("Submit Hooks"))
+                    {
+                        for (int i = 0; i < hookCount; i++)
+                        {
+                            int index = i + 1;
+                            DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, index, HookContent[i]);
+                        }
+
+                    }
+                }
+             
+
+
+
+                if (addAvatar == true)
                 {
                     addAvatar = false;
-                AddAvatar();
-            }
-            if(editAvatar == true)
-            {
-                editAvatar = false;
-                EditAvatar();
-            }
+                    AddAvatar();
+                }
+                if (editAvatar == true)
+                {
+                    editAvatar = false;
+                    EditAvatar();
+                }
 
+            }
         }
         public void ClearUI()
         {
@@ -890,9 +918,10 @@ namespace InfiniteRoleplay.Windows
         {
             ExistingProfile = DataReceiver.ExistingProfileData;
             ExistingBio = DataReceiver.ExistingBioData;
+            ExistingHooks = DataReceiver.ExistingHooks;
             existingAvatarBytes = DataReceiver.currentAvatar;
             lawfulGoodEditVal = DataReceiver.lawfulGoodEditVal;
-
+            hookEditCount = DataReceiver.hookEditCount;
             
 
             if (editBio == true)

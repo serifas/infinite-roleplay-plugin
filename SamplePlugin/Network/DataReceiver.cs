@@ -13,8 +13,10 @@ using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UpdateTest;
+using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.HumanInterfaceDevice;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -33,18 +35,21 @@ namespace UpdateTest
         SDoneSending = 21,
         SNoProfileBio = 22,
         SNoProfile = 23,
+        SSendProfileHook = 24,
+        SSendNoProfileHooks = 25,
     }
     class DataReceiver
     {
         public static string accountStatus = "status...";
         public static bool ExistingProfileData = false;
         public static byte[] currentAvatar;
+        public static int hookEditCount;
         public static int lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, 
                           lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, 
                           lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal;
         public static string currentName, currentRace, currentGender,currentAge, currentHeight,currentWeight,currentAfg;
 
-        public static bool ExistingBioData = false;
+        public static bool ExistingBioData, ExistingHooks = false;
         public static Vector4 accounStatusColor = new Vector4(255, 255, 255, 255);
         public static Plugin plugin;
         public static Dictionary<int, string> characters = new Dictionary<int, string>();
@@ -112,6 +117,7 @@ namespace UpdateTest
             
             
         }
+      
         public static void RecRulebookContent(byte[] data)
         {
             var buffer = new ByteBuffer();
@@ -279,10 +285,35 @@ namespace UpdateTest
             currentAvatar = avatarBytes;
             ExistingBioData = true;
             buffer.Dispose();
-
         }
-        
-        
+
+        public static void ReceiveProfileHooks(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            string hooks = buffer.ReadString();
+            ExistingHooks = true;
+
+            Regex hookRx = new Regex(@"<hook>(.*?)</hook>");
+            string[] hookSplit = hooks.Replace("|||", "~").Split('~');
+
+            for (int i = 0; i < hookSplit.Count(); i++)
+            {
+                string hookContent = hookRx.Match(hookSplit[i]).Groups[1].Value;
+                hookEditCount = i;
+                ProfileWindow.HookEditContent[i] = hookContent;
+            }
+                buffer.Dispose();
+        }
+        public static void NoProfileHooks(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            ExistingHooks = false;
+            buffer.Dispose();
+        }
 
         
 
