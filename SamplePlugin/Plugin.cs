@@ -25,19 +25,29 @@ using UpdateTest;
 using ImGuiScene;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.Gui;
+using Dalamud.Game.ClientState.Objects;
+using Dalamud.Game.ClientState.Objects.SubKinds;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
+using Uno.UI.DataBinding;
+using Windows.Storage.Pickers.Provider;
+using Dalamud.Game;
 
 namespace InfiniteRoleplay
 {
     public sealed class Plugin : IDalamudPlugin
     {
         public bool loggedIn;
+        public bool targeted = false;
         public string socketStatus;
         public DalamudPluginInterface PluginInterfacePub;
         public string Name => "Infinite Plugin";
         private const string CommandName = "/infinite";
         private DalamudPluginInterface PluginInterface { get; init; }
+
+        public TargetManager targetManager { get; init; }
         private ClientState clientState { get; init; }
         private ChatGui chatgui { get; init; }
+        private Framework framework { get; init; }
         private CommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("InfinitePlugin");
@@ -48,12 +58,15 @@ namespace InfiniteRoleplay
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
             [RequiredVersion("1.0")] ClientState ClientState,
             [RequiredVersion("1.0")] ChatGui chatgui,
+            [RequiredVersion("1.0")] Framework framework,
+            [RequiredVersion("1.0")] TargetManager targetManager,
+
             [RequiredVersion("1.0")] CommandManager commandManager)
         {
+
             try
             {
                 Dalamud.Initialize(pluginInterface);
-               
             }
             catch
             {
@@ -63,12 +76,12 @@ namespace InfiniteRoleplay
             this.CommandManager = commandManager;
             this.PluginInterfacePub = pluginInterface;
             this.clientState = ClientState;
+            this.targetManager = targetManager;
             this.chatgui = chatgui;
+            this.framework = framework;
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(this.PluginInterface);
-
-
-
+            this.framework.Update += OnUpdate;
 
             TextureWrap AvatarHolder = this.PluginInterface.UiBuilder.LoadImage(Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "profile_avis/avatar_holder.png"));
             TextureWrap lawfulGoodMinus = this.PluginInterface.UiBuilder.LoadImage(Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "alignments/-.png"));
@@ -118,6 +131,7 @@ namespace InfiniteRoleplay
 
 
 
+            
 
 
 
@@ -143,8 +157,13 @@ namespace InfiniteRoleplay
             DataReceiver.plugin = this;
             ClientHandleData.InitializePackets(true);
             ClientTCP.InitializingNetworking(true);
-            
-            
+            this.WindowSystem.AddWindow(new TargetWindow(this, chatgui, this.PluginInterface, AvatarHolder,
+                                                                lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
+                                                                lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar,
+                                                                lawfulGoodPlus, neutralGoodPlus, chaoticGoodPlus, lawfulNeutralPlus, trueNeutralPlus, chaoticNeutralPlus, lawfulEvilPlus, neutralEvilPlus, chaoticEvilPlus,
+                                                                lawfulGoodMinus, neutralGoodMinus, chaoticGoodMinus, lawfulNeutralMinus, trueNeutralMinus, chaoticNeutralMinus, lawfulEvilMinus, neutralEvilMinus, chaoticEvilMinus));
+
+
         }
 
         public void Dispose()
@@ -156,8 +175,24 @@ namespace InfiniteRoleplay
             ClientTCP.InitializingNetworking(false);
         }
 
-
-
+        public void OnUpdate(Framework framework)
+        {
+            var chara = targetManager.Target as PlayerCharacter;
+            if (chara != null)
+            {
+                string world = chara.HomeWorld.GameData.Name.ToString();
+                string name = chara.Name.ToString();
+                if(!targeted)
+                {
+                    DataSender.RequestTargetProfile(name, world);
+                    targeted = true;
+                }
+            }
+            if(chara == null)
+            {
+                targeted = false;
+            }
+        }
         private void OnCommand(string command, string args)
         {
             DrawConfigUI();

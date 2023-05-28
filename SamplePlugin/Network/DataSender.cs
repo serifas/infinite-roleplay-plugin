@@ -30,6 +30,7 @@ namespace UpdateTest
         CStrikeAccount = 12,
         CEditProfileBio = 13,
         CSendHooks = 14,
+        SRequestTargetProfile = 15,
     }
     public class DataSender
     {
@@ -192,6 +193,15 @@ namespace UpdateTest
             buffer.WriteString(username);
             buffer.WriteString(title);
             buffer.WriteString(content);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+        public static void RequestTargetProfile(string name, string worldname)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.SRequestTargetProfile);
+            buffer.WriteString(name);
+            buffer.WriteString(worldname);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }

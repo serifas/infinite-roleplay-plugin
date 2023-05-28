@@ -37,19 +37,26 @@ namespace UpdateTest
         SNoProfile = 23,
         SSendProfileHook = 24,
         SSendNoProfileHooks = 25,
+        SRecNoTargetHooks = 26,
+        SRecNoTargetBio = 27,
+        SRecTargetHooks = 28,
+        SRecTargetBio = 29,
+        SRecTargetProfile = 30,
+        SRecNoTargetProfile = 31,
     }
     class DataReceiver
     {
         public static string accountStatus = "status...";
-        public static bool ExistingProfileData = false;
-        public static byte[] currentAvatar;
+        public static bool ExistingProfileData = false, ExistingTargetProfileData = false, targetBioData = false;
+        public static byte[] currentAvatar , currentTargetAvatar;
         public static int hookEditCount;
+        public static int targetHookEditCount;
         public static int lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, 
                           lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, 
                           lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal;
         public static string currentName, currentRace, currentGender,currentAge, currentHeight,currentWeight,currentAfg;
 
-        public static bool ExistingBioData, ExistingHooks = false;
+        public static bool ExistingBioData, ExistingHooks = false, ExistingTargetBioData, ExistingTargetHooks;
         public static Vector4 accounStatusColor = new Vector4(255, 255, 255, 255);
         public static Plugin plugin;
         public static Dictionary<int, string> characters = new Dictionary<int, string>();
@@ -154,6 +161,16 @@ namespace UpdateTest
             var profiles = buffer.ReadString();
             buffer.Dispose();
         }
+        public static void ExistingTargetProfile(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            buffer.Dispose();
+            ExistingTargetProfileData = true;
+
+            plugin.WindowSystem.GetWindow("TARGET").IsOpen = true;
+        }
         public static void ExistingProfile(byte[] data)
         {
             var buffer = new ByteBuffer();
@@ -175,6 +192,16 @@ namespace UpdateTest
             ExistingProfileData = false;
             plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
         }
+        public static void NoTargetProfile(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            buffer.Dispose();
+            loggedIn = true;
+            ExistingTargetProfileData = false;
+            plugin.WindowSystem.GetWindow("TARGET").IsOpen = true;
+        }
         public static void NoProfileBio(byte[] data)
         {
             var buffer = new ByteBuffer();
@@ -184,6 +211,15 @@ namespace UpdateTest
             loggedIn = true;
             ExistingBioData = false;
             plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
+        }
+        public static void NoTargetBio(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            buffer.Dispose();
+            loggedIn = true;
+            targetBioData = false;
         }
         public static void ReceiveProfile(byte[] data)
         {
@@ -243,6 +279,50 @@ namespace UpdateTest
              }
 
         }
+        
+        public static void ReceiveTargetBio(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+
+            int avatarLen = buffer.ReadInt();
+            byte[] avatarBytes = buffer.ReadBytes(avatarLen);
+            string name = buffer.ReadString();
+            string race = buffer.ReadString();
+            string gender = buffer.ReadString();
+            int age = buffer.ReadInt();
+            string height = buffer.ReadString();
+            string weight = buffer.ReadString();
+            string atFirstGlance = buffer.ReadString();
+            int lawful_good = buffer.ReadInt();
+            int neutral_good = buffer.ReadInt();
+            int chaotic_good = buffer.ReadInt();
+            int lawful_neutral = buffer.ReadInt();
+            int true_neutral = buffer.ReadInt();
+            int chaotic_neutral = buffer.ReadInt();
+            int lawful_evil = buffer.ReadInt();
+            int neutral_evil = buffer.ReadInt();
+            int chaotic_evil = buffer.ReadInt();
+            TargetWindow.characterEditName = name; TargetWindow.characterEditRace = race; TargetWindow.characterEditGender = gender;
+            TargetWindow.characterEditAge = age.ToString(); TargetWindow.characterEditHeight = height; TargetWindow.characterEditWeight = weight.ToString(); 
+            TargetWindow.characterEditAfg = atFirstGlance;
+
+            TargetWindow.alignmentEditVals[0] = lawful_good;
+            TargetWindow.alignmentEditVals[1] = neutral_good;
+            TargetWindow.alignmentEditVals[2] = chaotic_good;
+            TargetWindow.alignmentEditVals[3] = lawful_neutral;
+            TargetWindow.alignmentEditVals[4] = true_neutral;
+            TargetWindow.alignmentEditVals[5] = chaotic_neutral;
+            TargetWindow.alignmentEditVals[6] =  lawful_evil;
+            TargetWindow.alignmentEditVals[7] = neutral_evil;
+            TargetWindow.alignmentEditVals[8] = chaotic_evil;
+
+
+            currentTargetAvatar = avatarBytes;
+            ExistingTargetBioData = true;
+            buffer.Dispose();
+        }
         public static void ReceiveProfileBio(byte[] data)
         {
             var buffer = new ByteBuffer();
@@ -268,7 +348,7 @@ namespace UpdateTest
             int neutral_evil = buffer.ReadInt();
             int chaotic_evil = buffer.ReadInt();
             ProfileWindow.characterEditName = name; ProfileWindow.characterEditRace = race; ProfileWindow.characterEditGender = gender;
-            ProfileWindow.characterEditAge = age.ToString(); ProfileWindow.characterEditHeight = height; ProfileWindow.characterEditWeight = weight.ToString(); 
+            ProfileWindow.characterEditAge = age.ToString(); ProfileWindow.characterEditHeight = height; ProfileWindow.characterEditWeight = weight.ToString();
             ProfileWindow.characterEditAfg = atFirstGlance;
 
             ProfileWindow.alignmentEditVals[0] = lawful_good;
@@ -277,7 +357,7 @@ namespace UpdateTest
             ProfileWindow.alignmentEditVals[3] = lawful_neutral;
             ProfileWindow.alignmentEditVals[4] = true_neutral;
             ProfileWindow.alignmentEditVals[5] = chaotic_neutral;
-            ProfileWindow.alignmentEditVals[6] =  lawful_evil;
+            ProfileWindow.alignmentEditVals[6] = lawful_evil;
             ProfileWindow.alignmentEditVals[7] = neutral_evil;
             ProfileWindow.alignmentEditVals[8] = chaotic_evil;
 
@@ -286,7 +366,6 @@ namespace UpdateTest
             ExistingBioData = true;
             buffer.Dispose();
         }
-
         public static void ReceiveProfileHooks(byte[] data)
         {
             var buffer = new ByteBuffer();
@@ -306,6 +385,25 @@ namespace UpdateTest
             }
                 buffer.Dispose();
         }
+        public static void ReceiveTargetHooks(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            string hooks = buffer.ReadString();
+            ExistingTargetHooks = true;
+
+            Regex hookRx = new Regex(@"<hook>(.*?)</hook>");
+            string[] hookSplit = hooks.Replace("|||", "~").Split('~');
+
+            for (int i = 0; i < hookSplit.Count(); i++)
+            {
+                string hookContent = hookRx.Match(hookSplit[i]).Groups[1].Value;
+                targetHookEditCount = i;
+                TargetWindow.HookEditContent[i] = hookContent;
+            }
+            buffer.Dispose();
+        }
         public static void NoProfileHooks(byte[] data)
         {
             var buffer = new ByteBuffer();
@@ -315,7 +413,15 @@ namespace UpdateTest
             buffer.Dispose();
         }
 
-        
 
+
+        public static void NoTargetProfileHooks(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            ExistingTargetHooks = false;
+            buffer.Dispose();
+        }
     }
 }

@@ -46,6 +46,7 @@ using Dalamud.Game;
 using Dalamud.Game.Gui;
 using Image = SixLabors.ImageSharp.Image;
 using System.Xml.Linq;
+using Dalamud.Game.ClientState.Objects;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -225,19 +226,19 @@ namespace InfiniteRoleplay.Windows
             if (addProfile == true)
             {
                 ImGui.Spacing();
-                if (ImGui.Button("Add Bio", new Vector2(100, 20))) { addBio = true; }
+                if (ImGui.Button("Add Bio", new Vector2(100, 20))) { ClearUI(); addBio = true; }
                 if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add a bio section to your profile."); }
                 ImGui.SameLine();
-                if (ImGui.Button("Add Hooks", new Vector2(100, 20))) { addHooks = true; }
+                if (ImGui.Button("Add Hooks", new Vector2(100, 20))) { ClearUI(); addHooks = true; }
                 if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add a hooks section to your profile."); }
                 ImGui.SameLine();
-                if (ImGui.Button("Add Story", new Vector2(100, 20))) { addStory = true; }
+                if (ImGui.Button("Add Story", new Vector2(100, 20))) { ClearUI(); addStory = true; }
                 if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add a story section to your profile."); }
                 ImGui.SameLine();
-                if (ImGui.Button("Add OOC Info", new Vector2(100, 20))) { addOOC = true; }
+                if (ImGui.Button("Add OOC Info", new Vector2(100, 20))) { ClearUI(); addOOC = true; }
                 if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add an OOC section to your profile."); }
                 ImGui.SameLine();
-                if (ImGui.Button("Add Gallery", new Vector2(100, 20))) { addGallery = true; }
+                if (ImGui.Button("Add Gallery", new Vector2(100, 20))) { ClearUI(); addGallery = true; }
                 if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add a gallery section to your profile."); }
 
             }
@@ -922,8 +923,8 @@ namespace InfiniteRoleplay.Windows
             existingAvatarBytes = DataReceiver.currentAvatar;
             lawfulGoodEditVal = DataReceiver.lawfulGoodEditVal;
             hookEditCount = DataReceiver.hookEditCount;
-            
 
+            
             if (editBio == true)
             {
                 for (int i = 0; i < alignmentWidthVals.Length; i++)

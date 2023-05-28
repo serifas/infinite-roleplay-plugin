@@ -28,6 +28,13 @@ namespace UpdateTest
                 packets.Add((int)ServerPackets.SRecExistingProfile, DataReceiver.ExistingProfile);
                 packets.Add((int)ServerPackets.SSendProfileHook, DataReceiver.ReceiveProfileHooks);
                 packets.Add((int)ServerPackets.SSendNoProfileHooks, DataReceiver.NoProfileHooks);
+                packets.Add((int)ServerPackets.SRecTargetBio, DataReceiver.ReceiveTargetBio);
+                packets.Add((int)ServerPackets.SRecTargetHooks, DataReceiver.ReceiveTargetHooks);
+                packets.Add((int)ServerPackets.SRecNoTargetBio, DataReceiver.NoTargetBio);
+                packets.Add((int)ServerPackets.SRecNoTargetHooks, DataReceiver.NoTargetProfileHooks);
+                packets.Add((int)ServerPackets.SRecTargetProfile, DataReceiver.ExistingTargetProfile);
+                packets.Add((int)ServerPackets.SRecNoTargetProfile, DataReceiver.NoTargetProfile);
+
 
             }
             else
