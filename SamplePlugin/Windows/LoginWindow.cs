@@ -15,8 +15,14 @@ public class LoginWindow : Window, IDisposable
     private Configuration Configuration;
     public string username = string.Empty;
     public string password = string.Empty;
+    public string registerUser  = string.Empty;
+    public string registerPassword = string.Empty;
+    public string registerVerPassword = string.Empty;
     public bool attemptedLogin = false;
     public bool updateWindow = false;
+    public bool login = true;
+    public bool register = false;
+    public bool agree = false;
     public string status = "status...";
     public Vector4 statusColor = new Vector4(255,255,255,255);
     public Plugin plugin;
@@ -45,15 +51,40 @@ public class LoginWindow : Window, IDisposable
         var connectionValue = this.Configuration.StayOnline;
         var usernamevalue = this.Configuration.username;
         var passwordvalue = this.Configuration.password;
-        ImGui.InputTextWithHint("##username", $"Username", ref this.username, 100);
-        ImGui.InputTextWithHint("##password", $"Password", ref this.password, 100, ImGuiInputTextFlags.Password);
+        if(login == true)
+        {
+            register = false;
+            ImGui.InputTextWithHint("##username", $"Username", ref this.username, 100);
+            ImGui.InputTextWithHint("##password", $"Password", ref this.password, 100, ImGuiInputTextFlags.Password);
 
-        if (ImGui.Button("Login"))
-        {            
-            this.Configuration.username = this.username;
-            this.Configuration.password = this.password;
-            this.Configuration.Save();           
-            DataSender.Login(username, password);           
+            if (ImGui.Button("Login"))
+            {
+                this.Configuration.username = this.username;
+                this.Configuration.password = this.password;
+                this.Configuration.Save();
+                DataSender.Login(username, password);
+            }
+        }
+        if (register == true)
+        {
+            login = false;
+            if (ImGui.Button("Register"))
+            {
+                ImGui.InputTextWithHint("##username", $"Username", ref registerUser, 100);
+                ImGui.InputTextWithHint("##password", $"Password", ref registerPassword, 100, ImGuiInputTextFlags.Password);
+                ImGui.InputTextWithHint("##password", $"Verify Password", ref registerVerPassword, 100, ImGuiInputTextFlags.Password);
+                if (ImGui.Checkbox("I am atleast 18 years of age", ref agree))
+                {
+                    if (ImGui.Button("Register"))
+                    {
+                        if (registerPassword == registerVerPassword)
+                        {
+                            DataSender.Register(registerUser, registerPassword);
+                        }
+
+                    }
+                }
+            }
         }
         ImGui.TextColored(this.statusColor, this.status);
     }

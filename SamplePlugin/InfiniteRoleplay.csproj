@@ -163,12 +163,6 @@
 
   <ItemGroup>
     <Folder Include="Penumbra.GameData\Interop\" />
-    <Folder Include="Penumbra\Api\" />
-    <Folder Include="Penumbra\Interop\ResourceTree\" />
-    <Folder Include="Penumbra\Meta\Files\" />
-    <Folder Include="Penumbra\Meta\Manipulations\" />
-    <Folder Include="Penumbra\UI\Classes\" />
-    <Folder Include="Penumbra\UI\ResourceWatcher\" />
   </ItemGroup>
 
 </Project>

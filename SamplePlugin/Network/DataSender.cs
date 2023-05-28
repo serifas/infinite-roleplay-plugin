@@ -31,6 +31,7 @@ namespace UpdateTest
         CEditProfileBio = 13,
         CSendHooks = 14,
         SRequestTargetProfile = 15,
+        CRegister = 16,
     }
     public class DataSender
     {
@@ -49,6 +50,16 @@ namespace UpdateTest
 
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CLogin);
+            buffer.WriteString(username);
+            buffer.WriteString(password);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+        public static void Register(string username, string password)
+        {
+
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CRegister);
             buffer.WriteString(username);
             buffer.WriteString(password);
             ClientTCP.SendData(buffer.ToArray());

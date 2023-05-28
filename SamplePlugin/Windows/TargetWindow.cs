@@ -28,7 +28,6 @@ using System.Collections.Concurrent;
 using Dalamud.Utility;
 using System.Reflection;
 using SixLabors.ImageSharp;
-using Penumbra.UI;
 using System.Security.Policy;
 using OtterGui.Raii;
 using static System.Runtime.InteropServices.JavaScript.JSType;
