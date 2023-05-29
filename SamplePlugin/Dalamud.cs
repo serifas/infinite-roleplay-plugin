@@ -5,6 +5,7 @@ using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.Command;
+using Dalamud.Game.DutyState;
 using Dalamud.Game.Gui;
 using Dalamud.Interface;
 using Dalamud.IoC;
@@ -33,6 +34,7 @@ public class Dalamud
         [PluginService][RequiredVersion("1.0")] public static ObjectTable            Objects         { get; private set; } = null!;
         [PluginService][RequiredVersion("1.0")] public static TitleScreenMenu        TitleScreenMenu { get; private set; } = null!;
         [PluginService][RequiredVersion("1.0")] public static GameGui                GameGui         { get; private set; } = null!;
-        [PluginService][RequiredVersion("1.0")] public static KeyState               KeyState        { get; private set; } = null!;
+        [PluginService][RequiredVersion("1.0")] public static KeyState KeyState { get; private set; } = null!;
+        [PluginService][RequiredVersion("1.0")] public static DutyState DutyState { get; private set; } = null!;
     // @formatter:on
 }

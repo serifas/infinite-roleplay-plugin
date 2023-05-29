@@ -523,8 +523,7 @@ namespace InfiniteRoleplay.Windows
 
                     #endregion
                     if (ImGui.Button("Save Bio"))
-                    {
-                      
+                    {                      
                         if (characterAddName == string.Empty || characterAddRace == string.Empty || characterAddGender == string.Empty || characterAddAge == string.Empty ||
                             characterAddHeight == string.Empty || characterAddWeight == string.Empty || characterAddAfg == string.Empty)
                         {
@@ -532,11 +531,10 @@ namespace InfiniteRoleplay.Windows
                         }
                         else
                         {
-                            DataSender.CreateProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), avatarBytes, characterAddName.Replace("'", "''"),
+                            DataSender.SubmitProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), avatarBytes, characterAddName.Replace("'", "''"),
                                                    characterAddRace.Replace("'", "''"), characterAddGender.Replace("'", "''"), int.Parse(characterAddAge), characterAddHeight.Replace("'", "''"), characterAddWeight.Replace("'", "''"), characterAddAfg.Replace("'", "''"),
                                                    alignmentVals[0], alignmentVals[1], alignmentVals[2], alignmentVals[3], alignmentVals[4], alignmentVals[5], alignmentVals[6], alignmentVals[7], alignmentVals[8]);
-                            
-                            
+                        
                         }
 
 
@@ -820,7 +818,7 @@ namespace InfiniteRoleplay.Windows
                         }
                         else
                         {
-                            DataSender.EditProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), existingAvatarBytes, characterEditName.Replace("'", "''"),
+                            DataSender.SubmitProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), existingAvatarBytes, characterEditName.Replace("'", "''"),
                                                    characterEditRace.Replace("'", "''"), characterEditGender.Replace("'", "''"), int.Parse(characterEditAge), characterEditHeight.Replace("'", "''"), characterEditWeight.Replace("'", "''"), characterEditAfg.Replace("'", "''"),
                                                    alignmentEditVals[0], alignmentEditVals[1], alignmentEditVals[2], alignmentEditVals[3], alignmentEditVals[4], alignmentEditVals[5], alignmentEditVals[6], alignmentEditVals[7], alignmentEditVals[8]);
 
@@ -847,6 +845,8 @@ namespace InfiniteRoleplay.Windows
                         for (int i = 0; i < hookCount; i++)
                         {
                             int index = i + 1;
+                            ClearUI();
+                            editHooks = true;
                             DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, index, HookContent[i]);
                         }
 
@@ -868,18 +868,15 @@ namespace InfiniteRoleplay.Windows
                     }
                     if (ImGui.Button("Submit Hooks"))
                     {
-                        for (int i = 0; i < hookCount; i++)
+                        int hookCurrent = hookCount + hookEditCount;
+                        for (int i = 0; i < hookCurrent; i++)
                         {
                             int index = i + 1;
-                            DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, index, HookContent[i]);
+                            DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, index, HookEditContent[i]);
                         }
 
                     }
                 }
-             
-
-
-
                 if (addAvatar == true)
                 {
                     addAvatar = false;

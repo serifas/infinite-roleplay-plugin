@@ -53,7 +53,7 @@ public class LoginWindow : Window, IDisposable
         var passwordvalue = this.Configuration.password;
         if(login == true)
         {
-            register = false;
+
             ImGui.InputTextWithHint("##username", $"Username", ref this.username, 100);
             ImGui.InputTextWithHint("##password", $"Password", ref this.password, 100, ImGuiInputTextFlags.Password);
 
@@ -64,27 +64,35 @@ public class LoginWindow : Window, IDisposable
                 this.Configuration.Save();
                 DataSender.Login(username, password);
             }
+            if (ImGui.Button("Register"))
+            {
+                login = false;
+                register = true;
+            }
         }
         if (register == true)
         {
-            login = false;
-            if (ImGui.Button("Register"))
+            ImGui.InputTextWithHint("##username", $"Username", ref this.registerUser, 100);
+            ImGui.InputTextWithHint("##passver", $"Password", ref this.registerPassword, 100, ImGuiInputTextFlags.Password);
+            ImGui.InputTextWithHint("##regpassver", $"Verify Password", ref this.registerVerPassword, 100, ImGuiInputTextFlags.Password);
+            ImGui.Checkbox("I am atleast 18 years of age", ref agree);
             {
-                ImGui.InputTextWithHint("##username", $"Username", ref registerUser, 100);
-                ImGui.InputTextWithHint("##password", $"Password", ref registerPassword, 100, ImGuiInputTextFlags.Password);
-                ImGui.InputTextWithHint("##password", $"Verify Password", ref registerVerPassword, 100, ImGuiInputTextFlags.Password);
-                if (ImGui.Checkbox("I am atleast 18 years of age", ref agree))
+                if(agree == true)
                 {
-                    if (ImGui.Button("Register"))
+                    if (ImGui.Button("Register Account"))
                     {
                         if (registerPassword == registerVerPassword)
                         {
                             DataSender.Register(registerUser, registerPassword);
+                            login = true;
+                            register = false;
                         }
 
                     }
                 }
+                
             }
+            
         }
         ImGui.TextColored(this.statusColor, this.status);
     }

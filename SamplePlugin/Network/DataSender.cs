@@ -156,7 +156,7 @@ namespace UpdateTest
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void CreateProfileBio(string playerName, string playerServer, byte[] avatarBytes, string name, string race, string gender, int age, 
+        public static void SubmitProfileBio(string playerName, string playerServer, byte[] avatarBytes, string name, string race, string gender, int age, 
                                             string height, string weight, string atFirstGlance, 
                                             int lawful_good, int neutral_good, int chaotic_good, 
                                             int lawful_neutral, int true_neutral, int chaotic_neutral, 

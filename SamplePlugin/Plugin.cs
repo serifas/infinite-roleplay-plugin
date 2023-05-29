@@ -32,6 +32,7 @@ using Uno.UI.DataBinding;
 using Windows.Storage.Pickers.Provider;
 using Dalamud.Game;
 using System.Runtime;
+using Dalamud.Game.DutyState;
 
 namespace InfiniteRoleplay
 {
@@ -47,6 +48,7 @@ namespace InfiniteRoleplay
 
         public TargetManager targetManager { get; init; }
         private ClientState clientState { get; init; }
+        private DutyState dutyState { get; init; }
         private SortedList<string, string> targetedPlayers = new SortedList<string, string>();
         private ChatGui chatgui { get; init; }
         private Framework framework { get; init; }
@@ -59,6 +61,7 @@ namespace InfiniteRoleplay
 
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
             [RequiredVersion("1.0")] ClientState ClientState,
+            [RequiredVersion("1.0")] DutyState DutyState,
             [RequiredVersion("1.0")] ChatGui chatgui,
             [RequiredVersion("1.0")] Framework framework,
             [RequiredVersion("1.0")] TargetManager targetManager,
@@ -81,6 +84,7 @@ namespace InfiniteRoleplay
             this.targetManager = targetManager;
             this.chatgui = chatgui;
             this.framework = framework;
+            this.dutyState = DutyState;
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(this.PluginInterface);
             this.framework.Update += Update;
@@ -180,7 +184,8 @@ namespace InfiniteRoleplay
         public void Update(Framework framework)
         {
             var targetPlayer = targetManager.Target as PlayerCharacter;
-            if (targetPlayer != null)
+            
+            if (targetPlayer != null && dutyState.IsDutyStarted == false)
             {
                 string world = targetPlayer.HomeWorld.GameData.Name.ToString();
                 string name = targetPlayer.Name.ToString();

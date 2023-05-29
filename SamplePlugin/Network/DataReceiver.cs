@@ -381,6 +381,7 @@ namespace UpdateTest
             {
                 string hookContent = hookRx.Match(hookSplit[i]).Groups[1].Value;
                 hookEditCount = i;
+                ProfileWindow.hookEditCount = i;
                 ProfileWindow.HookEditContent[i] = hookContent;
             }
                 buffer.Dispose();
