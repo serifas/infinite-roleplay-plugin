@@ -873,7 +873,10 @@ namespace InfiniteRoleplay.Windows
                         {
                             int index = i + 1;
                             DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, index, HookEditContent[i]);
-
+                            if (HookEditContent[i] == string.Empty)
+                            {
+                                DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, index, HookContent[i]);
+                            }
                         }
                     }
                 }
