@@ -862,7 +862,7 @@ namespace InfiniteRoleplay.Windows
                     {
                         ImGui.InputTextMultiline("##hookedit" + h, ref HookEditContent[h], 3000, new Vector2(450, 100));
                     }
-                    for(int i = 0; i < hookCount; i++)
+                    for(int i = hookEditCount; i < hookCount + hookEditCount; i++)
                     {
                         ImGui.InputTextMultiline("##hook" + i, ref HookContent[i], 3000, new Vector2(450, 100));
                     }
@@ -873,8 +873,8 @@ namespace InfiniteRoleplay.Windows
                         {
                             int index = i + 1;
                             DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, index, HookEditContent[i]);
-                        }
 
+                        }
                     }
                 }
                 if (addAvatar == true)
