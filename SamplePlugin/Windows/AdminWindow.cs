@@ -85,7 +85,6 @@ namespace InfiniteRoleplay.Windows
         private TextureWrap avatarImg;
         private TextureWrap HealthImage;
         public static int SelectedSheetID;
-        private MessageBox msgBox;
         private string message;
         private string eminenceTooltip, hardinessTooltip, intellectTooltip, nimblenessTooltip, sensesTooltip, strengthTootlip;
 
@@ -105,7 +104,6 @@ namespace InfiniteRoleplay.Windows
             this._infoFont = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter16));
 
             this.showSheet = false;
-            this.msgBox = new MessageBox(this.plugin);
             this.eminenceTooltip = "Eminence:\n" +
                                        "Measures a character’s force of personality, persuasiveness, personal magnetism, leadership capabilities, and attractiveness. \n" +
                                        "A check might arise when you try to influence or entertain others, when you try\n" +

@@ -9,7 +9,7 @@ namespace InfiniteRoleplay.Util
 {
     internal class MessageTypes
     {
-        public static MessageBox msgBox;
+      
         public static void AlertMessage(Plugin plugin, string title, string description)
         {
 

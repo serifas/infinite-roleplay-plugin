@@ -54,7 +54,6 @@ namespace InfiniteRoleplay.Windows
         private readonly ConcurrentDictionary<string, string> _startPaths = new();
         private Plugin plugin;
 
-
         private PlayerCharacter playerCharacter;
         private ChatGui chatGui;
         private DalamudPluginInterface pg;
@@ -70,6 +69,7 @@ namespace InfiniteRoleplay.Windows
         public static bool addHooks = false;
         public static bool editHooks = false;
         public static bool addStory = false;
+        public static bool resetHooks;
         public static string[] HookContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static string[] HookEditContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
 
@@ -84,7 +84,7 @@ namespace InfiniteRoleplay.Windows
         public static bool editProfile = false;
         public bool ExistingBio;
         public static bool ExistingHooks;
-        public static int hookCount;
+        public static int hookCount = 0;
         public static int hookEditCount;
         public static string[] hooks;
         public bool ExistingStory;
@@ -105,6 +105,7 @@ namespace InfiniteRoleplay.Windows
         private string[] alignmentNames = new string[]{};
         public byte[] avatarBytes, existingAvatarBytes;
         public int availablePercentage = 50;
+        public int[] flaggedHookIndexes = new int[] { };
         //Font Vars
         private GameFontHandle _Font;
         //BIO VARS
@@ -243,7 +244,7 @@ namespace InfiniteRoleplay.Windows
             if (editProfile == true)
             {
                 ImGui.Spacing();
-                if (ExistingBio == true) { if (ImGui.Button("Edit Bio", new Vector2(100, 20))) { ClearUI(); editBio = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your bio."); } } else { if (ImGui.Button("Add Bio", new Vector2(100, 20))) { ClearUI(); addBio = true; } }
+                if (ExistingBio == true) { if (ImGui.Button("Edit Bio", new Vector2(100, 20))) { ClearUI();  editBio = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your bio."); } } else { if (ImGui.Button("Add Bio", new Vector2(100, 20))) { ClearUI(); addBio = true; } }
                 ImGui.SameLine();
                 if (ExistingHooks == true) { if (ImGui.Button("Edit Hooks", new Vector2(100, 20))) { ClearUI(); editHooks = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Hooks."); } } else { if (ImGui.Button("Add Hooks", new Vector2(100, 20))) { ClearUI(); addHooks = true; } }
                 ImGui.SameLine();
@@ -831,14 +832,26 @@ namespace InfiniteRoleplay.Windows
                 }
                 if (addHooks == true)
                 {
-                    if (ImGui.Button("Add Hook"))
+                    string hookMsg = "";
+                    if (ImGui.Button("+", new Vector2(30,30)))
                     {
                         hookCount++;
+                    }
+                    ImGui.SameLine();
+                    if (ImGui.Button("-", new Vector2(30, 30)))
+                    {
+                        hookCount--;
+                        if(hookCount < 1)
+                        {
+                            hookCount = 0;
+                        }
                     }
 
                     for (int i = 0; i < hookCount; i++)
                     {
+                        int index = i + 1;
                         ImGui.InputTextMultiline("##content" + i, ref HookContent[i], 3000, new Vector2(450, 100));
+                        hookMsg += "<hook>" + index + "," + HookContent[i] + "</hook>|||";
                     }
                     if (ImGui.Button("Submit Hooks"))
                     {
@@ -847,36 +860,61 @@ namespace InfiniteRoleplay.Windows
                             int index = i + 1;
                             ClearUI();
                             editHooks = true;
-                            DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, index, HookContent[i]);
+                            addHooks = false;
+                            DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, hookMsg);
                         }
 
                     }
                 }
                 if (editHooks == true)
                 {
-                    if (ImGui.Button("Add Hook"))
+                    if(resetHooks == true)
+                    {
+                        hookCount = 0;
+                        resetHooks = false;
+                    }
+                    string hookMsg = "";
+                    string deleteHookMsg = "";
+                    if (ImGui.Button("+", new Vector2(30, 30)))
                     {
                         hookCount++;
                     }
+                    ImGui.SameLine();
+                    if (ImGui.Button("-", new Vector2(30, 30)))
+                    {
+                        hookCount--;
+                        deleteHookMsg += "<deletehook>" + hookCount + hookEditCount + "</deletehook>|||";
+                        if (hookCount < 1)
+                        {
+                            hookCount = 0;
+                            hookEditCount--;
+                            deleteHookMsg += "<deletehook>" + hookEditCount + hookEditCount + "</deletehook>|||";
+                            if (hookEditCount < 1)
+                            {
+                                hookEditCount = 0;
+                            }
+                        }
+                    }
                     for (int h = 0; h < hookEditCount; h++)
                     {
+                        int index = hookCount + hookEditCount;
                         ImGui.InputTextMultiline("##hookedit" + h, ref HookEditContent[h], 3000, new Vector2(450, 100));
+                        hookMsg += "<hook>" +index + "," + HookEditContent[h] + "</hook>|||";
                     }
-                    for(int i = hookEditCount; i < hookCount + hookEditCount; i++)
+                    for(int i = 0; i < hookCount; i++)
                     {
+                        int index = hookCount + hookEditCount;
+                        hookMsg += "<hook>" + index + "," + HookContent[i] + "</hook>|||";
                         ImGui.InputTextMultiline("##hook" + i, ref HookContent[i], 3000, new Vector2(450, 100));
                     }
                     if (ImGui.Button("Submit Hooks"))
                     {
-                        int hookCurrent = hookCount + hookEditCount;
-                        for (int i = 0; i < hookCurrent; i++)
+                        if(hookMsg != "")
                         {
-                            int index = i + 1;
-                            DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, index, HookEditContent[i]);
-                            if (HookEditContent[i] == string.Empty)
-                            {
-                                DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, index, HookContent[i]);
-                            }
+                            DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), hookMsg);
+                        }                        
+                        if(deleteHookMsg != ""){
+                            DataSender.DeleteHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), deleteHookMsg);
                         }
                     }
                 }
@@ -917,7 +955,6 @@ namespace InfiniteRoleplay.Windows
             ExistingHooks = DataReceiver.ExistingHooks;
             existingAvatarBytes = DataReceiver.currentAvatar;
             lawfulGoodEditVal = DataReceiver.lawfulGoodEditVal;
-            hookEditCount = DataReceiver.hookEditCount;
 
             
             if (editBio == true)

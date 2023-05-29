@@ -185,13 +185,13 @@ namespace InfiniteRoleplay
         {
             var targetPlayer = targetManager.Target as PlayerCharacter;
             
-            if (targetPlayer != null && dutyState.IsDutyStarted == false)
+            if (targetPlayer != null)
             {
                 string world = targetPlayer.HomeWorld.GameData.Name.ToString();
                 string name = targetPlayer.Name.ToString();
                 if(targeted == false)
                 {
-                    SendTargetInfoRequest(name, world, true);
+                    DataSender.RequestTargetProfile(name, world);
                     targeted = true;
                 }
             }
@@ -199,16 +199,6 @@ namespace InfiniteRoleplay
             {
                 targeted = false;
             }
-        }
-        public void SendTargetInfoRequest(string targetPlayerName, string targetPlayerWorld, bool triggered)
-        {
-            targeted = true;
-            if (triggered == true)
-            {
-                triggered = false;
-                DataSender.RequestTargetProfile(targetPlayerName, targetPlayerWorld);
-            }
-            
         }
         private void OnCommand(string command, string args)
         {
@@ -238,20 +228,7 @@ namespace InfiniteRoleplay
             }
         }
         
-        public void LoadNameTakenMessage()
-        {
-            LoadAlert("Banned Account", "This account has been banned by the admins.", new Vector4(1, 0, 0, 1), new Vector4(1, 1, 1, 1));
-        }
-        public void LoadBannedMessage()
-        {
-            LoadAlert("Banned Account", "This account has been banned by the admins.", new Vector4(1, 0, 0, 1), new Vector4(1, 1, 1, 1));
-        }
-        public void LoadAlert(string title, string description, Vector4 titleColor, Vector4 descColor)
-        {
-           
-           
-
-        }
-        
+      
+      
     }
 }

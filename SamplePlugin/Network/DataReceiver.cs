@@ -49,7 +49,7 @@ namespace UpdateTest
         public static string accountStatus = "status...";
         public static bool ExistingProfileData = false, ExistingTargetProfileData = false, targetBioData = false;
         public static byte[] currentAvatar , currentTargetAvatar;
-        public static int hookEditCount;
+        public static int hookEditCount, hookCount;
         public static int targetHookEditCount;
         public static int lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, 
                           lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, 
@@ -380,8 +380,8 @@ namespace UpdateTest
             for (int i = 0; i < hookSplit.Count(); i++)
             {
                 string hookContent = hookRx.Match(hookSplit[i]).Groups[1].Value;
-                hookEditCount = i;
                 ProfileWindow.hookEditCount = i;
+                ProfileWindow.resetHooks = true;
                 ProfileWindow.HookEditContent[i] = hookContent;
             }
                 buffer.Dispose();

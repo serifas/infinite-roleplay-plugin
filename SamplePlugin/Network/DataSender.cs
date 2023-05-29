@@ -1,4 +1,5 @@
 
+using Dalamud.Hooking;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using InfiniteRoleplay;
 using Lumina.Excel.GeneratedSheets;
@@ -32,6 +33,7 @@ namespace UpdateTest
         CSendHooks = 14,
         SRequestTargetProfile = 15,
         CRegister = 16,
+        CDeleteHook = 17,
     }
     public class DataSender
     {
@@ -216,18 +218,27 @@ namespace UpdateTest
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SendHooks(string charactername, string characterworld, int hookID, string hook)
+        public static void SendHooks(string charactername, string characterworld, string hooks)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendHooks);
             buffer.WriteString(charactername);
             buffer.WriteString(characterworld);
-            buffer.WriteInteger(hookID);
-            buffer.WriteString(hook);
+            buffer.WriteString(hooks);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+        public static void DeleteHooks(string charactername, string characterworld, string hookMsg)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CDeleteHook);
+            buffer.WriteString(charactername);
+            buffer.WriteString(characterworld);
+            buffer.WriteString(hookMsg);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
 
-        }
+            }
         public static void CreateProfile(string username, string charactername, byte[] avatarBytes, int avatarBytesLength, string race, string age, string height, string weight, string afg, string hooks, string story, string url)
         {
 
