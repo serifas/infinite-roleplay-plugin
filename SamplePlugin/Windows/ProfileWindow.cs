@@ -53,7 +53,7 @@ namespace InfiniteRoleplay.Windows
     {
         private readonly ConcurrentDictionary<string, string> _startPaths = new();
         private Plugin plugin;
-
+        public static bool loadedSelf = false;
         private PlayerCharacter playerCharacter;
         private ChatGui chatGui;
         private DalamudPluginInterface pg;
@@ -153,7 +153,6 @@ namespace InfiniteRoleplay.Windows
                              TextureWrap lawfulevilBar, TextureWrap neutralevilBar, TextureWrap chaoticevilBar,
 
                              //add plus buttons
-
                              TextureWrap lawfulgoodPlus, TextureWrap neutralgoodPlus, TextureWrap chaoticgoodPlus,
                              TextureWrap lawfulneutralPlus, TextureWrap trueneutralPlus, TextureWrap chaoticneutralPlus,
                              TextureWrap lawfulevilPlus, TextureWrap neutralevilPlus, TextureWrap chaoticevilPlus,
@@ -224,6 +223,7 @@ namespace InfiniteRoleplay.Windows
 
             if (addProfile == true)
             {
+                editProfile = false;
                 ImGui.Spacing();
                 if (ImGui.Button("Add Bio", new Vector2(100, 20))) { ClearUI(); addBio = true; }
                 if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add a bio section to your profile."); }
@@ -243,6 +243,7 @@ namespace InfiniteRoleplay.Windows
             }
             if (editProfile == true)
             {
+                addProfile = false;
                 ImGui.Spacing();
                 if (ExistingBio == true) { if (ImGui.Button("Edit Bio", new Vector2(100, 20))) { ClearUI();  editBio = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your bio."); } } else { if (ImGui.Button("Add Bio", new Vector2(100, 20))) { ClearUI(); addBio = true; } }
                 ImGui.SameLine();
@@ -874,7 +875,6 @@ namespace InfiniteRoleplay.Windows
                         resetHooks = false;
                     }
                     string hookMsg = "";
-                    string deleteHookMsg = "";
                     if (ImGui.Button("+", new Vector2(30, 30)))
                     {
                         hookCount++;
@@ -883,12 +883,10 @@ namespace InfiniteRoleplay.Windows
                     if (ImGui.Button("-", new Vector2(30, 30)))
                     {
                         hookCount--;
-                        deleteHookMsg += "<deletehook>" + hookCount + hookEditCount + "</deletehook>|||";
                         if (hookCount < 1)
                         {
                             hookCount = 0;
                             hookEditCount--;
-                            deleteHookMsg += "<deletehook>" + hookEditCount + hookEditCount + "</deletehook>|||";
                             if (hookEditCount < 1)
                             {
                                 hookEditCount = 0;
@@ -909,13 +907,7 @@ namespace InfiniteRoleplay.Windows
                     }
                     if (ImGui.Button("Submit Hooks"))
                     {
-                        if(hookMsg != "")
-                        {
-                            DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), hookMsg);
-                        }                        
-                        if(deleteHookMsg != ""){
-                            DataSender.DeleteHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), deleteHookMsg);
-                        }
+                         DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), hookMsg);
                     }
                 }
                 if (addAvatar == true)
@@ -955,7 +947,7 @@ namespace InfiniteRoleplay.Windows
             ExistingHooks = DataReceiver.ExistingHooks;
             existingAvatarBytes = DataReceiver.currentAvatar;
             lawfulGoodEditVal = DataReceiver.lawfulGoodEditVal;
-
+            loadedSelf = DataReceiver.LoadedSelf;
             
             if (editBio == true)
             {

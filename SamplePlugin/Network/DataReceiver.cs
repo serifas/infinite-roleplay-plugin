@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using UpdateTest;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.HumanInterfaceDevice;
+using Windows.UI.Xaml.Media;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace UpdateTest
@@ -43,10 +44,12 @@ namespace UpdateTest
         SRecTargetBio = 29,
         SRecTargetProfile = 30,
         SRecNoTargetProfile = 31,
+      
     }
     class DataReceiver
     {
         public static string accountStatus = "status...";
+        public static bool LoadedSelf = false;
         public static bool ExistingProfileData = false, ExistingTargetProfileData = false, targetBioData = false;
         public static byte[] currentAvatar , currentTargetAvatar;
         public static int hookEditCount, hookCount;
@@ -322,6 +325,8 @@ namespace UpdateTest
             currentTargetAvatar = avatarBytes;
             ExistingTargetBioData = true;
             buffer.Dispose();
+
+            plugin.WindowSystem.GetWindow("TARGET").IsOpen = true;
         }
         public static void ReceiveProfileBio(byte[] data)
         {
@@ -347,6 +352,7 @@ namespace UpdateTest
             int lawful_evil = buffer.ReadInt();
             int neutral_evil = buffer.ReadInt();
             int chaotic_evil = buffer.ReadInt();
+            
             ProfileWindow.characterEditName = name; ProfileWindow.characterEditRace = race; ProfileWindow.characterEditGender = gender;
             ProfileWindow.characterEditAge = age.ToString(); ProfileWindow.characterEditHeight = height; ProfileWindow.characterEditWeight = weight.ToString();
             ProfileWindow.characterEditAfg = atFirstGlance;
@@ -361,10 +367,11 @@ namespace UpdateTest
             ProfileWindow.alignmentEditVals[7] = neutral_evil;
             ProfileWindow.alignmentEditVals[8] = chaotic_evil;
 
-
             currentAvatar = avatarBytes;
             ExistingBioData = true;
             buffer.Dispose();
+
+            plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
         }
         public static void ReceiveProfileHooks(byte[] data)
         {

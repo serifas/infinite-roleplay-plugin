@@ -7,6 +7,7 @@ using ImGuiNET;
 using Dalamud.Interface.ImGuiFileDialog;
 using UpdateTest;
 using Windows.Devices.HumanInterfaceDevice;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
 
 namespace InfiniteRoleplay.Windows;
 
@@ -21,6 +22,7 @@ public class LoginWindow : Window, IDisposable
     public bool attemptedLogin = false;
     public bool updateWindow = false;
     public bool login = true;
+    public bool loginRequest = false;
     public bool register = false;
     public bool agree = false;
     public string status = "status...";
@@ -62,7 +64,7 @@ public class LoginWindow : Window, IDisposable
                 this.Configuration.username = this.username;
                 this.Configuration.password = this.password;
                 this.Configuration.Save();
-                DataSender.Login(username, password);
+                loginRequest = true;
             }
             if (ImGui.Button("Register"))
             {
@@ -109,6 +111,11 @@ public class LoginWindow : Window, IDisposable
     {
         this.status = DataReceiver.accountStatus;
         this.statusColor = DataReceiver.accounStatusColor;
+        if(loginRequest == true && ClientTCP.clientSocket.Connected == true)
+        {
+            DataSender.Login(username, password);
+            loginRequest = false;
+        }
     }
 
 

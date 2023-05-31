@@ -18,7 +18,7 @@ namespace UpdateTest
         private static NetworkStream myStream;
         private static byte[] recBuffer;
         private static string server = "77.83.199.90";
-        private static int port = 5392;
+        private static int port = 80;
         public static void InitializingNetworking(bool start)
         {
           
@@ -48,7 +48,10 @@ namespace UpdateTest
             }
             else
             {
-                
+                if (clientSocket.Connected == true)
+                {
+                    Disconnect();
+                }
 
             }
         }

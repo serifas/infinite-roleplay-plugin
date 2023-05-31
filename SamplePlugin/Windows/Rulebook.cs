@@ -124,7 +124,7 @@ public class Rulebook : Window, IDisposable
 
             if (ImGui.Button("Show Settings"))
             {
-                this.Plugin.DrawConfigUI();
+                this.Plugin.DrawLoginUI();
             }
 
         }

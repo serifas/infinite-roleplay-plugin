@@ -23,6 +23,8 @@ using ImGuiNET;
 using ImGuiScene;
 using static Lumina.Data.Files.ScdFile;
 using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Objects;
+using Dalamud.Game.Gui;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -42,13 +44,15 @@ namespace InfiniteRoleplay.Windows
         public Configuration configuration;
         public static bool WindowOpen;
         public string msg;
-
+        private TargetManager targetManager;
         private PlayerCharacter playerCharacter;
+        private ChatGui ChatGUI;
+        public static PlayerCharacter lastTarget;
 
         private bool _showFileDialogError = false;
-
-
-        public OptionsWindow(Plugin plugin, DalamudPluginInterface Interface, PlayerCharacter playerCharacter) : base(
+        public bool openedProfile = false;
+        public bool openedTargetProfile = false;
+        public OptionsWindow(Plugin plugin, DalamudPluginInterface Interface, PlayerCharacter playerCharacter, TargetManager targetManager, ChatGui chatGui) : base(
        "OPTIONS", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
             this.SizeConstraints = new WindowSizeConstraints
@@ -67,19 +71,29 @@ namespace InfiniteRoleplay.Windows
             this.systemsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "common/systems.png");
             this.systemsImage = Interface.UiBuilder.LoadImage(systemsImagePath);
             this.playerCharacter = playerCharacter;
-
+            this.targetManager = targetManager;
+            this.ChatGUI = chatGui;
         }
+       
         public override void Draw()
         {
-            ImGui.Text("Working");
             if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
             {
-                DataSender.FetchProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name);
+                var targetPlayer = targetManager.Target as PlayerCharacter;
+                
+                if(targetPlayer == null)
+                {
+                    DataSender.FetchProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name);
+                }
+                if(targetPlayer != null)
+                {
+                    DataSender.RequestTargetProfile(targetPlayer.Name.ToString(), targetPlayer.HomeWorld.GameData.Name.ToString());
+                }     
               
             }
             if (ImGui.IsItemHovered())
             {
-                ImGui.SetTooltip("Profile");
+                ImGui.SetTooltip("View Target Profile");
             }
             ImGui.SameLine();
             if (ImGui.ImageButton(this.documentImage.ImGuiHandle, new Vector2(100, 50)))
@@ -116,10 +130,16 @@ namespace InfiniteRoleplay.Windows
                      plugin.WindowSystem.GetWindow("ADMINISTRATION").IsOpen = true;
                  }
              }
-
+            if (ImGui.Button("Logout", new Vector2(225, 25)))
+            {
+                plugin.WindowSystem.GetWindow("LOGIN").IsOpen = true;
+                plugin.WindowSystem.GetWindow("OPTIONS").IsOpen = false;
+            }
 
 
         }
+
+       
         public void Dispose()
         {
             WindowOpen = false;

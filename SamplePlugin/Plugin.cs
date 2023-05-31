@@ -33,6 +33,7 @@ using Windows.Storage.Pickers.Provider;
 using Dalamud.Game;
 using System.Runtime;
 using Dalamud.Game.DutyState;
+using FFXIVClientStructs.FFXIV.Client.Game.Event;
 
 namespace InfiniteRoleplay
 {
@@ -45,7 +46,7 @@ namespace InfiniteRoleplay
         public string Name => "Infinite Plugin";
         private const string CommandName = "/infinite";
         private DalamudPluginInterface PluginInterface { get; init; }
-
+        public bool loadNetworking = true;
         public TargetManager targetManager { get; init; }
         private ClientState clientState { get; init; }
         private DutyState dutyState { get; init; }
@@ -55,7 +56,7 @@ namespace InfiniteRoleplay
         private CommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("InfinitePlugin");
-        public bool status = false;
+        public status = false;
         public Dictionary<int, string> characters = new Dictionary<int, string>();
         public Plugin(
 
@@ -75,7 +76,7 @@ namespace InfiniteRoleplay
             }
             catch
             {
-
+               
             }
             this.PluginInterface = pluginInterface;
             this.CommandManager = commandManager;
@@ -86,9 +87,9 @@ namespace InfiniteRoleplay
             this.framework = framework;
             this.dutyState = DutyState;
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            
             this.Configuration.Initialize(this.PluginInterface);
             this.framework.Update += Update;
-
             TextureWrap AvatarHolder = this.PluginInterface.UiBuilder.LoadImage(Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "profile_avis/avatar_holder.png"));
             TextureWrap lawfulGoodMinus = this.PluginInterface.UiBuilder.LoadImage(Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "alignments/-.png"));
             TextureWrap lawfulGoodPlus = this.PluginInterface.UiBuilder.LoadImage(Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "alignments/+.png"));
@@ -142,7 +143,12 @@ namespace InfiniteRoleplay
 
 
             string name = "";
-            this.WindowSystem.AddWindow(new SystemsWindow(this));
+
+            Window systemWindow = new SystemsWindow(this);
+
+
+
+            this.WindowSystem.AddWindow(systemWindow);
             this.WindowSystem.AddWindow(new ProfileWindow(this, chatgui, clientState.LocalPlayer, this.PluginInterface, AvatarHolder, 
                                                                 lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil, 
                                                                 lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar,
@@ -151,7 +157,7 @@ namespace InfiniteRoleplay
             this.WindowSystem.AddWindow(new Rulebook(this));
             this.WindowSystem.AddWindow(new LoginWindow(this));
             //this.WindowSystem.AddWindow(new SystemsWindow(this));
-            this.WindowSystem.AddWindow(new OptionsWindow(this, this.PluginInterface, clientState.LocalPlayer));
+            this.WindowSystem.AddWindow(new OptionsWindow(this, this.PluginInterface, clientState.LocalPlayer, targetManager, chatgui));
             this.WindowSystem.AddWindow(new MessageBox(this));
             this.WindowSystem.AddWindow(new AdminWindow(this, this.PluginInterface));
             this.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
@@ -159,10 +165,8 @@ namespace InfiniteRoleplay
                 HelpMessage = "to open the plugin window"
             });
             this.PluginInterface.UiBuilder.Draw += DrawUI;
-            this.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
+            this.PluginInterface.UiBuilder.OpenConfigUi += DrawLoginUI;
             DataReceiver.plugin = this;
-            ClientHandleData.InitializePackets(true);
-            ClientTCP.InitializingNetworking(true);
             this.WindowSystem.AddWindow(new TargetWindow(this, chatgui, this.PluginInterface, AvatarHolder,
                                                                 lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
                                                                 lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar,
@@ -172,40 +176,56 @@ namespace InfiniteRoleplay
 
         }
 
+    
+
         public void Dispose()
         {
             framework.Update -= Update;
             this.WindowSystem.RemoveAllWindows();
             this.CommandManager.RemoveHandler(CommandName);
-
-            ClientHandleData.InitializePackets(false);
             ClientTCP.InitializingNetworking(false);
+            ClientHandleData.InitializePackets(false);
         }
         public void Update(Framework framework)
         {
-            var targetPlayer = targetManager.Target as PlayerCharacter;
-            
-            if (targetPlayer != null)
+            if(IsPlayerOnline() == true)
             {
-                string world = targetPlayer.HomeWorld.GameData.Name.ToString();
-                string name = targetPlayer.Name.ToString();
-                if(targeted == false)
-                {
-                    DataSender.RequestTargetProfile(name, world);
-                    targeted = true;
-                }
+
             }
-            if(targetPlayer == null)
+        }
+        public bool IsPlayerConnected()
+        {
+            if(ClientHandleData.packets.Count > 1 && ClientTCP.clientSocket.Connected == true)
             {
-                targeted = false;
+                return true;
             }
+            else
+            {
+                return false;
+            }
+        }
+        public bool IsPlayerOnline()
+        {
+            if (clientState.IsLoggedIn == true && clientState.LocalPlayer != null && clientState.LocalPlayer.IsValid())
+            {
+               
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
         }
         private void OnCommand(string command, string args)
         {
-            DrawConfigUI();
+            DrawLoginUI();
             // in response to the slash command, just display our main ui          
         }
-       
+        public static void RemoveAllWindows()
+        {
+
+        }
         private void DrawUI()
         {
             this.WindowSystem.Draw();
@@ -214,7 +234,7 @@ namespace InfiniteRoleplay
 
        
 
-        public void DrawConfigUI()
+        public void DrawLoginUI()
         {          
             
             if (loggedIn == true)
