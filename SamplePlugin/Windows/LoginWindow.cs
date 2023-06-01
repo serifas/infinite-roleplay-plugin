@@ -7,7 +7,6 @@ using ImGuiNET;
 using Dalamud.Interface.ImGuiFileDialog;
 using UpdateTest;
 using Windows.Devices.HumanInterfaceDevice;
-using FFXIVClientStructs.FFXIV.Client.Game.Object;
 
 namespace InfiniteRoleplay.Windows;
 
@@ -64,6 +63,11 @@ public class LoginWindow : Window, IDisposable
                 this.Configuration.username = this.username;
                 this.Configuration.password = this.password;
                 this.Configuration.Save();
+                if(ClientTCP.clientSocket.Connected == false)
+                {
+                    ClientHandleData.InitializePackets(true);
+                    ClientTCP.InitializingNetworking(true);
+                }
                 loginRequest = true;
             }
             if (ImGui.Button("Register"))

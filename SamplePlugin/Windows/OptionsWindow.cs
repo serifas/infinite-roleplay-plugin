@@ -85,7 +85,7 @@ namespace InfiniteRoleplay.Windows
                 {
                     DataSender.FetchProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name);
                 }
-                if(targetPlayer != null)
+                if (targetPlayer != null)
                 {
                     DataSender.RequestTargetProfile(targetPlayer.Name.ToString(), targetPlayer.HomeWorld.GameData.Name.ToString());
                 }     
@@ -132,6 +132,8 @@ namespace InfiniteRoleplay.Windows
              }
             if (ImGui.Button("Logout", new Vector2(225, 25)))
             {
+                ClientHandleData.InitializePackets(false);
+                ClientTCP.InitializingNetworking(false);
                 plugin.WindowSystem.GetWindow("LOGIN").IsOpen = true;
                 plugin.WindowSystem.GetWindow("OPTIONS").IsOpen = false;
             }

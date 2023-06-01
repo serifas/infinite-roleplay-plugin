@@ -24,7 +24,7 @@ namespace UpdateTest
           
             if(start == true)
             {
-                if (PingHost(server, port))
+                if(PingHost(server))
                 {
                     try
                     {
@@ -33,17 +33,17 @@ namespace UpdateTest
                         clientSocket.SendBufferSize = 65535;
                         recBuffer = new byte[65535 * 2];
                         clientSocket.BeginConnect(server, port, new AsyncCallback(ClientConnectionCallback), clientSocket);
-                    }
-                    catch (Exception ex)
-                    {
-                    }
 
+                    }
+                    catch
+                    {
+
+                    }
                 }
-                else
-                {
-                    
-                }
-               
+
+
+
+
 
             }
             else
@@ -58,8 +58,27 @@ namespace UpdateTest
 
 
 
-
-        public static bool PingHost(string _HostURI, int _PortNumber)
+        public static bool PingHost(string server)
+        {
+            bool connection = false;
+            try
+            {
+                Ping myPing = new Ping();
+                PingReply reply = myPing.Send(server, 1000);
+                if (reply != null)
+                {                    
+                    connection = true;
+                }
+            }
+            catch
+            {
+                connection = false;
+            }
+            return connection;
+            Console.ReadKey();
+        }
+    
+        /*public static bool PingHost(string _HostURI, int _PortNumber)
         {
             try
             {
@@ -71,7 +90,7 @@ namespace UpdateTest
             {
                 return false;
             }
-        }
+        }*/
 
         private static void ClientConnectionCallback(IAsyncResult result)
         {
@@ -110,7 +129,7 @@ namespace UpdateTest
         }
         public static void SendData(byte[] data)
         {
-            if (connected == true)
+            try
             {
                 var buffer = new ByteBuffer();
                 buffer.WriteInteger(data.GetUpperBound(0) - data.GetLowerBound(0) + 1);
@@ -118,10 +137,12 @@ namespace UpdateTest
                 myStream.BeginWrite(buffer.ToArray(), 0, buffer.ToArray().Length, null, null);
                 buffer.Dispose();
             }
-            else
+            catch
             {
-              
+
             }
+                
+           
 
         }
         public static void Disconnect()

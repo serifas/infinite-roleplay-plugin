@@ -56,7 +56,7 @@ namespace InfiniteRoleplay
         private CommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("InfinitePlugin");
-        public status = false;
+        public bool status = false;
         public Dictionary<int, string> characters = new Dictionary<int, string>();
         public Plugin(
 
@@ -176,46 +176,35 @@ namespace InfiniteRoleplay
 
         }
 
-    
+        private void ClientState_Logout(object? sender, System.EventArgs e)
+        {
+            ClientHandleData.InitializePackets(false);
+            ClientTCP.InitializingNetworking(false);
+        }
 
         public void Dispose()
         {
             framework.Update -= Update;
             this.WindowSystem.RemoveAllWindows();
             this.CommandManager.RemoveHandler(CommandName);
-            ClientTCP.InitializingNetworking(false);
+
             ClientHandleData.InitializePackets(false);
+            ClientTCP.InitializingNetworking(false);
         }
         public void Update(Framework framework)
         {
-            if(IsPlayerOnline() == true)
+            if (clientState.IsLoggedIn && loadNetworking == true)
             {
-
+                
+                ClientHandleData.InitializePackets(true);
+                ClientTCP.InitializingNetworking(true);
+                loadNetworking = false;
             }
-        }
-        public bool IsPlayerConnected()
-        {
-            if(ClientHandleData.packets.Count > 1 && ClientTCP.clientSocket.Connected == true)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        public bool IsPlayerOnline()
-        {
-            if (clientState.IsLoggedIn == true && clientState.LocalPlayer != null && clientState.LocalPlayer.IsValid())
+            if(clientState.IsLoggedIn == false)
             {
                
-                return true;
+                loadNetworking = true;
             }
-            else
-            {
-                return false;
-            }
-
         }
         private void OnCommand(string command, string args)
         {
