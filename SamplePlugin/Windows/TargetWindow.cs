@@ -490,7 +490,7 @@ namespace InfiniteRoleplay.Windows
             ExistingHooks = DataReceiver.ExistingTargetHooks;
             existingAvatarBytes = DataReceiver.currentTargetAvatar;
             hookEditCount = DataReceiver.targetHookEditCount;
-
+            
 
             if (viewBio == true)
             {

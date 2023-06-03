@@ -39,6 +39,7 @@ namespace InfiniteRoleplay
 {
     public sealed class Plugin : IDalamudPlugin
     {
+        public bool toggleconnection = true;
         public bool loggedIn;
         public bool targeted = false;
         public bool loadCallback = true;
@@ -88,9 +89,8 @@ namespace InfiniteRoleplay
             this.framework = framework;
             this.dutyState = DutyState;
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            
-            this.Configuration.Initialize(this.PluginInterface);
-            this.framework.Update += Update;
+            this.framework.Update +=UpdateData;
+            this.Configuration.Initialize(this.PluginInterface);           
             TextureWrap AvatarHolder = this.PluginInterface.UiBuilder.LoadImage(Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "profile_avis/avatar_holder.png"));
             TextureWrap lawfulGoodMinus = this.PluginInterface.UiBuilder.LoadImage(Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "alignments/-.png"));
             TextureWrap lawfulGoodPlus = this.PluginInterface.UiBuilder.LoadImage(Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "alignments/+.png"));
@@ -177,57 +177,78 @@ namespace InfiniteRoleplay
 
         }
 
-        private void ClientState_Logout(object? sender, System.EventArgs e)
-        {
-            ClientHandleData.InitializePackets(false);
-            ClientTCP.InitializingNetworking(false);
-        }
+        
 
         public void Dispose()
         {
-            framework.Update -= Update;
+            this.framework.Update -= UpdateData;
             this.WindowSystem.RemoveAllWindows();
             this.CommandManager.RemoveHandler(CommandName);
-
             ClientHandleData.InitializePackets(false);
             ClientTCP.InitializingNetworking(false);
         }
-        public void Update(Framework framework)
+        public void UpdateData(Framework framework)
         {
-            if (clientState.IsLoggedIn && loadNetworking == true)
+            if (IsConnectedToServer())
             {
-                
-                ClientHandleData.InitializePackets(true);
-                ClientTCP.InitializingNetworking(true);
-                loadNetworking = false;
+                toggleconnection = false;
             }
-            if(clientState.IsLoggedIn == false)
-            {               
-                loadNetworking = true;
-            }
-            if(ClientTCP.clientSocket.Connected == true && loadCallback == true)
+            else
             {
-                ClientTCP.ClientConnectionCallback();
-                loadCallback = false;
+                toggleconnection = true;
+            }
+            if (IsConnectedToServer() == false && IsLoggedIn() == true && toggleconnection == true)
+            {
+                ConnectToServer();
+            }
+            if (IsConnectedToServer() == false && IsLoggedIn() == false)
+            {
+                DisconnectFromServer();
             }
         }
+       
         private void OnCommand(string command, string args)
         {
             DrawLoginUI();
             // in response to the slash command, just display our main ui          
         }
-        public static void RemoveAllWindows()
-        {
-
-        }
         private void DrawUI()
         {
             this.WindowSystem.Draw();
+        }       
+        public static bool IsConnectedToServer()
+        {
+            if(ClientTCP.clientSocket.Connected == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-
-
-       
-
+        public bool IsLoggedIn()
+        {
+            if (clientState.IsLoggedIn && clientState.LocalPlayer != null && clientState.LocalPlayer.IsValid())
+            {
+                return true;
+            }
+            else 
+            { 
+                return false;
+            }
+        }
+        public void ConnectToServer()
+        {
+            ClientHandleData.InitializePackets(true);            
+            ClientTCP.InitializingNetworking(true);
+            ClientTCP.ClientConnectionCallback();
+        }
+        public void DisconnectFromServer()
+        {
+            ClientHandleData.InitializePackets(false);
+            ClientTCP.InitializingNetworking(false);
+        }
         public void DrawLoginUI()
         {          
             

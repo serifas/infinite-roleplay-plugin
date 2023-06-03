@@ -132,8 +132,7 @@ namespace InfiniteRoleplay.Windows
              }
             if (ImGui.Button("Logout", new Vector2(225, 25)))
             {
-                ClientHandleData.InitializePackets(false);
-                ClientTCP.InitializingNetworking(false);
+                plugin.DisconnectFromServer();
                 plugin.WindowSystem.GetWindow("LOGIN").IsOpen = true;
                 plugin.WindowSystem.GetWindow("OPTIONS").IsOpen = false;
             }
@@ -150,8 +149,6 @@ namespace InfiniteRoleplay.Windows
         {
             isAdmin = DataReceiver.isAdmin;
             msg = DataReceiver.ConnectionMsg;
-
-
         }
 
     }

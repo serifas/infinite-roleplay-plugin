@@ -62,12 +62,7 @@ public class LoginWindow : Window, IDisposable
             {
                 this.Configuration.username = this.username;
                 this.Configuration.password = this.password;
-                this.Configuration.Save();
-                if(ClientTCP.clientSocket.Connected == false)
-                {
-                    ClientHandleData.InitializePackets(true);
-                    ClientTCP.InitializingNetworking(true);
-                }
+                this.Configuration.Save();               
                 loginRequest = true;
             }
             if (ImGui.Button("Register"))
