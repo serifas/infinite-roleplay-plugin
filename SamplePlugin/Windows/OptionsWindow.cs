@@ -44,15 +44,14 @@ namespace InfiniteRoleplay.Windows
         public Configuration configuration;
         public static bool WindowOpen;
         public string msg;
-        private TargetManager targetManager;
-        private PlayerCharacter playerCharacter;
+        public static TargetManager targetManager;
+        public static PlayerCharacter playerCharacter;
         private ChatGui ChatGUI;
         public static PlayerCharacter lastTarget;
-
         private bool _showFileDialogError = false;
         public bool openedProfile = false;
         public bool openedTargetProfile = false;
-        public OptionsWindow(Plugin plugin, DalamudPluginInterface Interface, PlayerCharacter playerCharacter, TargetManager targetManager, ChatGui chatGui) : base(
+        public OptionsWindow(Plugin plugin, DalamudPluginInterface Interface, TargetManager targetManager, ChatGui chatGui) : base(
        "OPTIONS", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
             this.SizeConstraints = new WindowSizeConstraints
@@ -70,8 +69,7 @@ namespace InfiniteRoleplay.Windows
             this.groupsImage = Interface.UiBuilder.LoadImage(groupsImagePath);
             this.systemsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "common/systems.png");
             this.systemsImage = Interface.UiBuilder.LoadImage(systemsImagePath);
-            this.playerCharacter = playerCharacter;
-            this.targetManager = targetManager;
+            
             this.ChatGUI = chatGui;
         }
        
@@ -147,6 +145,7 @@ namespace InfiniteRoleplay.Windows
         }
         public override void Update()
         {
+            
             isAdmin = DataReceiver.isAdmin;
             msg = DataReceiver.ConnectionMsg;
         }

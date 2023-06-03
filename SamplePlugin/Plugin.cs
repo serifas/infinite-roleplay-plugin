@@ -34,12 +34,14 @@ using Dalamud.Game;
 using System.Runtime;
 using Dalamud.Game.DutyState;
 using FFXIVClientStructs.FFXIV.Client.Game.Event;
+using Lumina.Excel.GeneratedSheets;
 
 namespace InfiniteRoleplay
 {
     public sealed class Plugin : IDalamudPlugin
     {
         public bool toggleconnection = true;
+        
         public bool loggedIn;
         public bool targeted = false;
         public bool loadCallback = true;
@@ -71,7 +73,7 @@ namespace InfiniteRoleplay
 
             [RequiredVersion("1.0")] CommandManager commandManager)
         {
-
+            
             try
             {
                 Dalamud.Initialize(pluginInterface);
@@ -89,8 +91,7 @@ namespace InfiniteRoleplay
             this.framework = framework;
             this.dutyState = DutyState;
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            this.framework.Update +=UpdateData;
-            this.Configuration.Initialize(this.PluginInterface);           
+            this.Configuration.Initialize(this.PluginInterface);
             TextureWrap AvatarHolder = this.PluginInterface.UiBuilder.LoadImage(Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "profile_avis/avatar_holder.png"));
             TextureWrap lawfulGoodMinus = this.PluginInterface.UiBuilder.LoadImage(Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "alignments/-.png"));
             TextureWrap lawfulGoodPlus = this.PluginInterface.UiBuilder.LoadImage(Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "alignments/+.png"));
@@ -150,7 +151,7 @@ namespace InfiniteRoleplay
 
 
             this.WindowSystem.AddWindow(systemWindow);
-            this.WindowSystem.AddWindow(new ProfileWindow(this, chatgui, clientState.LocalPlayer, this.PluginInterface, AvatarHolder, 
+            this.WindowSystem.AddWindow(new ProfileWindow(this, chatgui, this.PluginInterface, AvatarHolder, 
                                                                 lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil, 
                                                                 lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar,
                                                                 lawfulGoodPlus, neutralGoodPlus, chaoticGoodPlus, lawfulNeutralPlus, trueNeutralPlus, chaoticNeutralPlus, lawfulEvilPlus, neutralEvilPlus, chaoticEvilPlus,
@@ -158,7 +159,7 @@ namespace InfiniteRoleplay
             this.WindowSystem.AddWindow(new Rulebook(this));
             this.WindowSystem.AddWindow(new LoginWindow(this));
             //this.WindowSystem.AddWindow(new SystemsWindow(this));
-            this.WindowSystem.AddWindow(new OptionsWindow(this, this.PluginInterface, clientState.LocalPlayer, targetManager, chatgui));
+            this.WindowSystem.AddWindow(new OptionsWindow(this, this.PluginInterface, targetManager, chatgui));
             this.WindowSystem.AddWindow(new MessageBox(this));
             this.WindowSystem.AddWindow(new AdminWindow(this, this.PluginInterface));
             this.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
@@ -173,37 +174,50 @@ namespace InfiniteRoleplay
                                                                 lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar,
                                                                 lawfulGoodPlus, neutralGoodPlus, chaoticGoodPlus, lawfulNeutralPlus, trueNeutralPlus, chaoticNeutralPlus, lawfulEvilPlus, neutralEvilPlus, chaoticEvilPlus,
                                                                 lawfulGoodMinus, neutralGoodMinus, chaoticGoodMinus, lawfulNeutralMinus, trueNeutralMinus, chaoticNeutralMinus, lawfulEvilMinus, neutralEvilMinus, chaoticEvilMinus));
-
+            ConnectToServer();
+            ReloadClient();
+            this.framework.Update += Update;
 
         }
 
-        
+        public void ReloadClient()
+        {
+            ProfileWindow.playerCharacter = this.clientState.LocalPlayer;
+            OptionsWindow.playerCharacter = this.clientState.LocalPlayer;
+            OptionsWindow.targetManager = this.targetManager;
+        }
 
         public void Dispose()
         {
-            this.framework.Update -= UpdateData;
+            this.framework.Update -= Update;
             this.WindowSystem.RemoveAllWindows();
             this.CommandManager.RemoveHandler(CommandName);
-            ClientHandleData.InitializePackets(false);
-            ClientTCP.InitializingNetworking(false);
+            DisconnectFromServer();
         }
-        public void UpdateData(Framework framework)
+        public void Update(Framework framework)
         {
-            if (IsConnectedToServer())
+            if (IsConnectedToServer() == true)
             {
                 toggleconnection = false;
+                if(IsLoggedIn() == false)
+                {
+                    DisconnectFromServer();
+                }
+                if(loadCallback == true)
+                {
+
+                    ClientTCP.ClientConnectionCallback();
+                    loadCallback = false;
+                }
             }
             else
             {
                 toggleconnection = true;
             }
-            if (IsConnectedToServer() == false && IsLoggedIn() == true && toggleconnection == true)
+            if (IsLoggedIn() == true && toggleconnection == true)
             {
+                ReloadClient();
                 ConnectToServer();
-            }
-            if (IsConnectedToServer() == false && IsLoggedIn() == false)
-            {
-                DisconnectFromServer();
             }
         }
        
@@ -229,7 +243,7 @@ namespace InfiniteRoleplay
         }
         public bool IsLoggedIn()
         {
-            if (clientState.IsLoggedIn && clientState.LocalPlayer != null && clientState.LocalPlayer.IsValid())
+            if (clientState.IsLoggedIn && clientState.LocalPlayer != null)
             {
                 return true;
             }
@@ -242,7 +256,8 @@ namespace InfiniteRoleplay
         {
             ClientHandleData.InitializePackets(true);            
             ClientTCP.InitializingNetworking(true);
-            ClientTCP.ClientConnectionCallback();
+           
+            loadCallback = true;
         }
         public void DisconnectFromServer()
         {

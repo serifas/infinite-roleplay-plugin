@@ -79,18 +79,12 @@ namespace UpdateTest
 
         }
         public static void ClientConnectionCallback()
-        {
-            if (clientSocket.Connected == false)
-            {
-                return;
-            }
-            else
-            {
-                connected = true;
-                clientSocket.NoDelay = true;
-                myStream = clientSocket.GetStream();
-                myStream.BeginRead(recBuffer, 0, 4096 * 2, ReceiveCallback, null);
-            }
+        {           
+            connected = true;
+            clientSocket.NoDelay = true;
+            myStream = clientSocket.GetStream();
+            myStream.BeginRead(recBuffer, 0, 4096 * 2, ReceiveCallback, null);
+            
         }
         private static void ReceiveCallback(IAsyncResult result)
         {

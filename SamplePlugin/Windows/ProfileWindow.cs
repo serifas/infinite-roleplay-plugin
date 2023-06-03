@@ -54,7 +54,7 @@ namespace InfiniteRoleplay.Windows
         private readonly ConcurrentDictionary<string, string> _startPaths = new();
         private Plugin plugin;
         public static bool loadedSelf = false;
-        private PlayerCharacter playerCharacter;
+        public static PlayerCharacter playerCharacter;
         private ChatGui chatGui;
         private DalamudPluginInterface pg;
         private FileDialogManager _fileDialogManager;
@@ -140,7 +140,7 @@ namespace InfiniteRoleplay.Windows
 
 
 
-        public ProfileWindow(Plugin plugin, ChatGui chatGui, PlayerCharacter playerChar, DalamudPluginInterface Interface, TextureWrap avatarHolder,
+        public ProfileWindow(Plugin plugin, ChatGui chatGui, DalamudPluginInterface Interface, TextureWrap avatarHolder,
                              //alignment icon
                              TextureWrap lawfulgood, TextureWrap neutralgood, TextureWrap chaoticgood,
                              TextureWrap lawfulneutral, TextureWrap trueneutral, TextureWrap chaoticneutral,
@@ -192,7 +192,7 @@ namespace InfiniteRoleplay.Windows
             this.lawfulGoodMinus = lawfulgoodMinus; this.neutralGoodMinus = neutralgoodMinus; this.chaoticGoodMinus = chaoticgoodMinus;
             this.lawfulNeutralMinus = lawfulneutralMinus; this.trueNeutralMinus = trueneutralMinus; this.chaoticNeutralMinus = chaoticneutralMinus;
             this.lawfulEvilMinus = lawfulevilMinus; this.neutralEvilMinus = neutralevilMinus; this.chaoticEvilMinus = chaoticevilMinus;
-            this.playerCharacter = playerChar;
+
             alignmentVals = new int[9] { lawfulGoodVal, neutralGoodVal, chaoticGoodVal, lawfulNeutralVal, trueNeutralVal, chaoticNeutralVal, lawfulEvilVal, neutralEvilVal, chaoticEvilVal };
             alignmentEditVals = new int[9] { lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal };
             this.alignmentWidthVals = new float[9] { lawfulGoodWidthVal, neutralGoodWidthVal, chaoticGoodWidthVal, lawfulNeutralWidthVal, trueNeutralWidthVal, chaoticNeutralWidthVal, lawfulEvilWidthVal, neutralEvilWidthVal, chaoticEvilWidthVal };
@@ -218,6 +218,7 @@ namespace InfiniteRoleplay.Windows
             }
             if (this.ExistingProfile == false)
             {
+                addProfile = true;
                 if (ImGui.Button("Add Profile", new Vector2(100, 20))) { addProfile = true; DataSender.CreateProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString()); }
             }
 
