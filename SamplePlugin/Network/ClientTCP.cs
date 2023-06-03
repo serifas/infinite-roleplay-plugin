@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Net.NetworkInformation;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Timers;
 
 namespace UpdateTest
 {
@@ -21,30 +22,10 @@ namespace UpdateTest
         private static int port = 80;
         public static void InitializingNetworking(bool start)
         {
-          
-            if(start == true)
+
+            if (start == true)
             {
-                if(PingHost(server))
-                {
-                    try
-                    {
-                        clientSocket = new TcpClient();
-                        clientSocket.ReceiveBufferSize = 65535;
-                        clientSocket.SendBufferSize = 65535;
-                        recBuffer = new byte[65535 * 2];
-                        clientSocket.BeginConnect(server, port, new AsyncCallback(ClientConnectionCallback), clientSocket);
-
-                    }
-                    catch
-                    {
-
-                    }
-                }
-
-
-
-
-
+                EstablishConnection();
             }
             else
             {
@@ -52,49 +33,53 @@ namespace UpdateTest
                 {
                     Disconnect();
                 }
-
             }
         }
 
 
 
-        public static bool PingHost(string server)
+       
+    
+       public static void PingHost(string _HostURI, int _PortNumber)
         {
-            bool connection = false;
             try
             {
-                Ping myPing = new Ping();
-                PingReply reply = myPing.Send(server, 1000);
-                if (reply != null)
-                {                    
-                    connection = true;
+                TcpClient client = new TcpClient(_HostURI, _PortNumber);        
+            
+            
+                if(client.Connected == true)
+                {
+                    client.Close();
                 }
+
+
             }
             catch
             {
-                connection = false;
+
             }
-            return connection;
-            Console.ReadKey();
+
+
+
         }
-    
-        /*public static bool PingHost(string _HostURI, int _PortNumber)
+        public static void EstablishConnection()
         {
             try
             {
-                TcpClient client = new TcpClient(_HostURI, _PortNumber);
-                client.Close();
-                return true;
+                clientSocket = new TcpClient();
+                clientSocket.ReceiveBufferSize = 65535;
+                clientSocket.SendBufferSize = 65535;
+                recBuffer = new byte[65535 * 2];
+                clientSocket.Connect(server, port);
             }
-            catch (Exception ex)
+            catch
             {
-                return false;
-            }
-        }*/
 
-        private static void ClientConnectionCallback(IAsyncResult result)
+            }
+
+        }
+        public static void ClientConnectionCallback()
         {
-            clientSocket.EndConnect(result);
             if (clientSocket.Connected == false)
             {
                 return;

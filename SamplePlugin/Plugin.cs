@@ -41,6 +41,7 @@ namespace InfiniteRoleplay
     {
         public bool loggedIn;
         public bool targeted = false;
+        public bool loadCallback = true;
         public string socketStatus;
         public DalamudPluginInterface PluginInterfacePub; 
         public string Name => "Infinite Plugin";
@@ -201,9 +202,13 @@ namespace InfiniteRoleplay
                 loadNetworking = false;
             }
             if(clientState.IsLoggedIn == false)
-            {
-               
+            {               
                 loadNetworking = true;
+            }
+            if(ClientTCP.clientSocket.Connected == true && loadCallback == true)
+            {
+                ClientTCP.ClientConnectionCallback();
+                loadCallback = false;
             }
         }
         private void OnCommand(string command, string args)
