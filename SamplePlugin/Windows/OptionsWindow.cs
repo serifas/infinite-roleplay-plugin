@@ -81,6 +81,7 @@ namespace InfiniteRoleplay.Windows
                 
                 if(targetPlayer == null)
                 {
+                    ProfileWindow.ClearUI();
                     DataSender.FetchProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name);
                 }
                 if (targetPlayer != null)
