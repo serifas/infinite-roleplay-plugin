@@ -34,7 +34,6 @@ namespace UpdateTest
         SRequestTargetProfile = 15,
         CRegister = 16,
         CDeleteHook = 17,
-        CSendStory = 18,
     }
     public class DataSender
     {
@@ -75,17 +74,6 @@ namespace UpdateTest
             buffer.WriteString(username);
             buffer.WriteString(SystemName);
             buffer.WriteString(Msg);
-            ClientTCP.SendData(buffer.ToArray());
-            buffer.Dispose();
-        }
-        public static void SendStory(string username, string worldname, string title, string chapters)
-        {
-            var buffer = new ByteBuffer();
-            buffer.WriteInteger((int)ClientPackets.CSendSystemStats);
-            buffer.WriteString(username);
-            buffer.WriteString(worldname);
-            buffer.WriteString(title);
-            buffer.WriteString(chapters);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
