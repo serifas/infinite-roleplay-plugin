@@ -72,7 +72,11 @@ namespace InfiniteRoleplay.Windows
         public static bool resetHooks;
         public static string[] HookContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static string[] HookEditContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-
+        public static string[] ChapterTitle = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
+        public static string[] ChapterEditTitle = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
+        public static string[] ChapterContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
+        public static string[] ChapterEditContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
+        public static string storyTitle;
         public static bool editStory = false;
         public static bool addOOC = false;
         public static bool editOOC = false;
@@ -86,6 +90,8 @@ namespace InfiniteRoleplay.Windows
         public static bool ExistingHooks;
         public static int hookCount = 0;
         public static int hookEditCount;
+        public static int chapterCount = 0;
+        public static int storyEditCount = 1;
         public static string[] hooks;
         public bool ExistingStory;
         public bool ExistingOOC;
@@ -921,7 +927,50 @@ namespace InfiniteRoleplay.Windows
                     editAvatar = false;
                     EditAvatar();
                 }
+                if (addStory == true)
+                {
+                    string storyMsg = "";
+                    ImGui.Text("Story Title");
+                    ImGui.SameLine();
+                    ImGui.InputText("##Title", ref storyTitle, 100);
+                    if (ImGui.Button("Add Chapter", new Vector2(30, 30)))
+                    {
+                        chapterCount++;
+                    }
+                    ImGui.SameLine();
+                    if (ImGui.Button("Remove Chapter", new Vector2(30, 30)))
+                    {
+                        chapterCount--;
+                        if (chapterCount < 1)
+                        {
+                            chapterCount = 0;
+                        }
+                    }
 
+                    for (int i = 0; i < chapterCount; i++)
+                    {
+                        int index = i + 1;
+                        ImGui.Text("Chapter Title:");
+                        ImGui.SameLine();
+                        ImGui.InputText("##chaptertitle" + i, ref ChapterTitle[i], 100);
+                        ImGui.Text("Chapter Content:");
+                        ImGui.SameLine();
+                        ImGui.InputTextMultiline("##chaptercontent" + i, ref ChapterContent[i], 3000, new Vector2(450, 100));
+                        storyMsg += "<chapter>" + index + "," + ChapterTitle[i]+ "," + ChapterContent[i] + "</chapter>>|||";
+                    }
+                    if (ImGui.Button("Submit Chapter"))
+                    {
+                        for (int i = 0; i < hookCount; i++)
+                        {
+                            int index = i + 1;
+                            ClearUI();
+                            editStory = true;
+                            addStory = false;
+                            DataSender.SendStory(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, storyTitle, storyMsg);
+                        }
+
+                    }
+                }
             }
         }
         public static void ClearUI()

@@ -119,15 +119,10 @@ namespace InfiniteRoleplay.Windows
         
         private bool _showFileDialogError = false;
         private TextureWrap lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil;
-        private float lawfulGoodWidth = 0, neutralGoodWidth = 0, chaoticGoodWidth = 0, lawfulNeutralWidth = 0, trueNeutralWidth = 0, chaoticNeutralWidth = 0, lawfulEvilWidth = 0, neutralEvilWidth = 0, chaoticEvilWidth = 0;
         private int lawfulGoodWidthVal = 0, neutralGoodWidthVal = 0, chaoticGoodWidthVal = 0, lawfulNeutralWidthVal = 0, trueNeutralWidthVal = 0, chaoticNeutralWidthVal = 0, lawfulEvilWidthVal = 0, neutralEvilWidthVal = 0, chaoticEvilWidthVal = 0;
         private int lawfulGoodVal = 0, neutralGoodVal = 0, chaoticGoodVal = 0, lawfulNeutralVal = 0, trueNeutralVal = 0, chaoticNeutralVal = 0, lawfulEvilVal = 0, neutralEvilVal = 0, chaoticEvilVal = 0;
         private TextureWrap lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar;
-        private TextureWrap lawfulGoodPlus, neutralGoodPlus, chaoticGoodPlus, lawfulNeutralPlus, trueNeutralPlus, chaoticNeutralPlus, lawfulEvilPlus, neutralEvilPlus, chaoticEvilPlus;
-        private TextureWrap lawfulGoodMinus, neutralGoodMinus, chaoticGoodMinus, lawfulNeutralMinus, trueNeutralMinus, chaoticNeutralMinus, lawfulEvilMinus, neutralEvilMinus, chaoticEvilMinus;
-        private int currentLawfulGood, currentNeutralGood, currentChaoticGood, currentLawfulNeutral, currentTrueNeutral, currentChaoticNeutral, currentLawfulEvil, currentNeutralEvil, currentChaoticEvil;
-
-
+     
 
         public TargetWindow(Plugin plugin, ChatGui chatGui, DalamudPluginInterface Interface, TextureWrap avatarHolder,
                              //alignment icon
@@ -139,16 +134,7 @@ namespace InfiniteRoleplay.Windows
 
                              TextureWrap lawfulgoodBar, TextureWrap neutralgoodBar, TextureWrap chaoticgoodBar,
                              TextureWrap lawfulneutralBar, TextureWrap trueneutralBar, TextureWrap chaoticneutralBar,
-                             TextureWrap lawfulevilBar, TextureWrap neutralevilBar, TextureWrap chaoticevilBar,
-
-                             //add plus buttons
-
-                             TextureWrap lawfulgoodPlus, TextureWrap neutralgoodPlus, TextureWrap chaoticgoodPlus,
-                             TextureWrap lawfulneutralPlus, TextureWrap trueneutralPlus, TextureWrap chaoticneutralPlus,
-                             TextureWrap lawfulevilPlus, TextureWrap neutralevilPlus, TextureWrap chaoticevilPlus,
-                             TextureWrap lawfulgoodMinus, TextureWrap neutralgoodMinus, TextureWrap chaoticgoodMinus,
-                             TextureWrap lawfulneutralMinus, TextureWrap trueneutralMinus, TextureWrap chaoticneutralMinus,
-                             TextureWrap lawfulevilMinus, TextureWrap neutralevilMinus, TextureWrap chaoticevilMinus
+                             TextureWrap lawfulevilBar, TextureWrap neutralevilBar, TextureWrap chaoticevilBar
                             ) : base(
        "TARGET", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
@@ -174,14 +160,6 @@ namespace InfiniteRoleplay.Windows
             this.lawfulNeutralBar = lawfulneutralBar; this.trueNeutralBar = trueneutralBar; this.chaoticNeutralBar = chaoticneutralBar;
             this.lawfulEvilBar = lawfulevilBar; this.neutralEvilBar = neutralevilBar; this.chaoticEvilBar = chaoticevilBar;
             this._Font = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
-            //plus and minus
-            this.lawfulGoodPlus = lawfulgoodPlus; this.neutralGoodPlus = neutralgoodPlus; this.chaoticGoodPlus = chaoticgoodPlus;
-            this.lawfulNeutralPlus = lawfulneutralPlus; this.trueNeutralPlus = trueneutralPlus; this.chaoticNeutralPlus = chaoticneutralPlus;
-            this.lawfulEvilPlus = lawfulevilPlus; this.neutralEvilPlus = neutralevilPlus; this.chaoticEvilPlus = chaoticevilPlus;
-            this.lawfulGoodMinus = lawfulgoodMinus; this.neutralGoodMinus = neutralgoodMinus; this.chaoticGoodMinus = chaoticgoodMinus;
-            this.lawfulNeutralMinus = lawfulneutralMinus; this.trueNeutralMinus = trueneutralMinus; this.chaoticNeutralMinus = chaoticneutralMinus;
-            this.lawfulEvilMinus = lawfulevilMinus; this.neutralEvilMinus = neutralevilMinus; this.chaoticEvilMinus = chaoticevilMinus;
-
             alignmentVals = new int[9] { lawfulGoodVal, neutralGoodVal, chaoticGoodVal, lawfulNeutralVal, trueNeutralVal, chaoticNeutralVal, lawfulEvilVal, neutralEvilVal, chaoticEvilVal };
             alignmentEditVals = new int[9] { lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal };
             this.alignmentWidthVals = new float[9] { lawfulGoodWidthVal, neutralGoodWidthVal, chaoticGoodWidthVal, lawfulNeutralWidthVal, trueNeutralWidthVal, chaoticNeutralWidthVal, lawfulEvilWidthVal, neutralEvilWidthVal, chaoticEvilWidthVal };

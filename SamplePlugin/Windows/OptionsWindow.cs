@@ -86,6 +86,7 @@ namespace InfiniteRoleplay.Windows
                 }
                 if (targetPlayer != null)
                 {
+                    
                     DataSender.RequestTargetProfile(targetPlayer.Name.ToString(), targetPlayer.HomeWorld.GameData.Name.ToString());
                 }     
               

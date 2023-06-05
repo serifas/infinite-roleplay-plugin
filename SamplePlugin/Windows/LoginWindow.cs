@@ -115,6 +115,7 @@ public class LoginWindow : Window, IDisposable
             DataSender.Login(username, password);
             loginRequest = false;
         }
+        
     }
 
 
