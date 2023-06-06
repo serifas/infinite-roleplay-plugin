@@ -893,7 +893,7 @@ namespace InfiniteRoleplay.Windows
                     for (int h = 0; h < hookEditCount; h++)
                     {
                         int index = hookCount + hookEditCount;
-                        string HookEdit = HookEditContent[h].Replace("---===---", "\n");
+                        string HookEdit = HookEditContent[h].Replace("---===---", "\n").Replace("''","'");
                         ImGui.InputTextMultiline("##hookedit" + h, ref HookEdit, 3000, new Vector2(450, 100));
                         hookMsg += "<hook>" +index + "," + HookEditContent[h].Replace("\n", "---===---") + "</hook>|||";
                     }
