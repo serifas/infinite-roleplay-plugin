@@ -853,7 +853,7 @@ namespace InfiniteRoleplay.Windows
                     {
                         int index = i + 1;
                         ImGui.InputTextMultiline("##content" + i, ref HookContent[i], 3000, new Vector2(450, 100));
-                        hookMsg += "<hook>" + index + "," + HookContent[i].Replace(Environment.NewLine, "---===---") + "</hook>|||";
+                        hookMsg += "<hook>" + index + "," + HookContent[i] + "</hook>|||";
                     }
                     if (ImGui.Button("Submit Hooks"))
                     {
@@ -893,7 +893,8 @@ namespace InfiniteRoleplay.Windows
                     for (int h = 0; h < hookEditCount; h++)
                     {
                         int index = hookCount + hookEditCount;
-                        ImGui.InputTextMultiline("##hookedit" + h, ref HookEditContent[h], 3000, new Vector2(450, 100));
+                        string HookEdit = HookEditContent[h].Replace("---===---", "\n");
+                        ImGui.InputTextMultiline("##hookedit" + h, ref HookEdit, 3000, new Vector2(450, 100));
                         hookMsg += "<hook>" +index + "," + HookEditContent[h].Replace("\n", "---===---") + "</hook>|||";
                     }
                     for(int i = 0; i < hookCount; i++)
