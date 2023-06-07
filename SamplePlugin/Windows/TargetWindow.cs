@@ -46,6 +46,7 @@ using Dalamud.Game.Gui;
 using Image = SixLabors.ImageSharp.Image;
 using System.Xml.Linq;
 using Dalamud.Game.ClientState.Objects;
+using OtterGui;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -64,23 +65,30 @@ namespace InfiniteRoleplay.Windows
 #pragma warning restore CS0169 // The field 'ProfileWindow.profilesImage' is never used
         public Configuration configuration;
         public static bool WindowOpen;
+        public static string[] StoryContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
+        public static string[] ChapterContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
+        public static string[] ChapterTitle = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static string[] HookContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static string[] HookEditContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-
+        public static int chapterCount;
+        public static int chapterEditCount;
         public static bool viewBio = false;
         public static bool viewHooks = false;
         public static bool viewStory = false;
         public static bool viewOOC = false;
         public static bool viewGallery = false;
+        public static bool resetStory = false;
         public bool ExistingBio;
         public static bool ExistingHooks;
         public static int hookCount;
         public static int hookEditCount;
+        private GameFontHandle _nameFont;
         public static string[] hooks;
         public bool ExistingStory;
         public bool ExistingOOC;
         public bool ExistingGallery;
         public bool ExistingProfile;
+        public static string storyTitle = "";
         public static int lawfulGoodEditVal,
                           neutralGoodEditVal,
                           chaoticGoodEditVal,
@@ -147,7 +155,8 @@ namespace InfiniteRoleplay.Windows
             this.pg = plugin.PluginInterfacePub;
             this.configuration = plugin.Configuration;
             this.avatarImg = avatarHolder;
-            
+
+            this._nameFont = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "profile_avis/avatar_holder.png"));
             this.avatarBytes = ImageToByteArray(image1);
             //alignment icons
@@ -423,26 +432,50 @@ namespace InfiniteRoleplay.Windows
 
 
                     }
-
+                
 
                 }
                
-            if (viewHooks == true)
-            {
-                    
-                for (int h = 0; h < hookEditCount; h++)
+                if (viewHooks == true)
                 {
-                    ImGui.Text(HookEditContent[h]);
-                }
+                    
+                    for (int h = 0; h < hookEditCount; h++)
+                    {
+                        ImGui.Text(HookEditContent[h]);
+                    }
                
-            }
+                }
 
+                if(viewStory == true)
+                {
+                   
+                    if (resetStory == true)
+                    {
+                        chapterCount = 0;
+                        resetStory = false;
+                    }
+                    using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
+                    using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+                    using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
+                    ImGuiUtil.DrawTextButton(storyTitle, Vector2.Zero, 0);
+                    string chapterMsg = "";
+                   
+                    
+                    for (int h = 0; h < chapterCount; h++)
+                    {
+                        string Chapter = ChapterContent[h].Replace("---===---", "\n").Replace("''", "'");
 
+                        using var defInfFontDen = ImRaii.DefaultFont();
+                        ImGui.Text(ChapterTitle[h]);
+                        ImGui.Text(Chapter);
+                        ImGui.SameLine();
+                    }
+                    
+                    
+                }
             }
-            else
-            {
-                ImGui.Text("No profile is available for this user");
-            }
+                
+               
 
 
 

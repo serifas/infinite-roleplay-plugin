@@ -44,13 +44,15 @@ namespace UpdateTest
         SRecTargetBio = 29,
         SRecTargetProfile = 30,
         SRecNoTargetProfile = 31,
+        SRecProfileStory = 32,
+        SRecTargetStory = 33,
       
     }
     class DataReceiver
     {
         public static string accountStatus = "status...";
         public static bool LoadedSelf = false;
-        public static bool ExistingProfileData = false, ExistingTargetProfileData = false, targetBioData = false;
+        public static bool ExistingProfileData = false, ExistingTargetProfileData = false, targetBioData = false, ExistingStory = false;
         public static byte[] currentAvatar , currentTargetAvatar;
         public static int hookEditCount, hookCount;
         public static int targetHookEditCount;
@@ -353,8 +355,8 @@ namespace UpdateTest
             int neutral_evil = buffer.ReadInt();
             int chaotic_evil = buffer.ReadInt();
             
-            ProfileWindow.characterEditName = name; ProfileWindow.characterEditRace = race; ProfileWindow.characterEditGender = gender;
-            ProfileWindow.characterEditAge = age.ToString(); ProfileWindow.characterEditHeight = height; ProfileWindow.characterEditWeight = weight.ToString();
+            ProfileWindow.characterEditName = name.Replace("''", "'"); ProfileWindow.characterEditRace = race.Replace("''", "'"); ProfileWindow.characterEditGender = gender.Replace("''", "'");
+            ProfileWindow.characterEditAge = age.ToString().Replace("''", "'"); ProfileWindow.characterEditHeight = height.Replace("''", "'"); ProfileWindow.characterEditWeight = weight.ToString().Replace("''", "'");
             ProfileWindow.characterEditAfg = atFirstGlance;
 
             ProfileWindow.alignmentEditVals[0] = lawful_good;
@@ -391,7 +393,53 @@ namespace UpdateTest
                 ProfileWindow.resetHooks = true;
                 ProfileWindow.HookEditContent[i] = hookContent;
             }
-                buffer.Dispose();
+            buffer.Dispose();
+        }
+        public static void ReceiveProfileStory(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            string storyTitle = buffer.ReadString();
+            string chaptersMsg = buffer.ReadString();
+            ExistingStory = true;
+
+            Regex chapterTitleRx = new Regex(@"<chapter_title>(.*?)</chapter_title>");
+            Regex chapterRx = new Regex(@"<chapter>(.*?)</chapter>");
+            string[] chaptersSplit = chaptersMsg.Replace("|||", "~").Split('~');
+
+            ProfileWindow.storyEditTitle = storyTitle;
+            for (int i = 0; i < chaptersSplit.Count(); i++)
+            {
+                string hookContent = chapterRx.Match(chaptersSplit[i]).Groups[1].Value;
+                string hookTitle = chapterTitleRx.Match(chaptersSplit[i]).Groups[1].Value;
+                ProfileWindow.chapterEditCount = i;
+                ProfileWindow.resetStory = true;
+                ProfileWindow.ChapterEditTitle[i] = hookTitle;
+                ProfileWindow.ChapterEditContent[i] = hookContent;
+            }
+            buffer.Dispose();
+        }
+
+        public static void ReceiveTargetStory(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            string storyTitle = buffer.ReadString();
+            string chapters = buffer.ReadString();
+
+            Regex hookRx = new Regex(@"<chapter>(.*?)</chapter>");
+            string[] chapterSplit = chapters.Replace("|||", "~").Split('~');
+            TargetWindow.storyTitle = storyTitle;
+            for (int i = 0; i < chapterSplit.Count(); i++)
+            {
+                string chapterContent = hookRx.Match(chapterSplit[i]).Groups[1].Value;
+                TargetWindow.chapterCount = i;
+                TargetWindow.resetStory = true;
+                TargetWindow.ChapterContent[i] = chapterContent;
+            }
+            buffer.Dispose();
         }
         public static void ReceiveTargetHooks(byte[] data)
         {

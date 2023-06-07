@@ -34,6 +34,8 @@ namespace UpdateTest
                 packets.Add((int)ServerPackets.SRecNoTargetHooks, DataReceiver.NoTargetProfileHooks);
                 packets.Add((int)ServerPackets.SRecTargetProfile, DataReceiver.ExistingTargetProfile);
                 packets.Add((int)ServerPackets.SRecNoTargetProfile, DataReceiver.NoTargetProfile);
+                packets.Add((int)ServerPackets.SRecProfileStory, DataReceiver.ReceiveProfileStory);
+                packets.Add((int)ServerPackets.SRecTargetStory, DataReceiver.ReceiveTargetStory);
 
 
             }

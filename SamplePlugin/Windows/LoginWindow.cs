@@ -21,7 +21,7 @@ public class LoginWindow : Window, IDisposable
     public bool attemptedLogin = false;
     public bool updateWindow = false;
     public bool login = true;
-    public bool loginRequest = false;
+    public static bool loginRequest = false;
     public bool register = false;
     public bool agree = false;
     public string status = "status...";

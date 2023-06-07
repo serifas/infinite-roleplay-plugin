@@ -77,10 +77,12 @@ namespace InfiniteRoleplay.Windows
         {
             if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
             {
+                LoginWindow.loginRequest = true;
+                plugin.ReloadClient();
+
                 var targetPlayer = targetManager.Target as PlayerCharacter;
-                
                 if(targetPlayer == null)
-                {
+                {                    
                     ProfileWindow.ClearUI();
                     DataSender.FetchProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name);
                 }
