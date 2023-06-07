@@ -145,7 +145,8 @@ namespace InfiniteRoleplay.Windows
         private TextureWrap lawfulGoodPlus, neutralGoodPlus, chaoticGoodPlus, lawfulNeutralPlus, trueNeutralPlus, chaoticNeutralPlus, lawfulEvilPlus, neutralEvilPlus, chaoticEvilPlus;
         private TextureWrap lawfulGoodMinus, neutralGoodMinus, chaoticGoodMinus, lawfulNeutralMinus, trueNeutralMinus, chaoticNeutralMinus, lawfulEvilMinus, neutralEvilMinus, chaoticEvilMinus;
         private int currentLawfulGood, currentNeutralGood, currentChaoticGood, currentLawfulNeutral, currentTrueNeutral, currentChaoticNeutral, currentLawfulEvil, currentNeutralEvil, currentChaoticEvil;
-
+        public bool reduceChapters = false;
+        public bool reduceHooks = false;
 
 
         public ProfileWindow(Plugin plugin, ChatGui chatGui, DalamudPluginInterface Interface, TextureWrap avatarHolder,
@@ -971,20 +972,25 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.Button("Remove Chapter"))
                     {
-                        chapterCount--;
-                        if (chapterCount < 1)
+                        reduceChapters = true;
+                        if(chapterCount > 0)
                         {
-                            chapterCount = 0;
-                            chapterEditCount--;
-                            if (chapterEditCount < 1)
-                            {
-                                chapterEditCount = 0;
-                            }
+                            chapterCount--;
+                            reduceChapters = false;
                         }
+                        if(chapterCount == 0 && reduceChapters == true)
+                        {
+                            if(chapterEditCount > 0)
+                            {
+                                chapterEditCount--;
+                            }
+                            
+                        }
+                        
+                        
                     }
                     for (int h = 0; h < chapterEditCount; h++)
                     {
-                        int index = chapterCount + chapterEditCount;
                         string ChapterEdit = ChapterEditContent[h].Replace("---===---", "\n").Replace("''", "'");
 
                         ImGui.Text("Chapter Title:");
@@ -998,7 +1004,6 @@ namespace InfiniteRoleplay.Windows
                     }
                     for (int i = 0; i < chapterCount; i++)
                     {
-                        int index = chapterCount + chapterEditCount;
                         ImGui.Text("Chapter Title:");
                         ImGui.SameLine();
                         ImGui.InputText("##chaptertitle" + i, ref ChapterTitle[i], 100);

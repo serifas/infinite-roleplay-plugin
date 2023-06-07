@@ -56,6 +56,7 @@ namespace InfiniteRoleplay.Windows
         private Plugin plugin;
 
 
+        private float _modVersionWidth;
         private PlayerCharacter playerCharacter;
         private ChatGui chatGui;
         private DalamudPluginInterface pg;
@@ -448,12 +449,20 @@ namespace InfiniteRoleplay.Windows
 
                 if(viewStory == true)
                 {
-                   
-                    if (resetStory == true)
+
+                    int NameWidth = storyTitle.Length * 10;
+                    var decidingWidth = Math.Max(500, ImGui.GetWindowWidth());
+                    var offsetWidth = (decidingWidth - NameWidth) / 2;
+                    var offsetVersion = storyTitle.Length > 0
+                        ? _modVersionWidth + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().WindowPadding.X
+                        : 0;
+                    var offset = Math.Max(offsetWidth, offsetVersion);
+                    if (offset > 0)
                     {
-                        chapterCount = 0;
-                        resetStory = false;
+                        ImGui.SetCursorPosX(offset);
                     }
+
+
                     using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
                     using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
                     using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
