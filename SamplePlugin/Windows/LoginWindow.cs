@@ -47,6 +47,7 @@ public class LoginWindow : Window, IDisposable
 
     public override void Draw()
     {
+
         updateWindow = true;
         // can't ref a property, so use a local copy
         var connectionValue = this.Configuration.StayOnline;
@@ -115,6 +116,7 @@ public class LoginWindow : Window, IDisposable
             DataSender.Login(username, password);
             loginRequest = false;
         }
+        
         
     }
 

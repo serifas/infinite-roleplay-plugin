@@ -52,7 +52,7 @@ namespace UpdateTest
     {
         public static string accountStatus = "status...";
         public static bool LoadedSelf = false;
-        public static bool ExistingProfileData = false, ExistingTargetProfileData = false, targetBioData = false, ExistingStory = false;
+        public static bool ExistingProfileData = false, ExistingTargetProfileData = false, targetBioData = false, ExistingStory = false, ExistingTargetStory;
         public static byte[] currentAvatar , currentTargetAvatar;
         public static int hookEditCount, hookCount;
         public static int targetHookEditCount;
@@ -428,7 +428,7 @@ namespace UpdateTest
             var packetID = buffer.ReadInt();
             string storyTitle = buffer.ReadString();
             string chapters = buffer.ReadString();
-
+            ExistingTargetStory = true;
             Regex hookRx = new Regex(@"<chapter>(.*?)</chapter>");
             string[] chapterSplit = chapters.Replace("|||", "~").Split('~');
             TargetWindow.storyTitle = storyTitle;

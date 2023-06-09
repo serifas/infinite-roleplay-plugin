@@ -14,7 +14,7 @@ namespace UpdateTest
     public class ClientTCP
     {
         public float targetTime = 60.0f;
-        private static bool connected;
+        public static bool Connected;
         public static TcpClient clientSocket;
         private static NetworkStream myStream;
         private static byte[] recBuffer;
@@ -80,7 +80,7 @@ namespace UpdateTest
         }
         public static void ClientConnectionCallback()
         {           
-            connected = true;
+            Connected = true;
             clientSocket.NoDelay = true;
             myStream = clientSocket.GetStream();
             myStream.BeginRead(recBuffer, 0, 4096 * 2, ReceiveCallback, null);
@@ -126,7 +126,7 @@ namespace UpdateTest
         }
         public static void Disconnect()
         {
-            connected = false; //simply used for scripts to tell if the server is connected
+            Connected = false; //simply used for scripts to tell if the server is connected
             clientSocket.Close(); //close the socket on disconnect
         }
 

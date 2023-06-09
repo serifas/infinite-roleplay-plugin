@@ -25,6 +25,7 @@ using static Lumina.Data.Files.ScdFile;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.Gui;
+using Dalamud.Game.ClientState;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -152,7 +153,9 @@ namespace InfiniteRoleplay.Windows
             
             isAdmin = DataReceiver.isAdmin;
             msg = DataReceiver.ConnectionMsg;
+          
         }
+       
 
     }
 }

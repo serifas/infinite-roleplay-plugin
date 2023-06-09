@@ -84,6 +84,7 @@ namespace InfiniteRoleplay.Windows
         public static int hookCount;
         public static int hookEditCount;
         private GameFontHandle _nameFont;
+        private GameFontHandle _secionFont;
         public static string[] hooks;
         public bool ExistingStory;
         public bool ExistingOOC;
@@ -125,6 +126,7 @@ namespace InfiniteRoleplay.Windows
         public static string fileName = "";
         private readonly FileDialogManager _manager;
         private bool _isOpen;
+
         
         private bool _showFileDialogError = false;
         private TextureWrap lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil;
@@ -474,14 +476,18 @@ namespace InfiniteRoleplay.Windows
                     {
                         string Chapter = ChapterContent[h].Replace("---===---", "\n").Replace("''", "'");
 
-                        using var defInfFontDen = ImRaii.DefaultFont();
                         ImGui.Text(ChapterTitle[h]);
+                        using var defInfFontDen = ImRaii.DefaultFont();
                         ImGui.Text(Chapter);
                         ImGui.SameLine();
                     }
                     
                     
                 }
+            }
+            else
+            {
+                ImGui.Text("No Profile Available");
             }
                 
                
@@ -507,6 +513,7 @@ namespace InfiniteRoleplay.Windows
         {
             ExistingProfile = DataReceiver.ExistingTargetProfileData;
             ExistingBio = DataReceiver.ExistingTargetBioData;
+            ExistingStory = DataReceiver.ExistingTargetStory;
             ExistingHooks = DataReceiver.ExistingTargetHooks;
             existingAvatarBytes = DataReceiver.currentTargetAvatar;
             hookEditCount = DataReceiver.targetHookEditCount;

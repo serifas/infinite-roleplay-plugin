@@ -888,15 +888,19 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.Button("-", new Vector2(30, 30)))
                     {
-                        hookCount--;
-                        if (hookCount < 1)
+                        reduceHooks = true;
+                        if (hookCount > 0)
                         {
-                            hookCount = 0;
-                            hookEditCount--;
-                            if (hookEditCount < 1)
+                            hookCount--;
+                            reduceHooks = false;
+                        }
+                        if (hookCount == 0 && reduceHooks == true)
+                        {
+                            if (hookEditCount > 0)
                             {
-                                hookEditCount = 0;
+                                hookEditCount--;
                             }
+
                         }
                     }
                     for (int h = 0; h < hookEditCount; h++)

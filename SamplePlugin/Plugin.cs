@@ -52,7 +52,8 @@ namespace InfiniteRoleplay
         private DalamudPluginInterface PluginInterface { get; init; }
         public bool loadNetworking = true;
         public TargetManager targetManager { get; init; }
-        private ClientState clientState { get; init; }
+        public  ClientState clientState { get; init; }
+        public static ClientState _clientState;
         private DutyState dutyState { get; init; }
         private SortedList<string, string> targetedPlayers = new SortedList<string, string>();
         private ChatGui chatgui { get; init; }
@@ -86,6 +87,7 @@ namespace InfiniteRoleplay
             this.CommandManager = commandManager;
             this.PluginInterfacePub = pluginInterface;
             this.clientState = ClientState;
+            _clientState = ClientState;
             this.targetManager = targetManager;
             this.chatgui = chatgui;
             this.framework = framework;
@@ -177,7 +179,12 @@ namespace InfiniteRoleplay
             this.framework.Update += Update;
 
         }
+        public void RefreshConnection()
+        {
+            ConnectToServer();
+            ReloadClient();
 
+        }
         public void ReloadClient()
         {
             ProfileWindow.playerCharacter = this.clientState.LocalPlayer;
@@ -192,16 +199,18 @@ namespace InfiniteRoleplay
             this.CommandManager.RemoveHandler(CommandName);
             DisconnectFromServer();
         }
+
+
         public void Update(Framework framework)
         {
             if (IsConnectedToServer() == true)
             {
                 toggleconnection = false;
-                if(IsLoggedIn() == false)
+                if (IsLoggedIn() == false)
                 {
                     DisconnectFromServer();
                 }
-                if(loadCallback == true)
+                if (loadCallback == true)
                 {
 
                     ClientTCP.ClientConnectionCallback();
@@ -217,6 +226,8 @@ namespace InfiniteRoleplay
                 ReloadClient();
                 ConnectToServer();
             }
+
+
         }
        
         private void OnCommand(string command, string args)
@@ -241,7 +252,7 @@ namespace InfiniteRoleplay
         }
         public bool IsLoggedIn()
         {
-            if (clientState.IsLoggedIn && clientState.LocalPlayer != null)
+            if (clientState.IsLoggedIn == true && clientState.LocalPlayer != null)
             {
                 return true;
             }
