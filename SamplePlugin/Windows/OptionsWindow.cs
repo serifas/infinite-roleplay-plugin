@@ -135,6 +135,7 @@ namespace InfiniteRoleplay.Windows
              }
             if (ImGui.Button("Logout", new Vector2(225, 25)))
             {
+                plugin.loggedIn = false;
                 plugin.DisconnectFromServer();
                 plugin.WindowSystem.GetWindow("LOGIN").IsOpen = true;
                 plugin.WindowSystem.GetWindow("OPTIONS").IsOpen = false;

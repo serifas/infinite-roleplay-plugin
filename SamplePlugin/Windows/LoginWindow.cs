@@ -111,11 +111,16 @@ public class LoginWindow : Window, IDisposable
     {
         this.status = DataReceiver.accountStatus;
         this.statusColor = DataReceiver.accounStatusColor;
+        if(ClientTCP.clientSocket.Connected == false)
+        {
+            plugin.ReloadClient();
+        }
         if(loginRequest == true && ClientTCP.clientSocket.Connected == true)
         {
             DataSender.Login(username, password);
             loginRequest = false;
         }
+
         
         
     }

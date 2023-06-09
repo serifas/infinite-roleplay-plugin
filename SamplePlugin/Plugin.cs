@@ -46,6 +46,7 @@ namespace InfiniteRoleplay
         public bool targeted = false;
         public bool loadCallback = true;
         public string socketStatus;
+        public static Plugin pg;
         public DalamudPluginInterface PluginInterfacePub; 
         public string Name => "Infinite Plugin";
         private const string CommandName = "/infinite";
@@ -83,6 +84,7 @@ namespace InfiniteRoleplay
             {
                
             }
+            pg = this;
             this.PluginInterface = pluginInterface;
             this.CommandManager = commandManager;
             this.PluginInterfacePub = pluginInterface;
@@ -179,12 +181,18 @@ namespace InfiniteRoleplay
             this.framework.Update += Update;
 
         }
+
+        public static void ReloadCon()
+        {
+            pg.RefreshConnection();
+        }
+
         public void RefreshConnection()
         {
             ConnectToServer();
             ReloadClient();
-
         }
+        
         public void ReloadClient()
         {
             ProfileWindow.playerCharacter = this.clientState.LocalPlayer;
