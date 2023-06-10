@@ -36,6 +36,7 @@ namespace UpdateTest
                 packets.Add((int)ServerPackets.SRecNoTargetProfile, DataReceiver.NoTargetProfile);
                 packets.Add((int)ServerPackets.SRecProfileStory, DataReceiver.ReceiveProfileStory);
                 packets.Add((int)ServerPackets.SRecTargetStory, DataReceiver.ReceiveTargetStory);
+                packets.Add((int)ServerPackets.SRecVersionRequest, DataReceiver.HandleVersionRequest);
 
 
             }

@@ -46,7 +46,7 @@ namespace UpdateTest
         SRecNoTargetProfile = 31,
         SRecProfileStory = 32,
         SRecTargetStory = 33,
-      
+        SRecVersionRequest = 34,
     }
     class DataReceiver
     {
@@ -158,6 +158,16 @@ namespace UpdateTest
             buffer.Dispose();
           
         }
+
+        public static void HandleVersionRequest(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            buffer.Dispose();
+            DataSender.SendVersion("1.0.0.0");
+        }
+
         public static void BadLogin(byte[] data)
         {
             var buffer = new ByteBuffer();

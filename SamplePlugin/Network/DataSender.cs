@@ -35,6 +35,7 @@ namespace UpdateTest
         CRegister = 16,
         CDeleteHook = 17,
         CSendStory = 18,
+        CSendVersion = 19,
     }
     public class DataSender
     {
@@ -48,6 +49,16 @@ namespace UpdateTest
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
+
+        public static void SendVersion(string version)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CSendVersion);
+            buffer.WriteString(version);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+
         public static void Login(string username, string password)
         {
 

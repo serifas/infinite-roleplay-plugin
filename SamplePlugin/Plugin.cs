@@ -182,13 +182,11 @@ namespace InfiniteRoleplay
 
         }
 
-        public static void ReloadCon()
-        {
-            pg.RefreshConnection();
-        }
+    
 
         public void RefreshConnection()
         {
+            DisconnectFromServer();
             ConnectToServer();
             ReloadClient();
         }
@@ -231,8 +229,8 @@ namespace InfiniteRoleplay
             }
             if (IsLoggedIn() == true && toggleconnection == true)
             {
-                ReloadClient();
                 ConnectToServer();
+                ReloadClient();
             }
 
 
@@ -246,6 +244,7 @@ namespace InfiniteRoleplay
         private void DrawUI()
         {
             this.WindowSystem.Draw();
+
         }       
         public static bool IsConnectedToServer()
         {
@@ -282,8 +281,8 @@ namespace InfiniteRoleplay
             ClientTCP.InitializingNetworking(false);
         }
         public void DrawLoginUI()
-        {          
-            
+        {
+            RefreshConnection();
             if (loggedIn == true)
             {
                 this.WindowSystem.GetWindow("OPTIONS").IsOpen = true;
@@ -291,6 +290,7 @@ namespace InfiniteRoleplay
             }
             else
             {
+                
                 this.WindowSystem.GetWindow("LOGIN").IsOpen = true;
             }
         }
