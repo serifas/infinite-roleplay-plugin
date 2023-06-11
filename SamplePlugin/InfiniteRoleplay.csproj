@@ -111,11 +111,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ColorHelper" Version="1.8.0" />
+    <PackageReference Include="ColorHelper" Version="1.8.1" />
     <PackageReference Include="DalamudPackager" Version="2.1.11" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
-    <PackageReference Include="Uno.UI" Version="4.6.19" />
+    <PackageReference Include="Uno.UI" Version="4.9.20" />
     <Reference Include="FFXIVClientStructs">
       <HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
       <Private>false</Private>
@@ -145,7 +145,7 @@
       <Private>false</Private>
     </Reference>
     <Reference Include="OtterGui">
-      <HintPath>..\OtterGui\bin\Debug\OtterGui.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\infinite-roleplay-plugin\OtterGui\bin\Debug\OtterGui.dll</HintPath>
     </Reference>
     <Reference Include="OtterTex">
       <HintPath>lib\OtterTex.dll</HintPath>
