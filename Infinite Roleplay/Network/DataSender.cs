@@ -35,7 +35,7 @@ namespace Networking
         CRegister = 16,
         CDeleteHook = 17,
         CSendStory = 18,
-        CSendVersion = 19,
+        CSendLocation = 19,
     }
     public class DataSender
     {
@@ -49,15 +49,15 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-
-        public static void SendVersion(string version)
+        public static void SendLocation(string location)
         {
             var buffer = new ByteBuffer();
-            buffer.WriteInteger((int)ClientPackets.CSendVersion);
-            buffer.WriteString(version);
+            buffer.WriteInteger((int)ClientPackets.CSendLocation);
+            buffer.WriteString(location);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
+      
 
         public static void Login(string username, string password)
         {

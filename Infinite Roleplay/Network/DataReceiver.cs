@@ -124,7 +124,7 @@ namespace Networking
             
             
         }
-      
+        
         public static void RecRulebookContent(byte[] data)
         {
             var buffer = new ByteBuffer();
@@ -160,7 +160,7 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             buffer.Dispose();
-            DataSender.SendVersion("1.0.0.0");
+          
         }
 
         public static void BadLogin(byte[] data)

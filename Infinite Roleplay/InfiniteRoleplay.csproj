@@ -138,7 +138,7 @@
             <Private>false</Private>
         </Reference>
         <Reference Include="OtterGui">
-          <HintPath>..\..\..\..\Desktop\infinite-roleplay-plugin\OtterGui\bin\Debug\OtterGui.dll</HintPath>
+          <HintPath>..\..\..\Desktop\infinite-roleplay-plugin\OtterGui\bin\Debug\OtterGui.dll</HintPath>
         </Reference>
     </ItemGroup>
 
