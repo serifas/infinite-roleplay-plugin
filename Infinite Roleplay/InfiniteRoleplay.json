@@ -1,0 +1,13 @@
+{
+    "Author": "your name here",
+    "Name": "Infinite Roleplay",
+    "Punchline": "An all around roleplay plugin.",
+    "Description": "A description that shows up in /xlplugins. List any major slash-command(s).",
+    "InternalName": "samplePlugin",
+    "ApplicableVersion": "any",
+    "Tags": [
+        "sample",
+        "plugin",
+        "goats"
+    ]
+}
