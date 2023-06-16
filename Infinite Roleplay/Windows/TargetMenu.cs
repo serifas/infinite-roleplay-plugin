@@ -94,7 +94,10 @@ namespace InfiniteRoleplay.Windows
             {
                 ImGui.SetTooltip("View Profile");
             }
+
+
             ImGui.SameLine();
+
             if (ImGui.ImageButton(this.requestFriendImage.ImGuiHandle, new Vector2(50, 50)))
             {
                 //plugin.WindowSystem.GetWindow("SHINE RULEBOOK").IsOpen = true;
@@ -104,7 +107,10 @@ namespace InfiniteRoleplay.Windows
             {
                 ImGui.SetTooltip("Friend Request");
             }
+
+
             ImGui.SameLine();
+
             if (ImGui.ImageButton(this.groupInviteImage.ImGuiHandle, new Vector2(50, 50)))
             {
                 
@@ -113,7 +119,10 @@ namespace InfiniteRoleplay.Windows
             {
                 ImGui.SetTooltip("Group Invite");
             }
+
+
             ImGui.SameLine();
+
             if (ImGui.ImageButton(this.addBookmarkImage.ImGuiHandle, new Vector2(50, 50)))
             {
 
