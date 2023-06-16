@@ -291,6 +291,7 @@ namespace InfiniteRoleplay.Windows
                     ImGui.TextColored(new Vector4(1, 1, 0, 1), "ALIGNMENT:");
                     ImGui.SameLine();
                     ImGui.Text(this.availablePercentage + " Points Available:");
+            
                     #region ALIGNMENTS
                     #region LAWFUL GOOD
                     //LAWFUL GOOD
@@ -304,9 +305,9 @@ namespace InfiniteRoleplay.Windows
                                         "    and they aim to be an upstanding citizen.");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("lawfulgood", true); }
+                    if (ImGui.Button("+##lawfulgoodplus", new Vector2(20, 20))) { ModAlignment("lawfulgood", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("lawfulgood", false); }
+                    if (ImGui.Button("-##lawfulgoodminus", new Vector2(20, 20))) { ModAlignment("lawfulgood", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.lawfulGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[0] * 30, 20));
                     ImGui.SameLine();
@@ -327,9 +328,9 @@ namespace InfiniteRoleplay.Windows
                                         "    and justified in their actions.  ");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("neutralgood", true); }
+                    if (ImGui.Button("+##neutralgoodplus", new Vector2(20, 20))) { ModAlignment("neutralgood", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("neutralgood", false); }
+                    if (ImGui.Button("-##neutralgoodminus", new Vector2(20, 20))) { ModAlignment("neutralgood", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.neutralGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[1] * 30, 20));
                     ImGui.SameLine();
@@ -352,9 +353,9 @@ namespace InfiniteRoleplay.Windows
                                         "    being told what to do for nonsensical reasons. ");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("chaoticgood", true); }
+                    if (ImGui.Button("+##chaoticgoodplus", new Vector2(20, 20))) { ModAlignment("chaoticgood", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("chaoticgood", false); }
+                    if (ImGui.Button("-##chaoticgoodminus", new Vector2(20, 20))) { ModAlignment("chaoticgood", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.chaoticGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[2] * 30, 20));
                     ImGui.SameLine();
@@ -377,9 +378,9 @@ namespace InfiniteRoleplay.Windows
                                         "    to their code.But they do not preach their code to others and try to convert them. ");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("lawfulneutral", true); }
+                    if (ImGui.Button("+##lawfulneutralplus", new Vector2(20, 20))) { ModAlignment("lawfulneutral", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("lawfulneutral", false); }
+                    if (ImGui.Button("-##lawfulneutralminus", new Vector2(20, 20))) { ModAlignment("lawfulneutral", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.lawfulNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[3] * 30, 20));
                     ImGui.SameLine();
@@ -404,9 +405,9 @@ namespace InfiniteRoleplay.Windows
                                         "    them the least hassle, or they stand to gain the most from. ");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("trueneutral", true); }
+                    if (ImGui.Button("+##trueneutralplus", new Vector2(20, 20))) { ModAlignment("trueneutral", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("trueneutral", false); }
+                    if (ImGui.Button("-##trueneutralminus", new Vector2(20, 20))) { ModAlignment("trueneutral", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.trueNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[4] * 30, 20));
                     ImGui.SameLine();
@@ -428,9 +429,9 @@ namespace InfiniteRoleplay.Windows
                                         "    Their need to be free is the most important thing. ");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("chaoticneutral", true); }
+                    if (ImGui.Button("+##chaoticneutralplus", new Vector2(20, 20))) { ModAlignment("chaoticneutral", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("chaoticneutral", false); }
+                    if (ImGui.Button("-##chaoticneutralminus", new Vector2(20, 20))) { ModAlignment("chaoticneutral", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.chaoticNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[5] * 30, 20));
                     ImGui.SameLine();
@@ -454,9 +455,9 @@ namespace InfiniteRoleplay.Windows
                                         "    Lawful Evil characters feel no guilt or remorse for causing harm to others in this way.");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("lawfulevil", true); }
+                    if (ImGui.Button("+##lawfulevilplus", new Vector2(20, 20))) { ModAlignment("lawfulevil", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("lawfulevil", false); }
+                    if (ImGui.Button("-##lawfulevilminus", new Vector2(20, 20))) { ModAlignment("lawfulevil", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.lawfulEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[6] * 30, 20));
                     ImGui.SameLine();
@@ -479,9 +480,9 @@ namespace InfiniteRoleplay.Windows
                                         "    as a tool to influence their behaviour. ");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("neutralevil", true); }
+                    if (ImGui.Button("+##neutralevilplus", new Vector2(20, 20))) { ModAlignment("neutralevil", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("neutralevil", false); }
+                    if (ImGui.Button("-##neutralevilminus", new Vector2(20, 20))) { ModAlignment("neutralevil", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.neutralEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[7] * 30, 20));
                     ImGui.SameLine();
@@ -502,16 +503,15 @@ namespace InfiniteRoleplay.Windows
                                         "    because they do not work well with others.");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("chaoticevil", true); }
+                    if (ImGui.Button("+##chaoticevilplus", new Vector2(20, 20))) { ModAlignment("chaoticevil", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("chaoticevil", false); }
+                    if (ImGui.Button("-##chaoticevilminus", new Vector2(20, 20))) { ModAlignment("chaoticevil", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.chaoticEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[8] * 30, 20));
                     ImGui.SameLine();
                     int formattedChaoticEvilVal = chaoticEvilVal / 10;
                     ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[8].ToString());
                     #endregion
-
                     #endregion
                     if (ImGui.Button("Save Bio"))
                     {                      
@@ -588,9 +588,9 @@ namespace InfiniteRoleplay.Windows
                                         "    and they aim to be an upstanding citizen.");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("lawfulgood", true); }
+                    if (ImGui.Button("+##editlawfulgoodplus", new Vector2(20, 20))) { ModAlignment("lawfulgood", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("lawfulgood", false); }
+                    if (ImGui.Button("-##editlawfulgoodminus", new Vector2(20, 20))) { ModAlignment("lawfulgood", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.lawfulGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[0] * 30, 20));
                     ImGui.SameLine();
@@ -611,9 +611,9 @@ namespace InfiniteRoleplay.Windows
                                         "    and justified in their actions.  ");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("neutralgood", true); }
+                    if (ImGui.Button("+##editneutralgoodplus", new Vector2(20, 20))) { ModAlignment("neutralgood", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("neutralgood", false); }
+                    if (ImGui.Button("-##editneutralgoodminus", new Vector2(20, 20))) { ModAlignment("neutralgood", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.neutralGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[1] * 30, 20));
                     ImGui.SameLine();
@@ -635,9 +635,9 @@ namespace InfiniteRoleplay.Windows
                                         "    being told what to do for nonsensical reasons. ");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("chaoticgood", true); }
+                    if (ImGui.Button("+##editchaoticgoodplus", new Vector2(20, 20))) { ModAlignment("chaoticgood", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("chaoticgood", false); }
+                    if (ImGui.Button("-##editchaoticgoodminus", new Vector2(20, 20))) { ModAlignment("chaoticgood", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.chaoticGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[2] * 30, 20));
                     ImGui.SameLine();
@@ -660,9 +660,9 @@ namespace InfiniteRoleplay.Windows
                                         "    to their code.But they do not preach their code to others and try to convert them. ");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("lawfulneutral", true); }
+                    if (ImGui.Button("+##editlawfulneutralplus", new Vector2(20, 20))) { ModAlignment("lawfulneutral", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("lawfulneutral", false); }
+                    if (ImGui.Button("-##editlawfulneutralminus", new Vector2(20, 20))) { ModAlignment("lawfulneutral", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.lawfulNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[3] * 30, 20));
                     ImGui.SameLine();
@@ -687,9 +687,9 @@ namespace InfiniteRoleplay.Windows
                                         "    them the least hassle, or they stand to gain the most from. ");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("trueneutral", true); }
+                    if (ImGui.Button("+##edittrueneutralplus", new Vector2(20, 20))) { ModAlignment("trueneutral", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("trueneutral", false); }
+                    if (ImGui.Button("-##edittrueneutralminus", new Vector2(20, 20))) { ModAlignment("trueneutral", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.trueNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[4] * 30, 20));
                     ImGui.SameLine();
@@ -711,9 +711,9 @@ namespace InfiniteRoleplay.Windows
                                         "    Their need to be free is the most important thing. ");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("chaoticneutral", true); }
+                    if (ImGui.Button("+##editchaoticneutralplus", new Vector2(20, 20))) { ModAlignment("chaoticneutral", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("chaoticneutral", false); }
+                    if (ImGui.Button("-##editchaoticneutralminus", new Vector2(20, 20))) { ModAlignment("chaoticneutral", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.chaoticNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[5] * 30, 20));
                     ImGui.SameLine();
@@ -737,9 +737,9 @@ namespace InfiniteRoleplay.Windows
                                         "    Lawful Evil characters feel no guilt or remorse for causing harm to others in this way.");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("lawfulevil", true); }
+                    if (ImGui.Button("+##editlawfulevilplus", new Vector2(20, 20))) { ModAlignment("lawfulevil", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("lawfulevil", false); }
+                    if (ImGui.Button("-##editlawfulevilminus", new Vector2(20, 20))) { ModAlignment("lawfulevil", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.lawfulEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[6] * 30, 20));
                     ImGui.SameLine();
@@ -762,9 +762,9 @@ namespace InfiniteRoleplay.Windows
                                         "    as a tool to influence their behaviour. ");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("neutralevil", true); }
+                    if (ImGui.Button("+##editneutralevilplus", new Vector2(20, 20))) { ModAlignment("neutralevil", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("neutralevil", false); }
+                    if (ImGui.Button("-##editneutralevilminus", new Vector2(20, 20))) { ModAlignment("neutralevil", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.neutralEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[7] * 30, 20));
                     ImGui.SameLine();
@@ -785,9 +785,9 @@ namespace InfiniteRoleplay.Windows
                                         "    because they do not work well with others.");
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("+", new Vector2(20, 20))) { ModAlignment("chaoticevil", true); }
+                    if (ImGui.Button("+##editchaoticevilplus", new Vector2(20, 20))) { ModAlignment("chaoticevil", true); }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(20, 20))) { ModAlignment("chaoticevil", false); }
+                    if (ImGui.Button("-##editchaoticevilminus", new Vector2(20, 20))) { ModAlignment("chaoticevil", false); }
                     ImGui.SameLine();
                     ImGui.Image(this.chaoticEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[8] * 30, 20));
                     ImGui.SameLine();
@@ -842,6 +842,8 @@ namespace InfiniteRoleplay.Windows
                         int index = i + 1;
                         ImGui.InputTextMultiline("##content" + i, ref HookContent[i], 3000, new Vector2(450, 100));
                         hookMsg += "<hook>" + index + "," + HookContent[i].Replace("\n", "---===---") + "</hook>|||";
+                        
+                       
                     }
                     if (ImGui.Button("Submit Hooks"))
                     {
@@ -860,12 +862,12 @@ namespace InfiniteRoleplay.Windows
                         resetHooks = false;
                     }
                     string hookMsg = "";
-                    if (ImGui.Button("+", new Vector2(30, 30)))
+                    if (ImGui.Button("+##addhook", new Vector2(30,30)))
                     {
                         hookCount++;
                     }
                     ImGui.SameLine();
-                    if (ImGui.Button("-", new Vector2(30, 30)))
+                    if (ImGui.Button("-##removehook", new Vector2(30,30)))
                     {
                         reduceHooks = true;
                         if (hookCount > 0)
@@ -881,6 +883,8 @@ namespace InfiniteRoleplay.Windows
                             }
 
                         }
+
+
                     }
                     for (int h = 0; h < hookEditCount; h++)
                     {
@@ -943,11 +947,16 @@ namespace InfiniteRoleplay.Windows
                 }
                 if (editStory == true)
                 {
-                    
+                    if (resetStory == true)
+                    {
+                        chapterCount = 0;
+                        resetStory = false;
+                    }
                     ImGui.Text("Story Title:");
                     ImGui.SameLine();
                     ImGui.InputText("##story_edit_title", ref storyEditTitle, 100);
                     string chapterMsg = "";
+                    string ChapterEdit = "";
                     if (ImGui.Button("Add Chapter"))
                     {
                         chapterCount++;
@@ -956,34 +965,32 @@ namespace InfiniteRoleplay.Windows
                     if (ImGui.Button("Remove Chapter"))
                     {
                         reduceChapters = true;
-                        if(chapterCount > 0)
+                        if (chapterCount > 0)
                         {
                             chapterCount--;
                             reduceChapters = false;
                         }
-                        if(chapterCount == 0 && reduceChapters == true)
+                        if (chapterCount == 0 && reduceChapters == true)
                         {
-                            if(chapterEditCount > 0)
+                            if (chapterEditCount > 0)
                             {
                                 chapterEditCount--;
                             }
-                            
+
                         }
-                        
-                        
+
+
                     }
                     for (int h = 0; h < chapterEditCount; h++)
                     {
-                        string ChapterEdit = ChapterEditContent[h].Replace("---===---", "\n").Replace("''", "'");
-
                         ImGui.Text("Chapter Title:");
                         ImGui.SameLine();
                         ImGui.InputText("##editchaptertitle" + h, ref ChapterEditTitle[h], 100);
 
                         ImGui.Text("Chapter:");
                         ImGui.SameLine();
-                        ImGui.InputTextMultiline("##chapteredit" + h, ref ChapterEdit, 3000, new Vector2(450, 100));
-                        chapterMsg += "<chapter>" + ChapterEditTitle[h] + "," + ChapterEditContent[h].Replace("\n", "---===---") + "</chapter>|||";
+                        ImGui.InputTextMultiline("##chapteredit" + h, ref ChapterEditContent[h], 3000, new Vector2(450, 100));
+                        ChapterEdit += "<chapter>" + ChapterEditTitle[h] + "," + ChapterEditContent[h].Replace("\n", "---===---") + "</chapter>|||";
                     }
                     for (int i = 0; i < chapterCount; i++)
                     {
@@ -995,11 +1002,13 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         ImGui.InputTextMultiline("##chapter" + i, ref ChapterContent[i], 3000, new Vector2(450, 100));
                     }
+                    string chapterMessage = ChapterEdit + chapterMsg;
                     if (ImGui.Button("Update Story"))
                     {
-                        DataSender.SendStory(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),storyEditTitle, chapterMsg);
+                        DataSender.SendStory(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), storyEditTitle, chapterMessage);
                     }
                 }
+            
                 if (addAvatar == true)
                 {
                     addAvatar = false;

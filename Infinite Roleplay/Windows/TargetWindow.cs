@@ -438,7 +438,7 @@ namespace InfiniteRoleplay.Windows
                     
                     for (int h = 0; h < hookEditCount; h++)
                     {
-                        ImGui.Text(HookEditContent[h]);
+                        ImGui.Text(HookEditContent[h].Replace("---===---", "\n").Replace("''", "'"));
                     }
                
                 }

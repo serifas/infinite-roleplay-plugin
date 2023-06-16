@@ -422,7 +422,7 @@ namespace Networking
                 ProfileWindow.chapterEditCount = i;
                 ProfileWindow.resetStory = true;
                 ProfileWindow.ChapterEditTitle[i] = hookTitle;
-                ProfileWindow.ChapterEditContent[i] = hookContent;
+                ProfileWindow.ChapterEditContent[i] = hookContent.Replace("---===---", "\n").Replace("''", "'");
             }
             buffer.Dispose();
         }

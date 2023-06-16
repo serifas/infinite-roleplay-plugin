@@ -67,7 +67,7 @@ namespace InfiniteRoleplay.Windows
             this.documentImage = Interface.UiBuilder.LoadImage(documentImagePath);
             this.groupsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/groups.png");
             this.groupsImage = Interface.UiBuilder.LoadImage(groupsImagePath);
-            this.systemsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/systems.png");
+            this.systemsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/bookmarks.png");
             this.systemsImage = Interface.UiBuilder.LoadImage(systemsImagePath);
 
          
@@ -78,42 +78,32 @@ namespace InfiniteRoleplay.Windows
             if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
             {
                 LoginWindow.loginRequest = true;
-                plugin.ReloadClient();
-
-                var targetPlayer = targetManager.Target as PlayerCharacter;
-                if (targetPlayer == null)
-                {
-                    ProfileWindow.ClearUI();
-                    DataSender.FetchProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name);
-                }
-                if (targetPlayer != null)
-                {
-
-                    DataSender.RequestTargetProfile(targetPlayer.Name.ToString(), targetPlayer.HomeWorld.GameData.Name.ToString());
-                }
+                plugin.ReloadClient();                
+                ProfileWindow.ClearUI();
+                DataSender.FetchProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name);               
 
             }
             if (ImGui.IsItemHovered())
             {
-                ImGui.SetTooltip("View Target Profile");
+                ImGui.SetTooltip("Edit Profile");
             }
             ImGui.SameLine();
             if (ImGui.ImageButton(this.documentImage.ImGuiHandle, new Vector2(100, 50)))
             {
-                plugin.WindowSystem.GetWindow("SHINE RULEBOOK").IsOpen = true;
+               // plugin.WindowSystem.GetWindow("SHINE RULEBOOK").IsOpen = true;
 
             }
             if (ImGui.IsItemHovered())
             {
-                ImGui.SetTooltip("Rule Book");
+                ImGui.SetTooltip("Friends");
             }
             if (ImGui.ImageButton(this.systemsImage.ImGuiHandle, new Vector2(100, 50)))
             {
-                plugin.WindowSystem.GetWindow("SYSTEMS").IsOpen = true;
+              //  plugin.WindowSystem.GetWindow("SYSTEMS").IsOpen = true;
             }
             if (ImGui.IsItemHovered())
             {
-                ImGui.SetTooltip("Systems");
+                ImGui.SetTooltip("Bookmarks");
             }
 
             ImGui.SameLine();
@@ -123,7 +113,7 @@ namespace InfiniteRoleplay.Windows
             }
             if (ImGui.IsItemHovered())
             {
-                ImGui.SetTooltip("Events");
+                ImGui.SetTooltip("Groups");
             }
             if (isAdmin == true)
             {

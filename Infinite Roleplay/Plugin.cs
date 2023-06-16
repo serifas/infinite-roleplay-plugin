@@ -37,6 +37,8 @@ namespace InfiniteRoleplay
       
 
         public bool loggedIn;
+        public bool toggleconnection;
+        public bool firstload = true;
         public bool targeted = false;
         public bool loadCallback = false;
         public string socketStatus;
@@ -48,9 +50,8 @@ namespace InfiniteRoleplay
         public TargetManager targetManager { get; init; }
         public ClientState clientState { get; init; }
         public static ClientState _clientState;
-        private DutyState dutyState { get; init; }
-        private ChatGui chatgui { get; init; }
         private Framework framework { get; init; }
+        private DutyState dutyState { get; init; }
         private CommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("InfiniteRoleplay");
@@ -58,6 +59,7 @@ namespace InfiniteRoleplay
                       [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
                       [RequiredVersion("1.0")] Framework framework,
                       [RequiredVersion("1.0")] TargetManager targetManager,
+                      [RequiredVersion("1.0")] DutyState dutyState,
                       [RequiredVersion("1.0")] CommandManager commandManager)
         {
 
@@ -69,8 +71,38 @@ namespace InfiniteRoleplay
             _clientState = ClientState;
             this.targetManager = targetManager;
             this.framework = framework;
+            this.dutyState = dutyState;
             this.Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(pluginInterface);
+        
+
+
+            string name = "";
+
+
+
+
+             this.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
+            {
+                HelpMessage = "to open the plugin window"
+            });
+            this.pluginInterface.UiBuilder.Draw += DrawUI;
+            this.pluginInterface.UiBuilder.OpenConfigUi += DrawLoginUI;
+            DataReceiver.plugin = this;
+            ConnectToServer();
+            ReloadClient();
+            this.framework.Update += Update;
+
+        }
+
+        public void ReloadClient()
+        {
+            ProfileWindow.playerCharacter = this.clientState.LocalPlayer;
+            OptionsWindow.playerCharacter = this.clientState.LocalPlayer;
+            OptionsWindow.targetManager = this.targetManager;
+        }
+        public void LoadUI()
+        {
             var AvatarHolder = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
             //Icons
 
@@ -96,18 +128,7 @@ namespace InfiniteRoleplay
             var neutralEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_evil_bar.png"));
             var chaoticEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil_bar.png"));
 
-
-
-
-
-
-            string name = "";
-
-            Window systemWindow = new SystemsWindow(this);
-
-
-
-            this.WindowSystem.AddWindow(systemWindow);
+            this.WindowSystem.AddWindow(new SystemsWindow(this));
             this.WindowSystem.AddWindow(new ProfileWindow(this, this.pluginInterface, AvatarHolder,
                                                                 lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
                                                                 lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar));
@@ -117,76 +138,78 @@ namespace InfiniteRoleplay
             this.WindowSystem.AddWindow(new OptionsWindow(this, this.pluginInterface, targetManager));
             this.WindowSystem.AddWindow(new MessageBox(this));
             this.WindowSystem.AddWindow(new AdminWindow(this, this.pluginInterface));
-            this.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
-            {
-                HelpMessage = "to open the plugin window"
-            });
-            this.pluginInterface.UiBuilder.Draw += DrawUI;
-            this.pluginInterface.UiBuilder.OpenConfigUi += DrawLoginUI;
-            DataReceiver.plugin = this;
             this.WindowSystem.AddWindow(new TargetWindow(this, this.pluginInterface, AvatarHolder,
                                                                 lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
                                                                 lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar));
-            RefreshConnection();
-            this.framework.Update += Update;
+            this.WindowSystem.AddWindow(new TargetMenu(this, this.pluginInterface, targetManager));
+
+
 
         }
-
-        public static void ReloadCon()
-        {
-           // pg.RefreshConnection();
-        }
-
-        public void RefreshConnection()
-        {
-            ConnectToServer();
-            ReloadClient();
-        }
-
-        public void ReloadClient()
-        {
-            ProfileWindow.playerCharacter = this.clientState.LocalPlayer;
-            OptionsWindow.playerCharacter = this.clientState.LocalPlayer;
-            OptionsWindow.targetManager = this.targetManager;
-        }
-
         public void Dispose()
         {
             this.framework.Update -= Update;
             this.WindowSystem.RemoveAllWindows();
             this.CommandManager.RemoveHandler(CommandName);
-            DisconnectFromServer();
+            if (IsConnectedToServer() == true)
+            {
+                DisconnectFromServer();
+            }
+           
+            
         }
 
+        public void RefreshConnection()
+        {
+            if(IsConnectedToServer() != true)
+            {
+                ConnectToServer();
+                ReloadClient();
+
+            }
+               
+         
+        }
 
         public void Update(Framework framework)
         {
             if (IsConnectedToServer() == true)
             {
-                
+                toggleconnection = false; 
                 if (IsLoggedIn() == false)
-                {
+                {                   
                     DisconnectFromServer();
                 }
                 if (loadCallback == true)
                 {
-
                     ClientTCP.ClientConnectionCallback();
                     loadCallback = false;
-
-                    DataSender.SendLocation(pluginInterface.AssemblyLocation.Directory?.FullName);
                 }
             }
             else
             {
-                if (IsLoggedIn() == true)
-                {
-                    RefreshConnection();
-                }
+                toggleconnection = true;
             }
-            
+            if (IsLoggedIn() == true && toggleconnection == true)
+            {
+                ConnectToServer();
+                ReloadClient();
+            }
+            if(firstload == true && IsConnectedToServer() == true)
+            {
+                firstload = false;
+                LoadUI();
 
-
+            }
+            var targetPlayer = targetManager.Target as PlayerCharacter;
+            if (targetPlayer != null && dutyState.IsDutyStarted == false)
+            {
+                WindowSystem.GetWindow("TARGET OPTIONS").IsOpen = true;
+            }
+            else
+            {
+                WindowSystem.GetWindow("TARGET OPTIONS").IsOpen = false;
+            }
         }
 
         private void OnCommand(string command, string args)
