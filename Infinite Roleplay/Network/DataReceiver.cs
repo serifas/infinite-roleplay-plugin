@@ -397,7 +397,7 @@ namespace Networking
                 string hookContent = hookRx.Match(hookSplit[i]).Groups[1].Value;
                 ProfileWindow.hookEditCount = i;
                 ProfileWindow.resetHooks = true;
-                ProfileWindow.HookEditContent[i] = hookContent;
+                ProfileWindow.HookEditContent[i] = hookContent.Replace("---===---", "\n").Replace("''", "'");
             }
             buffer.Dispose();
         }
