@@ -1,4 +1,5 @@
 
+using Dalamud.Hooking;
 using Dalamud.Interface.Windowing;
 using FFXIVClientStructs.FFXIV.Common.Math;
 using InfiniteRoleplay;
@@ -41,13 +42,14 @@ namespace Networking
         SRecNoTargetProfile = 31,
         SRecProfileStory = 32,
         SRecTargetStory = 33,
-        SRecVersionRequest = 34,
+        SRecBookmarks = 34,
     }
     class DataReceiver
     {
         public static string accountStatus = "status...";
         public static bool LoadedSelf = false;
         public static bool ExistingProfileData = false, ExistingTargetProfileData = false, targetBioData = false, ExistingStory = false, ExistingTargetStory;
+        public static string bookmarks;
         public static byte[] currentAvatar , currentTargetAvatar;
         public static int hookEditCount, hookCount;
         public static int targetHookEditCount;
@@ -124,7 +126,27 @@ namespace Networking
             
             
         }
-        
+        public static void RecBookmarks(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            string bookmarkVals = buffer.ReadString();
+
+            Regex nameRx = new Regex(@"<bookmarkName>(.*?)</bookmarkName>");
+            Regex worldRx = new Regex(@"<bookmarkWorld>(.*?)</bookmarkWorld>");
+            string[] bookmarkSplit = bookmarkVals.Replace("|||", "~").Split('~');
+            BookmarksWindow.profiles.Clear();
+            for (int i = 0; i < bookmarkSplit.Count(); i++)
+            {
+                string characterName = nameRx.Match(bookmarkSplit[i]).Groups[1].Value;
+                string characterWorld = worldRx.Match(bookmarkSplit[i]).Groups[1].Value;
+
+                BookmarksWindow.profiles.Add(characterName, characterWorld);
+            }
+            plugin.WindowSystem.GetWindow("BOOKMARKS").IsOpen = true;
+
+        }
         public static void RecRulebookContent(byte[] data)
         {
             var buffer = new ByteBuffer();

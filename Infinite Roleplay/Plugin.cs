@@ -142,7 +142,7 @@ namespace InfiniteRoleplay
                                                                 lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
                                                                 lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar));
             this.WindowSystem.AddWindow(new TargetMenu(this, this.pluginInterface, targetManager));
-
+            this.WindowSystem.AddWindow(new BookmarksWindow(this, this.pluginInterface));
 
 
         }

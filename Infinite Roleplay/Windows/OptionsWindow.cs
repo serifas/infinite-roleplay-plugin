@@ -80,7 +80,7 @@ namespace InfiniteRoleplay.Windows
                 LoginWindow.loginRequest = true;
                 plugin.ReloadClient();                
                 ProfileWindow.ClearUI();
-                DataSender.FetchProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name);               
+                DataSender.FetchProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name);
 
             }
             if (ImGui.IsItemHovered())
@@ -99,7 +99,7 @@ namespace InfiniteRoleplay.Windows
             }
             if (ImGui.ImageButton(this.systemsImage.ImGuiHandle, new Vector2(100, 50)))
             {
-              //  plugin.WindowSystem.GetWindow("SYSTEMS").IsOpen = true;
+                DataSender.RequestBookmarks(configuration.username);
             }
             if (ImGui.IsItemHovered())
             {

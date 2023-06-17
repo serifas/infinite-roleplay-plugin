@@ -812,13 +812,8 @@ namespace InfiniteRoleplay.Windows
                             DataSender.SubmitProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), existingAvatarBytes, characterEditName.Replace("'", "''"),
                                                    characterEditRace.Replace("'", "''"), characterEditGender.Replace("'", "''"), int.Parse(characterEditAge), characterEditHeight.Replace("'", "''"), characterEditWeight.Replace("'", "''"), characterEditAfg.Replace("'", "''"),
                                                    alignmentEditVals[0], alignmentEditVals[1], alignmentEditVals[2], alignmentEditVals[3], alignmentEditVals[4], alignmentEditVals[5], alignmentEditVals[6], alignmentEditVals[7], alignmentEditVals[8]);
-
                         }
-
-
                     }
-
-
                 }
                 if (addHooks == true)
                 {
@@ -836,22 +831,15 @@ namespace InfiniteRoleplay.Windows
                             chapterCount = 0;
                         }
                     }
-
                     for (int i = 0; i < chapterCount; i++)
                     {
                         int index = i + 1;
                         ImGui.InputTextMultiline("##content" + i, ref HookContent[i], 3000, new Vector2(450, 100));
-                        hookMsg += "<hook>" + index + "," + HookContent[i].Replace("\n", "---===---") + "</hook>|||";
-                        
-                       
+                        hookMsg += "<hook>" + index + "," + HookContent[i].Replace("\n", "---===---") + "</hook>|||";                   
                     }
                     if (ImGui.Button("Submit Hooks"))
                     {
-                        ClearUI();
-                        editHooks = true;
-                        addHooks = false;
                         DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, hookMsg);
-
                     }
                 }
                 if (editHooks == true)
@@ -881,22 +869,19 @@ namespace InfiniteRoleplay.Windows
                             {
                                 hookEditCount--;
                             }
-
                         }
-
-
-                    }
-                    for (int h = 0; h < hookEditCount; h++)
-                    {
-                        int index = hookCount + hookEditCount;
-                        ImGui.InputTextMultiline("##hookedit" + h, ref HookEditContent[h], 3000, new Vector2(450, 100));
-                        hookMsg += "<hook>" + index + "," + HookEditContent[h].Replace("\n", "---===---") + "</hook>|||";
                     }
                     for (int i = 0; i < hookCount; i++)
                     {
                         int index = hookCount + hookEditCount;
                         hookMsg += "<hook>" + index + "," + HookContent[i].Replace("\n", "---===---") + "</hook>|||";
                         ImGui.InputTextMultiline("##hook" + i, ref HookContent[i], 3000, new Vector2(450, 100));
+                    }
+                    for (int h = 0; h < hookEditCount; h++)
+                    {
+                        int index = hookCount + hookEditCount;
+                        ImGui.InputTextMultiline("##hookedit" + h, ref HookEditContent[h], 3000, new Vector2(450, 100));
+                        hookMsg += "<hook>" + index + "," + HookEditContent[h].Replace("\n", "---===---") + "</hook>|||";
                     }
                     if (ImGui.Button("Submit Hooks"))
                     {
@@ -922,7 +907,6 @@ namespace InfiniteRoleplay.Windows
                             chapterCount = 0;
                         }
                     }
-
                     for (int i = 0; i < chapterCount; i++)
                     {
                         int index = i + 1;
@@ -937,11 +921,7 @@ namespace InfiniteRoleplay.Windows
                     }
                     if (ImGui.Button("Submit Story"))
                     {
-                        ClearUI();
-                        editStory = true;
-                        addStory = false;
                         DataSender.SendStory(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, storyTitle, storyMsg);
-
                     }
                 }
                 if (editStory == true)
@@ -975,10 +955,7 @@ namespace InfiniteRoleplay.Windows
                             {
                                 chapterEditCount--;
                             }
-
                         }
-
-
                     }
                     for (int h = 0; h < chapterEditCount; h++)
                     {
@@ -1006,8 +983,7 @@ namespace InfiniteRoleplay.Windows
                     {
                         DataSender.SendStory(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), storyEditTitle, chapterMessage);
                     }
-                }
-            
+                }            
                 if (addAvatar == true)
                 {
                     addAvatar = false;
@@ -1017,8 +993,7 @@ namespace InfiniteRoleplay.Windows
                 {
                     editAvatar = false;
                     EditAvatar();
-                }
-             
+                }             
             }
         }
         public static void ClearUI()

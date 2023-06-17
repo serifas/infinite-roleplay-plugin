@@ -36,6 +36,7 @@ namespace Networking
         CDeleteHook = 17,
         CSendStory = 18,
         CSendLocation = 19,
+        CSendBookmarkRequest = 20,
     }
     public class DataSender
     {
@@ -57,7 +58,7 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-      
+        
 
         public static void Login(string username, string password)
         {
@@ -149,7 +150,14 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-
+        public static void RequestBookmarks(string username)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CSendBookmarkRequest);
+            buffer.WriteString(username);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
         public static void EditProfileBio(string playerName, string playerServer, byte[] avatarBytes, string name, string race, string gender, int age,
                                             string height, string weight, string atFirstGlance,
                                             int lawful_good, int neutral_good, int chaotic_good,
