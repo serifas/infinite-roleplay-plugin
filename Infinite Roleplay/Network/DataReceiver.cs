@@ -457,14 +457,17 @@ namespace Networking
             string storyTitle = buffer.ReadString();
             string chapters = buffer.ReadString();
             ExistingTargetStory = true;
-            Regex hookRx = new Regex(@"<chapter>(.*?)</chapter>");
+            Regex chapterTitleRx = new Regex(@"<chapter_title>(.*?)</chapter_title>");
+            Regex chapterRx = new Regex(@"<chapter>(.*?)</chapter>");
             string[] chapterSplit = chapters.Replace("|||", "~").Split('~');
             TargetWindow.storyTitle = storyTitle;
             for (int i = 0; i < chapterSplit.Count(); i++)
             {
-                string chapterContent = hookRx.Match(chapterSplit[i]).Groups[1].Value;
+                string chapterTitle = chapterTitleRx.Match(chapterSplit[i]).Groups[1].Value;
+                string chapterContent = chapterRx.Match(chapterSplit[i]).Groups[1].Value;
                 TargetWindow.chapterCount = i;
                 TargetWindow.resetStory = true;
+                TargetWindow.ChapterTitle[i] = chapterTitle;
                 TargetWindow.ChapterContent[i] = chapterContent;
             }
             buffer.Dispose();

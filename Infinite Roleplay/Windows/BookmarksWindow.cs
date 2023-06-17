@@ -47,8 +47,7 @@ namespace InfiniteRoleplay.Windows
         }
         public override void Draw()
         {
-            if (ImGui.BeginChild("ProfilesTitle", new Vector2(290, 450), true))
-            {
+            
                 using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
                 using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
                 var _nameFont = plugin.PluginInterfacePub.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
@@ -57,9 +56,9 @@ namespace InfiniteRoleplay.Windows
                 using var defInfFontDen = ImRaii.DefaultFont();
                 using var DefaultColor = ImRaii.DefaultColors();
 
-                if (ImGui.BeginChild("Profiles", new Vector2(280, 430), true))
+                if (ImGui.BeginChild("Profiles", new Vector2(200, 400), true))
                 {
-                    for (int i = 0; i < profiles.Count; i++)
+                    for (int i = 1; i < profiles.Count; i++)
                     {
                         if (ImGui.Selectable(profiles.Keys[i] + " @ " + profiles.Values[i]))
                         {
@@ -69,9 +68,6 @@ namespace InfiniteRoleplay.Windows
                         }
                     }
                 }
-
-            }
-            
             ImGui.EndChild();
               
 
