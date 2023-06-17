@@ -1017,9 +1017,9 @@ namespace InfiniteRoleplay.Windows
         public override void Update()
         {
             ExistingProfile = DataReceiver.ExistingProfileData;
-            ExistingStory = DataReceiver.ExistingStory;
+            ExistingStory = DataReceiver.ExistingStoryData;
             ExistingBio = DataReceiver.ExistingBioData;
-            ExistingHooks = DataReceiver.ExistingHooks;
+            ExistingHooks = DataReceiver.ExistingHooksData;
             existingAvatarBytes = DataReceiver.currentAvatar;
             lawfulGoodEditVal = DataReceiver.lawfulGoodEditVal;
             loadedSelf = DataReceiver.LoadedSelf;

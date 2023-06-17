@@ -103,14 +103,7 @@ namespace InfiniteRoleplay.Windows
         private GameFontHandle _Font;
         //BIO VARS
         private TextureWrap avatarImg, currentAvatarImg;
-        public static string characterAddName = "",
-                                characterAddRace = "",
-                                characterAddGender = "",
-                                characterAddAge = "",
-                                characterAddAfg = "",
-                                characterAddHeight = "",
-                                characterAddWeight = "",
-                                characterEditName = "",
+        public static string    characterEditName = "",
                                 characterEditRace = "",
                                 characterEditGender = "",
                                 characterEditAge = "",
@@ -473,7 +466,6 @@ namespace InfiniteRoleplay.Windows
                         ImGui.Text(ChapterTitle[h]);
                         using var defInfFontDen = ImRaii.DefaultFont();
                         ImGui.Text(Chapter);
-                        ImGui.SameLine();
                     }
                     
                     
@@ -507,8 +499,8 @@ namespace InfiniteRoleplay.Windows
         {
             ExistingProfile = DataReceiver.ExistingTargetProfileData;
             ExistingBio = DataReceiver.ExistingTargetBioData;
-            ExistingStory = DataReceiver.ExistingTargetStory;
-            ExistingHooks = DataReceiver.ExistingTargetHooks;
+            ExistingStory = DataReceiver.ExistingTargetStoryData;
+            ExistingHooks = DataReceiver.ExistingTargetHooksData;
             existingAvatarBytes = DataReceiver.currentTargetAvatar;
             hookEditCount = DataReceiver.targetHookEditCount;
             

@@ -43,12 +43,15 @@ namespace Networking
         SRecProfileStory = 32,
         SRecTargetStory = 33,
         SRecBookmarks = 34,
+        SRecNoTargetStory = 35,
+        SRecNoProfileStory = 36,
     }
     class DataReceiver
     {
         public static string accountStatus = "status...";
         public static bool LoadedSelf = false;
-        public static bool ExistingProfileData = false, ExistingTargetProfileData = false, targetBioData = false, ExistingStory = false, ExistingTargetStory;
+        public static bool ExistingProfileData, ExistingBioData, ExistingHooksData, ExistingStoryData, ExistingOOCData, ExistingGalleryData = false;
+        public static bool ExistingTargetProfileData, ExistingTargetBioData, ExistingTargetHooksData, ExistingTargetStoryData, ExistingTargetOOCData, ExistingTargetGalleryData = false;
         public static string bookmarks;
         public static byte[] currentAvatar , currentTargetAvatar;
         public static int hookEditCount, hookCount;
@@ -58,7 +61,6 @@ namespace Networking
                           lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal;
         public static string currentName, currentRace, currentGender,currentAge, currentHeight,currentWeight,currentAfg;
 
-        public static bool ExistingBioData, ExistingHooks = false, ExistingTargetBioData, ExistingTargetHooks;
         public static Vector4 accounStatusColor = new Vector4(255, 255, 255, 255);
         public static Plugin plugin;
         public static Dictionary<int, string> characters = new Dictionary<int, string>();
@@ -200,7 +202,9 @@ namespace Networking
             var packetID = buffer.ReadInt();
             buffer.Dispose();
             ExistingTargetProfileData = true;
-
+            ExistingTargetBioData = false;
+            ExistingTargetHooksData = false;
+            ExistingTargetStoryData = false;
             plugin.WindowSystem.GetWindow("TARGET").IsOpen = true;
         }
         public static void ExistingProfile(byte[] data)
@@ -246,12 +250,29 @@ namespace Networking
         }
         public static void NoTargetBio(byte[] data)
         {
+            ExistingTargetBioData = false;
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             buffer.Dispose();
             loggedIn = true;
-            targetBioData = false;
+        }
+        public static void NoTargetStory(byte[] data)
+        {
+            ExistingTargetStoryData = false;
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            buffer.Dispose();
+            loggedIn = true;
+        }
+        public static void NoTargetHooks(byte[] data)
+        {
+            ExistingTargetHooksData = false;
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            buffer.Dispose();
         }
         public static void ReceiveProfile(byte[] data)
         {
@@ -409,7 +430,7 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             string hooks = buffer.ReadString();
-            ExistingHooks = true;
+            ExistingHooksData = true;
 
             Regex hookRx = new Regex(@"<hook>(.*?)</hook>");
             string[] hookSplit = hooks.Replace("|||", "~").Split('~');
@@ -430,7 +451,7 @@ namespace Networking
             var packetID = buffer.ReadInt();
             string storyTitle = buffer.ReadString();
             string chaptersMsg = buffer.ReadString();
-            ExistingStory = true;
+            ExistingStoryData = true;
 
             Regex chapterTitleRx = new Regex(@"<chapter_title>(.*?)</chapter_title>");
             Regex chapterRx = new Regex(@"<chapter>(.*?)</chapter>");
@@ -456,7 +477,7 @@ namespace Networking
             var packetID = buffer.ReadInt();
             string storyTitle = buffer.ReadString();
             string chapters = buffer.ReadString();
-            ExistingTargetStory = true;
+            ExistingTargetStoryData = true;
             Regex chapterTitleRx = new Regex(@"<chapter_title>(.*?)</chapter_title>");
             Regex chapterRx = new Regex(@"<chapter>(.*?)</chapter>");
             string[] chapterSplit = chapters.Replace("|||", "~").Split('~');
@@ -478,7 +499,7 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             string hooks = buffer.ReadString();
-            ExistingTargetHooks = true;
+            ExistingTargetHooksData = true;
 
             Regex hookRx = new Regex(@"<hook>(.*?)</hook>");
             string[] hookSplit = hooks.Replace("|||", "~").Split('~');
@@ -496,18 +517,15 @@ namespace Networking
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
-            ExistingHooks = false;
+            ExistingHooksData = false;
             buffer.Dispose();
         }
-
-
-
-        public static void NoTargetProfileHooks(byte[] data)
+        public static void NoProfileStory(byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
-            ExistingTargetHooks = false;
+            ExistingStoryData = false;
             buffer.Dispose();
         }
     }

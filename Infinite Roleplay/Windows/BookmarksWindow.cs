@@ -21,6 +21,8 @@ using Networking;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using FFXIVClientStructs.Havok;
 using System.Text.RegularExpressions;
+using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Objects;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -48,26 +50,26 @@ namespace InfiniteRoleplay.Windows
         public override void Draw()
         {
             
-                using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
-                using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
-                var _nameFont = plugin.PluginInterfacePub.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
-                using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
-                ImGuiUtil.DrawTextButton("Profiles", Vector2.Zero, 0);
-                using var defInfFontDen = ImRaii.DefaultFont();
-                using var DefaultColor = ImRaii.DefaultColors();
+            using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
+            using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+            var _nameFont = plugin.PluginInterfacePub.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
+            using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
+            ImGuiUtil.DrawTextButton("Profiles", Vector2.Zero, 0);
+            using var defInfFontDen = ImRaii.DefaultFont();
+            using var DefaultColor = ImRaii.DefaultColors();
 
-                if (ImGui.BeginChild("Profiles", new Vector2(200, 400), true))
+            if (ImGui.BeginChild("Profiles", new Vector2(200, 400), true))
+            {
+                for (int i = 0; i < profiles.Count; i++)
                 {
-                    for (int i = 1; i < profiles.Count; i++)
-                    {
-                        if (ImGui.Selectable(profiles.Keys[i] + " @ " + profiles.Values[i]))
-                        {
-                            LoginWindow.loginRequest = true;
-                            plugin.ReloadClient();
-                            DataSender.RequestTargetProfile(profiles.Keys[i], profiles.Values[i]);
-                        }
+                    if (ImGui.Selectable(profiles.Keys[i] + " @ " + profiles.Values[i]))
+                    {                        
+                        LoginWindow.loginRequest = true;
+                        plugin.ReloadClient();
+                        DataSender.RequestTargetProfile(profiles.Keys[i], profiles.Values[i]);                        
                     }
                 }
+            }
             ImGui.EndChild();
               
 
