@@ -202,14 +202,18 @@ namespace InfiniteRoleplay
 
             }
             var targetPlayer = targetManager.Target as PlayerCharacter;
-            if (targetPlayer != null && dutyState.IsDutyStarted == false)
+            if(loggedIn == true)
             {
-                WindowSystem.GetWindow("TARGET OPTIONS").IsOpen = true;
+                if (targetPlayer != null && dutyState.IsDutyStarted == false)
+                {
+                    WindowSystem.GetWindow("TARGET OPTIONS").IsOpen = true;
+                }
+                else
+                {
+                    WindowSystem.GetWindow("TARGET OPTIONS").IsOpen = false;
+                }
             }
-            else
-            {
-                WindowSystem.GetWindow("TARGET OPTIONS").IsOpen = false;
-            }
+            
         }
 
         private void OnCommand(string command, string args)
@@ -257,7 +261,10 @@ namespace InfiniteRoleplay
         }
         public void DrawLoginUI()
         {
-
+            if(Configuration.username != "" && Configuration.password != "")
+            {
+                DataSender.Login(Configuration.username.ToString(), Configuration.password.ToString());
+            }
             if (loggedIn == true)
             {
                 this.WindowSystem.GetWindow("OPTIONS").IsOpen = true;

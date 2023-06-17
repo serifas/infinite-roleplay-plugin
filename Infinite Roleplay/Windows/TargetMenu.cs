@@ -125,7 +125,11 @@ namespace InfiniteRoleplay.Windows
 
             if (ImGui.ImageButton(this.addBookmarkImage.ImGuiHandle, new Vector2(50, 50)))
             {
-
+                var targetPlayer = targetManager.Target as PlayerCharacter;
+                if (targetPlayer != null)
+                {
+                    DataSender.BookmarkPlayer(plugin.Configuration.username, targetPlayer.Name.ToString(), targetPlayer.HomeWorld.GameData.Name.ToString());
+                }
             }
             if (ImGui.IsItemHovered())
             {

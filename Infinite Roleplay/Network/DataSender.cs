@@ -37,6 +37,7 @@ namespace Networking
         CSendStory = 18,
         CSendLocation = 19,
         CSendBookmarkRequest = 20,
+        CSendPlayerBookmark = 21,
     }
     public class DataSender
     {
@@ -147,6 +148,16 @@ namespace Networking
             buffer.WriteInteger((int)ClientPackets.CStrikeAccount);
             buffer.WriteString(senderName);
             buffer.WriteString(receiverName);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+        public static void BookmarkPlayer(string username, string playerName, string playerWorld)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CSendPlayerBookmark);
+            buffer.WriteString(username);
+            buffer.WriteString(playerName);
+            buffer.WriteString(playerWorld);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
