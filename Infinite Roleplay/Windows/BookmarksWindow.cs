@@ -40,7 +40,7 @@ namespace InfiniteRoleplay.Windows
             this.SizeConstraints = new WindowSizeConstraints
             {
                 MinimumSize = new Vector2(300, 500),
-                MaximumSize = new Vector2(300, 500)
+                MaximumSize = new Vector2(500, 800)
             };
             this.plugin = plugin;
             this.pg = Interface;

@@ -236,6 +236,11 @@ namespace Networking
             buffer.Dispose();
             loggedIn = true;
             ExistingTargetProfileData = false;
+            ExistingTargetBioData = false;
+            ExistingTargetHooksData = false;
+            ExistingTargetStoryData = false;
+            ExistingTargetOOCData = false;
+            ExistingTargetGalleryData = false;
             plugin.WindowSystem.GetWindow("TARGET").IsOpen = true;
         }
         public static void NoProfileBio(byte[] data)
