@@ -38,6 +38,7 @@ namespace Networking
         CSendLocation = 19,
         CSendBookmarkRequest = 20,
         CSendPlayerBookmark = 21,
+        CSendRemovePlayerBookmark = 22,
     }
     public class DataSender
     {
@@ -160,7 +161,18 @@ namespace Networking
             buffer.WriteString(playerWorld);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
+        }   
+        public static void RemoveBookmarkedPlayer(string username, string playerName, string playerWorld)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CSendRemovePlayerBookmark);
+            buffer.WriteString(username);
+            buffer.WriteString(playerName);
+            buffer.WriteString(playerWorld);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
         }
+
         public static void RequestBookmarks(string username)
         {
             var buffer = new ByteBuffer();

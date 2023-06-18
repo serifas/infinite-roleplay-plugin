@@ -58,20 +58,28 @@ namespace InfiniteRoleplay.Windows
             using var defInfFontDen = ImRaii.DefaultFont();
             using var DefaultColor = ImRaii.DefaultColors();
 
-            if (ImGui.BeginChild("Profiles", new Vector2(200, 400), true))
+            if (ImGui.BeginChild("Profiles", new Vector2(290, 380), true))
             {
-                for (int i = 0; i < profiles.Count; i++)
+                for (int i = 1; i < profiles.Count; i++)
                 {
-                    if (ImGui.Selectable(profiles.Keys[i] + " @ " + profiles.Values[i]))
-                    {                        
+                    if (ImGui.Button(profiles.Keys[i] + " @ " + profiles.Values[i]))
+                    {
                         LoginWindow.loginRequest = true;
                         plugin.ReloadClient();
-                        DataSender.RequestTargetProfile(profiles.Keys[i], profiles.Values[i]);                        
+                        DataSender.RequestTargetProfile(profiles.Keys[i], profiles.Values[i]);
+
+                    }
+                    ImGui.SameLine();
+                    if (ImGui.Button("Remove##Removal" + i))
+                    {
+                        LoginWindow.loginRequest = true;
+                        plugin.ReloadClient();
+                        DataSender.RemoveBookmarkedPlayer(plugin.Configuration.username.ToString(), profiles.Keys[i], profiles.Values[i]);
                     }
                 }
+                ImGui.EndChild();
+
             }
-            ImGui.EndChild();
-              
 
         }
         public void Dispose()
