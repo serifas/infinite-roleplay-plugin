@@ -59,6 +59,7 @@ namespace InfiniteRoleplay.Windows
                 MinimumSize = new Vector2(250, 225),
                 MaximumSize = new Vector2(250, 225)
             };
+            
             this.plugin = plugin;
             this.configuration = plugin.Configuration;
             this.profilesImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/profiles.png");

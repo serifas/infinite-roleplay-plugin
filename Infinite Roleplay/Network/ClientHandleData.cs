@@ -40,6 +40,7 @@ namespace Networking
                 packets.Add((int)ServerPackets.SRecTargetHooks, DataReceiver.ReceiveTargetHooks);
                 packets.Add((int)ServerPackets.SRecNoTargetStory, DataReceiver.NoTargetStory);
                 packets.Add((int)ServerPackets.SRecTargetStory, DataReceiver.ReceiveTargetStory);
+                packets.Add((int)ServerPackets.SRecProfileGallery, DataReceiver.ReceiveProfileGallery);
 
 
             }

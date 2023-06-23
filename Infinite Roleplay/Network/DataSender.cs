@@ -39,6 +39,7 @@ namespace Networking
         CSendBookmarkRequest = 20,
         CSendPlayerBookmark = 21,
         CSendRemovePlayerBookmark = 22,
+        CSendGalleryImage = 23,
     }
     public class DataSender
     {
@@ -89,6 +90,17 @@ namespace Networking
             buffer.WriteString(username);
             buffer.WriteString(SystemName);
             buffer.WriteString(Msg);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+
+        public static void SendGalleryImage(string playername, string playerworld, string galleryString)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CSendGalleryImage);
+            buffer.WriteString(playername);
+            buffer.WriteString(playerworld);
+            buffer.WriteString(galleryString);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }

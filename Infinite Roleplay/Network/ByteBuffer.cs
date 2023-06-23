@@ -104,6 +104,7 @@ namespace Networking
                 throw new Exception("Wrong Data Type.You are not trying to read out a 'BYTE'");
             }
         }
+        
         public byte[] ReadBytes(int length, bool Peek = true)
         {
             if (Buff.Count > readPos)

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Security.Policy;
@@ -16,7 +17,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
-
+using InfiniteRoleplay.Helpers;
 namespace Networking
 {
 
@@ -45,6 +46,7 @@ namespace Networking
         SRecBookmarks = 34,
         SRecNoTargetStory = 35,
         SRecNoProfileStory = 36,
+        SRecProfileGallery = 37,
     }
     class DataReceiver
     {
@@ -338,7 +340,24 @@ namespace Networking
              }
 
         }
-        
+        public static void ReceiveProfileGallery(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            string image_urls = buffer.ReadString();
+            string[] imageUrlsSplit = image_urls.Replace("|||", "~").Split('~');
+            using (var webClient = new WebClient())
+            {
+                foreach(var imageUrl in imageUrlsSplit)
+                {
+                    string imgurl = Misc.GetBetween(imageUrl, "<GalleryImage>", "</GalleryImage>");
+                    byte[] imageBytes = webClient.DownloadData(imgurl);
+                    ProfileWindow.galleryImageBytes.Add(imageBytes);
+                }
+            }
+            buffer.Dispose();
+        }
         public static void ReceiveTargetBio(byte[] data)
         {
             var buffer = new ByteBuffer();

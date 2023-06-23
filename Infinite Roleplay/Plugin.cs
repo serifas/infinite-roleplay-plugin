@@ -199,7 +199,6 @@ namespace InfiniteRoleplay
             {
                 firstload = false;
                 LoadUI();
-
             }
             var targetPlayer = targetManager.Target as PlayerCharacter;
             if(loggedIn == true)
@@ -261,10 +260,7 @@ namespace InfiniteRoleplay
         }
         public void DrawLoginUI()
         {
-            if(Configuration.username != "" && Configuration.password != "")
-            {
-                DataSender.Login(Configuration.username.ToString(), Configuration.password.ToString());
-            }
+            
             if (loggedIn == true)
             {
                 this.WindowSystem.GetWindow("OPTIONS").IsOpen = true;
