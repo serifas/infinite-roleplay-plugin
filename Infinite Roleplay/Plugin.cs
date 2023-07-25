@@ -41,6 +41,7 @@ namespace InfiniteRoleplay
         public bool firstload = true;
         public bool targeted = false;
         public bool loadCallback = false;
+        public bool loadPreview = false;
         public string socketStatus;
         public DalamudPluginInterface PluginInterfacePub;
         public string Name => "Infinite Roleplay";
@@ -144,8 +145,7 @@ namespace InfiniteRoleplay
                                                                 lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar));
             this.WindowSystem.AddWindow(new TargetMenu(this, this.pluginInterface, targetManager));
             this.WindowSystem.AddWindow(new BookmarksWindow(this, this.pluginInterface));
-
-
+            this.WindowSystem.AddWindow(new ImagePreview(this, this.pluginInterface, targetManager));
         }
         public void Dispose()
         {
@@ -213,6 +213,11 @@ namespace InfiniteRoleplay
                     WindowSystem.GetWindow("TARGET OPTIONS").IsOpen = false;
                 }
             }
+            if(loadPreview == true)
+            {
+                WindowSystem.GetWindow("PREVIEW").IsOpen = true;
+                loadPreview = false;
+            }
             
         }
 
@@ -272,6 +277,7 @@ namespace InfiniteRoleplay
                 this.WindowSystem.GetWindow("LOGIN").IsOpen = true;
             }
         }
+        
 
 
 

@@ -102,6 +102,7 @@ namespace InfiniteRoleplay.Windows
         public static bool editAvatar = false;
         public static bool addProfile = false;
         public static bool editProfile = false;
+        public static bool LoadPreview = false;
         public bool ExistingBio;
         public static bool ExistingHooks;
         public static int hookCount = 0;
@@ -1054,8 +1055,49 @@ namespace InfiniteRoleplay.Windows
                     }
                 if(editGallery == true)
                 {
-                    
-                    loadGallery(true);
+                    if (ImGui.Button("Add Image"))
+                    {
+                        imageIndex++;
+                    }
+                    for (int i = 0; i < imageIndex; i++)
+                    {
+
+                    }
+                    for (int h = 0; h < ExistingGalleryImageCount; h++)
+                    {
+                        if (h % 2 == 0)
+                        {
+
+                        }
+                        else
+                        {
+                            ImGui.SameLine();
+                        }
+                        galleryEditImages[h] = pg.UiBuilder.LoadImage(galleryEditImageBytes[h]);
+                        ImGui.Image(galleryEditImages[h].ImGuiHandle, ScaledPreviewThumb(galleryEditImages[h], 300, 300));
+                        if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
+                        if (ImGui.IsItemClicked())
+                        {
+                            ImagePreview.width = galleryEditImages[h].Width;
+                            ImagePreview.height = galleryEditImages[h].Height;
+                            ImagePreview.PreviewImage = galleryEditImages[h];
+                            plugin.loadPreview = true;
+                        }
+                        ImGui.SameLine();
+                        if (ImGui.Button("Upload##" + "gallery" + h))
+                        {
+                            editGalleryImage = true;
+                            editImageIndexVal = h;
+                        }
+                    }
+                    if (ImGui.Button("Submit Gallery"))
+                    {
+                        for (int i = 0; i < imageIndex; i++)
+                        {
+                            int galIndex = i + 1;
+                            DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), galIndex, galleryEditImageBytes[i]);
+                        }
+                    }
                 }
                 if (addImageToGallery == true)
                 {
@@ -1078,51 +1120,14 @@ namespace InfiniteRoleplay.Windows
                     editAvatar = false;
                     EditAvatar();
                 }    
-                
+                if(LoadPreview == true)
+                {
+                    
+                }
             }
         }
-        public void loadGallery(bool load)
-        {
-            if(load == true)
-            {
-                if (ImGui.Button("Add Image"))
-                {
-                    imageIndex++;
-                }
-                for (int i = 0; i < imageIndex; i++)
-                {
+     
 
-                }
-                for (int h = 0; h < ExistingGalleryImageCount; h++)
-                {
-                    if (h % 2 == 0)
-                    {
-
-                    }
-                    else
-                    {
-                        ImGui.SameLine();
-                    }
-                    galleryEditImages[h] = pg.UiBuilder.LoadImage(galleryEditImageBytes[h]);
-                    ImGui.Image(galleryEditImages[h].ImGuiHandle, ScaledPreviewThumb(galleryEditImages[h], 300, 300));
-                    ImGui.SameLine();
-                    if (ImGui.Button("Upload##" + "gallery" + h))
-                    {
-                        editGalleryImage = true;
-                        editImageIndexVal = h;
-                    }
-                }
-                if (ImGui.Button("Submit Gallery"))
-                {
-                    for (int i = 0; i < imageIndex; i++)
-                    {
-                        int galIndex = i + 1;
-                        DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), galIndex, galleryEditImageBytes[i]);
-                    }
-                    }
-                load = false;
-            }
-        }
         public void SET_VAL(string mytype, string myvalue)
         {
             this.GetType().GetField(mytype).SetValue(this, myvalue);
