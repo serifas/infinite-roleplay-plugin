@@ -57,7 +57,7 @@ namespace Networking
         public static string bookmarks;
         public static byte[] currentAvatar , currentTargetAvatar;
         public static int hookEditCount, hookCount;
-        public static int targetHookEditCount;
+        public static int targetHookEditCount, ExistingGalleryImageCount;
         public static int lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, 
                           lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, 
                           lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal;
@@ -340,16 +340,29 @@ namespace Networking
              }
 
         }
-        public static void ReceiveProfileGallery(byte[] data)
+        public static void ReceiveProfileGalleryImage(byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
-            string image_urls = buffer.ReadString();
+            int imagesLen = buffer.ReadInt();
+            for(int i = 0; i < imagesLen; i++)
+            {
+                
+                int imageBtLen = buffer.ReadInt();
+                if(imageBtLen > 0)
+                {
+                    byte[] imageBytes = buffer.ReadBytes(imageBtLen);
 
-            
+                    ExistingGalleryData = true;
+                    ExistingGalleryImageCount = i + 1;
+                    ProfileWindow.galleryEditImageBytes[i] = imageBytes;
+                }
+                
+            }
             
             buffer.Dispose();
+
         }
         public static void ReceiveTargetBio(byte[] data)
         {
