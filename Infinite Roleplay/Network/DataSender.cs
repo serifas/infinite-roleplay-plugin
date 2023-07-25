@@ -40,6 +40,8 @@ namespace Networking
         CSendPlayerBookmark = 21,
         CSendRemovePlayerBookmark = 22,
         CSendGalleryImage = 23,
+        CSendGalleryImagesReceived = 24,
+        CSendGalleryImageRequest = 25,
     }
     public class DataSender
     {
@@ -62,7 +64,15 @@ namespace Networking
             buffer.Dispose();
         }
         
-
+        public static void SendImagesReceived(string username, string world)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CSendGalleryImagesReceived);
+            buffer.WriteString(username);
+            buffer.WriteString(world);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
         public static void Login(string username, string password)
         {
 
@@ -93,16 +103,27 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-
-        public static void SendGalleryImage(string playername, string playerworld, int index, byte[] galleryImageBts)
+        public static void RequestGalleryImage(string imageName)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CSendGalleryImageRequest);
+            buffer.WriteString(imageName);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+        public static void SendGalleryImage(string playername, string playerworld, int count, byte[][] galleryImagesBts)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendGalleryImage);
             buffer.WriteString(playername);
             buffer.WriteString(playerworld);
-            buffer.WriteInteger(index);
-            buffer.WriteInteger(galleryImageBts.Length);
-            buffer.WriteBytes(galleryImageBts);
+            buffer.WriteInteger(galleryImagesBts.Length);
+            for(int i = 0; i < count; i++)
+            {
+
+                buffer.WriteInteger(galleryImagesBts[i].Length);
+                buffer.WriteBytes(galleryImagesBts[i]);
+            }
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
@@ -306,12 +327,7 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
 
-            }
-        public static void CreateProfile(string username, string charactername, byte[] avatarBytes, int avatarBytesLength, string race, string age, string height, string weight, string afg, string hooks, string storystory, string url)
-        {
-
         }
-
         
         public static void UpdateSheetStatus(int sheetID, int status)
         {

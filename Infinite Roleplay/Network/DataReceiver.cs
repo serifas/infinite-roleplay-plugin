@@ -47,6 +47,7 @@ namespace Networking
         SRecNoTargetStory = 35,
         SRecNoProfileStory = 36,
         SRecProfileGallery = 37,
+        SRecGalleryImageLoaded = 38,
     }
     class DataReceiver
     {
@@ -57,7 +58,7 @@ namespace Networking
         public static string bookmarks;
         public static byte[] currentAvatar , currentTargetAvatar;
         public static int hookEditCount, hookCount;
-        public static int targetHookEditCount, ExistingGalleryImageCount;
+        public static int targetHookEditCount, ExistingGalleryImageCount, ExistingGalleryThumbCount;
         public static int lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, 
                           lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, 
                           lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal;
@@ -188,7 +189,15 @@ namespace Networking
             buffer.Dispose();
           
         }
-
+        public static void ImageLoaded(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            int index = buffer.ReadInt();
+            ProfileWindow.UpdateUploadStatus(index);
+            buffer.Dispose();
+        }
         public static void BadLogin(byte[] data)
         {
             var buffer = new ByteBuffer();
@@ -346,7 +355,8 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             int imagesLen = buffer.ReadInt();
-            for(int i = 0; i < imagesLen; i++)
+            int thumbsLen = buffer.ReadInt();
+            for (int i = 0; i < imagesLen; i++)
             {
                 
                 int imageBtLen = buffer.ReadInt();
@@ -360,7 +370,20 @@ namespace Networking
                 }
                 
             }
-            
+            for (int f = 0; f < thumbsLen; f++)
+            {
+
+                int thumbBtLen = buffer.ReadInt();
+                if (thumbBtLen > 0)
+                {
+                    byte[] thumbBytes = buffer.ReadBytes(thumbBtLen);
+
+                    ExistingGalleryData = true;
+                    ExistingGalleryThumbCount = f + 1;
+                    ProfileWindow.galleryEditThumbBytes[f] = thumbBytes;
+                }
+
+            }
             buffer.Dispose();
 
         }
