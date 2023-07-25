@@ -94,13 +94,15 @@ namespace Networking
             buffer.Dispose();
         }
 
-        public static void SendGalleryImage(string playername, string playerworld, string galleryString)
+        public static void SendGalleryImage(string playername, string playerworld, int index, byte[] galleryImageBts)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendGalleryImage);
             buffer.WriteString(playername);
             buffer.WriteString(playerworld);
-            buffer.WriteString(galleryString);
+            buffer.WriteInteger(index);
+            buffer.WriteInteger(galleryImageBts.Length);
+            buffer.WriteBytes(galleryImageBts);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }

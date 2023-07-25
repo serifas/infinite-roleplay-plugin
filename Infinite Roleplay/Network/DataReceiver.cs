@@ -346,16 +346,9 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             string image_urls = buffer.ReadString();
-            string[] imageUrlsSplit = image_urls.Replace("|||", "~").Split('~');
-            using (var webClient = new WebClient())
-            {
-                foreach(var imageUrl in imageUrlsSplit)
-                {
-                    string imgurl = Misc.GetBetween(imageUrl, "<GalleryImage>", "</GalleryImage>");
-                    byte[] imageBytes = webClient.DownloadData(imgurl);
-                    ProfileWindow.galleryImageBytes.Add(imageBytes);
-                }
-            }
+
+            
+            
             buffer.Dispose();
         }
         public static void ReceiveTargetBio(byte[] data)

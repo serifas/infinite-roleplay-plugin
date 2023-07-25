@@ -95,6 +95,9 @@
         <None Update="UI\common\avatar_holder.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="UI\common\picturetab.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     
     <PropertyGroup>
