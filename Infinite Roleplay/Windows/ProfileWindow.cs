@@ -61,6 +61,7 @@ namespace InfiniteRoleplay.Windows
         public static PlayerCharacter playerCharacter;
         private ChatGui chatGui;
         private DalamudPluginInterface pg;
+        public static bool GalleryUpdateAvailable = false;
         private FileDialogManager _fileDialogManager;
 #pragma warning disable CS0169 // The field 'ProfileWindow.profilesImage' is never used
         private TextureWrap profilesImage;
@@ -79,7 +80,7 @@ namespace InfiniteRoleplay.Windows
         public static int[] imageHeights = new int[30] { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
         public static string CombinedGalleryString = "";
         public static bool resetStory;
-        private byte[][] galleryImageBytes = new byte[][] { };
+        private byte[][] galleryImageBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0]};
         public static TextureWrap galleryImg1, galleryImg2, galleryImg3, galleryImg4, galleryImg5, galleryImg6, galleryImg7, galleryImg8, galleryImg9, galleryImg10, galleryImg11, galleryImg12, galleryImg13, galleryImg14, galleryImg15, galleryImg16, galleryImg17, galleryImg18, galleryImg19, galleryImg20, galleryImg21, galleryImg22, galleryImg23, galleryImg24, galleryImg25, galleryImg26, galleryImg27, galleryImg28, galleryImg29, galleryImg30;
         public TextureWrap[] galleryImages;
         public static string[] HookContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
@@ -1007,9 +1008,10 @@ namespace InfiniteRoleplay.Windows
                 }
                 if (addGallery == true)
                 {
+                   
                     if(ImGui.Button("Add Image"))
                     {
-                        imageIndex++;                        
+                        imageIndex++;      
                     }
                     for(int i = 0; i < imageIndex; i++)
                     {
@@ -1036,7 +1038,12 @@ namespace InfiniteRoleplay.Windows
                     }                
                     if(ImGui.Button("Submit Gallery"))
                     {
-
+                        for(int i = 0; i < imageIndex; i++)
+                        {
+                            int galIndex = i + 1;
+                            DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), galIndex, galleryImageBytes[i]);
+                        }
+                       
                     }
                     }
                 if (addImageToGallery == true)
@@ -1236,9 +1243,9 @@ namespace InfiniteRoleplay.Windows
 
                     imageWidths[imageIndex] = sizedImageThumb.Width;
                     imageHeights[imageIndex] = sizedImageThumb.Height;
-
+                    this.galleryImageBytes[imageIndex] = imgBytes;
                     this.galleryImages[imageIndex] = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(image);
- 
+
 
                 }
                   
