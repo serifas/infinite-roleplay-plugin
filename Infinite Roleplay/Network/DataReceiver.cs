@@ -366,7 +366,7 @@ namespace Networking
 
                     ExistingGalleryData = true;
                     ExistingGalleryImageCount = i + 1;
-                    ProfileWindow.galleryEditImageBytes[i] = imageBytes;
+                    ProfileWindow.galleryImageBytes[i] = imageBytes;
                 }
                 
             }
@@ -380,7 +380,7 @@ namespace Networking
 
                     ExistingGalleryData = true;
                     ExistingGalleryThumbCount = f + 1;
-                    ProfileWindow.galleryEditThumbBytes[f] = thumbBytes;
+                    ProfileWindow.galleryThumbBytes[f] = thumbBytes;
                 }
 
             }

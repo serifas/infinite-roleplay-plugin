@@ -206,7 +206,7 @@ namespace InfiniteRoleplay.Windows
 
             for (int tb = 0; tb < galleryThumbBytes.Length; tb++)
             {
-                galleryThumbBytes[tb] = Imaging.ScaleImageBytes(picBytes, 300, 300);
+                galleryThumbBytes[tb] = Imaging.ScaleImageBytes(picBytes, 150, 150);
             }
             for (int tb = 0; tb < galleryImageBytes.Length; tb++)
             {
@@ -1030,7 +1030,7 @@ namespace InfiniteRoleplay.Windows
                     }
                     for(int i = 0; i < imageIndex; i++)
                     {
-                        if (i % 2 == 0)
+                        if (i % 3 == 0)
                         {
                            
                         }
@@ -1061,7 +1061,8 @@ namespace InfiniteRoleplay.Windows
                     }                
                     if(ImGui.Button("Submit Gallery"))
                     {
-                         DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), imageIndex, galleryImageBytes);
+                        DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), imageIndex, galleryImageBytes);
+                        plugin.ReloadClient();
                     }
                     }
                 if (editGallery == true)
@@ -1070,13 +1071,10 @@ namespace InfiniteRoleplay.Windows
                     {
                         imageIndex++;
                     }
-                    for (int i = 0; i < imageIndex; i++)
+                   
+                    for (int h = 0; h < ExistingGalleryImageCount + imageIndex; h++)
                     {
-
-                    }
-                    for (int h = 0; h < ExistingGalleryImageCount; h++)
-                    {
-                        if (h % 2 == 0)
+                        if (h % 3 == 0)
                         {
 
                         }
@@ -1084,28 +1082,30 @@ namespace InfiniteRoleplay.Windows
                         {
                             ImGui.SameLine();
                         }
-                        galleryEditImages[h] = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryEditImageBytes[h]);
-                        galleryEditThumbs[h] = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryEditThumbBytes[h]);
-                        ImGui.Image(galleryEditThumbs[h].ImGuiHandle, new Vector2(galleryEditThumbs[h].Width, galleryEditThumbs[h].Height));
+                        galleryImages[h] = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryImageBytes[h]);
+                        galleryThumbs[h] = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryThumbBytes[h]);
+                        ImGui.Image(galleryThumbs[h].ImGuiHandle, new Vector2(galleryThumbs[h].Width, galleryThumbs[h].Height));
                         if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
                         if (ImGui.IsItemClicked())
                         {
                             int imgIndex = h + 1;
-                            ImagePreview.width = galleryEditImages[h].Width;
-                            ImagePreview.height = galleryEditImages[h].Height;
-                            ImagePreview.PreviewImage = galleryEditImages[h];
+                            ImagePreview.width = galleryImages[h].Width;
+                            ImagePreview.height = galleryImages[h].Height;
+                            ImagePreview.PreviewImage = galleryImages[h];
                             plugin.loadPreview = true;
                         }
                         ImGui.SameLine();
-                        if (ImGui.Button("Upload##" + "gallery" + h))
+                        if (ImGui.Button("Upload##" + "gallery_edit" + h))
                         {
                             editGalleryImage = true;
                             editImageIndexVal = h;
                         }
                     }
+                    
                     if (ImGui.Button("Submit Gallery"))
-                    {                
-                        DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), imageIndex + ExistingGalleryImageCount, galleryEditImageBytes);
+                    {
+                        DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), imageIndex + ExistingGalleryImageCount, galleryImageBytes);
+                        plugin.ReloadClient();
                     }
                 }
                 if (addImageToGallery == true)
@@ -1289,8 +1289,8 @@ namespace InfiniteRoleplay.Windows
                 }
                 else
                 {
-                    galleryEditThumbBytes[imageIndex] = Imaging.ScaleImageBytes(imageBytes, 300, 300);
-                    galleryEditImageBytes[imageIndex] = imageBytes;
+                    galleryThumbBytes[imageIndex] = Imaging.ScaleImageBytes(imageBytes, 150, 150);
+                    galleryImageBytes[imageIndex] = imageBytes;
                 }
 
 
@@ -1321,7 +1321,7 @@ namespace InfiniteRoleplay.Windows
                                         
                     byte[] imgBytes = File.ReadAllBytes(imagePath);
 
-                    byte[] scaledImageBytes = Imaging.ScaleImageBytes(imgBytes, 300, 300);
+                    byte[] scaledImageBytes = Imaging.ScaleImageBytes(imgBytes, 150, 150);
                     System.Drawing.Image scaledImage = Imaging.byteArrayToImage(scaledImageBytes);
 
                     
