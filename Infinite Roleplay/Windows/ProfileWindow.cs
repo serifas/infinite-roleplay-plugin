@@ -128,6 +128,7 @@ namespace InfiniteRoleplay.Windows
         public static int chapterEditCount;
         public bool ExistingStory;
         public bool ExistingOOC;
+        public static byte[] picBytes;
         public bool ExistingGallery;
         public static int imageIndexVal = 0;
         public bool ExistingProfile;
@@ -216,7 +217,7 @@ namespace InfiniteRoleplay.Windows
             galleryEditImages = new TextureWrap[30] { galleryEditImg1, galleryEditImg2, galleryEditImg3, galleryEditImg4, galleryEditImg5, galleryEditImg6, galleryEditImg7, galleryEditImg8, galleryEditImg9, galleryEditImg10, galleryEditImg11, galleryEditImg12, galleryEditImg13, galleryEditImg14, galleryEditImg15, galleryEditImg16, galleryEditImg17, galleryEditImg18, galleryEditImg19, galleryEditImg20, galleryEditImg21, galleryEditImg22, galleryEditImg23, galleryEditImg24, galleryEditImg25, galleryEditImg26, galleryEditImg27, galleryEditImg28, galleryEditImg29, galleryEditImg30 };
             galleryEditThumbs = new TextureWrap[30] { galleryEditThumbImg1, galleryEditThumbImg2, galleryEditThumbImg3, galleryEditThumbImg4, galleryEditThumbImg5, galleryEditThumbImg6, galleryEditThumbImg7, galleryEditThumbImg8, galleryEditThumbImg9, galleryEditThumbImg10, galleryEditThumbImg11, galleryEditThumbImg12, galleryEditThumbImg13, galleryEditThumbImg14, galleryEditThumbImg15, galleryEditThumbImg16, galleryEditThumbImg17, galleryEditThumbImg18, galleryEditThumbImg19, galleryEditThumbImg20, galleryEditThumbImg21, galleryEditThumbImg22, galleryEditThumbImg23, galleryEditThumbImg24, galleryEditThumbImg25, galleryEditThumbImg26, galleryEditThumbImg27, galleryEditThumbImg28, galleryEditThumbImg29, galleryEditThumbImg30 };
 
-            byte[] picBytes = Imaging.ImageToByteArray(pictureTab);
+            picBytes = Imaging.ImageToByteArray(pictureTab);
 
 
             imageHolder = Imaging.ImageToByteArray(pictureTab);
@@ -1044,7 +1045,10 @@ namespace InfiniteRoleplay.Windows
                 {
                     if(ImGui.Button("Add Image"))
                     {
-                        imageIndex++;
+                        if(imageIndex < 29)
+                        {
+                            imageIndex++;
+                        }
                     }
                     addGalleryImageGUI = true;
                     ImageExists[imageIndex] = true;
@@ -1086,13 +1090,7 @@ namespace InfiniteRoleplay.Windows
                 {
                     if (i < 29)
                     {
-                        if (i % 3 == 0)
-                        {
-
-
-                        }
-                
-                        else
+                        if (i % 3 != 0)
                         {
                             ImGui.SameLine();
                         }
@@ -1121,17 +1119,19 @@ namespace InfiniteRoleplay.Windows
                                             imageIndexVal = i;
                                             Cols[i] = new Vector4(255, 255, 255, 255);
                                             galleryStatusVals[i] = "Pending Submission";
+                                            LoginWindow.loginRequest = true;
                                         }
                                         ImGui.SameLine();
                                         if (ImGui.Button("Remove##" + "gallery_remove" + i))
                                         {
-                                            imageIndex --;
+                                            imageIndex = imageIndex - 1;
                                             Cols[i] = new Vector4(255, 0, 0, 255);
                                             galleryStatusVals[i] = "Pending Deletion";
                                             ImageExists[i] = false; 
                                             DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i);
                                             galleryImageBytes[i] = imageHolder;
                                             galleryThumbBytes[i] = thumbHolder;
+                                            
                                         }
                                         ImGui.TextColored(Cols[i], galleryStatusVals[i]);
                                     }
@@ -1151,16 +1151,7 @@ namespace InfiniteRoleplay.Windows
                     //ImGui.Image(galleryImages.ImGuiHandle, new Vector2(300, 100));                        
 
                 }
-                ImGui.NewLine();
-                    if (ImGui.Button("Submit Gallery"))
-                    {
-                        DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), imageIndex, galleryImageBytes);
-
-                        plugin.DisconnectFromServer();
-                        plugin.RefreshConnection();
-                        plugin.loggedIn = false;
-                        LoginWindow.loginRequest = true;
-                    }
+              
 
 
 
@@ -1359,8 +1350,19 @@ namespace InfiniteRoleplay.Windows
                     
                     galleryImageBytes[imageIndex] = imgBytes;
                     galleryThumbBytes[imageIndex] = scaledImageBytes;
+
+                    if (galleryImageBytes[imageIndex] != picBytes)
+                    {
+                        DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), galleryImageBytes.Length, galleryImageBytes[imageIndex]);
+
+                        plugin.DisconnectFromServer();
+                        plugin.RefreshConnection();
+                        plugin.loggedIn = false;
+                    }
+
+
                 }
-                  
+
 
             }, 0, null, this.configuration.AlwaysOpenDefaultImport);
         }

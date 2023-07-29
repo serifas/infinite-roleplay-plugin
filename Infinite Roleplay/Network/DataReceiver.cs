@@ -355,7 +355,7 @@ namespace Networking
                     byte[] imageBytes = buffer.ReadBytes(imageBtLen);
 
                     ExistingGalleryData = true;
-                    ProfileWindow.imageIndex = i + 1;
+                    ProfileWindow.imageIndex = imagesLen + 1;
                     ProfileWindow.ImageExists[i] = true;
                     ProfileWindow.galleryImageBytes[i] = imageBytes;
                     ProfileWindow.Cols[i] = new System.Numerics.Vector4(0, 255, 0, 255);

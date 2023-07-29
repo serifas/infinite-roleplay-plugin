@@ -114,19 +114,15 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SendGalleryImage(string playername, string playerworld, int count, byte[][] galleryImagesBts)
+        public static void SendGalleryImage(string playername, string playerworld, int length, byte[] galleryImagesBts)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendGalleryImage);
             buffer.WriteString(playername);
             buffer.WriteString(playerworld);
-            buffer.WriteInteger(galleryImagesBts.Length);
-            for(int i = 0; i < count; i++)
-            {
-                buffer.WriteInteger(galleryImagesBts[i].Length);
-                buffer.WriteBytes(galleryImagesBts[i]);
-            }
-           
+            buffer.WriteInteger(galleryImagesBts.Length);    
+            buffer.WriteBytes(galleryImagesBts);
+            buffer.WriteInteger(length);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
