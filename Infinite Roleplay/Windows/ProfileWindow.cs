@@ -131,6 +131,7 @@ namespace InfiniteRoleplay.Windows
         public bool ExistingGallery;
         public static int imageIndexVal = 0;
         public bool ExistingProfile;
+        public static byte[] imageHolder, thumbHolder;
         public string storyTitle = "";
         public static string storyEditTitle = "";
         public static int lawfulGoodEditVal,
@@ -217,6 +218,10 @@ namespace InfiniteRoleplay.Windows
 
             byte[] picBytes = Imaging.ImageToByteArray(pictureTab);
 
+
+            imageHolder = Imaging.ImageToByteArray(pictureTab);
+            thumbHolder = Imaging.ImageToByteArray(Imaging.byteArrayToImage(Imaging.ScaleImageBytes(picBytes, 150, 150)));
+
             for (int tb = 0; tb < galleryThumbBytes.Length; tb++)
             {
                 galleryThumbBytes[tb] = Imaging.ScaleImageBytes(picBytes, 150, 150);
@@ -293,7 +298,7 @@ namespace InfiniteRoleplay.Windows
                 ImGui.SameLine();
                 if (ExistingOOC == true) { if (ImGui.Button("Edit OOC Info", new Vector2(100, 20))) { ClearUI(); editOOC = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your OOC Info."); } } else { if (ImGui.Button("Add OOC Info", new Vector2(100, 20))) { ClearUI(); addOOC = true; } }
                 ImGui.SameLine();
-                if (ExistingGallery == true) { if (ImGui.Button("Edit Gallery", new Vector2(100, 20))) { ClearUI(); editGallery = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Gallery."); } } else { if (ImGui.Button("Add Gallery", new Vector2(100, 20))) { ClearUI(); addGallery = true; } }
+                if (ExistingGallery == true) { if (ImGui.Button("Edit Gallery", new Vector2(100, 20))) { ClearUI(); addGallery = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Gallery."); } } else { if (ImGui.Button("Add Gallery", new Vector2(100, 20))) { ClearUI(); addGallery = true; } }
 
             }
             bool warning = false;
@@ -1040,86 +1045,12 @@ namespace InfiniteRoleplay.Windows
                     if(ImGui.Button("Add Image"))
                     {
                         imageIndex++;
-                        addGalleryImageGUI = true;
-                        ImageExists[imageIndex -1] = true;
-                    }                    
+                    }
+                    addGalleryImageGUI = true;
+                    ImageExists[imageIndex] = true;
+                    ImGui.NewLine();
                 }
-                if (editGallery == true)
-                {
-                    if (ImGui.Button("Add Image"))
-                    {
-                        imageIndex++;
-                        ImageExists[imageIndex - 1] = true;
-                    }
-                   
-                    for (int h = 0; h < ExistingGalleryImageCount + imageIndex; h++)
-                    {
-                        if (h % 3 == 0)
-                        {
-
-                        }
-                        else
-                        {
-                            ImGui.SameLine();
-                        }
-                        if (ImageExists[h] == true)
-                        {
-                            if (ImGui.BeginChild("##GalleryEdit" + h, new Vector2(160, 200), false))
-                            {
-                                galleryImages[h] = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryImageBytes[h]);
-                                galleryThumbs[h] = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryThumbBytes[h]);
-                                ImGui.Image(galleryThumbs[h].ImGuiHandle, new Vector2(galleryThumbs[h].Width, galleryThumbs[h].Height));
-                                if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
-                                if (ImGui.IsItemClicked())
-                                {
-                                    int imgIndex = h + 1;
-                                    ImagePreview.width = galleryImages[h].Width;
-                                    ImagePreview.height = galleryImages[h].Height;
-                                    ImagePreview.PreviewImage = galleryImages[h];
-                                    plugin.loadPreview = true;
-                                }
-                            
-                            }
-                            if (ImGui.BeginChild("##GalleryEditButtons" + h, new Vector2(160, 45), false))
-                            {
-                                if (ImGui.Button("Upload##" + "gallery_edit" + h))
-                                    {
-                                    addImageToGallery = true;
-                                    imageIndexVal = h;
-                                    Cols[h] = new Vector4(255, 255, 255, 255);
-                                    galleryStatusVals[h] = "Pending Submission";
-                                }
-                                ImGui.SameLine();
-                                if (ImGui.Button("Remove##" + "gallery_remove_edit" + h))
-                                {
-                                    deletionMarkedImages[h] = h;
-                                    Cols[h] = new Vector4(255, 0, 0, 255);
-                                    galleryStatusVals[h] = "Scheduled for Deletion";
-                                    ImageExists[h] = false;
-                                    DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), h);
-                               
-                                }
-                                ImGui.TextColored(Cols[h], galleryStatusVals[h]);
-                            }
-
-                        ImGui.EndChild();
-
-                        ImGui.EndChild();
-
-
-                        }
-                    }
-                    
-                    if (ImGui.Button("Submit Gallery"))
-                    {
-                        DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), imageIndex + ExistingGalleryImageCount,  galleryImageBytes);
-
-                        plugin.DisconnectFromServer();
-                        plugin.RefreshConnection();
-                        plugin.loggedIn = false;
-                        LoginWindow.loginRequest = true;
-                    }
-                }
+                
                 if (addImageToGallery == true)
                 {
                     addImageToGallery = false;
@@ -1149,75 +1080,92 @@ namespace InfiniteRoleplay.Windows
         }
         public static void AddImageToGallery(Plugin plugin, int imageIndex)
         {
-            for (int i = 0; i < imageIndex; i++)
+            if(addGallery == true)
             {
-                if (i % 3 == 0)
+                for (int i = 0; i < imageIndex; i++)
                 {
-
-                }
-                else
-                {
-                    ImGui.SameLine();
-                }
-                if (ImageExists[i] == true)
-                if (ImGui.BeginChild("##GalleryImage" + i, new Vector2(160, 200), false))
-                {
-                    galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryImageBytes[i]);
-                    galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryThumbBytes[i]);
-                    ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
-                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
-                    if (ImGui.IsItemClicked())
+                    if (i < 29)
                     {
-                        ImagePreview.width = galleryImages[i].Width;
-                        ImagePreview.height = galleryImages[i].Height;
-                        ImagePreview.PreviewImage = galleryImages[i];
-                        plugin.loadPreview = true;
-                    }
-                    if (ImageExists[i] == true)
-                    {
-                        if (ImGui.BeginChild("#GalleryButtons" + i, new Vector2(160, 45), false))
+                        if (i % 3 == 0)
                         {
-                            if (ImGui.Button("Upload##" + "gallery_add" + i))
-                            {
-                                addImageToGallery = true;
-                                imageIndexVal = i;
-                                Cols[i] = new Vector4(255, 255, 255, 255);
-                                galleryStatusVals[i] = "Pending Submission";
-                            }
-                            ImGui.SameLine();
-                            if (ImGui.Button("Remove##" + "gallery_remove" + i))
-                            {
-                                deletionMarkedImages[i] = i;
-                                Cols[i] = new Vector4(255, 0, 0, 255);
-                                galleryStatusVals[i] = "Pending Deletion";
-                                    ImageExists[i] = false;
-                            }
-                            ImGui.TextColored(Cols[i], galleryStatusVals[i]);
+
+
                         }
+                
+                        else
+                        {
+                            ImGui.SameLine();
+                        }
+                        if (ImageExists[i] == true)
+                        {
+                            if (ImGui.BeginChild("##GalleryImage" + i, new Vector2(160, 200), false))
+                            {
+                                galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryImageBytes[i]);
+                                galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryThumbBytes[i]);
+                                ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
+                                if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
+                                if (ImGui.IsItemClicked())
+                                {
+                                    ImagePreview.width = galleryImages[i].Width;
+                                    ImagePreview.height = galleryImages[i].Height;
+                                    ImagePreview.PreviewImage = galleryImages[i];
+                                    plugin.loadPreview = true;
+                                }
+                                if (ImageExists[i] == true)
+                                {
+                                    if (ImGui.BeginChild("#GalleryButtons" + i, new Vector2(160, 45), false))
+                                    {
+                                        if (ImGui.Button("Upload##" + "gallery_add" + i))
+                                        {
+                                            addImageToGallery = true;
+                                            imageIndexVal = i;
+                                            Cols[i] = new Vector4(255, 255, 255, 255);
+                                            galleryStatusVals[i] = "Pending Submission";
+                                        }
+                                        ImGui.SameLine();
+                                        if (ImGui.Button("Remove##" + "gallery_remove" + i))
+                                        {
+                                            imageIndex --;
+                                            Cols[i] = new Vector4(255, 0, 0, 255);
+                                            galleryStatusVals[i] = "Pending Deletion";
+                                            ImageExists[i] = false; 
+                                            DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i);
+                                            galleryImageBytes[i] = imageHolder;
+                                            galleryThumbBytes[i] = thumbHolder;
+                                        }
+                                        ImGui.TextColored(Cols[i], galleryStatusVals[i]);
+                                    }
 
-                        ImGui.EndChild();
+                                    ImGui.EndChild();
 
-                        ImGui.EndChild();
+                                    ImGui.EndChild();
 
+                                }
+                            }
+
+
+
+                        }
+                        }
+                    // TextureWrap galleryImages = plugin.PluginInterfacePub.UiBuilder.LoadImage(GalleryImageURL);
+                    //ImGui.Image(galleryImages.ImGuiHandle, new Vector2(300, 100));                        
+
+                }
+                ImGui.NewLine();
+                    if (ImGui.Button("Submit Gallery"))
+                    {
+                        DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), imageIndex, galleryImageBytes);
+
+                        plugin.DisconnectFromServer();
+                        plugin.RefreshConnection();
+                        plugin.loggedIn = false;
+                        LoginWindow.loginRequest = true;
                     }
-                }
-                       
-                // TextureWrap galleryImages = plugin.PluginInterfacePub.UiBuilder.LoadImage(GalleryImageURL);
-                //ImGui.Image(galleryImages.ImGuiHandle, new Vector2(300, 100));                        
+
+
+
+
             }
-                if (ImGui.Button("Submit Gallery"))
-                {
-                    DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), imageIndex, galleryImageBytes);
-
-                    plugin.DisconnectFromServer();
-                    plugin.RefreshConnection();
-                    plugin.loggedIn = false;
-                    LoginWindow.loginRequest = true;
-                }
-
-
-
-
 
         }
         public static void UpdateUploadStatus(int index)
@@ -1275,7 +1223,6 @@ namespace InfiniteRoleplay.Windows
             ExistingBio = DataReceiver.ExistingBioData;
             ExistingHooks = DataReceiver.ExistingHooksData;
             ExistingGallery = DataReceiver.ExistingGalleryData;
-            ExistingGalleryImageCount = DataReceiver.ExistingGalleryImageCount;
             existingAvatarBytes = DataReceiver.currentAvatar;
             lawfulGoodEditVal = DataReceiver.lawfulGoodEditVal;
             loadedSelf = DataReceiver.LoadedSelf;

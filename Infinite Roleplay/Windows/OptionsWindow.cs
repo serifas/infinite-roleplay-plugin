@@ -79,8 +79,7 @@ namespace InfiniteRoleplay.Windows
             if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
             {
                 LoginWindow.loginRequest = true;
-                plugin.ReloadClient();                
-                ProfileWindow.ClearUI();
+                plugin.ReloadClient();         
 
                 plugin.WindowSystem.GetWindow("PROFILE").IsOpen = true;
             }
