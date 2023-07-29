@@ -6,6 +6,7 @@ using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using Dalamud.Interface.ImGuiFileDialog;
 using Networking;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 
 namespace InfiniteRoleplay.Windows;
 
@@ -23,10 +24,11 @@ public class LoginWindow : Window, IDisposable
     public static bool loginRequest = false;
     public bool register = false;
     public bool agree = false;
+    private PlayerCharacter playerCharacter;
     public string status = "status...";
     public Vector4 statusColor = new Vector4(255, 255, 255, 255);
     public Plugin plugin;
-    public LoginWindow(Plugin plugin) : base(
+    public LoginWindow(Plugin plugin, PlayerCharacter playerCharacter) : base(
         "LOGIN",
         ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
         ImGuiWindowFlags.NoScrollWithMouse)
@@ -37,6 +39,7 @@ public class LoginWindow : Window, IDisposable
         this.Configuration = plugin.Configuration;
         this.username = this.Configuration.username;
         this.password = this.Configuration.password;
+        this.playerCharacter = playerCharacter;
     }
 
     public void Dispose()
@@ -116,7 +119,7 @@ public class LoginWindow : Window, IDisposable
         }
         if (loginRequest == true && ClientTCP.clientSocket.Connected == true)
         {
-            DataSender.Login(username, password);
+            DataSender.Login(username, password, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
             loginRequest = false;
         }
 

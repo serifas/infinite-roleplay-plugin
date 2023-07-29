@@ -81,8 +81,8 @@ namespace InfiniteRoleplay.Windows
                 LoginWindow.loginRequest = true;
                 plugin.ReloadClient();                
                 ProfileWindow.ClearUI();
-                DataSender.FetchProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name);
 
+                plugin.WindowSystem.GetWindow("PROFILE").IsOpen = true;
             }
             if (ImGui.IsItemHovered())
             {

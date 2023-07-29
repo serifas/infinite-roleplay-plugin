@@ -42,6 +42,7 @@ namespace Networking
         CSendGalleryImage = 23,
         CSendGalleryImagesReceived = 24,
         CSendGalleryImageRequest = 25,
+        CSendGalleryRemoveRequest = 26,
     }
     public class DataSender
     {
@@ -73,13 +74,15 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void Login(string username, string password)
+        public static void Login(string username, string password, string playerName, string playerWorld)
         {
 
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CLogin);
             buffer.WriteString(username);
             buffer.WriteString(password);
+            buffer.WriteString(playerName);
+            buffer.WriteString(playerWorld);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
@@ -120,10 +123,23 @@ namespace Networking
             buffer.WriteInteger(galleryImagesBts.Length);
             for(int i = 0; i < count; i++)
             {
-
                 buffer.WriteInteger(galleryImagesBts[i].Length);
                 buffer.WriteBytes(galleryImagesBts[i]);
             }
+           
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+        public static void RemoveGalleryImage(string playername, string playerworld, int index)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CSendGalleryRemoveRequest);
+            buffer.WriteString(playername);
+            buffer.WriteString(playerworld);          
+           
+            buffer.WriteInteger(index);
+          
+
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }

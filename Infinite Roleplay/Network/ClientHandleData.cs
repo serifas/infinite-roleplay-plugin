@@ -42,6 +42,7 @@ namespace Networking
                 packets.Add((int)ServerPackets.SRecTargetStory, DataReceiver.ReceiveTargetStory);
                 packets.Add((int)ServerPackets.SRecProfileGallery, DataReceiver.ReceiveProfileGalleryImage);
                 packets.Add((int)ServerPackets.SRecGalleryImageLoaded, DataReceiver.ImageLoaded);
+                packets.Add((int)ServerPackets.SRecImageDeletionStatus, DataReceiver.ReceiveImageDeletionStatus); 
             }
             else
             {

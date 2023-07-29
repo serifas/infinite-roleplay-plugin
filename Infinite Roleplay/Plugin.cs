@@ -130,18 +130,23 @@ namespace InfiniteRoleplay
             var neutralEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_evil_bar.png"));
             var chaoticEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil_bar.png"));
             var pictureTab = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/picturetab.png");
+            var blank_holder = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/blank.png");
 
             byte[] imgBytes = File.ReadAllBytes(pictureTab);
 
             byte[] picTabBytes = Imaging.ScaleImageBytes(imgBytes, 300, 300);
             System.Drawing.Image picTab = Imaging.byteArrayToImage(picTabBytes);
-           
+            byte[] emptyByteImage = File.ReadAllBytes(blank_holder);
+
+            byte[] blankTabBytes = Imaging.ScaleImageBytes(emptyByteImage, 300, 300);
+            System.Drawing.Image blankTab = Imaging.byteArrayToImage(blankTabBytes);
+
             this.WindowSystem.AddWindow(new SystemsWindow(this));
             this.WindowSystem.AddWindow(new ProfileWindow(this, this.pluginInterface, AvatarHolder,
                                                                 lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
-                                                                lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar, picTab));
+                                                                lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar, picTab, blankTab));
             this.WindowSystem.AddWindow(new Rulebook(this));
-            this.WindowSystem.AddWindow(new LoginWindow(this));
+            this.WindowSystem.AddWindow(new LoginWindow(this, this.clientState.LocalPlayer));
             //this.WindowSystem.AddWindow(new SystemsWindow(this));
             this.WindowSystem.AddWindow(new OptionsWindow(this, this.pluginInterface, targetManager));
             this.WindowSystem.AddWindow(new MessageBox(this));

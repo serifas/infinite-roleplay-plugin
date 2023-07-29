@@ -48,6 +48,7 @@ namespace Networking
         SRecNoProfileStory = 36,
         SRecProfileGallery = 37,
         SRecGalleryImageLoaded = 38,
+        SRecImageDeletionStatus = 39,
     }
     class DataReceiver
     {
@@ -195,7 +196,6 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             int index = buffer.ReadInt();
-            ProfileWindow.UpdateUploadStatus(index);
             buffer.Dispose();
         }
         public static void BadLogin(byte[] data)
@@ -218,17 +218,6 @@ namespace Networking
             ExistingTargetStoryData = false;
             plugin.WindowSystem.GetWindow("TARGET").IsOpen = true;
         }
-        public static void ExistingProfile(byte[] data)
-        {
-            var buffer = new ByteBuffer();
-            buffer.WriteBytes(data);
-            var packetID = buffer.ReadInt();
-            buffer.Dispose();
-            ExistingProfileData = true;
-            
-            plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
-
-        }
         public static void NoProfile(byte[] data)
         {
             var buffer = new ByteBuffer();
@@ -237,7 +226,6 @@ namespace Networking
             buffer.Dispose();
             loggedIn = true;
             ExistingProfileData = false;
-            plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
         }
         public static void NoTargetProfile(byte[] data)
         {
@@ -262,7 +250,6 @@ namespace Networking
             buffer.Dispose();
             loggedIn = true;
             ExistingBioData = false;
-            plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
         }
         public static void NoTargetBio(byte[] data)
         {
@@ -358,7 +345,10 @@ namespace Networking
             int thumbsLen = buffer.ReadInt();
             for (int i = 0; i < imagesLen; i++)
             {
-                
+                for(int d = 0; d < ProfileWindow.ExistingGalleryImageCount; d++)
+                {
+                    
+                }
                 int imageBtLen = buffer.ReadInt();
                 if(imageBtLen > 0)
                 {
@@ -367,6 +357,8 @@ namespace Networking
                     ExistingGalleryData = true;
                     ExistingGalleryImageCount = i + 1;
                     ProfileWindow.galleryImageBytes[i] = imageBytes;
+                    ProfileWindow.Cols[i] = new System.Numerics.Vector4(0, 255, 0, 255);
+                    ProfileWindow.galleryStatusVals[i] = "Uploaded";
                 }
                 
             }
@@ -475,7 +467,14 @@ namespace Networking
             ExistingBioData = true;
             buffer.Dispose();
 
-            plugin.WindowSystem.GetWindow("PROFILES").IsOpen = true;
+        }
+        public static void ExistingProfile(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            buffer.Dispose();
+            ExistingProfileData = true;
         }
         public static void ReceiveProfileHooks(byte[] data)
         {
@@ -494,6 +493,27 @@ namespace Networking
                 ProfileWindow.hookEditCount = i;
                 ProfileWindow.resetHooks = true;
                 ProfileWindow.HookEditContent[i] = hookContent.Replace("---===---", "\n").Replace("''", "'");
+
+            }
+            buffer.Dispose();
+        }
+        public static void ReceiveImageDeletionStatus(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            int index = buffer.ReadInt();
+            int status = buffer.ReadInt();
+            if (status == 0)
+            {
+                ProfileWindow.Cols[index] = new System.Numerics.Vector4(255, 0, 0, 255);
+                ProfileWindow.galleryStatusVals[index] = "Deleted";
+                
+            }
+            if (status == 1)
+            {
+                ProfileWindow.Cols[index] = new System.Numerics.Vector4(0, 255, 0, 255);
+                ProfileWindow.galleryStatusVals[index] = "Uploaded";
             }
             buffer.Dispose();
         }
