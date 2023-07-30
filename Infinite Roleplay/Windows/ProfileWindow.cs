@@ -52,11 +52,14 @@ using System.Diagnostics.Metrics;
 using InfiniteRoleplay.Helpers;
 using OtterGui.Table;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 
 namespace InfiniteRoleplay.Windows
 {
     internal class ProfileWindow : Window, IDisposable
     {
+        public static bool Reorder;
+        public static int ReorderItterations;
         public ProfileWindow pf;
         private readonly ConcurrentDictionary<string, string> _startPaths = new();
         private Plugin plugin;
@@ -80,6 +83,7 @@ namespace InfiniteRoleplay.Windows
         public static bool addHooks = false;
         public static bool editHooks = false;
         public static bool addStory = false;
+        public static int imageCount = 0;
         public static bool resetHooks;
         public static bool[] ImageExists = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         public static Vector4[] Cols = new Vector4[30] { new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255) };
@@ -184,7 +188,8 @@ namespace InfiniteRoleplay.Windows
         public bool reduceHooks = false;
         public TextureWrap blank;
         public static System.Drawing.Image bl;
-        public ProfileWindow(Plugin plugin, DalamudPluginInterface Interface, TextureWrap avatarHolder,
+        
+        public ProfileWindow(Plugin plugin, DalamudPluginInterface Interface, Configuration configuration, TextureWrap avatarHolder,
                              //alignment icon
                              TextureWrap lawfulgood, TextureWrap neutralgood, TextureWrap chaoticgood,
                              TextureWrap lawfulneutral, TextureWrap trueneutral, TextureWrap chaoticneutral,
@@ -214,7 +219,7 @@ namespace InfiniteRoleplay.Windows
             this.pf = this;
             galleryImages = new TextureWrap[30] { galleryImg1, galleryImg2, galleryImg3, galleryImg4, galleryImg5, galleryImg6, galleryImg7, galleryImg8, galleryImg9, galleryImg10, galleryImg11, galleryImg12, galleryImg13, galleryImg14, galleryImg15, galleryImg16, galleryImg17, galleryImg18, galleryImg19, galleryImg20, galleryImg21, galleryImg22, galleryImg23, galleryImg24, galleryImg25, galleryImg26, galleryImg27, galleryImg28, galleryImg29, galleryImg30 };
             galleryThumbs = new TextureWrap[30] { galleryEditThm1, galleryEditThm2, galleryEditThm3, galleryEditThm4, galleryEditThm5, galleryEditThm6, galleryEditThm7, galleryEditThm8, galleryEditThm9, galleryEditThm10, galleryEditThm11, galleryEditThm12, galleryEditThm13, galleryEditThm14, galleryEditThm15, galleryEditThm16, galleryEditThm17, galleryEditThm18, galleryEditThm19, galleryEditThm20, galleryEditThm21, galleryEditThm22, galleryEditThm23, galleryEditThm24, galleryEditThm25, galleryEditThm26, galleryEditThm27, galleryEditThm28, galleryEditThm29, galleryEditThm30 };
-
+            this.configuration = configuration;
              
            
             galleryEditImages = new TextureWrap[30] { galleryEditImg1, galleryEditImg2, galleryEditImg3, galleryEditImg4, galleryEditImg5, galleryEditImg6, galleryEditImg7, galleryEditImg8, galleryEditImg9, galleryEditImg10, galleryEditImg11, galleryEditImg12, galleryEditImg13, galleryEditImg14, galleryEditImg15, galleryEditImg16, galleryEditImg17, galleryEditImg18, galleryEditImg19, galleryEditImg20, galleryEditImg21, galleryEditImg22, galleryEditImg23, galleryEditImg24, galleryEditImg25, galleryEditImg26, galleryEditImg27, galleryEditImg28, galleryEditImg29, galleryEditImg30 };
@@ -1048,10 +1053,7 @@ namespace InfiniteRoleplay.Windows
                 {
                     if(ImGui.Button("Add Image"))
                     {
-                        if(imageIndex < 29)
-                        {
-                            imageIndex++;
-                        }
+                        imageIndex ++;
                     }
                     addGalleryImageGUI = true;
                     ImageExists[imageIndex] = true;
@@ -1085,6 +1087,7 @@ namespace InfiniteRoleplay.Windows
                 }
             }
         }
+   
         public static void AddImageToGallery(Plugin plugin, int imageIndex)
         {
             if(addGallery == true)
@@ -1123,9 +1126,26 @@ namespace InfiniteRoleplay.Windows
             }
 
         }
+        
+        public static int NextAvailableImageIndex()
+        {
+            bool load = true;
+            int index = 0;
+            for(int i = 0; i < ImageExists.Length; i++)
+            {
+                if (ImageExists[i] == false && load == true)
+                {
+                    load = false;
+                    index = i;
+                    return index;
+                }
+            }
+            return index;
+        }
+       
+
         public static void DrawGalleryImage(int i, Plugin plugin)
         {
-
             if (ImageExists[i] == true)
             {
 
@@ -1148,18 +1168,15 @@ namespace InfiniteRoleplay.Windows
                         {
                             addImageToGallery = true;
                             imageIndexVal = i;
-                            LoginWindow.loginRequest = true;
                         }
                         ImGui.SameLine();
                         if (ImGui.Button("Remove##" + "gallery_remove" + i))
-                        {
-                            imageIndex--;
-                            ImageExists[i] = false;
+                        {                                  
                             DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, imageIndex);
-                            galleryImageBytes[i] = imageHolder;
-                            galleryThumbBytes[i] = thumbHolder;
+                            ImageExists[i] = false;
+                            Reorder = true;
+                            ReorderItterations = imageIndex;
                         }
-
                     }
                     ImGui.EndChild();
                 }
@@ -1246,6 +1263,23 @@ namespace InfiniteRoleplay.Windows
                     if (alignmentWidthVals[i] > alignmentVals[i]) { alignmentWidthVals[i] -= 0.1f; }
                 }
             }
+
+            if(Reorder == true)
+            {
+                Reorder = false;
+                for(int i = 0; i < ReorderItterations; i ++)
+                {
+                    if (ImageExists[NextAvailableImageIndex() + 1] == true)
+                    {
+                        int nextIndex = NextAvailableImageIndex();
+                        ImageExists[nextIndex] = true;
+                        galleryImageBytes[nextIndex] = galleryImageBytes[nextIndex + 1];
+                        galleryThumbBytes[nextIndex] = galleryThumbBytes[nextIndex + 1];
+                    }
+                }
+                imageIndex--;
+            }
+           
 
         }
         

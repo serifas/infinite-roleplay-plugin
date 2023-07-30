@@ -142,7 +142,7 @@ namespace InfiniteRoleplay
             System.Drawing.Image blankTab = Imaging.byteArrayToImage(blankTabBytes);
 
             this.WindowSystem.AddWindow(new SystemsWindow(this));
-            this.WindowSystem.AddWindow(new ProfileWindow(this, this.pluginInterface, AvatarHolder,
+            this.WindowSystem.AddWindow(new ProfileWindow(this, this.pluginInterface, this.Configuration, AvatarHolder,
                                                                 lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
                                                                 lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar, picTab, blankTab));
             this.WindowSystem.AddWindow(new Rulebook(this));

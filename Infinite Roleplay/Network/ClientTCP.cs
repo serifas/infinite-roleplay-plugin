@@ -18,7 +18,7 @@ namespace Networking
         public static TcpClient clientSocket;
         private static NetworkStream myStream;
         private static byte[] recBuffer;
-        private static string server = "127.0.0.1";
+        private static string server = "79.141.173.88";
         private static int port = 80;
         public static void InitializingNetworking(bool start)
         {

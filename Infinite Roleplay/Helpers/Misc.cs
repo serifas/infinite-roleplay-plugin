@@ -31,5 +31,6 @@ namespace InfiniteRoleplay.Helpers
             // finally, let's decrement Array's size by one
             Array.Resize(ref arr, arr.Length - 1);
         }
+
     }
 }

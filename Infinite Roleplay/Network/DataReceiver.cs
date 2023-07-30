@@ -358,15 +358,7 @@ namespace Networking
                     ProfileWindow.Cols[i] = new System.Numerics.Vector4(0, 255, 0, 255);
                     ProfileWindow.galleryStatusVals[i] = "Uploaded";
                 }
-                if(imagesLen < imageCount)
-                {
-                    for(int c = imagesLen; c < imageCount; c++)
-                    {
-                        int ind = imagesLen + c;
-                        ProfileWindow.imageIndex = ind + 1;
-                        ProfileWindow.galleryImageBytes[ind] = ProfileWindow.picBytes;
-                    }
-                }
+               
                 
             }
             for (int f = 0; f < thumbsLen; f++)
