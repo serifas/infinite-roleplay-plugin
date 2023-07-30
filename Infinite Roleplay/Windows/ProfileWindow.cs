@@ -1267,14 +1267,17 @@ namespace InfiniteRoleplay.Windows
                 Reorder = false;
                 bool nextExists = ImageExists[NextAvailableImageIndex() + 1];
                 int firstOpen = NextAvailableImageIndex();
-                for (int i = 0; firstOpen < imageIndex; i++)
+                for (int i = firstOpen; i < imageIndex; i++)
                 {
+                    ImageExists[firstOpen] = true;
                     if (nextExists)
                     {
                         galleryImageBytes[i] = galleryImageBytes[i + 1];
+                        galleryThumbBytes[i] = galleryThumbBytes[i + 1];
                     }
+
                 }
-                ImageExists[imageIndex] = false;
+                ImageExists[imageIndex] = false;  
             }
            
 
