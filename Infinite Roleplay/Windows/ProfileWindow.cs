@@ -59,7 +59,6 @@ namespace InfiniteRoleplay.Windows
     internal class ProfileWindow : Window, IDisposable
     {
         public static bool Reorder;
-        public static int ReorderItterations;
         public ProfileWindow pf;
         private readonly ConcurrentDictionary<string, string> _startPaths = new();
         private Plugin plugin;
@@ -1173,9 +1172,8 @@ namespace InfiniteRoleplay.Windows
                         if (ImGui.Button("Remove##" + "gallery_remove" + i))
                         {                                  
                             DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, imageIndex);
-                     
+                            ImageExists[i] = false;
                             Reorder = true;
-                            ReorderItterations = imageIndex;
                         }
                     }
                     ImGui.EndChild();
@@ -1267,17 +1265,16 @@ namespace InfiniteRoleplay.Windows
             if(Reorder == true)
             {
                 Reorder = false;
-                for(int i = 0; i < ReorderItterations; i ++)
+                bool nextExists = ImageExists[NextAvailableImageIndex() + 1];
+                int firstOpen = NextAvailableImageIndex();
+                for (int i = 0; firstOpen < imageIndex; i++)
                 {
-                    if (ImageExists[NextAvailableImageIndex() + 1] == true)
+                    if (nextExists)
                     {
-                        int nextIndex = NextAvailableImageIndex();
-                        ImageExists[nextIndex] = true;
-                        galleryImageBytes[nextIndex] = galleryImageBytes[nextIndex + 1];
-                        galleryThumbBytes[nextIndex] = galleryThumbBytes[nextIndex + 1];
+                        galleryImageBytes[i] = galleryImageBytes[i + 1];
                     }
                 }
-                imageIndex--;
+                ImageExists[imageIndex] = false;
             }
            
 
