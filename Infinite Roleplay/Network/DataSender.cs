@@ -114,6 +114,7 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
+        
         public static void SendGalleryImage(string playername, string playerworld, int length, byte[] galleryImagesBts)
         {
             var buffer = new ByteBuffer();
@@ -126,7 +127,7 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void RemoveGalleryImage(string playername, string playerworld, int index)
+        public static void RemoveGalleryImage(string playername, string playerworld, int index, int imageCount)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendGalleryRemoveRequest);
@@ -134,7 +135,7 @@ namespace Networking
             buffer.WriteString(playerworld);          
            
             buffer.WriteInteger(index);
-          
+            buffer.WriteInteger(imageCount);    
 
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();

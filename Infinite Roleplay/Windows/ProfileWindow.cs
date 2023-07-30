@@ -74,6 +74,7 @@ namespace InfiniteRoleplay.Windows
 #pragma warning restore CS0169 // The field 'ProfileWindow.profilesImage' is never used
         public Configuration configuration;
         public static bool WindowOpen;
+        public static int[] addedImageIndexes = new int[30] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
         public static bool addBio = false;
         public static bool editBio = false;
         public static bool addHooks = false;
@@ -1152,16 +1153,15 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         if (ImGui.Button("Remove##" + "gallery_remove" + i))
                         {
-                            imageIndex = imageIndex - 1;
+                            imageIndex--;
                             ImageExists[i] = false;
-                            DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i);
+                            DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, imageIndex);
                             galleryImageBytes[i] = imageHolder;
                             galleryThumbBytes[i] = thumbHolder;
                         }
 
                     }
                     ImGui.EndChild();
-                    ImGui.TextColored(Cols[i], galleryStatusVals[i]);
                 }
                 ImGui.EndChild();
 
@@ -1364,14 +1364,12 @@ namespace InfiniteRoleplay.Windows
                     galleryImageBytes[imageIndex] = imgBytes;
                     galleryThumbBytes[imageIndex] = scaledImageBytes;
 
-                    if (galleryImageBytes[imageIndex] != picBytes)
-                    {
-                        DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), galleryImageBytes.Length, galleryImageBytes[imageIndex]);
+                    
+                        DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), imageIndex, galleryImageBytes[imageIndex]);
 
                         plugin.DisconnectFromServer();
                         plugin.RefreshConnection();
                         plugin.loggedIn = false;
-                    }
 
 
                 }

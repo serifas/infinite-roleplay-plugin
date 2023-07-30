@@ -343,12 +343,9 @@ namespace Networking
             var packetID = buffer.ReadInt();
             int imagesLen = buffer.ReadInt();
             int thumbsLen = buffer.ReadInt();
+            int imageCount = buffer.ReadInt();
             for (int i = 0; i < imagesLen; i++)
             {
-                for(int d = 0; d < ProfileWindow.ExistingGalleryImageCount; d++)
-                {
-                    
-                }
                 int imageBtLen = buffer.ReadInt();
                 if(imageBtLen > 0)
                 {
@@ -360,6 +357,15 @@ namespace Networking
                     ProfileWindow.galleryImageBytes[i] = imageBytes;
                     ProfileWindow.Cols[i] = new System.Numerics.Vector4(0, 255, 0, 255);
                     ProfileWindow.galleryStatusVals[i] = "Uploaded";
+                }
+                if(imagesLen < imageCount)
+                {
+                    for(int c = imagesLen; c < imageCount; c++)
+                    {
+                        int ind = imagesLen + c;
+                        ProfileWindow.imageIndex = ind + 1;
+                        ProfileWindow.galleryImageBytes[ind] = ProfileWindow.picBytes;
+                    }
                 }
                 
             }
