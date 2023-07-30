@@ -1173,7 +1173,7 @@ namespace InfiniteRoleplay.Windows
                         if (ImGui.Button("Remove##" + "gallery_remove" + i))
                         {                                  
                             DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, imageIndex);
-                            ImageExists[i] = false;
+                     
                             Reorder = true;
                             ReorderItterations = imageIndex;
                         }
