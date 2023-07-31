@@ -18,6 +18,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using InfiniteRoleplay.Helpers;
+using ImGuiNET;
+
 namespace Networking
 {
 
@@ -336,7 +338,7 @@ namespace Networking
              }
 
         }
-        public static void ReceiveProfileGalleryImage(byte[] data)
+       public static void ReceiveProfileGalleryImage(byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);

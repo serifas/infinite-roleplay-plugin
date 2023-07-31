@@ -84,6 +84,7 @@ namespace InfiniteRoleplay.Windows
         public static bool addStory = false;
         public static int imageCount = 0;
         public static bool resetHooks;
+        public static SortedList<int, byte[]> imageBytesList = new SortedList<int, byte[]>();
         public static bool[] ImageExists = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         public static Vector4[] Cols = new Vector4[30] { new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255) };
         public static string[] galleryStatusVals = new string[30] { "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission" };
@@ -1117,14 +1118,7 @@ namespace InfiniteRoleplay.Windows
                     }
                     ImGui.EndTable();
                 }
-                if (ImGui.Button("Submit##GallerySubmit"))
-                {
-
-
-                    DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), galleryImageBytes);
-
-
-                }
+           
 
 
             }
@@ -1175,7 +1169,9 @@ namespace InfiniteRoleplay.Windows
                         }
                         ImGui.SameLine();
                         if (ImGui.Button("Remove##" + "gallery_remove" + i))
-                        {     
+                        {
+                            DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, 1);
+                            deletionMarkedImages[i] = i;
                             ImageExists[i] = false;
                             Reorder = true;
                         }
@@ -1405,14 +1401,8 @@ namespace InfiniteRoleplay.Windows
                     galleryImageBytes[imageIndex] = imgBytes;
                     galleryThumbBytes[imageIndex] = scaledImageBytes;
 
-                    
-                    //    DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), imageIndex, galleryImageBytes[imageIndex]);
 
-                        plugin.DisconnectFromServer();
-                        plugin.RefreshConnection();
-                        plugin.loggedIn = false;
-
-
+                    DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), galleryImageBytes[imageIndex]);
                 }
 
 
