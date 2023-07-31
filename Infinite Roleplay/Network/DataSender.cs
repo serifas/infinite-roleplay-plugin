@@ -44,6 +44,7 @@ namespace Networking
         CSendGalleryImagesReceived = 24,
         CSendGalleryImageRequest = 25,
         CSendGalleryRemoveRequest = 26,
+        CReorderGallery = 27
     }
     public class DataSender
     {
@@ -115,8 +116,18 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-
-        public static void SendGalleryImage(string playername, string playerworld, byte[] galleryImagesBts)
+        public static void ReorderGallery(string playername, string playerworld, int oldKey, int newKey)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CReorderGallery);
+            buffer.WriteString(playername);
+            buffer.WriteString(playerworld);
+            buffer.WriteInteger(oldKey);
+            buffer.WriteInteger(newKey);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+        public static void SendGalleryImage(string playername, string playerworld, int index, byte[] galleryImagesBts)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendGalleryImage);
@@ -124,6 +135,7 @@ namespace Networking
             buffer.WriteString(playerworld);
             buffer.WriteInteger(galleryImagesBts.Length);
             buffer.WriteBytes(galleryImagesBts);
+            buffer.WriteInteger(index + 1);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }

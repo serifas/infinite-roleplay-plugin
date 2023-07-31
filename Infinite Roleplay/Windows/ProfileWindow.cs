@@ -58,7 +58,8 @@ namespace InfiniteRoleplay.Windows
 {
     internal class ProfileWindow : Window, IDisposable
     {
-        public static bool Reorder;
+        public static bool Reorder, Reordered;
+
         public ProfileWindow pf;
         private readonly ConcurrentDictionary<string, string> _startPaths = new();
         private Plugin plugin;
@@ -69,6 +70,7 @@ namespace InfiniteRoleplay.Windows
         private DalamudPluginInterface pg;
         public static bool GalleryUpdateAvailable = false;
         public static bool addGalleryImageGUI = false;
+        public static SortedList<int, int> reordered = new SortedList<int, int>();
         private FileDialogManager _fileDialogManager;
 #pragma warning disable CS0169 // The field 'ProfileWindow.profilesImage' is never used
         private TextureWrap profilesImage;
@@ -89,7 +91,6 @@ namespace InfiniteRoleplay.Windows
         public static Vector4[] Cols = new Vector4[30] { new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255) };
         public static string[] galleryStatusVals = new string[30] { "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission" };
         public static int galleryUpdates = 0;
-        public static int[] deletionMarkedImages = new int[30]{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         public static string[] galleryUpdateTxts = new string[30] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static Vector4[] ImageUpdateColors = new Vector4[30] { Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero };
         public static int imageIndex = 0;
@@ -1171,7 +1172,6 @@ namespace InfiniteRoleplay.Windows
                         if (ImGui.Button("Remove##" + "gallery_remove" + i))
                         {
                             DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, 1);
-                            deletionMarkedImages[i] = i;
                             ImageExists[i] = false;
                             Reorder = true;
                         }
@@ -1274,15 +1274,15 @@ namespace InfiniteRoleplay.Windows
                     {
                         galleryImageBytes[i] = galleryImageBytes[i + 1];
                         galleryThumbBytes[i] = galleryThumbBytes[i + 1];
+                        DataSender.ReorderGallery(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, i + 1);               
                     }
-
                 }
 
                 imageIndex--;
                 galleryImageBytes[imageIndex] = picBytes;
                 ImageExists[imageIndex] = false;
             }
-           
+          
 
         }
         
@@ -1373,7 +1373,7 @@ namespace InfiniteRoleplay.Windows
 
 
        
-        public void AddImage(bool avatar, int imageIndex)
+        public void AddImage(bool avatar, int i)
         {
             _fileDialogManager.OpenFileDialog("Select Image", "Image{.png,.jpg, .gif}", (s, f) =>
             {
@@ -1398,11 +1398,11 @@ namespace InfiniteRoleplay.Windows
                     byte[] scaledImageBytes = Imaging.ScaleImageBytes(imgBytes, 150, 150);
                     System.Drawing.Image scaledImage = Imaging.byteArrayToImage(scaledImageBytes);
                     
-                    galleryImageBytes[imageIndex] = imgBytes;
-                    galleryThumbBytes[imageIndex] = scaledImageBytes;
+                    galleryImageBytes[i] = imgBytes;
+                    galleryThumbBytes[i] = scaledImageBytes;
 
 
-                    DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), galleryImageBytes[imageIndex]);
+                    DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, galleryImageBytes[imageIndex]);
                 }
 
 
