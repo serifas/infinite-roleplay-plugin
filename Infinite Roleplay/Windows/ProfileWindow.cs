@@ -1086,6 +1086,11 @@ namespace InfiniteRoleplay.Windows
                 {
                     AddImageToGallery(plugin, imageIndex);
                 }
+                if(Reordered == true)
+                {
+                    Reordered = false;
+                    DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), imageIndex, 0);
+                }
             }
         }
    
@@ -1170,8 +1175,7 @@ namespace InfiniteRoleplay.Windows
                         }
                         ImGui.SameLine();
                         if (ImGui.Button("Remove##" + "gallery_remove" + i))
-                        {
-                            DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, 1);
+                        {                            
                             ImageExists[i] = false;
                             Reorder = true;
                         }
@@ -1274,13 +1278,14 @@ namespace InfiniteRoleplay.Windows
                     {
                         galleryImageBytes[i] = galleryImageBytes[i + 1];
                         galleryThumbBytes[i] = galleryThumbBytes[i + 1];
-                        DataSender.ReorderGallery(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, i + 1);               
+                        DataSender.ReorderGallery(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, i + 1, imageIndex);               
                     }
                 }
 
                 imageIndex--;
                 galleryImageBytes[imageIndex] = picBytes;
                 ImageExists[imageIndex] = false;
+                Reordered = true;
             }
           
 

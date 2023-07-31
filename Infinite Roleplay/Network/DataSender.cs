@@ -116,7 +116,7 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void ReorderGallery(string playername, string playerworld, int oldKey, int newKey)
+        public static void ReorderGallery(string playername, string playerworld, int oldKey, int newKey, int removal)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CReorderGallery);
@@ -124,6 +124,7 @@ namespace Networking
             buffer.WriteString(playerworld);
             buffer.WriteInteger(oldKey);
             buffer.WriteInteger(newKey);
+            buffer.WriteInteger(removal);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
