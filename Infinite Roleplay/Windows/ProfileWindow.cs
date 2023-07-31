@@ -58,7 +58,7 @@ namespace InfiniteRoleplay.Windows
 {
     internal class ProfileWindow : Window, IDisposable
     {
-        public static bool Reorder, Reordered;
+        public static bool Reorder, Reordered, ReorderNoSend;
 
         private Plugin plugin;
         public static bool editGalleryImage = false;
@@ -1278,7 +1278,25 @@ namespace InfiniteRoleplay.Windows
                 ImageExists[imageIndex] = false;
                 Reordered = true;
             }
-          
+            if (ReorderNoSend == true)
+            {
+                ReorderNoSend = false;
+                bool nextExists = ImageExists[NextAvailableImageIndex() + 1];
+                int firstOpen = NextAvailableImageIndex();
+                for (int i = firstOpen; i < imageIndex; i++)
+                {
+                    ImageExists[firstOpen] = true;
+                    if (nextExists)
+                    {
+                        galleryImageBytes[i] = galleryImageBytes[i + 1];
+                        galleryThumbBytes[i] = galleryThumbBytes[i + 1];
+
+                    }
+                }
+                Reordered = true;
+            }
+
+
 
         }
         
