@@ -2,6 +2,7 @@
 using Dalamud.Hooking;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using InfiniteRoleplay;
+using InfiniteRoleplay.Windows;
 using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
@@ -115,15 +116,34 @@ namespace Networking
             buffer.Dispose();
         }
         
-        public static void SendGalleryImage(string playername, string playerworld, int length, byte[] galleryImagesBts)
+        public static void SendGalleryImage(string playername, string playerworld,  byte[][] galleryImagesBts)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendGalleryImage);
             buffer.WriteString(playername);
             buffer.WriteString(playerworld);
-            buffer.WriteInteger(galleryImagesBts.Length);    
-            buffer.WriteBytes(galleryImagesBts);
-            buffer.WriteInteger(length);
+
+            int nonHolderIndex = 0;
+            for(int f=0;f < galleryImagesBts.Length; f++)
+            {
+                if (galleryImagesBts[f] != ProfileWindow.picBytes)
+                {
+                    nonHolderIndex++;
+                }
+            }
+            buffer.WriteInteger(nonHolderIndex);
+            for(int i = 0; i < galleryImagesBts.Length;i++) 
+            {
+               
+                if (galleryImagesBts[i] != ProfileWindow.picBytes) 
+                {
+                    buffer.WriteInteger(galleryImagesBts[i].Length);
+                    buffer.WriteBytes(galleryImagesBts[i]);
+                }
+
+            }
+
+
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }

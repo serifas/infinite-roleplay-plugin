@@ -216,6 +216,7 @@ namespace InfiniteRoleplay.Windows
             this._fileDialogManager = new FileDialogManager();
             this.avatarImg = avatarHolder;
             this.pf = this;
+
             galleryImages = new TextureWrap[30] { galleryImg1, galleryImg2, galleryImg3, galleryImg4, galleryImg5, galleryImg6, galleryImg7, galleryImg8, galleryImg9, galleryImg10, galleryImg11, galleryImg12, galleryImg13, galleryImg14, galleryImg15, galleryImg16, galleryImg17, galleryImg18, galleryImg19, galleryImg20, galleryImg21, galleryImg22, galleryImg23, galleryImg24, galleryImg25, galleryImg26, galleryImg27, galleryImg28, galleryImg29, galleryImg30 };
             galleryThumbs = new TextureWrap[30] { galleryEditThm1, galleryEditThm2, galleryEditThm3, galleryEditThm4, galleryEditThm5, galleryEditThm6, galleryEditThm7, galleryEditThm8, galleryEditThm9, galleryEditThm10, galleryEditThm11, galleryEditThm12, galleryEditThm13, galleryEditThm14, galleryEditThm15, galleryEditThm16, galleryEditThm17, galleryEditThm18, galleryEditThm19, galleryEditThm20, galleryEditThm21, galleryEditThm22, galleryEditThm23, galleryEditThm24, galleryEditThm25, galleryEditThm26, galleryEditThm27, galleryEditThm28, galleryEditThm29, galleryEditThm30 };
             this.configuration = configuration;
@@ -225,7 +226,6 @@ namespace InfiniteRoleplay.Windows
             galleryEditThumbs = new TextureWrap[30] { galleryEditThumbImg1, galleryEditThumbImg2, galleryEditThumbImg3, galleryEditThumbImg4, galleryEditThumbImg5, galleryEditThumbImg6, galleryEditThumbImg7, galleryEditThumbImg8, galleryEditThumbImg9, galleryEditThumbImg10, galleryEditThumbImg11, galleryEditThumbImg12, galleryEditThumbImg13, galleryEditThumbImg14, galleryEditThumbImg15, galleryEditThumbImg16, galleryEditThumbImg17, galleryEditThumbImg18, galleryEditThumbImg19, galleryEditThumbImg20, galleryEditThumbImg21, galleryEditThumbImg22, galleryEditThumbImg23, galleryEditThumbImg24, galleryEditThumbImg25, galleryEditThumbImg26, galleryEditThumbImg27, galleryEditThumbImg28, galleryEditThumbImg29, galleryEditThumbImg30 };
 
             picBytes = Imaging.ImageToByteArray(pictureTab);
-
 
             imageHolder = Imaging.ImageToByteArray(pictureTab);
             thumbHolder = Imaging.ImageToByteArray(Imaging.byteArrayToImage(Imaging.ScaleImageBytes(picBytes, 150, 150)));
@@ -1117,9 +1117,14 @@ namespace InfiniteRoleplay.Windows
                     }
                     ImGui.EndTable();
                 }
+                if (ImGui.Button("Submit##GallerySubmit"))
+                {
 
 
+                    DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), galleryImageBytes);
 
+
+                }
 
 
             }
@@ -1170,8 +1175,7 @@ namespace InfiniteRoleplay.Windows
                         }
                         ImGui.SameLine();
                         if (ImGui.Button("Remove##" + "gallery_remove" + i))
-                        {                                  
-                            DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, imageIndex);
+                        {     
                             ImageExists[i] = false;
                             Reorder = true;
                         }
@@ -1181,10 +1185,10 @@ namespace InfiniteRoleplay.Windows
                 ImGui.EndChild();
 
             }
+        
 
-                    
 
-            
+
 
         }
         public static void UpdateUploadStatus(int index)
@@ -1277,7 +1281,10 @@ namespace InfiniteRoleplay.Windows
                     }
 
                 }
-                ImageExists[imageIndex] = false;  
+
+                imageIndex--;
+                galleryImageBytes[imageIndex] = picBytes;
+                ImageExists[imageIndex] = false;
             }
            
 
@@ -1399,7 +1406,7 @@ namespace InfiniteRoleplay.Windows
                     galleryThumbBytes[imageIndex] = scaledImageBytes;
 
                     
-                        DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), imageIndex, galleryImageBytes[imageIndex]);
+                    //    DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), imageIndex, galleryImageBytes[imageIndex]);
 
                         plugin.DisconnectFromServer();
                         plugin.RefreshConnection();
