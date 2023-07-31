@@ -359,7 +359,6 @@ namespace Networking
                     ProfileWindow.galleryImageBytes[i] = imageBytes;
                     ProfileWindow.Cols[i] = new System.Numerics.Vector4(0, 255, 0, 255);
                     ProfileWindow.galleryStatusVals[i] = "Uploaded";
-                    ProfileWindow.Reorder = true;
                 }
                
                 

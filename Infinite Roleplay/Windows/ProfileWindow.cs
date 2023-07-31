@@ -60,8 +60,6 @@ namespace InfiniteRoleplay.Windows
     {
         public static bool Reorder, Reordered;
 
-        public ProfileWindow pf;
-        private readonly ConcurrentDictionary<string, string> _startPaths = new();
         private Plugin plugin;
         public static bool editGalleryImage = false;
         public static bool loadedSelf = false;
@@ -72,13 +70,7 @@ namespace InfiniteRoleplay.Windows
         public static bool addGalleryImageGUI = false;
         public static SortedList<int, int> reordered = new SortedList<int, int>();
         private FileDialogManager _fileDialogManager;
-#pragma warning disable CS0169 // The field 'ProfileWindow.profilesImage' is never used
-        private TextureWrap profilesImage;
-
-#pragma warning restore CS0169 // The field 'ProfileWindow.profilesImage' is never used
         public Configuration configuration;
-        public static bool WindowOpen;
-        public static int[] addedImageIndexes = new int[30] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
         public static bool addBio = false;
         public static bool editBio = false;
         public static bool addHooks = false;
@@ -217,7 +209,6 @@ namespace InfiniteRoleplay.Windows
             this.configuration = plugin.Configuration;
             this._fileDialogManager = new FileDialogManager();
             this.avatarImg = avatarHolder;
-            this.pf = this;
 
             galleryImages = new TextureWrap[30] { galleryImg1, galleryImg2, galleryImg3, galleryImg4, galleryImg5, galleryImg6, galleryImg7, galleryImg8, galleryImg9, galleryImg10, galleryImg11, galleryImg12, galleryImg13, galleryImg14, galleryImg15, galleryImg16, galleryImg17, galleryImg18, galleryImg19, galleryImg20, galleryImg21, galleryImg22, galleryImg23, galleryImg24, galleryImg25, galleryImg26, galleryImg27, galleryImg28, galleryImg29, galleryImg30 };
             galleryThumbs = new TextureWrap[30] { galleryEditThm1, galleryEditThm2, galleryEditThm3, galleryEditThm4, galleryEditThm5, galleryEditThm6, galleryEditThm7, galleryEditThm8, galleryEditThm9, galleryEditThm10, galleryEditThm11, galleryEditThm12, galleryEditThm13, galleryEditThm14, galleryEditThm15, galleryEditThm16, galleryEditThm17, galleryEditThm18, galleryEditThm19, galleryEditThm20, galleryEditThm21, galleryEditThm22, galleryEditThm23, galleryEditThm24, galleryEditThm25, galleryEditThm26, galleryEditThm27, galleryEditThm28, galleryEditThm29, galleryEditThm30 };
@@ -1236,7 +1227,6 @@ namespace InfiniteRoleplay.Windows
         }
         public void Dispose()
         {
-            WindowOpen = false;
             storyTitle = "";
         }
         public override void Update()
@@ -1284,6 +1274,7 @@ namespace InfiniteRoleplay.Windows
 
                 imageIndex--;
                 galleryImageBytes[imageIndex] = picBytes;
+                galleryThumbBytes[imageIndex] = Imaging.ScaleImageBytes(picBytes, 150, 150);
                 ImageExists[imageIndex] = false;
                 Reordered = true;
             }
@@ -1407,7 +1398,7 @@ namespace InfiniteRoleplay.Windows
                     galleryThumbBytes[i] = scaledImageBytes;
 
 
-                    DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, galleryImageBytes[imageIndex]);
+                    DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, galleryImageBytes[i]);
                 }
 
 
