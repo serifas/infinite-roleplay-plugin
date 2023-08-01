@@ -53,6 +53,8 @@ using InfiniteRoleplay.Helpers;
 using OtterGui.Table;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using Aspose.Imaging;
+using Aspose.Imaging.ImageFilters.FilterOptions;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -86,6 +88,7 @@ namespace InfiniteRoleplay.Windows
         public static string[] galleryUpdateTxts = new string[30] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static Vector4[] ImageUpdateColors = new Vector4[30] { Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero };
         public static int imageIndex = 0;
+        public static bool[] nsfwImages = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         public static int[] galleryThumbWidths = new int[30] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         public static int[] galleryThumbHeights = new int[30] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         public static int[] galleryButtonWidths = new int[30] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -1173,6 +1176,10 @@ namespace InfiniteRoleplay.Windows
                             ImageExists[i] = false;
                             Reorder = true;
                         }
+                        if (ImGui.Checkbox("NSFW", ref nsfwImages[i]))
+                        {
+
+                        }
                     }
                     ImGui.EndChild();
                 }
@@ -1416,7 +1423,14 @@ namespace InfiniteRoleplay.Windows
                     System.Drawing.Image scaledImage = Imaging.byteArrayToImage(scaledImageBytes);
                     
                     galleryImageBytes[i] = Imaging.ScaleImageBytes(imgBytes,500,500);
-                    galleryThumbBytes[i] = scaledImageBytes;
+                    if (nsfwImages[i] == true)
+                    {
+                        galleryThumbBytes[i] = Imaging.BlurBytes((Bitmap)scaledImage, 10);
+                    }
+                    else
+                    {
+                        galleryThumbBytes[i] = scaledImageBytes;
+                    }
 
 
                     DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, galleryImageBytes[i]);
