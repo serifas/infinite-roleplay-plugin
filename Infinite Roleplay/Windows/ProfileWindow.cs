@@ -1423,17 +1423,12 @@ namespace InfiniteRoleplay.Windows
                     System.Drawing.Image scaledImage = Imaging.byteArrayToImage(scaledImageBytes);
                     
                     galleryImageBytes[i] = Imaging.ScaleImageBytes(imgBytes,500,500);
-                    if (nsfwImages[i] == true)
-                    {
-                        galleryThumbBytes[i] = Imaging.BlurBytes((Bitmap)scaledImage, 10);
-                    }
-                    else
-                    {
-                        galleryThumbBytes[i] = scaledImageBytes;
-                    }
+                   
+                    galleryThumbBytes[i] = scaledImageBytes;
+                  
 
 
-                    DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, galleryImageBytes[i]);
+                    DataSender.SendGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), nsfwImages[i], i, galleryImageBytes[i]);
                 }
 
 
