@@ -1045,10 +1045,13 @@ namespace InfiniteRoleplay.Windows
                 {
                     if(ImGui.Button("Add Image"))
                     {
-                        imageIndex ++;
+                        if(imageIndex < 16)
+                        {
+                            imageIndex++;
+                            addGalleryImageGUI = true;
+                            ImageExists[imageIndex] = true;
+                        }
                     }
-                    addGalleryImageGUI = true;
-                    ImageExists[imageIndex] = true;
                     ImGui.NewLine();
                 }
                 
