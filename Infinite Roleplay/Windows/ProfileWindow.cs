@@ -1412,7 +1412,7 @@ namespace InfiniteRoleplay.Windows
                     byte[] scaledImageBytes = Imaging.ScaleImageBytes(imgBytes, 150, 150);
                     System.Drawing.Image scaledImage = Imaging.byteArrayToImage(scaledImageBytes);
                     
-                    galleryImageBytes[i] = imgBytes;
+                    galleryImageBytes[i] = Imaging.ScaleImageBytes(imgBytes,500,500);
                     galleryThumbBytes[i] = scaledImageBytes;
 
 

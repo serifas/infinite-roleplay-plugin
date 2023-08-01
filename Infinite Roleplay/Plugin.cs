@@ -141,6 +141,8 @@ namespace InfiniteRoleplay
             byte[] blankTabBytes = Imaging.ScaleImageBytes(emptyByteImage, 300, 300);
             System.Drawing.Image blankTab = Imaging.byteArrayToImage(blankTabBytes);
 
+
+            this.WindowSystem.AddWindow(new Loader(this.pluginInterface, this));
             this.WindowSystem.AddWindow(new SystemsWindow(this));
             this.WindowSystem.AddWindow(new ProfileWindow(this, this.pluginInterface, this.Configuration, AvatarHolder,
                                                                 lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
@@ -157,6 +159,7 @@ namespace InfiniteRoleplay
             this.WindowSystem.AddWindow(new TargetMenu(this, this.pluginInterface, targetManager));
             this.WindowSystem.AddWindow(new BookmarksWindow(this, this.pluginInterface));
             this.WindowSystem.AddWindow(new ImagePreview(this, this.pluginInterface, targetManager));
+           
         }
         public void Dispose()
         {

@@ -25,6 +25,7 @@ using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.Gui;
 using Dalamud.Game.ClientState;
 using Networking;
+using Dalamud.Game.Config;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -79,8 +80,7 @@ namespace InfiniteRoleplay.Windows
             if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
             {
                 LoginWindow.loginRequest = true;
-                plugin.ReloadClient();         
-
+                plugin.ReloadClient();
                 plugin.WindowSystem.GetWindow("PROFILE").IsOpen = true;
             }
             if (ImGui.IsItemHovered())
