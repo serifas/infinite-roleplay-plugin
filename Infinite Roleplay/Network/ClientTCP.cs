@@ -19,7 +19,7 @@ namespace Networking
         private static NetworkStream myStream;
         private static byte[] recBuffer;
         private static string server = "79.141.173.88";
-        private static int port = 5392;
+        private static int port = 5398;
         public static void InitializingNetworking(bool start)
         {
 
