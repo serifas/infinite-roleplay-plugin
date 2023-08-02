@@ -346,7 +346,7 @@ namespace Networking
             int imagesLen = buffer.ReadInt();
             int thumbsLen = buffer.ReadInt();
             int imageCount = buffer.ReadInt();
-
+            int NSFWImages = buffer.ReadInt();
             for (int i = 0; i < imagesLen; i++)
             {
                 int imageBtLen = buffer.ReadInt();
@@ -376,6 +376,21 @@ namespace Networking
                     ProfileWindow.galleryThumbBytes[f] = thumbBytes;
                 }
 
+            }
+            for (int n = 0; n < NSFWImages; n++)
+            {
+                bool NSFW = buffer.ReadBool();
+                if(NSFW == true)
+                {
+                    ProfileWindow.nsfwImagesCheck[n] = true;
+                    ProfileWindow.nsfwImagesUncheck[n] = false;
+                }
+                else
+                {
+                    ProfileWindow.nsfwImagesCheck[n] = false;
+                    ProfileWindow.nsfwImagesUncheck[n] = true;
+                }
+              
             }
             buffer.Dispose();
 

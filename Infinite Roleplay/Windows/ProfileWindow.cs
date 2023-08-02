@@ -1159,24 +1159,28 @@ namespace InfiniteRoleplay.Windows
                     if (ImGui.Checkbox("Yes", ref nsfwImagesCheck[i]))
                     {
                         nsfwImages[i] = true;
+                        nsfwImagesUncheck[i] = false;
                         nsfw[i] = 1;
-                        nsfwImagesUncheck[i] = false;                        
+                        DataSender.SendGalleryImage(plugin.Configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), nsfwImages[i], i, galleryImageBytes[i]);
+
                     }
                     ImGui.SameLine();
                     if (ImGui.Checkbox("No", ref nsfwImagesUncheck[i]))
                     {
                         nsfwImages[i] = false;
-                        nsfw[i] = -1;
                         nsfwImagesCheck[i] = false;
-                        
-
+                        nsfw[i] = -1;
+                        DataSender.SendGalleryImage(plugin.Configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), nsfwImages[i], i, galleryImageBytes[i]);
                     }
+                    
                     if (nsfwImagesCheck[i] == false && nsfwImagesUncheck[i] == false)
                     {
                         nsfw[i] = 0;
                     }
-                    if (nsfw[i] == 1 || nsfw[i] == -1)
+                    else
                     {
+                        ImageExists[i] = true;
+                    }
                         galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryImageBytes[i]);
                         galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryThumbBytes[i]);
                         ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
@@ -1204,11 +1208,12 @@ namespace InfiniteRoleplay.Windows
                                 Reorder = true;
                                 nsfwImagesCheck[i] = false;
                                 nsfwImagesUncheck[i] = false;
+                                
                             }
 
 
 
-                        }
+                        
                         ImGui.EndChild();
                     }
                 }
@@ -1461,6 +1466,7 @@ namespace InfiniteRoleplay.Windows
 
 
                     DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), nsfwImages[i], i, galleryImageBytes[i]);
+               
                 }
 
 
