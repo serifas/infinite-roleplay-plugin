@@ -18,8 +18,8 @@ namespace Networking
         public static TcpClient clientSocket;
         private static NetworkStream myStream;
         private static byte[] recBuffer;
-        private static string server = "127.0.0.1";
-        private static int port = 5398;
+        private static string server = "47.158.193.144";
+        private static int port = 25565;
         public static void InitializingNetworking(bool start)
         {
 

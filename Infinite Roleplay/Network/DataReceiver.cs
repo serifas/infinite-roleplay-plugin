@@ -365,7 +365,6 @@ namespace Networking
             }
             for (int f = 0; f < thumbsLen; f++)
             {
-
                 int thumbBtLen = buffer.ReadInt();
                 if (thumbBtLen > 0)
                 {
