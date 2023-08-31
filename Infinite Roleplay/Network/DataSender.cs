@@ -46,6 +46,7 @@ namespace Networking
         CSendGalleryRemoveRequest = 26,
         CReorderGallery = 27,
         CSendNSFWStatus = 28,
+        CSendGallery = 29,
     }
     public class DataSender
     {
@@ -117,7 +118,7 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void ReorderGallery(string playername, string playerworld, int oldKey, int newKey, int removal)
+        public static void ReorderGallery(string playername, string playerworld, int oldKey, int newKey, int endIndex, int removedIndex)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CReorderGallery);
@@ -125,7 +126,8 @@ namespace Networking
             buffer.WriteString(playerworld);
             buffer.WriteInteger(oldKey);
             buffer.WriteInteger(newKey);
-            buffer.WriteInteger(removal);
+            buffer.WriteInteger(endIndex);
+            buffer.WriteInteger(removedIndex);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
@@ -140,19 +142,19 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SendGalleryImage(string username, string playername, string playerworld, bool nsfw, int index, byte[] galleryImagesBts)
+        public static void SendGalleryImage(string username, string playername, string playerworld, bool NSFW, byte[] imageBytes, int index)
         {
             var buffer = new ByteBuffer();
-            buffer.WriteInteger((int)ClientPackets.CSendGalleryImage);
+            buffer.WriteInteger((int)ClientPackets.CSendGallery);
             buffer.WriteString(playername);
             buffer.WriteString(playerworld);
-            buffer.WriteInteger(galleryImagesBts.Length);
-            buffer.WriteBytes(galleryImagesBts);
-            buffer.WriteInteger(index + 1);
-            buffer.WriteBool(nsfw);
+            buffer.WriteBool(NSFW);
+            buffer.WriteInteger(imageBytes.Length);
+            buffer.WriteBytes(imageBytes);
+            buffer.WriteInteger(index);
+
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
-
         }
         public static void RemoveGalleryImage(string playername, string playerworld, int index, int imageCount)
         {

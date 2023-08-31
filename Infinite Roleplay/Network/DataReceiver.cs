@@ -360,7 +360,7 @@ namespace Networking
                     ProfileWindow.galleryImageBytes[i] = imageBytes;
                     ProfileWindow.Cols[i] = new System.Numerics.Vector4(0, 255, 0, 255);
                     ProfileWindow.galleryStatusVals[i] = "Uploaded";
-                    ProfileWindow.ReorderNoSend = true;
+                    //ProfileWindow.ReorderNoSend = true;
                 }        
             }
             for (int f = 0; f < thumbsLen; f++)
