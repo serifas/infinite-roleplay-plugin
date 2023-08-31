@@ -1052,7 +1052,10 @@ namespace InfiniteRoleplay.Windows
                 {
                     if (ImGui.Button("Add Image"))
                     {
-                        imageIndex++;
+                        if(imageIndex < 10)
+                        {
+                            imageIndex++;
+                        }
                     }
                     if (resetGalleryTimer == true)
                     {
@@ -1154,20 +1157,17 @@ namespace InfiniteRoleplay.Windows
                 {
 
                     for (int i = 0; i < imageIndex; i++)
-                    {
-                        if (i < 30)
+                    {                       
+                        if (i % 4 == 0)
                         {
-                            if (i % 4 == 0)
-                            {
-                                ImGui.TableNextRow();
-                                ImGui.TableNextColumn();
-                                DrawGalleryImage(i, plugin);
-                            }
-                            else
-                            {
-                                ImGui.TableNextColumn();
-                                DrawGalleryImage(i, plugin);
-                            }
+                            ImGui.TableNextRow();
+                            ImGui.TableNextColumn();
+                            DrawGalleryImage(i, plugin);
+                        }
+                        else
+                        {
+                            ImGui.TableNextColumn();
+                            DrawGalleryImage(i, plugin);
                         }
                     }
                     ImGui.EndTable();

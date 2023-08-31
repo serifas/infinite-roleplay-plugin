@@ -144,6 +144,7 @@ namespace Networking
             var packetID = buffer.ReadInt();
             string bookmarkVals = buffer.ReadString();
 
+            plugin.WindowSystem.GetWindow("BOOKMARKS").IsOpen = true;
             Regex nameRx = new Regex(@"<bookmarkName>(.*?)</bookmarkName>");
             Regex worldRx = new Regex(@"<bookmarkWorld>(.*?)</bookmarkWorld>");
             string[] bookmarkSplit = bookmarkVals.Replace("|||", "~").Split('~');
@@ -155,7 +156,6 @@ namespace Networking
 
                 BookmarksWindow.profiles.Add(characterName, characterWorld);
             }
-            plugin.WindowSystem.GetWindow("BOOKMARKS").IsOpen = true;
 
         }
         public static void RecRulebookContent(byte[] data)
@@ -221,6 +221,7 @@ namespace Networking
             ExistingTargetBioData = false;
             ExistingTargetHooksData = false;
             ExistingTargetStoryData = false;
+            ExistingTargetGalleryData = false;
             plugin.WindowSystem.GetWindow("TARGET").IsOpen = true;
         }
         public static void NoProfile(byte[] data)

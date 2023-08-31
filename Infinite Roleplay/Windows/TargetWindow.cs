@@ -54,10 +54,6 @@ namespace InfiniteRoleplay.Windows
         private PlayerCharacter playerCharacter;
         private ChatGui chatGui;
         private DalamudPluginInterface pg;
-#pragma warning disable CS0169 // The field 'ProfileWindow.profilesImage' is never used
-        private TextureWrap profilesImage;
-
-#pragma warning restore CS0169 // The field 'ProfileWindow.profilesImage' is never used
         public Configuration configuration;
         public static bool WindowOpen;
         public static byte[][] existingGalleryImgBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
@@ -189,7 +185,6 @@ namespace InfiniteRoleplay.Windows
         public override void Draw()
         {
             //LoadFileSelection();
-
             //Vector2 addProfileBtnScale = new Vector2(playerCharacter.Name.ToString().Length * 20, 20);
             if(ExistingProfile == true)
             {
@@ -220,7 +215,7 @@ namespace InfiniteRoleplay.Windows
                     {
                         ImGui.SameLine();
                         if (ImGui.Button("OOC Info", new Vector2(100, 20))) { ClearUI(); viewOOC = true; }
-                        if (ImGui.IsItemHovered()) { ImGui.SetTooltip("ViewOOC section of this profile."); }
+                        if (ImGui.IsItemHovered()) { ImGui.SetTooltip("View OOC section of this profile."); }
                     }
                 }
                
@@ -233,7 +228,7 @@ namespace InfiniteRoleplay.Windows
             {
 
 
-                if (ExistingBio == false && ExistingHooks == false && ExistingStory == false && ExistingOOC == false && ExistingOOC == false)
+                if (ExistingBio == false && ExistingHooks == false && ExistingStory == false && ExistingOOC == false && ExistingOOC == false && ExistingGallery == false)
                 {
                     ImGui.Text("No Profile Data Available");
                 }
@@ -567,7 +562,7 @@ namespace InfiniteRoleplay.Windows
 
             this.currentAvatarImg.Dispose();
             for(int o = 0; o < otherImages.Length; o++)
-            {
+            {                
                 otherImages[o].Dispose();
             }
             for(int i = 0; i < galleryImages.Length; i++)
