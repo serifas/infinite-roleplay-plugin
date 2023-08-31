@@ -51,6 +51,8 @@ namespace Networking
         SRecProfileGallery = 37,
         SRecGalleryImageLoaded = 38,
         SRecImageDeletionStatus = 39,
+        SRecNoTargetGallery = 40,
+        SRecTargetGallery = 41,
     }
     class DataReceiver
     {
@@ -60,6 +62,7 @@ namespace Networking
         public static bool ExistingTargetProfileData, ExistingTargetBioData, ExistingTargetHooksData, ExistingTargetStoryData, ExistingTargetOOCData, ExistingTargetGalleryData = false;
         public static string bookmarks;
         public static byte[] currentAvatar , currentTargetAvatar;
+        public static byte[][] ExistingTargetGalleryImageBytes, ExistingTargetGalleryThumbBytes;
         public static int hookEditCount, hookCount;
         public static int targetHookEditCount, ExistingGalleryImageCount, ExistingGalleryThumbCount;
         public static int lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, 
@@ -244,6 +247,16 @@ namespace Networking
             ExistingTargetGalleryData = false;
             plugin.WindowSystem.GetWindow("TARGET").IsOpen = true;
         }
+        public static void NoTargetGallery(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            buffer.Dispose();
+            loggedIn = true;
+            ExistingTargetGalleryData = false;
+            plugin.WindowSystem.GetWindow("TARGET").IsOpen = true;
+        }
         public static void NoProfileBio(byte[] data)
         {
             var buffer = new ByteBuffer();
@@ -338,7 +351,30 @@ namespace Networking
              }
 
         }
-       public static void ReceiveProfileGalleryImage(byte[] data)
+
+
+        public static void ReceiveTargetProfileGallery(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            int imageCount = buffer.ReadInt();
+            for (int i = 0; i < imageCount; i++)
+            {
+                int imageBtLen = buffer.ReadInt();
+                byte[] imageBytes = buffer.ReadBytes(imageBtLen);
+                int thumbBtLen = buffer.ReadInt();
+                byte[] thumbBytes = buffer.ReadBytes(thumbBtLen);
+                ExistingTargetGalleryData = true;
+                TargetWindow.existingGalleryImageCount = imageCount;
+                TargetWindow.existingGalleryImgBytes[i] = imageBytes;
+                TargetWindow.existingGalleryThumbBytes[i] = thumbBytes;
+                //ProfileWindow.ReorderNoSend = true;
+            }
+            buffer.Dispose();
+
+        }
+        public static void ReceiveProfileGalleryImage(byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);

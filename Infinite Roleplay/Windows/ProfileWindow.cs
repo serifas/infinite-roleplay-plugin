@@ -1257,7 +1257,6 @@ namespace InfiniteRoleplay.Windows
                             ImageExists[i] = false;
                             Reorder = true;
                             removalIndexes[i] = 1;
-                            int indexVal = i + 1;
                             DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, imageIndex);
                         }
 
