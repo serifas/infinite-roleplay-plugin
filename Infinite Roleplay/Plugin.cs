@@ -166,7 +166,7 @@ namespace InfiniteRoleplay
             this.framework.Update -= Update;
             this.WindowSystem.RemoveAllWindows();
             this.CommandManager.RemoveHandler(CommandName);
-            if (IsConnectedToServer() == true)
+            if (IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
                 DisconnectFromServer();
             }
@@ -176,7 +176,7 @@ namespace InfiniteRoleplay
 
         public void RefreshConnection()
         {
-            if(IsConnectedToServer() != true)
+            if(IsConnectedToServer(ClientTCP.clientSocket) != true)
             {
                 ConnectToServer();
                 ReloadClient();
@@ -188,7 +188,7 @@ namespace InfiniteRoleplay
 
         public void Update(Framework framework)
         {
-            if (IsConnectedToServer() == true)
+            if (IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
                 toggleconnection = false; 
                 if (IsLoggedIn() == false)
@@ -210,7 +210,7 @@ namespace InfiniteRoleplay
                 ConnectToServer();
                 ReloadClient();
             }
-            if(firstload == true && IsConnectedToServer() == true)
+            if(firstload == true && IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
                 firstload = false;
                 LoadUI();
@@ -244,17 +244,49 @@ namespace InfiniteRoleplay
         {
             this.WindowSystem.Draw();
         }
-        public static bool IsConnectedToServer()
+        public bool IsConnectedToServer(TcpClient _tcpClient)
         {
-            if (ClientTCP.clientSocket.Connected == true)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+           
+                try
+                {
+                    if (_tcpClient != null && _tcpClient.Client != null && _tcpClient.Client.Connected)
+                    {
+                        /* pear to the documentation on Poll:
+                         * When passing SelectMode.SelectRead as a parameter to the Poll method it will return 
+                         * -either- true if Socket.Listen(Int32) has been called and a connection is pending;
+                         * -or- true if data is available for reading; 
+                         * -or- true if the connection has been closed, reset, or terminated; 
+                         * otherwise, returns false
+                         */
+
+                        // Detect if client disconnected
+                        if (_tcpClient.Client.Poll(0, SelectMode.SelectRead))
+                        {
+                            byte[] buff = new byte[1];
+                            if (_tcpClient.Client.Receive(buff, SocketFlags.Peek) == 0)
+                            {
+                                // Client disconnected
+                                return false;
+                            }
+                            else
+                            {
+                                return true;
+                            }
+                        }
+
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
         }
+      
         public bool IsLoggedIn()
         {
             if (clientState.IsLoggedIn == true && clientState.LocalPlayer != null)

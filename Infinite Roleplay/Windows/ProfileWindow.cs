@@ -210,7 +210,7 @@ namespace InfiniteRoleplay.Windows
         {
             this.SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(750, 950),
+                MinimumSize = new Vector2(400, 740),
                 MaximumSize = new Vector2(750, 950)
             };
             bl = blank_holder;
