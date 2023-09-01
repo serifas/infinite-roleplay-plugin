@@ -95,7 +95,7 @@ namespace InfiniteRoleplay.Windows
             }
             if (ImGui.IsItemHovered())
             {
-                ImGui.SetTooltip("Friends");
+                ImGui.SetTooltip("Connections");
             }
             if (ImGui.ImageButton(this.systemsImage.ImGuiHandle, new Vector2(100, 50)))
             {
@@ -113,7 +113,7 @@ namespace InfiniteRoleplay.Windows
             }
             if (ImGui.IsItemHovered())
             {
-                ImGui.SetTooltip("Groups");
+                ImGui.SetTooltip("Dice Systems");
             }
             if (isAdmin == true)
             {

@@ -144,7 +144,7 @@ namespace InfiniteRoleplay.Windows
         {
             this.SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(400, 740),
+                MinimumSize = new Vector2(400, 400),
                 MaximumSize = new Vector2(750, 950)
             };
             this.plugin = plugin;
@@ -584,7 +584,7 @@ namespace InfiniteRoleplay.Windows
             existingAvatarBytes = DataReceiver.currentTargetAvatar;
             ExistingGallery = DataReceiver.ExistingTargetGalleryData;
             hookEditCount = DataReceiver.targetHookEditCount;
-
+           
             if (viewBio == true)
             {
                 for (int i = 0; i < alignmentWidthVals.Length; i++)

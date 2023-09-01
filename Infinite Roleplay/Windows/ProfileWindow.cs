@@ -210,8 +210,9 @@ namespace InfiniteRoleplay.Windows
         {
             this.SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(400, 740),
+                MinimumSize = new Vector2(400, 400),
                 MaximumSize = new Vector2(750, 950)
+                
             };
             bl = blank_holder;
             this.plugin = plugin;
@@ -1052,7 +1053,7 @@ namespace InfiniteRoleplay.Windows
                 {
                     if (ImGui.Button("Add Image"))
                     {
-                        if(imageIndex < 10)
+                        if(imageIndex < 20)
                         {
                             imageIndex++;
                         }
@@ -1260,13 +1261,11 @@ namespace InfiniteRoleplay.Windows
                             DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, imageIndex);
                         }
 
-                        
 
 
-
-                        ImGui.EndChild();
+                    }
+                    ImGui.EndChild();
                 }
-            }
 
 
         ImGui.EndChild();
