@@ -83,9 +83,6 @@
         <None Update="UI\common\friends.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-        <None Update="UI\common\friend_request.png">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
         <None Update="UI\common\groups.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>

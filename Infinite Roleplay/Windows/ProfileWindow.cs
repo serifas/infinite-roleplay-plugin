@@ -257,8 +257,14 @@ namespace InfiniteRoleplay.Windows
             this.alignmentWidthVals = new float[9] { lawfulGoodWidthVal, neutralGoodWidthVal, chaoticGoodWidthVal, lawfulNeutralWidthVal, trueNeutralWidthVal, chaoticNeutralWidthVal, lawfulEvilWidthVal, neutralEvilWidthVal, chaoticEvilWidthVal };
             this.alignmentNames = new string[9] { "lawfulgood", "neutralgood", "chaoticgood", "lawfulneutral", "trueneutral", "chaoticneutral", "lawfulevil", "neutralevil", "chaoticevil" };
         }
-       
 
+        public override void OnOpen()
+        {
+            if (this.ExistingProfile == true)
+            {
+                if (ImGui.Button("Edit Profile", new Vector2(100, 20))) { editProfile = true; }
+            }
+        }
         public override void Draw()
         {
             _fileDialogManager.Draw();
@@ -267,7 +273,7 @@ namespace InfiniteRoleplay.Windows
             //Vector2 addProfileBtnScale = new Vector2(playerCharacter.Name.ToString().Length * 20, 20);
             if (this.ExistingProfile == true)
             {
-                if (ImGui.Button("Edit Profile", new Vector2(100, 20))) { editProfile = true; }
+            //    if (ImGui.Button("Edit Profile", new Vector2(100, 20))) { editProfile = true; }
             }
             if (this.ExistingProfile == false)
             {
@@ -1483,11 +1489,10 @@ namespace InfiniteRoleplay.Windows
                     byte[] scaledImageBytes = Imaging.ScaleImageBytes(imgBytes, 150, 150);
                     System.Drawing.Image scaledImage = Imaging.byteArrayToImage(scaledImageBytes);
                     
-                    galleryImageBytes[i] = Imaging.ScaleImageBytes(imgBytes,500,500);
+                    galleryImageBytes[i] = Imaging.ScaleImageBytes(imgBytes,650,650);
                    
                     galleryThumbBytes[i] = scaledImageBytes;
-                    
-                    SortedList<SortedList<int, bool>, SortedList<int, byte[]>> newImageList = new SortedList<SortedList<int, bool>, SortedList<int, byte[]>>();
+                   
                     DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
                                                 NSFW[i], galleryImageBytes[i], i);
                 

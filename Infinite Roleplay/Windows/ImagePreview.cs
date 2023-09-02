@@ -56,28 +56,16 @@ namespace InfiniteRoleplay.Windows
         public ImagePreview(Plugin plugin, DalamudPluginInterface Interface, TargetManager targetManager) : base(
        "PREVIEW", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
-            
-
             this.plugin = plugin;
             this.configuration = plugin.Configuration;
-            this.profilesImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/profiles.png");
-            this.profilesImage = Interface.UiBuilder.LoadImage(profilesImagePath);
-            this.documentImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/friends.png");
-            this.documentImage = Interface.UiBuilder.LoadImage(documentImagePath);
-            this.groupsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/groups.png");
-            this.groupsImage = Interface.UiBuilder.LoadImage(groupsImagePath);
-            this.systemsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/bookmarks.png");
-            this.systemsImage = Interface.UiBuilder.LoadImage(systemsImagePath);
-
-
         }
 
         public override void Draw()
         {
             this.SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(width, height),
-                MaximumSize = new Vector2(width, height)
+                MinimumSize = new Vector2(width, height + 50),
+                MaximumSize = new Vector2(width, height + 50)
             };
             ImGui.Image(PreviewImage.ImGuiHandle, new Vector2(width, height));
         }
