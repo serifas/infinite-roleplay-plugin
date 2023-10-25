@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using FFXIVClientStructs.FFXIV.Client.Graphics;
 using System.Xml.Linq;
 using Networking;
+using Dalamud.Interface.Internal;
 
 namespace InfiniteRoleplay.Windows;
 
@@ -22,10 +23,10 @@ public class SystemsWindow : Window, IDisposable
 {
     private bool system_created = false;
     private Configuration Configuration;
-    private TextureWrap systemImage;
+    private IDalamudTextureWrap systemImage;
     private Vector3 statColor1, statColor2, statColor3, statColor4, statColor5, statColor6, statColor7, statColor8, statColor9, statColor10, statColor11, statColor12;
-    private TextureWrap statImg1, statImg2, statImg3, statImg4, statImg5, statImg6, statImg7, statImg8, statImg9, statImg10, statImg11, statImg12;
-    private TextureWrap[] statImgs;
+    private IDalamudTextureWrap statImg1, statImg2, statImg3, statImg4, statImg5, statImg6, statImg7, statImg8, statImg9, statImg10, statImg11, statImg12;
+    private IDalamudTextureWrap[] statImgs;
     public Dictionary<int, string> AccountSystems = new Dictionary<int, string>();
     public bool createSystem, statAllocationStatus, reductionStatus, selectSystem, reductionStatEffect;
     public string SystemName = string.Empty;
@@ -66,7 +67,7 @@ public class SystemsWindow : Window, IDisposable
             statIconPaths[i] = Path.Combine(this.plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "stats/statImgHolder.png");
             statIcons[i] = Path.Combine(this.plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "stats/statImgHolder.png");
         }
-        statImgs = new TextureWrap[12] { statImg1, statImg2, statImg3, statImg4, statImg5, statImg6, statImg7, statImg8, statImg9, statImg10, statImg11, statImg12 };
+        statImgs = new IDalamudTextureWrap[12] { statImg1, statImg2, statImg3, statImg4, statImg5, statImg6, statImg7, statImg8, statImg9, statImg10, statImg11, statImg12 };
 
         statColors = new Vector3[12] { statColor1, statColor2, statColor3, statColor4, statColor5, statColor6, statColor7, statColor8, statColor9, statColor10, statColor11, statColor12 };
 
@@ -113,7 +114,7 @@ public class SystemsWindow : Window, IDisposable
                 if (ImGui.Button("Add System Image"))
                 {
                     SystemImagePath = Path.GetFullPath(SystemImage);
-                   // systemImage = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(SystemImagePath);
+                    systemImage = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(SystemImagePath);
                     ImGui.SameLine();
                     SystemImageBytes = File.ReadAllBytes(SystemImagePath);
                 }
@@ -199,7 +200,7 @@ public class SystemsWindow : Window, IDisposable
                     {
 
                         statIconPaths[i] = Path.GetFullPath(statIcons[i]);
-                     //   statImgs[i] = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(statIconPaths[i]);
+                        statImgs[i] = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(statIconPaths[i]);
 
                         statIconImages[i] = File.ReadAllBytes(statIconPaths[i]);
                     }

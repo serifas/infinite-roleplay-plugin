@@ -25,8 +25,8 @@ using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.Gui;
 using Dalamud.Game.ClientState;
 using Networking;
-using Dalamud.Interface.Internal;
 using Dalamud.Plugin.Services;
+using Dalamud.Interface.Internal;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -55,24 +55,31 @@ namespace InfiniteRoleplay.Windows
         public bool openedProfile = false;
         public static int width = 0, height = 0;
         public bool openedTargetProfile = false;
-        private DalamudPluginInterface pluginInterface;
-        private ITargetManager targetManager1;
-
         public ImagePreview(Plugin plugin, DalamudPluginInterface Interface, ITargetManager targetManager) : base(
        "PREVIEW", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
+            
+
             this.plugin = plugin;
             this.configuration = plugin.Configuration;
-        }
+            this.profilesImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/profiles.png");
+            this.profilesImage = Interface.UiBuilder.LoadImage(profilesImagePath);
+            this.documentImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/friends.png");
+            this.documentImage = Interface.UiBuilder.LoadImage(documentImagePath);
+            this.groupsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/groups.png");
+            this.groupsImage = Interface.UiBuilder.LoadImage(groupsImagePath);
+            this.systemsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/bookmarks.png");
+            this.systemsImage = Interface.UiBuilder.LoadImage(systemsImagePath);
 
-       
+
+        }
 
         public override void Draw()
         {
             this.SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(width, height + 50),
-                MaximumSize = new Vector2(width, height + 50)
+                MinimumSize = new Vector2(width, height),
+                MaximumSize = new Vector2(width, height)
             };
             ImGui.Image(PreviewImage.ImGuiHandle, new Vector2(width, height));
         }

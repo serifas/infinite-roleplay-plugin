@@ -37,14 +37,12 @@ namespace InfiniteRoleplay.Windows
         private Plugin plugin;
         private string profilesImagePath;
         private IDalamudTextureWrap profilesImage;
-        private string eventsImagePath;
-        private IDalamudTextureWrap eventsImage;
-        private string bookmarksImagePath;
-        private IDalamudTextureWrap bookmarksImage;
-        private string groupsImagePath;
-        private IDalamudTextureWrap groupsImage;
+        private string documentImagePath;
+        private IDalamudTextureWrap documentImage;
         private string systemsImagePath;
         private IDalamudTextureWrap systemsImage;
+        private string groupsImagePath;
+        private IDalamudTextureWrap groupsImage;
         public static bool isAdmin;
         public Configuration configuration;
         public static bool WindowOpen;
@@ -56,9 +54,6 @@ namespace InfiniteRoleplay.Windows
         private bool _showFileDialogError = false;
         public bool openedProfile = false;
         public bool openedTargetProfile = false;
-        private DalamudPluginInterface pluginInterface;
-        private ITargetManager targetManager1;
-
         public OptionsWindow(Plugin plugin, DalamudPluginInterface Interface, ITargetManager targetManager) : base(
        "OPTIONS", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
@@ -72,21 +67,18 @@ namespace InfiniteRoleplay.Windows
             this.configuration = plugin.Configuration;
             this.profilesImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/profiles.png");
             this.profilesImage = Interface.UiBuilder.LoadImage(profilesImagePath);
-            this.eventsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/events.png");
-            this.systemsImage = Interface.UiBuilder.LoadImage(eventsImagePath);
-            this.systemsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/systems.png");
+            this.documentImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/friends.png");
+            this.documentImage = Interface.UiBuilder.LoadImage(documentImagePath);
+            this.groupsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/groups.png");
+            this.groupsImage = Interface.UiBuilder.LoadImage(groupsImagePath);
+            this.systemsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/bookmarks.png");
             this.systemsImage = Interface.UiBuilder.LoadImage(systemsImagePath);
-            this.bookmarksImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/bookmarks.png");
-            this.bookmarksImage = Interface.UiBuilder.LoadImage(bookmarksImagePath);
 
          
         }
 
-      
-
         public override void Draw()
         {
-            //PROFILE
             if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
             {
                 LoginWindow.loginRequest = true;
@@ -95,23 +87,19 @@ namespace InfiniteRoleplay.Windows
             }
             if (ImGui.IsItemHovered())
             {
-                ImGui.SetTooltip("Edit Profile");
+                ImGui.SetTooltip("Profile");
             }
             ImGui.SameLine();
-
-            //EVENTS
-            if (ImGui.ImageButton(this.eventsImage.ImGuiHandle, new Vector2(100, 50)))
+            if (ImGui.ImageButton(this.documentImage.ImGuiHandle, new Vector2(100, 50)))
             {
                // plugin.WindowSystem.GetWindow("SHINE RULEBOOK").IsOpen = true;
 
             }
             if (ImGui.IsItemHovered())
             {
-                ImGui.SetTooltip("Events");
+                ImGui.SetTooltip("Connections - Comming Soon");
             }
-
-            //BOOKMARKS
-            if (ImGui.ImageButton(this.bookmarksImage.ImGuiHandle, new Vector2(100, 50)))
+            if (ImGui.ImageButton(this.systemsImage.ImGuiHandle, new Vector2(100, 50)))
             {
                 DataSender.RequestBookmarks(configuration.username);
             }
@@ -121,20 +109,19 @@ namespace InfiniteRoleplay.Windows
             }
 
             ImGui.SameLine();
-            //SYSTEMS
-            if (ImGui.ImageButton(this.systemsImage.ImGuiHandle, new Vector2(100, 50)))
+            if (ImGui.ImageButton(this.groupsImage.ImGuiHandle, new Vector2(100, 50)))
             {
 
             }
             if (ImGui.IsItemHovered())
             {
-                ImGui.SetTooltip("Systems");
+                ImGui.SetTooltip("Events - Comming Soon");
             }
             if (isAdmin == true)
             {
                 if (ImGui.Button("Administration", new Vector2(225, 25)))
                 {
-                    //Administration here
+                   //plugin.window("ADMINISTRATION").IsOpen = true;
                 }
             }
             if (ImGui.Button("Logout", new Vector2(225, 25)))
@@ -147,7 +134,7 @@ namespace InfiniteRoleplay.Windows
 
 
         }
-
+       
 
         public void Dispose()
         {

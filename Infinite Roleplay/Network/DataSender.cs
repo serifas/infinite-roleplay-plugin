@@ -142,7 +142,7 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SendGalleryImage(string username, string playername, string playerworld, bool NSFW, byte[] imageBytes, int index)
+        public static async Task SendGalleryImage(string username, string playername, string playerworld, bool NSFW, byte[] imageBytes, int index)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendGallery);

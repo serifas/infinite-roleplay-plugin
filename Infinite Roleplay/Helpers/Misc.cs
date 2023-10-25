@@ -9,6 +9,24 @@ namespace InfiniteRoleplay.Helpers
 {
     internal class Misc
     {
+        public static byte[] RemoveBytes(byte[] input, byte[] pattern)
+        {
+            if (pattern.Length == 0) return input;
+            var result = new List<byte>();
+            for (int i = 0; i < input.Length; i++)
+            {
+                var patternLeft = i <= input.Length - pattern.Length;
+                if (patternLeft && (!pattern.Where((t, j) => input[i + j] != t).Any()))
+                {
+                    i += pattern.Length - 1;
+                }
+                else
+                {
+                    result.Add(input[i]);
+                }
+            }
+            return result.ToArray();
+        }
         public static string GetBetween(string content, string startString, string endString)
         {
             int Start = 0, End = 0;

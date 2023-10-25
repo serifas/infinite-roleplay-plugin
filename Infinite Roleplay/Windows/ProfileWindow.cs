@@ -58,14 +58,11 @@ using Aspose.Imaging.ImageFilters.FilterOptions;
 using System.Timers;
 using Dalamud.Interface.Internal;
 using Dalamud.Plugin.Services;
-using Newtonsoft.Json.Linq;
-using static FFXIVClientStructs.FFXIV.Client.UI.Agent.AgentFreeCompanyProfile;
 
 namespace InfiniteRoleplay.Windows
 {
     public class ProfileWindow : Window, IDisposable
     {
-        public static bool imageUpdated;
         public static Timer timer = new Timer(1000);
         public static bool resetGalleryTimer = true;
         public static bool Reorder = false, Reordered = false, ReorderNoSend = false;
@@ -85,7 +82,7 @@ namespace InfiniteRoleplay.Windows
         public static bool editHooks = false;
         public static bool addStory = false;
         public static int imageCount = 0;
-
+        
         public static bool resetHooks;
 
         public static bool[] ImageExists = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
@@ -101,7 +98,7 @@ namespace InfiniteRoleplay.Windows
         public static bool[] nsfwImagesUncheck = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         public static bool[] NSFW = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         public static int[] nsfw = new int[30] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        public static int[] removalIndexes = new int[30] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+        public static int[] removalIndexes = new int[30] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         public static int[] galleryThumbWidths = new int[30] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         public static int[] galleryThumbHeights = new int[30] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         public static int[] galleryButtonWidths = new int[30] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -114,9 +111,8 @@ namespace InfiniteRoleplay.Windows
         public static byte[][] galleryEditImageBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
         public static byte[][] galleryEditThumbBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
         public static IDalamudTextureWrap galleryImg1, galleryImg2, galleryImg3, galleryImg4, galleryImg5, galleryImg6, galleryImg7, galleryImg8, galleryImg9, galleryImg10, galleryImg11, galleryImg12, galleryImg13, galleryImg14, galleryImg15, galleryImg16, galleryImg17, galleryImg18, galleryImg19, galleryImg20, galleryImg21, galleryImg22, galleryImg23, galleryImg24, galleryImg25, galleryImg26, galleryImg27, galleryImg28, galleryImg29, galleryImg30;
-        public static IDalamudTextureWrap galleryEditThm1, galleryEditThm2, galleryEditThm3, galleryEditThm4, galleryEditThm5, galleryEditThm6, galleryEditThm7, galleryEditThm8, galleryEditThm9, galleryEditThm10, galleryEditThm11, galleryEditThm12, galleryEditThm13, galleryEditThm14, galleryEditThm15, galleryEditThm16, galleryEditThm17, galleryEditThm18, galleryEditThm19, galleryEditThm20, galleryEditThm21, galleryEditThm22, galleryEditThm23, galleryEditThm24, galleryEditThm25, galleryEditThm26, galleryEditThm27, galleryEditThm28, galleryEditThm29, galleryEditThm30;
-
         public static IDalamudTextureWrap[] galleryImages, galleryThumbs;
+        public static IDalamudTextureWrap galleryEditThm1, galleryEditThm2, galleryEditThm3, galleryEditThm4, galleryEditThm5, galleryEditThm6, galleryEditThm7, galleryEditThm8, galleryEditThm9, galleryEditThm10, galleryEditThm11, galleryEditThm12, galleryEditThm13, galleryEditThm14, galleryEditThm15, galleryEditThm16, galleryEditThm17, galleryEditThm18, galleryEditThm19, galleryEditThm20, galleryEditThm21, galleryEditThm22, galleryEditThm23, galleryEditThm24, galleryEditThm25, galleryEditThm26, galleryEditThm27, galleryEditThm28, galleryEditThm29, galleryEditThm30;
         public static string[] HookContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static string[] HookEditContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static string[] ChapterContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
@@ -162,13 +158,13 @@ namespace InfiniteRoleplay.Windows
                           chaoticEvilEditVal;
         public static int[] alignmentVals, alignmentEditVals = new int[] { };
         private float[] alignmentWidthVals = new float[] { };
-        private string[] alignmentNames = new string[] { };
+        private string[] alignmentNames = new string[]{};
         public byte[] avatarBytes, existingAvatarBytes;
         public int availablePercentage = 50;
         public int[] flaggedHookIndexes = new int[] { };
         public static bool addImageToGallery = false;
         //Font Vars
-
+      
         private GameFontHandle _Font;
         //BIO VARS
         private IDalamudTextureWrap avatarImg, currentAvatarImg;
@@ -198,29 +194,6 @@ namespace InfiniteRoleplay.Windows
         public IDalamudTextureWrap blank;
         public static System.Drawing.Image bl;
         private IDalamudTextureWrap[] otherImages;
-        private DalamudPluginInterface pluginInterface;
-        private IDalamudTextureWrap avatarHolder;
-        private IDalamudTextureWrap lawfulGood1;
-        private IDalamudTextureWrap neutralGood1;
-        private IDalamudTextureWrap chaoticGood1;
-        private IDalamudTextureWrap lawfulNeutral1;
-        private IDalamudTextureWrap trueNeutral1;
-        private IDalamudTextureWrap chaoticNeutral1;
-        private IDalamudTextureWrap lawfulEvil1;
-        private IDalamudTextureWrap neutralEvil1;
-        private IDalamudTextureWrap chaoticEvil1;
-        private IDalamudTextureWrap lawfulGoodBar1;
-        private IDalamudTextureWrap neutralGoodBar1;
-        private IDalamudTextureWrap chaoticGoodBar1;
-        private IDalamudTextureWrap lawfulNeutralBar1;
-        private IDalamudTextureWrap trueNeutralBar1;
-        private IDalamudTextureWrap chaoticNeutralBar1;
-        private IDalamudTextureWrap lawfulEvilBar1;
-        private IDalamudTextureWrap neutralEvilBar1;
-        private IDalamudTextureWrap chaoticEvilBar1;
-        private System.Drawing.Image picTab;
-        private System.Drawing.Image blankTab;
-
         public ProfileWindow(Plugin plugin, DalamudPluginInterface Interface, Configuration configuration, IDalamudTextureWrap avatarHolder,
                              //alignment icon
                              IDalamudTextureWrap lawfulgood, IDalamudTextureWrap neutralgood, IDalamudTextureWrap chaoticgood,
@@ -241,7 +214,7 @@ namespace InfiniteRoleplay.Windows
             {
                 MinimumSize = new Vector2(400, 400),
                 MaximumSize = new Vector2(750, 950)
-
+                
             };
             bl = blank_holder;
             this.plugin = plugin;
@@ -253,20 +226,20 @@ namespace InfiniteRoleplay.Windows
             galleryImages = new IDalamudTextureWrap[30] { galleryImg1, galleryImg2, galleryImg3, galleryImg4, galleryImg5, galleryImg6, galleryImg7, galleryImg8, galleryImg9, galleryImg10, galleryImg11, galleryImg12, galleryImg13, galleryImg14, galleryImg15, galleryImg16, galleryImg17, galleryImg18, galleryImg19, galleryImg20, galleryImg21, galleryImg22, galleryImg23, galleryImg24, galleryImg25, galleryImg26, galleryImg27, galleryImg28, galleryImg29, galleryImg30 };
             galleryThumbs = new IDalamudTextureWrap[30] { galleryEditThm1, galleryEditThm2, galleryEditThm3, galleryEditThm4, galleryEditThm5, galleryEditThm6, galleryEditThm7, galleryEditThm8, galleryEditThm9, galleryEditThm10, galleryEditThm11, galleryEditThm12, galleryEditThm13, galleryEditThm14, galleryEditThm15, galleryEditThm16, galleryEditThm17, galleryEditThm18, galleryEditThm19, galleryEditThm20, galleryEditThm21, galleryEditThm22, galleryEditThm23, galleryEditThm24, galleryEditThm25, galleryEditThm26, galleryEditThm27, galleryEditThm28, galleryEditThm29, galleryEditThm30 };
             this.configuration = configuration;
-
+            
             picBytes = Imaging.ImageToByteArray(pictureTab);
 
             //timer.Elapsed += OnEventExecution;
             imageHolder = Imaging.ImageToByteArray(pictureTab);
             thumbHolder = Imaging.ImageToByteArray(Imaging.byteArrayToImage(Imaging.ScaleImageBytes(picBytes, 150, 150)));
-
-            for (int tb = 0; tb < 30; tb++)
+            
+            for (int tb = 0; tb < galleryThumbBytes.Length; tb++)
             {
-                galleryThumbBytes[tb] = Imaging.ScaleImageBytes(picBytes, 150, 150);
+                galleryThumbBytes[tb] = Imaging.ScaleImageBytes(picBytes, 150, 150);   
             }
-            for (int ib = 0; ib < 30; ib++)
+            for (int ib = 0; ib < galleryImageBytes.Length; ib++)
             {
-                galleryImageBytes[ib] = picBytes;
+                galleryImageBytes[ib]= Imaging.ImageToByteArray(pictureTab);               
             }
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
             this.avatarBytes = Imaging.ImageToByteArray(image1);
@@ -286,15 +259,8 @@ namespace InfiniteRoleplay.Windows
             this.alignmentWidthVals = new float[9] { lawfulGoodWidthVal, neutralGoodWidthVal, chaoticGoodWidthVal, lawfulNeutralWidthVal, trueNeutralWidthVal, chaoticNeutralWidthVal, lawfulEvilWidthVal, neutralEvilWidthVal, chaoticEvilWidthVal };
             this.alignmentNames = new string[9] { "lawfulgood", "neutralgood", "chaoticgood", "lawfulneutral", "trueneutral", "chaoticneutral", "lawfulevil", "neutralevil", "chaoticevil" };
         }
+       
 
-
-        public override void OnOpen()
-        {
-            if (this.ExistingProfile == true)
-            {
-                if (ImGui.Button("Edit Profile", new Vector2(100, 20))) { editProfile = true; }
-            }
-        }
         public override void Draw()
         {
             _fileDialogManager.Draw();
@@ -333,9 +299,9 @@ namespace InfiniteRoleplay.Windows
             if (editProfile == true)
             {
                 addProfile = false;
-
+                
                 ImGui.Spacing();
-                if (ExistingBio == true) { if (ImGui.Button("Edit Bio", new Vector2(100, 20))) { ClearUI(); editBio = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your bio."); } } else { if (ImGui.Button("Add Bio", new Vector2(100, 20))) { ClearUI(); addBio = true; } }
+                if (ExistingBio == true) { if (ImGui.Button("Edit Bio", new Vector2(100, 20))) { ClearUI();  editBio = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your bio."); } } else {  if (ImGui.Button("Add Bio", new Vector2(100, 20))) { ClearUI(); addBio = true; } }
                 ImGui.SameLine();
                 if (ExistingHooks == true) { if (ImGui.Button("Edit Hooks", new Vector2(100, 20))) { ClearUI(); editHooks = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Hooks."); } } else { if (ImGui.Button("Add Hooks", new Vector2(100, 20))) { ClearUI(); addHooks = true; } }
                 ImGui.SameLine();
@@ -371,11 +337,11 @@ namespace InfiniteRoleplay.Windows
                     //gender input
                     ImGui.Text("Gender: ");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##gender", $"Specifying an insult or terms such as trap or futa will get you banned. These are not genders.", ref characterAddGender, 100);
+                    ImGui.InputTextWithHint("##gender", $"The IC gender of your character", ref characterAddGender, 100);
                     //age input
                     ImGui.Text("Age:    ");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##age", $"If your character's age is not 18+ you may not make your profile nsfw (numbers only)", ref characterAddAge, 100, ImGuiInputTextFlags.CharsHexadecimal);
+                    ImGui.InputTextWithHint("##age", $"The IC age of your character (numbers only)", ref characterAddAge, 100, ImGuiInputTextFlags.CharsHexadecimal);
                     //age input
                     ImGui.Text("Height:");
                     ImGui.SameLine();
@@ -975,14 +941,14 @@ namespace InfiniteRoleplay.Windows
                     for (int i = 0; i < hookCount; i++)
                     {
                         int index = hookCount + hookEditCount;
-                        hookMsg += "<hook>" + index + "," + HookContent[i].Replace("\n", "---===---") + "</hook>|||";
+                        hookMsg += "<hook>" + HookContent[i].Replace("\n", "---===---") + "</hook>|||";
                         ImGui.InputTextMultiline("##hook" + i, ref HookContent[i], 3000, new Vector2(450, 100));
                     }
                     for (int h = 0; h < hookEditCount; h++)
                     {
                         int index = hookCount + hookEditCount;
                         ImGui.InputTextMultiline("##hookedit" + h, ref HookEditContent[h], 3000, new Vector2(450, 100));
-                        hookMsg += "<hook>" + index + "," + HookEditContent[h].Replace("\n", "---===---") + "</hook>|||";
+                        hookMsg += "<hook>" + HookEditContent[h].Replace("\n", "---===---") + "</hook>|||";
                     }
                     if (ImGui.Button("Submit Hooks"))
                     {
@@ -1089,15 +1055,15 @@ namespace InfiniteRoleplay.Windows
                 {
                     if (ImGui.Button("Add Image"))
                     {
-                        if (imageIndex < 20)
+                        if(imageIndex < 20)
                         {
                             imageIndex++;
                         }
                     }
                     if (resetGalleryTimer == true)
                     {
-                        // timer.Stop();
-                        //  EnableGallerySubmition();
+                       // timer.Stop();
+                      //  EnableGallerySubmition();
                     }
                     else
                     {
@@ -1110,10 +1076,10 @@ namespace InfiniteRoleplay.Windows
 
                 if (addImageToGallery == true)
                 {
-                    AddImage(false, imageIndexVal);
                     addImageToGallery = false;
+                    AddImage(false, imageIndexVal);
                 }
-
+                
 
                 if (addAvatar == true)
                 {
@@ -1130,17 +1096,17 @@ namespace InfiniteRoleplay.Windows
                     AddImageToGallery(plugin, imageIndex);
                 }
                 if (Reorder == true)
-                {
-                    Reorder = false;
+                {                   
+                    Reorder = false; 
                     bool nextExists = ImageExists[NextAvailableImageIndex() + 1];
                     int firstOpen = NextAvailableImageIndex();
                     ImageExists[firstOpen] = true;
                     if (nextExists)
-                    {
+                    {                       
                         for (int i = firstOpen; i < imageIndex; i++)
-                        {
+                        {                            
                             galleryImageBytes[i] = galleryImageBytes[i + 1];
-                            galleryThumbBytes[i] = galleryThumbBytes[i + 1];
+                            galleryThumbBytes[i] = galleryThumbBytes[i + 1];                            
                         }
                     }
 
@@ -1166,7 +1132,7 @@ namespace InfiniteRoleplay.Windows
                         }
                     }
                 }
-
+               
             }
         }
         /*public static void OnEventExecution(System.Object? sender, ElapsedEventArgs e)
@@ -1188,13 +1154,13 @@ namespace InfiniteRoleplay.Windows
         }*/
         public void AddImageToGallery(Plugin plugin, int imageIndex)
         {
-            if (addGallery == true)
-            {
+            if(addGallery == true)
+            {                
                 if (ImGui.BeginTable("##GalleryTable", 4))
                 {
 
                     for (int i = 0; i < imageIndex; i++)
-                    {
+                    {                       
                         if (i % 4 == 0)
                         {
                             ImGui.TableNextRow();
@@ -1209,18 +1175,18 @@ namespace InfiniteRoleplay.Windows
                     }
                     ImGui.EndTable();
                 }
-
+           
 
 
             }
 
         }
-
+        
         public static int NextAvailableImageIndex()
         {
             bool load = true;
             int index = 0;
-            for (int i = 0; i < ImageExists.Length; i++)
+            for(int i = 0; i < ImageExists.Length; i++)
             {
                 if (ImageExists[i] == false && load == true)
                 {
@@ -1237,7 +1203,7 @@ namespace InfiniteRoleplay.Windows
         {
             if (ImageExists[i] == true)
             {
-
+               
                 if (ImGui.BeginChild("##GalleryImage" + i, new Vector2(150, 240)))
                 {
                     ImGui.Text("Will this image be 18+ ?");
@@ -1269,11 +1235,14 @@ namespace InfiniteRoleplay.Windows
                     {
                         ImageExists[i] = true;
                     }
-                    //ref SortedList<int, IDalamudTextureWrap> listRef = ref galleryImageBytes[i];
+                    Task.Run(async () =>
+                    {
+                        // you might normally want to embed resources and load them from the manifest stream
+                        galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryImageBytes[i]);
+                        galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryThumbBytes[i]);
 
-
-                    galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryImageBytes[i]);
-                    galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryThumbBytes[i]);
+                        //this.imageTextures.Add(goatImage);
+                    });
                     ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
                     if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
                     if (ImGui.IsItemClicked())
@@ -1288,7 +1257,7 @@ namespace InfiniteRoleplay.Windows
                         if (ImGui.Button("Upload##" + "gallery_add" + i))
                         {
                             addImageToGallery = true;
-                            imageIndexVal = i;
+                            imageIndexVal = i;                             
                         }
                         ImGui.SameLine();
                         if (ImGui.Button("Remove##" + "gallery_remove" + i))
@@ -1307,23 +1276,23 @@ namespace InfiniteRoleplay.Windows
                 }
 
 
-                ImGui.EndChild();
-
-            }
-
-
-
-
-
+        ImGui.EndChild();
 
         }
+
+
+
+
+
+
+    }
         public static void UpdateUploadStatus(int index)
         {
             ImageUpdateColors[index] = new Vector4(0, 255, 0, 255);
             galleryUpdateTxts[index] = "Completed";
             galleryUpdates = index;
-
-            if (index == galleryEditImageBytes.Length)
+            
+            if(index == galleryEditImageBytes.Length)
             {
                 DataSender.SendImagesReceived(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
             }
@@ -1331,7 +1300,7 @@ namespace InfiniteRoleplay.Windows
         public void SET_VAL(string mytype, string myvalue)
         {
             this.GetType().GetField(mytype).SetValue(this, myvalue);
-
+            
         }
         public object FindValByName(string PropName)
         {
@@ -1351,7 +1320,7 @@ namespace InfiniteRoleplay.Windows
         {
             addBio = false;
             editBio = false;
-            addHooks = false;
+            addHooks = false; 
             editHooks = false;
             addStory = false;
             editStory = false;
@@ -1362,8 +1331,8 @@ namespace InfiniteRoleplay.Windows
         }
         public void Dispose()
         {
-            foreach (TextureWrap oi in otherImages)
-            {
+            foreach(IDalamudTextureWrap oi in otherImages)
+            {               
                 oi.Dispose();
             }
             foreach (IDalamudTextureWrap ti in galleryImages)
@@ -1374,7 +1343,7 @@ namespace InfiniteRoleplay.Windows
             {
                 gt.Dispose();
             }
-            // timer.Dispose();
+           // timer.Dispose();
             storyTitle = "";
         }
         public override void Update()
@@ -1387,7 +1356,7 @@ namespace InfiniteRoleplay.Windows
             existingAvatarBytes = DataReceiver.currentAvatar;
             lawfulGoodEditVal = DataReceiver.lawfulGoodEditVal;
             loadedSelf = DataReceiver.LoadedSelf;
-
+            
             if (editBio == true)
             {
                 for (int i = 0; i < alignmentWidthVals.Length; i++)
@@ -1403,31 +1372,31 @@ namespace InfiniteRoleplay.Windows
                     if (alignmentWidthVals[i] > alignmentVals[i]) { alignmentWidthVals[i] -= 0.1f; }
                 }
             }
-          
 
+            
 
 
 
         }
-
-
+        
+      
         public int AvailablePercentageLeft(int lawful_good, int neutral_good, int chaotic_good, int lawful_neutral, int true_neutral, int chaotic_neutral, int lawful_evil, int neutral_evil, int chaotic_evil)
         {
             int PercentageUsed = lawful_good + neutral_good + chaotic_good + lawful_neutral + true_neutral + chaotic_neutral + lawful_evil + neutral_evil + chaotic_evil;
             int percentageLeft = availablePercentage - PercentageUsed;
             return percentageLeft;
         }
-        public void ModAlignment(string alignmentName, bool add)
+        public void ModAlignment(string alignmentName, bool add) 
         {
-            for (int i = 0; i < alignmentNames.Length; i++)
+            for(int i =0; i < alignmentNames.Length; i++)
             {
                 if (alignmentNames[i] == alignmentName)
                 {
-                    if (ExistingBio == true)
+                    if(ExistingBio == true)
                     {
                         if (add)
                         {
-                            if (availablePercentage > 0 && alignmentEditVals[i] < 10)
+                            if(availablePercentage > 0 && alignmentEditVals[i] < 10)
                             {
                                 availablePercentage -= 1;
                                 alignmentEditVals[i] += 1;
@@ -1437,7 +1406,7 @@ namespace InfiniteRoleplay.Windows
                         {
                             if (alignmentEditVals[i] > 0)
                             {
-                                availablePercentage += 1;
+                                availablePercentage +=1;
                                 alignmentEditVals[i] -= 1;
                             }
                         }
@@ -1495,49 +1464,51 @@ namespace InfiniteRoleplay.Windows
             }, 0, null, this.configuration.AlwaysOpenDefaultImport);
         }
 
+
+       
         public void AddImage(bool avatar, int i)
         {
-            _fileDialogManager.OpenFileDialog("Select Image", "Image{.png,.jpg}", (s, f) =>
+            _fileDialogManager.OpenFileDialog("Select Image", "Image{.png,.jpg, .gif}", (s, f) =>
             {
                 if (!s)
                     return;
-                if (avatar == true)
+                _ = Task.Run(async () =>
                 {
-                    string AvatarPath = f[0].ToString();
-                    var avatarImage = Path.GetFullPath(AvatarPath);
+                    if (avatar == true)
+                    {
+                        string AvatarPath = f[0].ToString();
+                        var avatarImage = Path.GetFullPath(AvatarPath);
 
-                    this.avatarImg = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarImage);
+                        this.avatarImg = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarImage);
 
-                    this.avatarBytes = File.ReadAllBytes(AvatarPath);
-                }
-                else
-                {
-                    string imagePath = f[0].ToString();
-                    var image = Path.GetFullPath(imagePath);
+                        this.avatarBytes = File.ReadAllBytes(AvatarPath);
+                    }
+                    else
+                    {
+                        string imagePath = f[0].ToString();
+                        var image = Path.GetFullPath(imagePath);
 
-                    byte[] imgBytes = File.ReadAllBytes(imagePath);
+                        byte[] imgBytes = File.ReadAllBytes(imagePath);
 
-                    byte[] scaledImageBytes = Imaging.ScaleImageBytes(imgBytes, 150, 150);
-                    System.Drawing.Image scaledImage = Imaging.byteArrayToImage(scaledImageBytes);
+                        byte[] scaledImageBytes = Imaging.ScaleImageBytes(imgBytes, 150, 150);
+                        System.Drawing.Image scaledImage = Imaging.byteArrayToImage(scaledImageBytes);
 
-                    galleryImageBytes[i] = Imaging.ScaleImageBytes(imgBytes, 650, 650);
+                        galleryImageBytes[i] = Imaging.ScaleImageBytes(imgBytes, 900, 900);
 
-                    galleryThumbBytes[i] = scaledImageBytes;
+                        galleryThumbBytes[i] = scaledImageBytes;
 
-                    DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
-                                                NSFW[i], galleryImageBytes[i], i);
+                        SortedList<SortedList<int, bool>, SortedList<int, byte[]>> newImageList = new SortedList<SortedList<int, bool>, SortedList<int, byte[]>>();
+                        await DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
+                                                    NSFW[i], galleryImageBytes[i], i);
 
-                }
+                    }
 
-
+                });
             }, 0, null, this.configuration.AlwaysOpenDefaultImport);
         }
 
 
-
-
-
-
+       
 
     }
 }

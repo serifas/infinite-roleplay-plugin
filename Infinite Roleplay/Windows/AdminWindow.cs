@@ -18,6 +18,8 @@ using Dalamud.Interface.GameFonts;
 using Dalamud.Game.Gui.Dtr;
 using Microsoft.VisualBasic;
 using Networking;
+using Dalamud.Interface.Utility;
+using Dalamud.Interface.Internal;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -35,7 +37,7 @@ namespace InfiniteRoleplay.Windows
         private GameFontHandle _infoFont;
         private float _modVersionWidth;
         private DalamudPluginInterface pg;
-        private TextureWrap vitar;
+        private IDalamudTextureWrap vitar;
         private string CharacterName = string.Empty;
         private string characterName;
         private int chrID;
@@ -65,23 +67,23 @@ namespace InfiniteRoleplay.Windows
         private string ability3Description;
         private int verificationStatus;
         private bool showSheet;
-        private TextureWrap EminenceImage;
-        private TextureWrap HardinessImage;
-        private TextureWrap IntelligenceImage;
-        private TextureWrap NimblenessImage;
-        private TextureWrap SensesImage;
-        private TextureWrap StrengthImage;
-        private TextureWrap HealthBar;
-        private TextureWrap EminenceBar;
-        private TextureWrap HardinessBar;
-        private TextureWrap IntelligenceBar;
-        private TextureWrap NimblenessBar;
-        private TextureWrap SensesBar;
-        private TextureWrap StrengthBar;
-        private TextureWrap avatar;
-        private TextureWrap ngImage;
-        private TextureWrap avatarImg;
-        private TextureWrap HealthImage;
+        private IDalamudTextureWrap EminenceImage;
+        private IDalamudTextureWrap HardinessImage;
+        private IDalamudTextureWrap IntelligenceImage;
+        private IDalamudTextureWrap NimblenessImage;
+        private IDalamudTextureWrap SensesImage;
+        private IDalamudTextureWrap StrengthImage;
+        private IDalamudTextureWrap HealthBar;
+        private IDalamudTextureWrap EminenceBar;
+        private IDalamudTextureWrap HardinessBar;
+        private IDalamudTextureWrap IntelligenceBar;
+        private IDalamudTextureWrap NimblenessBar;
+        private IDalamudTextureWrap SensesBar;
+        private IDalamudTextureWrap StrengthBar;
+        private IDalamudTextureWrap avatar;
+        private IDalamudTextureWrap ngImage;
+        private IDalamudTextureWrap avatarImg;
+        private IDalamudTextureWrap HealthImage;
         public static int SelectedSheetID;
         private string message;
         private string eminenceTooltip, hardinessTooltip, intellectTooltip, nimblenessTooltip, sensesTooltip, strengthTootlip;
@@ -140,7 +142,7 @@ namespace InfiniteRoleplay.Windows
             if (ImGui.BeginChild("ProfilesTitle", new Vector2(300, 500), true))
             {
                 using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
-                //using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+                using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
                 var _nameFont = plugin.PluginInterfacePub.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
                 using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
                 ImGuiUtil.DrawTextButton("Profiles", Vector2.Zero, 0);
@@ -218,7 +220,7 @@ namespace InfiniteRoleplay.Windows
                             if (DataReceiver.adminCharacterAvatars.ContainsKey(ID))
                             {
                                 byte[] avData = DataReceiver.adminCharacterAvatars[ID];
-                    //            this.vitar = pg.UiBuilder.LoadImage(avData);
+                                this.vitar = pg.UiBuilder.LoadImage(avData);
                             }
                             showSheet = true;
                         }
@@ -246,7 +248,7 @@ namespace InfiniteRoleplay.Windows
                         if (verificationStatus == -2)
                         {
                             using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DPSRed);
-                      //      using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+                            using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
                             using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
                             ImGuiUtil.DrawTextButton(characterName, Vector2.Zero, 0);
                             using var defInfFontDen = ImRaii.DefaultFont();
@@ -261,7 +263,7 @@ namespace InfiniteRoleplay.Windows
                         if (verificationStatus == 0)
                         {
                             using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudOrange);
-                       //     using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+                            using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
                             using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
                             ImGuiUtil.DrawTextButton(characterName, Vector2.Zero, 0);
                             using var defInfFontPen = ImRaii.DefaultFont();
@@ -282,7 +284,7 @@ namespace InfiniteRoleplay.Windows
                         if (verificationStatus == 1)
                         {
                             using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.HealerGreen);
-                       //     using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+                            using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
                             using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
                             ImGuiUtil.DrawTextButton(characterName, Vector2.Zero, 0);
                             using var defInfFontPen = ImRaii.DefaultFont();
@@ -301,7 +303,7 @@ namespace InfiniteRoleplay.Windows
                         if (verificationStatus == -1)
                         {
                             using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudYellow);
-                      //      using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+                            using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
                             using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
                             ImGuiUtil.DrawTextButton(characterName, Vector2.Zero, 0);
                             using var defInfFontPen = ImRaii.DefaultFont();
@@ -338,7 +340,7 @@ namespace InfiniteRoleplay.Windows
                             MessageBox.MESSAGE_CONTENT = this.chrID.ToString();
                             MessageBox.MESSAGE_TYPE = MessageBox.messageType.SHEET_VERIFY;
                             MessageBox.SELECTED_SHEET_ID = SelectedSheetID;
-                  //          plugin.WindowSystem.GetWindow("Message").IsOpen = true;
+                            //plugin.WindowSystem.GetWindow("Message").IsOpen = true;
                         }
                         ImGui.SameLine();
                         if (ImGui.Button("Decline"))
@@ -353,7 +355,7 @@ namespace InfiniteRoleplay.Windows
                             MessageBox.MESSAGE_CONTENT = this.chrID.ToString();
                             MessageBox.MESSAGE_TYPE = MessageBox.messageType.SHEET_DECLINE;
                             MessageBox.SELECTED_SHEET_ID = SelectedSheetID;
-                  //          plugin.WindowSystem.GetWindow("Message").IsOpen = true;
+                           // plugin.WindowSystem.GetWindow("Message").IsOpen = true;
                         }
                         ImGui.SameLine();
                         if (ImGui.Button("Request Revision"))
@@ -368,8 +370,8 @@ namespace InfiniteRoleplay.Windows
                             MessageBox.MESSAGE_CONTENT = this.chrID.ToString();
                             MessageBox.MESSAGE_TYPE = MessageBox.messageType.SHEET_REVISION_REQUEST;
                             MessageBox.SELECTED_SHEET_ID = SelectedSheetID;
-                 //           plugin.WindowSystem.GetWindow("Message").IsOpen = true;
-                       }
+                            //plugin.WindowSystem.GetWindow("Message").IsOpen = true;
+                        }
                         ImGui.Separator();
 
                         //BASIC INFO

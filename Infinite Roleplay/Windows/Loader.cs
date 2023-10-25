@@ -26,25 +26,26 @@ using Dalamud.Game.Gui;
 using Dalamud.Game.ClientState;
 using Networking;
 using System.Timers;
+using Dalamud.Interface.Internal;
 
 namespace InfiniteRoleplay.Windows
 {
     internal class Loader : Window, IDisposable
     {
         public static int loaderIndex = 0;
-        public static TextureWrap PreviewImage;
+        public static IDalamudTextureWrap PreviewImage;
         public static bool isAdmin;
         public Configuration configuration;
         public static bool WindowOpen;
         public string msg;
-      //  public static TargetManager targetManager;
+        public static ITargetManager targetManager;
         public static PlayerCharacter playerCharacter;
         public static PlayerCharacter lastTarget;
         public bool openedProfile = false;
         public static int width = 0, height = 0;
         public bool openedTargetProfile = false;
         public static DalamudPluginInterface pg;
-        public static TextureWrap loaderAnimInd;
+        public static IDalamudTextureWrap loaderAnimInd;
         public static Window window;
         public static int contentCount, currentCount;
         public Loader(DalamudPluginInterface pluginInterface, Plugin plugin) : base(
@@ -54,10 +55,10 @@ namespace InfiniteRoleplay.Windows
             var timer = new Timer(30);
             timer.Elapsed += OnEventExecution;
             timer.Start();
-       //     if (window == plugin.WindowSystem.GetWindow("PROFILE"))
-       //     {
-       //         currentCount = ProfileWindow.imageIndex;
-       //     }
+            if (window == plugin.profileWindow)
+            {
+                currentCount = ProfileWindow.imageIndex;
+            }
         }
 
         public override void Draw()
@@ -78,7 +79,7 @@ namespace InfiniteRoleplay.Windows
             {
                 loaderIndex = 1;
             }
-     //       loaderAnimInd = pg.UiBuilder.LoadImage(Path.Combine(pg.AssemblyLocation.Directory?.FullName!, "UI/common/loader/loader (" + loaderIndex + ").gif"));
+            loaderAnimInd = pg.UiBuilder.LoadImage(Path.Combine(pg.AssemblyLocation.Directory?.FullName!, "UI/common/loader/loader (" + loaderIndex + ").gif"));
         }
         public void Dispose()
         {

@@ -31,6 +31,7 @@ using Networking;
 using InfiniteRP.Windows;
 using InfiniteRoleplay.Helpers;
 using Dalamud.Plugin.Services;
+using Dalamud.Interface.Internal.Windows;
 
 namespace InfiniteRoleplay
 {
@@ -102,6 +103,7 @@ namespace InfiniteRoleplay
             ConnectToServer();
             ReloadClient();
             this.framework.Update += Update;
+            
 
         }
 
@@ -151,8 +153,8 @@ namespace InfiniteRoleplay
 
 
             targetWindow = new TargetWindow(this, this.pluginInterface, AvatarHolder,
-                                                              lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
-                                                              lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar);
+                                                             lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
+                                                             lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar);
             targetMenu = new TargetMenu(this, this.pluginInterface, targetManager);
 
             imagePreview = new ImagePreview(this, this.pluginInterface, targetManager);
@@ -165,21 +167,21 @@ namespace InfiniteRoleplay
             profileWindow = new ProfileWindow(this, this.pluginInterface, this.Configuration, AvatarHolder,
                                                                 lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
                                                                 lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar, picTab, blankTab);
-           // this.WindowSystem.AddWindow(new Loader(this.pluginInterface, this));
-           // this.WindowSystem.AddWindow(new SystemsWindow(this));
+            // this.WindowSystem.AddWindow(new Loader(this.pluginInterface, this));
+            // this.WindowSystem.AddWindow(new SystemsWindow(this));
             this.WindowSystem.AddWindow(profileWindow);
 
-          //  this.WindowSystem.AddWindow(new Rulebook(this));
+            //  this.WindowSystem.AddWindow(new Rulebook(this));
             this.WindowSystem.AddWindow(loginWindow);
             //this.WindowSystem.AddWindow(new SystemsWindow(this));
             this.WindowSystem.AddWindow(optionsWindow);
-         //   this.WindowSystem.AddWindow(new MessageBox(this));
-          //  this.WindowSystem.AddWindow(new AdminWindow(this, this.pluginInterface));
+            //   this.WindowSystem.AddWindow(new MessageBox(this));
+            //  this.WindowSystem.AddWindow(new AdminWindow(this, this.pluginInterface));
             this.WindowSystem.AddWindow(targetWindow);
             this.WindowSystem.AddWindow(targetMenu);
             this.WindowSystem.AddWindow(bookmarksWindow);
             this.WindowSystem.AddWindow(imagePreview);
-           
+
         }
         public void Dispose()
         {
@@ -208,7 +210,7 @@ namespace InfiniteRoleplay
 
         public void Update(IFramework framework)
         {
-            if (IsConnectedToServer(ClientTCP.clientSocket) == true || ClientTCP.Connected == true)
+            if (IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
                 toggleconnection = false; 
                 if (IsLoggedIn() == false)
@@ -240,13 +242,11 @@ namespace InfiniteRoleplay
             {
                 if (targetPlayer != null && dutyState.IsDutyStarted == false)
                 {
-                    targetMenu.IsOpen = true;
-                    //WindowSystem.GetWindow("TARGET OPTIONS").IsOpen = true;
+                   targetMenu.IsOpen = true;
                 }
                 else
                 {
                     targetMenu.IsOpen = false;
-                   
                 }
             }
             if(loadPreview == true)
@@ -268,14 +268,45 @@ namespace InfiniteRoleplay
         }
         public bool IsConnectedToServer(TcpClient _tcpClient)
         {
-            if(_tcpClient.Connected == true)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+           
+                try
+                {
+                    if (_tcpClient != null && _tcpClient.Client != null && _tcpClient.Client.Connected)
+                    {
+                        /* pear to the documentation on Poll:
+                         * When passing SelectMode.SelectRead as a parameter to the Poll method it will return 
+                         * -either- true if Socket.Listen(Int32) has been called and a connection is pending;
+                         * -or- true if data is available for reading; 
+                         * -or- true if the connection has been closed, reset, or terminated; 
+                         * otherwise, returns false
+                         */
+
+                        // Detect if client disconnected
+                        if (_tcpClient.Client.Poll(0, SelectMode.SelectRead))
+                        {
+                            byte[] buff = new byte[1];
+                            if (_tcpClient.Client.Receive(buff, SocketFlags.Peek) == 0)
+                            {
+                                // Client disconnected
+                                return false;
+                            }
+                            else
+                            {
+                                return true;
+                            }
+                        }
+
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
         }
       
         public bool IsLoggedIn()
@@ -306,7 +337,6 @@ namespace InfiniteRoleplay
             
             if (loggedIn == true)
             {
-
                 optionsWindow.IsOpen = true;
                 loginWindow.IsOpen = false;
             }
@@ -315,10 +345,7 @@ namespace InfiniteRoleplay
                 loginWindow.IsOpen = true;
             }
         }
-        public void LoadProfileWindow()
-        {
-            profileWindow.IsOpen = true;
-        }
+        
 
 
 

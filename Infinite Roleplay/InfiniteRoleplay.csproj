@@ -83,6 +83,9 @@
         <None Update="UI\common\friends.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="UI\common\friend_request.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="UI\common\groups.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
@@ -105,12 +108,6 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="UI\common\bookmark.png">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="UI\common\events.png">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="UI\common\systems.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="UI\common\bookmarks.png">
@@ -346,7 +343,7 @@
             <Private>false</Private>
         </Reference>
         <Reference Include="OtterGui">
-          <HintPath>..\..\infinite-plugin\Infinite Roleplay\OtterGui.dll</HintPath>
+          <HintPath>..\..\..\Documents\GitHub\infinite-roleplay-plugin\Infinite Roleplay\bin\x64\Release\OtterGui.dll</HintPath>
         </Reference>
     </ItemGroup>
 

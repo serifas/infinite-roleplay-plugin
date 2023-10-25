@@ -41,8 +41,8 @@ using System.Xml.Linq;
 using Dalamud.Game.ClientState.Objects;
 using OtterGui;
 using Networking;
-using Dalamud.Interface.Internal;
 using Dalamud.Plugin.Services;
+using Dalamud.Interface.Internal;
 using Dalamud.Interface.Utility;
 
 namespace InfiniteRoleplay.Windows
@@ -129,33 +129,14 @@ namespace InfiniteRoleplay.Windows
         private int lawfulGoodWidthVal = 0, neutralGoodWidthVal = 0, chaoticGoodWidthVal = 0, lawfulNeutralWidthVal = 0, trueNeutralWidthVal = 0, chaoticNeutralWidthVal = 0, lawfulEvilWidthVal = 0, neutralEvilWidthVal = 0, chaoticEvilWidthVal = 0;
         private int lawfulGoodVal = 0, neutralGoodVal = 0, chaoticGoodVal = 0, lawfulNeutralVal = 0, trueNeutralVal = 0, chaoticNeutralVal = 0, lawfulEvilVal = 0, neutralEvilVal = 0, chaoticEvilVal = 0;
         private IDalamudTextureWrap lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar;
-        private DalamudPluginInterface pluginInterface;
-        private IDalamudTextureWrap avatarHolder;
-        private IDalamudTextureWrap lawfulGood1;
-        private IDalamudTextureWrap neutralGood1;
-        private IDalamudTextureWrap chaoticGood1;
-        private IDalamudTextureWrap lawfulNeutral1;
-        private IDalamudTextureWrap trueNeutral1;
-        private IDalamudTextureWrap chaoticNeutral1;
-        private IDalamudTextureWrap lawfulEvil1;
-        private IDalamudTextureWrap neutralEvil1;
-        private IDalamudTextureWrap chaoticEvil1;
-        private IDalamudTextureWrap lawfulGoodBar1;
-        private IDalamudTextureWrap neutralGoodBar1;
-        private IDalamudTextureWrap chaoticGoodBar1;
-        private IDalamudTextureWrap lawfulNeutralBar1;
-        private IDalamudTextureWrap trueNeutralBar1;
-        private IDalamudTextureWrap chaoticNeutralBar1;
-        private IDalamudTextureWrap lawfulEvilBar1;
-        private IDalamudTextureWrap neutralEvilBar1;
-        private IDalamudTextureWrap chaoticEvilBar1;
+     
 
         public TargetWindow(Plugin plugin, DalamudPluginInterface Interface, IDalamudTextureWrap avatarHolder,
                              //alignment icon
                              IDalamudTextureWrap lawfulgood, IDalamudTextureWrap neutralgood, IDalamudTextureWrap chaoticgood,
                              IDalamudTextureWrap lawfulneutral, IDalamudTextureWrap trueneutral, IDalamudTextureWrap chaoticneutral,
                              IDalamudTextureWrap lawfulevil, IDalamudTextureWrap neutralevil, IDalamudTextureWrap chaoticevil,
-
+                             
                              //bars
 
                              IDalamudTextureWrap lawfulgoodBar, IDalamudTextureWrap neutralgoodBar, IDalamudTextureWrap chaoticgoodBar,
@@ -166,7 +147,7 @@ namespace InfiniteRoleplay.Windows
         {
             this.SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(400, 740),
+                MinimumSize = new Vector2(400, 400),
                 MaximumSize = new Vector2(750, 950)
             };
             this.plugin = plugin;
@@ -196,8 +177,6 @@ namespace InfiniteRoleplay.Windows
             this.alignmentWidthVals = new float[9] { lawfulGoodWidthVal, neutralGoodWidthVal, chaoticGoodWidthVal, lawfulNeutralWidthVal, trueNeutralWidthVal, chaoticNeutralWidthVal, lawfulEvilWidthVal, neutralEvilWidthVal, chaoticEvilWidthVal };
             this.alignmentNames = new string[9] { "lawfulgood", "neutralgood", "chaoticgood", "lawfulneutral", "trueneutral", "chaoticneutral", "lawfulevil", "neutralevil", "chaoticevil" };
         }
-
-     
         public byte[] ImageToByteArray(System.Drawing.Image imageIn)
         {
             using (var ms = new MemoryStream())
@@ -518,36 +497,43 @@ namespace InfiniteRoleplay.Windows
                         for (int i = 0; i < existingGalleryImageCount; i++)
                         {
                             if (i % 4 == 0)
+                            {
+                                ImGui.TableNextRow();
+                                ImGui.TableNextColumn();
+
+                                // you might normally want to embed resources and load them from the manifest stream
+                                //this.imageTextures.Add(goatImage);
+                                DrawImage(i, plugin);
+                                ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
+                                if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
+                                if (ImGui.IsItemClicked())
                                 {
-                                    ImGui.TableNextRow();
-                                    ImGui.TableNextColumn();
-                                    galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(existingGalleryImgBytes[i]);
-                                    galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(existingGalleryThumbBytes[i]);
-                                    ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
-                                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
-                                    if (ImGui.IsItemClicked())
-                                    {
-                                        ImagePreview.width = galleryImages[i].Width;
-                                        ImagePreview.height = galleryImages[i].Height;
-                                        ImagePreview.PreviewImage = galleryImages[i];
-                                        plugin.loadPreview = true;
-                                    }
+                                    ImagePreview.width = galleryImages[i].Width;
+                                    ImagePreview.height = galleryImages[i].Height;
+                                    ImagePreview.PreviewImage = galleryImages[i];
+                                    plugin.loadPreview = true;
                                 }
-                                else
+                            }
+                            else
+                            {
+                                ImGui.TableNextColumn();
+                                // simulate some work
+
+                                // you might normally want to embed resources and load them from the manifest stream
+                                //this.imageTextures.Add(goatImage);
+
+
+                                DrawImage(i, plugin);
+                                ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
+                                if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
+                                if (ImGui.IsItemClicked())
                                 {
-                                    ImGui.TableNextColumn();
-                                    galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(existingGalleryImgBytes[i]);
-                                    galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(existingGalleryThumbBytes[i]);
-                                    ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
-                                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
-                                    if (ImGui.IsItemClicked())
-                                    {
-                                        ImagePreview.width = galleryImages[i].Width;
-                                        ImagePreview.height = galleryImages[i].Height;
-                                        ImagePreview.PreviewImage = galleryImages[i];
-                                        plugin.loadPreview = true;
-                                    }
+                                    ImagePreview.width = galleryImages[i].Width;
+                                    ImagePreview.height = galleryImages[i].Height;
+                                    ImagePreview.PreviewImage = galleryImages[i];
+                                    plugin.loadPreview = true;
                                 }
+                            }
 
                         }
                         ImGui.EndTable();
@@ -571,6 +557,17 @@ namespace InfiniteRoleplay.Windows
 
 
 
+        }
+        public static void DrawImage(int i, Plugin plugin)
+        {
+
+            Task.Run(async () =>
+            {
+                // simulate some work
+
+                galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(existingGalleryImgBytes[i]);
+                galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(existingGalleryThumbBytes[i]);
+            });
         }
         public static void ClearUI()
         {
@@ -608,7 +605,7 @@ namespace InfiniteRoleplay.Windows
             existingAvatarBytes = DataReceiver.currentTargetAvatar;
             ExistingGallery = DataReceiver.ExistingTargetGalleryData;
             hookEditCount = DataReceiver.targetHookEditCount;
-
+           
             if (viewBio == true)
             {
                 for (int i = 0; i < alignmentWidthVals.Length; i++)

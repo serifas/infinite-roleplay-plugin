@@ -371,6 +371,7 @@ namespace Networking
                 TargetWindow.existingGalleryImgBytes[i] = imageBytes;
                 TargetWindow.existingGalleryThumbBytes[i] = thumbBytes;
                 //ProfileWindow.ReorderNoSend = true;
+                TargetWindow.DrawImage(i, plugin);
             }
             buffer.Dispose();
 
