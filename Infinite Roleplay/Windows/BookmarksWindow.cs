@@ -23,10 +23,11 @@ using FFXIVClientStructs.Havok;
 using System.Text.RegularExpressions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects;
+using Dalamud.Interface.Utility;
 
 namespace InfiniteRoleplay.Windows
 {
-    internal class BookmarksWindow : Window, IDisposable
+    public class BookmarksWindow : Window, IDisposable
     {
         private Plugin plugin;
         private GameFontHandle _nameFont;

@@ -37,7 +37,7 @@ namespace InfiniteRoleplay.Windows
         public Configuration configuration;
         public static bool WindowOpen;
         public string msg;
-        public static TargetManager targetManager;
+      //  public static TargetManager targetManager;
         public static PlayerCharacter playerCharacter;
         public static PlayerCharacter lastTarget;
         public bool openedProfile = false;
@@ -54,10 +54,10 @@ namespace InfiniteRoleplay.Windows
             var timer = new Timer(30);
             timer.Elapsed += OnEventExecution;
             timer.Start();
-            if (window == plugin.WindowSystem.GetWindow("PROFILE"))
-            {
-                currentCount = ProfileWindow.imageIndex;
-            }
+       //     if (window == plugin.WindowSystem.GetWindow("PROFILE"))
+       //     {
+       //         currentCount = ProfileWindow.imageIndex;
+       //     }
         }
 
         public override void Draw()
@@ -78,7 +78,7 @@ namespace InfiniteRoleplay.Windows
             {
                 loaderIndex = 1;
             }
-            loaderAnimInd = pg.UiBuilder.LoadImage(Path.Combine(pg.AssemblyLocation.Directory?.FullName!, "UI/common/loader/loader (" + loaderIndex + ").gif"));
+     //       loaderAnimInd = pg.UiBuilder.LoadImage(Path.Combine(pg.AssemblyLocation.Directory?.FullName!, "UI/common/loader/loader (" + loaderIndex + ").gif"));
         }
         public void Dispose()
         {

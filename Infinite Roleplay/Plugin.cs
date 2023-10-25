@@ -30,6 +30,7 @@ using Lumina.Excel.GeneratedSheets;
 using Networking;
 using InfiniteRP.Windows;
 using InfiniteRoleplay.Helpers;
+using Dalamud.Plugin.Services;
 
 namespace InfiniteRoleplay
 {
@@ -45,24 +46,31 @@ namespace InfiniteRoleplay
         public bool loadPreview = false;
         public string socketStatus;
         public DalamudPluginInterface PluginInterfacePub;
+        public TargetWindow targetWindow;
+        public TargetMenu targetMenu;
+        public ImagePreview imagePreview;
+        public BookmarksWindow bookmarksWindow;
+        public OptionsWindow optionsWindow;
+        public LoginWindow loginWindow;
+        public ProfileWindow profileWindow;
         public string Name => "Infinite Roleplay";
         private const string CommandName = "/infinite";
         private DalamudPluginInterface pluginInterface { get; init; }
        
-        public TargetManager targetManager { get; init; }
-        public ClientState clientState { get; init; }
-        public static ClientState _clientState;
-        private Framework framework { get; init; }
-        private DutyState dutyState { get; init; }
-        private CommandManager CommandManager { get; init; }
+        public ITargetManager targetManager { get; init; }
+        public IClientState clientState { get; init; }
+        public static IClientState _clientState;
+        private IFramework framework { get; init; }
+        private IDutyState dutyState { get; init; }
+        private ICommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("InfiniteRoleplay");
-        public Plugin([RequiredVersion("1.0")] ClientState ClientState,
+        public Plugin([RequiredVersion("1.0")] IClientState ClientState,
                       [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
-                      [RequiredVersion("1.0")] Framework framework,
-                      [RequiredVersion("1.0")] TargetManager targetManager,
-                      [RequiredVersion("1.0")] DutyState dutyState,
-                      [RequiredVersion("1.0")] CommandManager commandManager)
+                      [RequiredVersion("1.0")] IFramework framework,
+                      [RequiredVersion("1.0")] ITargetManager targetManager,
+                      [RequiredVersion("1.0")] IDutyState dutyState,
+                      [RequiredVersion("1.0")] ICommandManager commandManager)
         {
 
             
@@ -142,23 +150,35 @@ namespace InfiniteRoleplay
             System.Drawing.Image blankTab = Imaging.byteArrayToImage(blankTabBytes);
 
 
-            this.WindowSystem.AddWindow(new Loader(this.pluginInterface, this));
-            this.WindowSystem.AddWindow(new SystemsWindow(this));
-            this.WindowSystem.AddWindow(new ProfileWindow(this, this.pluginInterface, this.Configuration, AvatarHolder,
+            targetWindow = new TargetWindow(this, this.pluginInterface, AvatarHolder,
+                                                              lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
+                                                              lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar);
+            targetMenu = new TargetMenu(this, this.pluginInterface, targetManager);
+
+            imagePreview = new ImagePreview(this, this.pluginInterface, targetManager);
+
+            bookmarksWindow = new BookmarksWindow(this, this.pluginInterface);
+
+            optionsWindow = new OptionsWindow(this, this.pluginInterface, targetManager);
+
+            loginWindow = new LoginWindow(this, this.clientState.LocalPlayer);
+            profileWindow = new ProfileWindow(this, this.pluginInterface, this.Configuration, AvatarHolder,
                                                                 lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
-                                                                lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar, picTab, blankTab));
-            this.WindowSystem.AddWindow(new Rulebook(this));
-            this.WindowSystem.AddWindow(new LoginWindow(this, this.clientState.LocalPlayer));
+                                                                lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar, picTab, blankTab);
+           // this.WindowSystem.AddWindow(new Loader(this.pluginInterface, this));
+           // this.WindowSystem.AddWindow(new SystemsWindow(this));
+            this.WindowSystem.AddWindow(profileWindow);
+
+          //  this.WindowSystem.AddWindow(new Rulebook(this));
+            this.WindowSystem.AddWindow(loginWindow);
             //this.WindowSystem.AddWindow(new SystemsWindow(this));
-            this.WindowSystem.AddWindow(new OptionsWindow(this, this.pluginInterface, targetManager));
-            this.WindowSystem.AddWindow(new MessageBox(this));
-            this.WindowSystem.AddWindow(new AdminWindow(this, this.pluginInterface));
-            this.WindowSystem.AddWindow(new TargetWindow(this, this.pluginInterface, AvatarHolder,
-                                                                lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
-                                                                lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar));
-            this.WindowSystem.AddWindow(new TargetMenu(this, this.pluginInterface, targetManager));
-            this.WindowSystem.AddWindow(new BookmarksWindow(this, this.pluginInterface));
-            this.WindowSystem.AddWindow(new ImagePreview(this, this.pluginInterface, targetManager));
+            this.WindowSystem.AddWindow(optionsWindow);
+         //   this.WindowSystem.AddWindow(new MessageBox(this));
+          //  this.WindowSystem.AddWindow(new AdminWindow(this, this.pluginInterface));
+            this.WindowSystem.AddWindow(targetWindow);
+            this.WindowSystem.AddWindow(targetMenu);
+            this.WindowSystem.AddWindow(bookmarksWindow);
+            this.WindowSystem.AddWindow(imagePreview);
            
         }
         public void Dispose()
@@ -186,9 +206,9 @@ namespace InfiniteRoleplay
          
         }
 
-        public void Update(Framework framework)
+        public void Update(IFramework framework)
         {
-            if (IsConnectedToServer(ClientTCP.clientSocket) == true)
+            if (IsConnectedToServer(ClientTCP.clientSocket) == true || ClientTCP.Connected == true)
             {
                 toggleconnection = false; 
                 if (IsLoggedIn() == false)
@@ -220,16 +240,18 @@ namespace InfiniteRoleplay
             {
                 if (targetPlayer != null && dutyState.IsDutyStarted == false)
                 {
-                    WindowSystem.GetWindow("TARGET OPTIONS").IsOpen = true;
+                    targetMenu.IsOpen = true;
+                    //WindowSystem.GetWindow("TARGET OPTIONS").IsOpen = true;
                 }
                 else
                 {
-                    WindowSystem.GetWindow("TARGET OPTIONS").IsOpen = false;
+                    targetMenu.IsOpen = false;
+                   
                 }
             }
             if(loadPreview == true)
             {
-                WindowSystem.GetWindow("PREVIEW").IsOpen = true;
+                imagePreview.IsOpen = true;
                 loadPreview = false;
             }
             
@@ -246,45 +268,14 @@ namespace InfiniteRoleplay
         }
         public bool IsConnectedToServer(TcpClient _tcpClient)
         {
-           
-                try
-                {
-                    if (_tcpClient != null && _tcpClient.Client != null && _tcpClient.Client.Connected)
-                    {
-                        /* pear to the documentation on Poll:
-                         * When passing SelectMode.SelectRead as a parameter to the Poll method it will return 
-                         * -either- true if Socket.Listen(Int32) has been called and a connection is pending;
-                         * -or- true if data is available for reading; 
-                         * -or- true if the connection has been closed, reset, or terminated; 
-                         * otherwise, returns false
-                         */
-
-                        // Detect if client disconnected
-                        if (_tcpClient.Client.Poll(0, SelectMode.SelectRead))
-                        {
-                            byte[] buff = new byte[1];
-                            if (_tcpClient.Client.Receive(buff, SocketFlags.Peek) == 0)
-                            {
-                                // Client disconnected
-                                return false;
-                            }
-                            else
-                            {
-                                return true;
-                            }
-                        }
-
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                catch
-                {
-                    return false;
-                }
+            if(_tcpClient.Connected == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
       
         public bool IsLoggedIn()
@@ -315,15 +306,19 @@ namespace InfiniteRoleplay
             
             if (loggedIn == true)
             {
-                this.WindowSystem.GetWindow("OPTIONS").IsOpen = true;
-                this.WindowSystem.GetWindow("LOGIN").IsOpen = false;
+
+                optionsWindow.IsOpen = true;
+                loginWindow.IsOpen = false;
             }
             else
             {
-                this.WindowSystem.GetWindow("LOGIN").IsOpen = true;
+                loginWindow.IsOpen = true;
             }
         }
-        
+        public void LoadProfileWindow()
+        {
+            profileWindow.IsOpen = true;
+        }
 
 
 

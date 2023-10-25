@@ -113,7 +113,7 @@ public class SystemsWindow : Window, IDisposable
                 if (ImGui.Button("Add System Image"))
                 {
                     SystemImagePath = Path.GetFullPath(SystemImage);
-                    systemImage = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(SystemImagePath);
+                   // systemImage = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(SystemImagePath);
                     ImGui.SameLine();
                     SystemImageBytes = File.ReadAllBytes(SystemImagePath);
                 }
@@ -199,7 +199,7 @@ public class SystemsWindow : Window, IDisposable
                     {
 
                         statIconPaths[i] = Path.GetFullPath(statIcons[i]);
-                        statImgs[i] = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(statIconPaths[i]);
+                     //   statImgs[i] = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(statIconPaths[i]);
 
                         statIconImages[i] = File.ReadAllBytes(statIconPaths[i]);
                     }

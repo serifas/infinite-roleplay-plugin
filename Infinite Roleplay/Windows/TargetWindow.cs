@@ -41,10 +41,13 @@ using System.Xml.Linq;
 using Dalamud.Game.ClientState.Objects;
 using OtterGui;
 using Networking;
+using Dalamud.Interface.Internal;
+using Dalamud.Plugin.Services;
+using Dalamud.Interface.Utility;
 
 namespace InfiniteRoleplay.Windows
 {
-    internal class TargetWindow : Window, IDisposable
+    public class TargetWindow : Window, IDisposable
     {
         private readonly ConcurrentDictionary<string, string> _startPaths = new();
         private Plugin plugin;
@@ -52,7 +55,7 @@ namespace InfiniteRoleplay.Windows
 
         private float _modVersionWidth;
         private PlayerCharacter playerCharacter;
-        private ChatGui chatGui;
+        private IChatGui chatGui;
         private DalamudPluginInterface pg;
         public Configuration configuration;
         public static bool WindowOpen;
@@ -103,12 +106,12 @@ namespace InfiniteRoleplay.Windows
         //Font Vars
         private GameFontHandle _Font;
         //BIO VARS
-        public static TextureWrap galleryImg1, galleryImg2, galleryImg3, galleryImg4, galleryImg5, galleryImg6, galleryImg7, galleryImg8, galleryImg9, galleryImg10, galleryImg11, galleryImg12, galleryImg13, galleryImg14, galleryImg15, galleryImg16, galleryImg17, galleryImg18, galleryImg19, galleryImg20, galleryImg21, galleryImg22, galleryImg23, galleryImg24, galleryImg25, galleryImg26, galleryImg27, galleryImg28, galleryImg29, galleryImg30;
-        public static TextureWrap[] galleryImages, galleryThumbs;
-        public static TextureWrap galleryEditThm1, galleryEditThm2, galleryEditThm3, galleryEditThm4, galleryEditThm5, galleryEditThm6, galleryEditThm7, galleryEditThm8, galleryEditThm9, galleryEditThm10, galleryEditThm11, galleryEditThm12, galleryEditThm13, galleryEditThm14, galleryEditThm15, galleryEditThm16, galleryEditThm17, galleryEditThm18, galleryEditThm19, galleryEditThm20, galleryEditThm21, galleryEditThm22, galleryEditThm23, galleryEditThm24, galleryEditThm25, galleryEditThm26, galleryEditThm27, galleryEditThm28, galleryEditThm29, galleryEditThm30;
+        public static IDalamudTextureWrap galleryImg1, galleryImg2, galleryImg3, galleryImg4, galleryImg5, galleryImg6, galleryImg7, galleryImg8, galleryImg9, galleryImg10, galleryImg11, galleryImg12, galleryImg13, galleryImg14, galleryImg15, galleryImg16, galleryImg17, galleryImg18, galleryImg19, galleryImg20, galleryImg21, galleryImg22, galleryImg23, galleryImg24, galleryImg25, galleryImg26, galleryImg27, galleryImg28, galleryImg29, galleryImg30;
+        public static IDalamudTextureWrap[] galleryImages, galleryThumbs;
+        public static IDalamudTextureWrap galleryEditThm1, galleryEditThm2, galleryEditThm3, galleryEditThm4, galleryEditThm5, galleryEditThm6, galleryEditThm7, galleryEditThm8, galleryEditThm9, galleryEditThm10, galleryEditThm11, galleryEditThm12, galleryEditThm13, galleryEditThm14, galleryEditThm15, galleryEditThm16, galleryEditThm17, galleryEditThm18, galleryEditThm19, galleryEditThm20, galleryEditThm21, galleryEditThm22, galleryEditThm23, galleryEditThm24, galleryEditThm25, galleryEditThm26, galleryEditThm27, galleryEditThm28, galleryEditThm29, galleryEditThm30;
         
         
-        private TextureWrap avatarImg, currentAvatarImg;
+        private IDalamudTextureWrap avatarImg, currentAvatarImg;
         public static string    characterEditName = "",
                                 characterEditRace = "",
                                 characterEditGender = "",
@@ -119,26 +122,45 @@ namespace InfiniteRoleplay.Windows
         public static string fileName = "";
         private readonly FileDialogManager _manager;
         private bool _isOpen;
-        private TextureWrap[] otherImages;
+        private IDalamudTextureWrap[] otherImages;
         
         private bool _showFileDialogError = false;
-        private TextureWrap lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil;
+        private IDalamudTextureWrap lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil;
         private int lawfulGoodWidthVal = 0, neutralGoodWidthVal = 0, chaoticGoodWidthVal = 0, lawfulNeutralWidthVal = 0, trueNeutralWidthVal = 0, chaoticNeutralWidthVal = 0, lawfulEvilWidthVal = 0, neutralEvilWidthVal = 0, chaoticEvilWidthVal = 0;
         private int lawfulGoodVal = 0, neutralGoodVal = 0, chaoticGoodVal = 0, lawfulNeutralVal = 0, trueNeutralVal = 0, chaoticNeutralVal = 0, lawfulEvilVal = 0, neutralEvilVal = 0, chaoticEvilVal = 0;
-        private TextureWrap lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar;
-     
+        private IDalamudTextureWrap lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar;
+        private DalamudPluginInterface pluginInterface;
+        private IDalamudTextureWrap avatarHolder;
+        private IDalamudTextureWrap lawfulGood1;
+        private IDalamudTextureWrap neutralGood1;
+        private IDalamudTextureWrap chaoticGood1;
+        private IDalamudTextureWrap lawfulNeutral1;
+        private IDalamudTextureWrap trueNeutral1;
+        private IDalamudTextureWrap chaoticNeutral1;
+        private IDalamudTextureWrap lawfulEvil1;
+        private IDalamudTextureWrap neutralEvil1;
+        private IDalamudTextureWrap chaoticEvil1;
+        private IDalamudTextureWrap lawfulGoodBar1;
+        private IDalamudTextureWrap neutralGoodBar1;
+        private IDalamudTextureWrap chaoticGoodBar1;
+        private IDalamudTextureWrap lawfulNeutralBar1;
+        private IDalamudTextureWrap trueNeutralBar1;
+        private IDalamudTextureWrap chaoticNeutralBar1;
+        private IDalamudTextureWrap lawfulEvilBar1;
+        private IDalamudTextureWrap neutralEvilBar1;
+        private IDalamudTextureWrap chaoticEvilBar1;
 
-        public TargetWindow(Plugin plugin, DalamudPluginInterface Interface, TextureWrap avatarHolder,
+        public TargetWindow(Plugin plugin, DalamudPluginInterface Interface, IDalamudTextureWrap avatarHolder,
                              //alignment icon
-                             TextureWrap lawfulgood, TextureWrap neutralgood, TextureWrap chaoticgood,
-                             TextureWrap lawfulneutral, TextureWrap trueneutral, TextureWrap chaoticneutral,
-                             TextureWrap lawfulevil, TextureWrap neutralevil, TextureWrap chaoticevil,
-                             
+                             IDalamudTextureWrap lawfulgood, IDalamudTextureWrap neutralgood, IDalamudTextureWrap chaoticgood,
+                             IDalamudTextureWrap lawfulneutral, IDalamudTextureWrap trueneutral, IDalamudTextureWrap chaoticneutral,
+                             IDalamudTextureWrap lawfulevil, IDalamudTextureWrap neutralevil, IDalamudTextureWrap chaoticevil,
+
                              //bars
 
-                             TextureWrap lawfulgoodBar, TextureWrap neutralgoodBar, TextureWrap chaoticgoodBar,
-                             TextureWrap lawfulneutralBar, TextureWrap trueneutralBar, TextureWrap chaoticneutralBar,
-                             TextureWrap lawfulevilBar, TextureWrap neutralevilBar, TextureWrap chaoticevilBar
+                             IDalamudTextureWrap lawfulgoodBar, IDalamudTextureWrap neutralgoodBar, IDalamudTextureWrap chaoticgoodBar,
+                             IDalamudTextureWrap lawfulneutralBar, IDalamudTextureWrap trueneutralBar, IDalamudTextureWrap chaoticneutralBar,
+                             IDalamudTextureWrap lawfulevilBar, IDalamudTextureWrap neutralevilBar, IDalamudTextureWrap chaoticevilBar
                             ) : base(
        "TARGET", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
@@ -160,9 +182,9 @@ namespace InfiniteRoleplay.Windows
             this.lawfulNeutral = lawfulneutral; this.trueNeutral = trueneutral; this.chaoticNeutral = chaoticneutral;
             this.lawfulEvil = lawfulevil; this.neutralEvil = neutralevil; this.chaoticEvil = chaoticevil;
             this.chatGui = chatGui;
-            this.otherImages = new TextureWrap[19] { this.currentAvatarImg, this.lawfulGood, this.neutralGood, this.chaoticGood, this.lawfulNeutral, this.trueNeutral, this.chaoticNeutral, this.lawfulEvil, this.neutralEvil, this.chaoticEvil, this.lawfulGoodBar, this.neutralGoodBar, this.chaoticGoodBar, this.lawfulNeutralBar, this.trueNeutralBar, this.chaoticNeutralBar, this.lawfulEvilBar, this.neutralEvilBar, this.chaoticEvilBar };
-            galleryImages = new TextureWrap[30] { galleryImg1, galleryImg2, galleryImg3, galleryImg4, galleryImg5, galleryImg6, galleryImg7, galleryImg8, galleryImg9, galleryImg10, galleryImg11, galleryImg12, galleryImg13, galleryImg14, galleryImg15, galleryImg16, galleryImg17, galleryImg18, galleryImg19, galleryImg20, galleryImg21, galleryImg22, galleryImg23, galleryImg24, galleryImg25, galleryImg26, galleryImg27, galleryImg28, galleryImg29, galleryImg30 };
-            galleryThumbs = new TextureWrap[30] { galleryEditThm1, galleryEditThm2, galleryEditThm3, galleryEditThm4, galleryEditThm5, galleryEditThm6, galleryEditThm7, galleryEditThm8, galleryEditThm9, galleryEditThm10, galleryEditThm11, galleryEditThm12, galleryEditThm13, galleryEditThm14, galleryEditThm15, galleryEditThm16, galleryEditThm17, galleryEditThm18, galleryEditThm19, galleryEditThm20, galleryEditThm21, galleryEditThm22, galleryEditThm23, galleryEditThm24, galleryEditThm25, galleryEditThm26, galleryEditThm27, galleryEditThm28, galleryEditThm29, galleryEditThm30 };
+            this.otherImages = new IDalamudTextureWrap[19] { this.currentAvatarImg, this.lawfulGood, this.neutralGood, this.chaoticGood, this.lawfulNeutral, this.trueNeutral, this.chaoticNeutral, this.lawfulEvil, this.neutralEvil, this.chaoticEvil, this.lawfulGoodBar, this.neutralGoodBar, this.chaoticGoodBar, this.lawfulNeutralBar, this.trueNeutralBar, this.chaoticNeutralBar, this.lawfulEvilBar, this.neutralEvilBar, this.chaoticEvilBar };
+            galleryImages = new IDalamudTextureWrap[30] { galleryImg1, galleryImg2, galleryImg3, galleryImg4, galleryImg5, galleryImg6, galleryImg7, galleryImg8, galleryImg9, galleryImg10, galleryImg11, galleryImg12, galleryImg13, galleryImg14, galleryImg15, galleryImg16, galleryImg17, galleryImg18, galleryImg19, galleryImg20, galleryImg21, galleryImg22, galleryImg23, galleryImg24, galleryImg25, galleryImg26, galleryImg27, galleryImg28, galleryImg29, galleryImg30 };
+            galleryThumbs = new IDalamudTextureWrap[30] { galleryEditThm1, galleryEditThm2, galleryEditThm3, galleryEditThm4, galleryEditThm5, galleryEditThm6, galleryEditThm7, galleryEditThm8, galleryEditThm9, galleryEditThm10, galleryEditThm11, galleryEditThm12, galleryEditThm13, galleryEditThm14, galleryEditThm15, galleryEditThm16, galleryEditThm17, galleryEditThm18, galleryEditThm19, galleryEditThm20, galleryEditThm21, galleryEditThm22, galleryEditThm23, galleryEditThm24, galleryEditThm25, galleryEditThm26, galleryEditThm27, galleryEditThm28, galleryEditThm29, galleryEditThm30 };
 
             //bars
             this.lawfulGoodBar = lawfulgoodBar; this.neutralGoodBar = neutralgoodBar; this.chaoticGoodBar = chaoticgoodBar;
@@ -174,6 +196,8 @@ namespace InfiniteRoleplay.Windows
             this.alignmentWidthVals = new float[9] { lawfulGoodWidthVal, neutralGoodWidthVal, chaoticGoodWidthVal, lawfulNeutralWidthVal, trueNeutralWidthVal, chaoticNeutralWidthVal, lawfulEvilWidthVal, neutralEvilWidthVal, chaoticEvilWidthVal };
             this.alignmentNames = new string[9] { "lawfulgood", "neutralgood", "chaoticgood", "lawfulneutral", "trueneutral", "chaoticneutral", "lawfulevil", "neutralevil", "chaoticevil" };
         }
+
+     
         public byte[] ImageToByteArray(System.Drawing.Image imageIn)
         {
             using (var ms = new MemoryStream())

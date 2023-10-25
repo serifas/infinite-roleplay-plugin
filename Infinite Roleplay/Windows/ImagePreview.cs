@@ -25,40 +25,47 @@ using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.Gui;
 using Dalamud.Game.ClientState;
 using Networking;
+using Dalamud.Interface.Internal;
+using Dalamud.Plugin.Services;
 
 namespace InfiniteRoleplay.Windows
 {
-    internal class ImagePreview : Window, IDisposable
+    public class ImagePreview : Window, IDisposable
     {
 
         private Plugin plugin;
         private string profilesImagePath;
-        private TextureWrap profilesImage;
+        private IDalamudTextureWrap profilesImage;
         private string documentImagePath;
-        private TextureWrap documentImage;
+        private IDalamudTextureWrap documentImage;
         private string systemsImagePath;
-        private TextureWrap systemsImage;
+        private IDalamudTextureWrap systemsImage;
         private string groupsImagePath;
-        private TextureWrap groupsImage;
-        public static TextureWrap PreviewImage;
+        private IDalamudTextureWrap groupsImage;
+        public static IDalamudTextureWrap PreviewImage;
         public static bool isAdmin;
         public Configuration configuration;
         public static bool WindowOpen;
         public string msg;
-        public static TargetManager targetManager;
+        public static ITargetManager targetManager;
         public static PlayerCharacter playerCharacter;
-        private ChatGui ChatGUI;
+        private IChatGui ChatGUI;
         public static PlayerCharacter lastTarget;
         private bool _showFileDialogError = false;
         public bool openedProfile = false;
         public static int width = 0, height = 0;
         public bool openedTargetProfile = false;
-        public ImagePreview(Plugin plugin, DalamudPluginInterface Interface, TargetManager targetManager) : base(
+        private DalamudPluginInterface pluginInterface;
+        private ITargetManager targetManager1;
+
+        public ImagePreview(Plugin plugin, DalamudPluginInterface Interface, ITargetManager targetManager) : base(
        "PREVIEW", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
             this.plugin = plugin;
             this.configuration = plugin.Configuration;
         }
+
+       
 
         public override void Draw()
         {

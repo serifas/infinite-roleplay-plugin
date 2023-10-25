@@ -140,7 +140,7 @@ namespace InfiniteRoleplay.Windows
             if (ImGui.BeginChild("ProfilesTitle", new Vector2(300, 500), true))
             {
                 using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
-                using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+                //using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
                 var _nameFont = plugin.PluginInterfacePub.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
                 using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
                 ImGuiUtil.DrawTextButton("Profiles", Vector2.Zero, 0);
@@ -218,7 +218,7 @@ namespace InfiniteRoleplay.Windows
                             if (DataReceiver.adminCharacterAvatars.ContainsKey(ID))
                             {
                                 byte[] avData = DataReceiver.adminCharacterAvatars[ID];
-                                this.vitar = pg.UiBuilder.LoadImage(avData);
+                    //            this.vitar = pg.UiBuilder.LoadImage(avData);
                             }
                             showSheet = true;
                         }
@@ -246,7 +246,7 @@ namespace InfiniteRoleplay.Windows
                         if (verificationStatus == -2)
                         {
                             using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DPSRed);
-                            using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+                      //      using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
                             using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
                             ImGuiUtil.DrawTextButton(characterName, Vector2.Zero, 0);
                             using var defInfFontDen = ImRaii.DefaultFont();
@@ -261,7 +261,7 @@ namespace InfiniteRoleplay.Windows
                         if (verificationStatus == 0)
                         {
                             using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudOrange);
-                            using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+                       //     using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
                             using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
                             ImGuiUtil.DrawTextButton(characterName, Vector2.Zero, 0);
                             using var defInfFontPen = ImRaii.DefaultFont();
@@ -282,7 +282,7 @@ namespace InfiniteRoleplay.Windows
                         if (verificationStatus == 1)
                         {
                             using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.HealerGreen);
-                            using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+                       //     using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
                             using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
                             ImGuiUtil.DrawTextButton(characterName, Vector2.Zero, 0);
                             using var defInfFontPen = ImRaii.DefaultFont();
@@ -301,7 +301,7 @@ namespace InfiniteRoleplay.Windows
                         if (verificationStatus == -1)
                         {
                             using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudYellow);
-                            using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+                      //      using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
                             using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
                             ImGuiUtil.DrawTextButton(characterName, Vector2.Zero, 0);
                             using var defInfFontPen = ImRaii.DefaultFont();
@@ -338,7 +338,7 @@ namespace InfiniteRoleplay.Windows
                             MessageBox.MESSAGE_CONTENT = this.chrID.ToString();
                             MessageBox.MESSAGE_TYPE = MessageBox.messageType.SHEET_VERIFY;
                             MessageBox.SELECTED_SHEET_ID = SelectedSheetID;
-                            plugin.WindowSystem.GetWindow("Message").IsOpen = true;
+                  //          plugin.WindowSystem.GetWindow("Message").IsOpen = true;
                         }
                         ImGui.SameLine();
                         if (ImGui.Button("Decline"))
@@ -353,7 +353,7 @@ namespace InfiniteRoleplay.Windows
                             MessageBox.MESSAGE_CONTENT = this.chrID.ToString();
                             MessageBox.MESSAGE_TYPE = MessageBox.messageType.SHEET_DECLINE;
                             MessageBox.SELECTED_SHEET_ID = SelectedSheetID;
-                            plugin.WindowSystem.GetWindow("Message").IsOpen = true;
+                  //          plugin.WindowSystem.GetWindow("Message").IsOpen = true;
                         }
                         ImGui.SameLine();
                         if (ImGui.Button("Request Revision"))
@@ -368,8 +368,8 @@ namespace InfiniteRoleplay.Windows
                             MessageBox.MESSAGE_CONTENT = this.chrID.ToString();
                             MessageBox.MESSAGE_TYPE = MessageBox.messageType.SHEET_REVISION_REQUEST;
                             MessageBox.SELECTED_SHEET_ID = SelectedSheetID;
-                            plugin.WindowSystem.GetWindow("Message").IsOpen = true;
-                        }
+                 //           plugin.WindowSystem.GetWindow("Message").IsOpen = true;
+                       }
                         ImGui.Separator();
 
                         //BASIC INFO

@@ -26,35 +26,40 @@ using Dalamud.Game.Gui;
 using Dalamud.Game.ClientState;
 using Networking;
 using Dalamud.Game.Config;
+using Dalamud.Interface.Internal;
+using Dalamud.Plugin.Services;
 
 namespace InfiniteRoleplay.Windows
 {
-    internal class OptionsWindow : Window, IDisposable
+    public class OptionsWindow : Window, IDisposable
     {
 
         private Plugin plugin;
         private string profilesImagePath;
-        private TextureWrap profilesImage;
+        private IDalamudTextureWrap profilesImage;
         private string eventsImagePath;
-        private TextureWrap eventsImage;
+        private IDalamudTextureWrap eventsImage;
         private string bookmarksImagePath;
-        private TextureWrap bookmarksImage;
+        private IDalamudTextureWrap bookmarksImage;
         private string groupsImagePath;
-        private TextureWrap groupsImage;
+        private IDalamudTextureWrap groupsImage;
         private string systemsImagePath;
-        private TextureWrap systemsImage;
+        private IDalamudTextureWrap systemsImage;
         public static bool isAdmin;
         public Configuration configuration;
         public static bool WindowOpen;
         public string msg;
-        public static TargetManager targetManager;
+        public static ITargetManager targetManager;
         public static PlayerCharacter playerCharacter;
-        private ChatGui ChatGUI;
+        private IChatGui ChatGUI;
         public static PlayerCharacter lastTarget;
         private bool _showFileDialogError = false;
         public bool openedProfile = false;
         public bool openedTargetProfile = false;
-        public OptionsWindow(Plugin plugin, DalamudPluginInterface Interface, TargetManager targetManager) : base(
+        private DalamudPluginInterface pluginInterface;
+        private ITargetManager targetManager1;
+
+        public OptionsWindow(Plugin plugin, DalamudPluginInterface Interface, ITargetManager targetManager) : base(
        "OPTIONS", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
             this.SizeConstraints = new WindowSizeConstraints
@@ -77,6 +82,8 @@ namespace InfiniteRoleplay.Windows
          
         }
 
+      
+
         public override void Draw()
         {
             //PROFILE
@@ -84,7 +91,7 @@ namespace InfiniteRoleplay.Windows
             {
                 LoginWindow.loginRequest = true;
                 plugin.ReloadClient();
-                plugin.WindowSystem.GetWindow("PROFILE").IsOpen = true;
+                plugin.profileWindow.IsOpen = true;
             }
             if (ImGui.IsItemHovered())
             {
@@ -127,15 +134,15 @@ namespace InfiniteRoleplay.Windows
             {
                 if (ImGui.Button("Administration", new Vector2(225, 25)))
                 {
-                    plugin.WindowSystem.GetWindow("ADMINISTRATION").IsOpen = true;
+                    //Administration here
                 }
             }
             if (ImGui.Button("Logout", new Vector2(225, 25)))
             {
                 plugin.loggedIn = false;
                 plugin.DisconnectFromServer();
-                plugin.WindowSystem.GetWindow("LOGIN").IsOpen = true;
-                plugin.WindowSystem.GetWindow("OPTIONS").IsOpen = false;
+                plugin.loginWindow.IsOpen = true;
+                plugin.optionsWindow.IsOpen = false;
             }
 
 

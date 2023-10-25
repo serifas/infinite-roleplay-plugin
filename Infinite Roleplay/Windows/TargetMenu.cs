@@ -25,35 +25,40 @@ using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.Gui;
 using Dalamud.Game.ClientState;
 using Networking;
+using Dalamud.Plugin.Services;
+using Dalamud.Interface.Internal;
 
 namespace InfiniteRoleplay.Windows
 {
-    internal class TargetMenu : Window, IDisposable
+    public class TargetMenu : Window, IDisposable
     {
 
         private Plugin plugin;
         private string profileViewImagePath;
-        private TextureWrap profileViewImage;
+        private IDalamudTextureWrap profileViewImage;
         private string requestFriendImagePath;
-        private TextureWrap requestFriendImage;
+        private IDalamudTextureWrap requestFriendImage;
         private string addBookmarkImagePath;
-        private TextureWrap addBookmarkImage;
+        private IDalamudTextureWrap addBookmarkImage;
         private string removeBookmarkImagePath;
-        private TextureWrap removeBookmarkImage;
+        private IDalamudTextureWrap removeBookmarkImage;
         private string groupInviteImagePath;
-        private TextureWrap groupInviteImage;
+        private IDalamudTextureWrap groupInviteImage;
         public static bool isAdmin;
         public Configuration configuration;
         public static bool WindowOpen;
         public string msg;
-        private TargetManager targetManager;
+        private ITargetManager targetManager;
         public static PlayerCharacter playerCharacter;
-        private ChatGui ChatGUI;
+        private IChatGui ChatGUI;
         public static PlayerCharacter lastTarget;
         private bool _showFileDialogError = false;
         public bool openedProfile = false;
         public bool openedTargetProfile = false;
-        public TargetMenu(Plugin plugin, DalamudPluginInterface Interface, TargetManager targetManager) : base(
+        private DalamudPluginInterface pluginInterface;
+        private ITargetManager targetManager1;
+
+        public TargetMenu(Plugin plugin, DalamudPluginInterface Interface, ITargetManager targetManager) : base(
        "TARGET OPTIONS", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
             this.SizeConstraints = new WindowSizeConstraints
@@ -65,18 +70,17 @@ namespace InfiniteRoleplay.Windows
             this.configuration = plugin.Configuration;
             this.profileViewImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/profile_view.png");
             this.profileViewImage = Interface.UiBuilder.LoadImage(profileViewImagePath);
-            this.requestFriendImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/friend_request.png");
+            this.requestFriendImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/friends.png");
             this.requestFriendImage = Interface.UiBuilder.LoadImage(requestFriendImagePath);
             this.addBookmarkImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/bookmark.png");
             this.addBookmarkImage = Interface.UiBuilder.LoadImage(addBookmarkImagePath);
-            this.removeBookmarkImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/remove_bookmark.png");
-            this.removeBookmarkImage = Interface.UiBuilder.LoadImage(removeBookmarkImagePath);
             this.groupInviteImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/group_invite.png");
             this.groupInviteImage = Interface.UiBuilder.LoadImage(groupInviteImagePath);
             this.targetManager = targetManager;
 
         }
 
+       
         public override void Draw()
         {
             if (ImGui.ImageButton(this.profileViewImage.ImGuiHandle, new Vector2(50, 50)))

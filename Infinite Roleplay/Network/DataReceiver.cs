@@ -144,7 +144,7 @@ namespace Networking
             var packetID = buffer.ReadInt();
             string bookmarkVals = buffer.ReadString();
 
-            plugin.WindowSystem.GetWindow("BOOKMARKS").IsOpen = true;
+            plugin.bookmarksWindow.IsOpen = true;
             Regex nameRx = new Regex(@"<bookmarkName>(.*?)</bookmarkName>");
             Regex worldRx = new Regex(@"<bookmarkWorld>(.*?)</bookmarkWorld>");
             string[] bookmarkSplit = bookmarkVals.Replace("|||", "~").Split('~');
@@ -222,7 +222,7 @@ namespace Networking
             ExistingTargetHooksData = false;
             ExistingTargetStoryData = false;
             ExistingTargetGalleryData = false;
-            plugin.WindowSystem.GetWindow("TARGET").IsOpen = true;
+            plugin.targetWindow.IsOpen = true;
         }
         public static void NoProfile(byte[] data)
         {
@@ -246,7 +246,7 @@ namespace Networking
             ExistingTargetStoryData = false;
             ExistingTargetOOCData = false;
             ExistingTargetGalleryData = false;
-            plugin.WindowSystem.GetWindow("TARGET").IsOpen = true;
+            plugin.targetWindow.IsOpen = true;
         }
         public static void NoTargetGallery(byte[] data)
         {
@@ -256,7 +256,7 @@ namespace Networking
             buffer.Dispose();
             loggedIn = true;
             ExistingTargetGalleryData = false;
-            plugin.WindowSystem.GetWindow("TARGET").IsOpen = true;
+            plugin.targetWindow.IsOpen = true;
         }
         public static void NoProfileBio(byte[] data)
         {
@@ -346,8 +346,8 @@ namespace Networking
              }
              if (status == 1)
              {
-                 plugin.WindowSystem.GetWindow("LOGIN").IsOpen = false;
-                 plugin.WindowSystem.GetWindow("OPTIONS").IsOpen = true;
+                 plugin.loginWindow.IsOpen = false;
+                 plugin.optionsWindow.IsOpen = true;
                  plugin.loggedIn = true;
              }
 
@@ -474,7 +474,7 @@ namespace Networking
             ExistingTargetBioData = true;
             buffer.Dispose();
 
-            plugin.WindowSystem.GetWindow("TARGET").IsOpen = true;
+            plugin.targetWindow.IsOpen = true;
         }
         public static void ReceiveProfileBio(byte[] data)
         {

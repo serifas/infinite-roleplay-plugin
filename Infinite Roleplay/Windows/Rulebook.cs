@@ -32,6 +32,7 @@ using OtterGui.Filesystem;
 using System.Net.Http.Headers;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using Networking;
+using Dalamud.Interface.Utility;
 
 namespace InfiniteRP.Windows;
 

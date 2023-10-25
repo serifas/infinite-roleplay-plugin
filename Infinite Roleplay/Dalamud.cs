@@ -10,6 +10,7 @@ using Dalamud.Game.Gui;
 using Dalamud.Interface;
 using Dalamud.IoC;
 using Dalamud.Plugin;
+using Dalamud.Plugin.Services;
 
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
 
@@ -24,17 +25,17 @@ public class Dalamud
 
     // @formatter:off
     [PluginService][RequiredVersion("1.0")] public static DalamudPluginInterface PluginInterface { get; private set; } = null!;
-    [PluginService][RequiredVersion("1.0")] public static CommandManager Commands { get; private set; } = null!;
-    [PluginService][RequiredVersion("1.0")] public static DataManager GameData { get; private set; } = null!;
-    [PluginService][RequiredVersion("1.0")] public static ClientState ClientState { get; private set; } = null!;
-    [PluginService][RequiredVersion("1.0")] public static ChatGui Chat { get; private set; } = null!;
-    [PluginService][RequiredVersion("1.0")] public static Framework Framework { get; private set; } = null!;
-    [PluginService][RequiredVersion("1.0")] public static Condition Conditions { get; private set; } = null!;
-    [PluginService][RequiredVersion("1.0")] public static TargetManager Targets { get; private set; } = null!;
-    [PluginService][RequiredVersion("1.0")] public static ObjectTable Objects { get; private set; } = null!;
-    [PluginService][RequiredVersion("1.0")] public static TitleScreenMenu TitleScreenMenu { get; private set; } = null!;
-    [PluginService][RequiredVersion("1.0")] public static GameGui GameGui { get; private set; } = null!;
-    [PluginService][RequiredVersion("1.0")] public static KeyState KeyState { get; private set; } = null!;
-    [PluginService][RequiredVersion("1.0")] public static DutyState DutyState { get; private set; } = null!;
+    [PluginService][RequiredVersion("1.0")] public static ICommandManager Commands { get; private set; } = null!;
+    [PluginService][RequiredVersion("1.0")] public static IDataManager GameData { get; private set; } = null!;
+    [PluginService][RequiredVersion("1.0")] public static IClientState ClientState { get; private set; } = null!;
+    [PluginService][RequiredVersion("1.0")] public static IChatGui Chat { get; private set; } = null!;
+    [PluginService][RequiredVersion("1.0")] public static IFramework Framework { get; private set; } = null!;
+    [PluginService][RequiredVersion("1.0")] public static ICondition Conditions { get; private set; } = null!;
+    [PluginService][RequiredVersion("1.0")] public static ITargetManager Targets { get; private set; } = null!;
+    [PluginService][RequiredVersion("1.0")] public static IObjectTable Objects { get; private set; } = null!;
+    [PluginService][RequiredVersion("1.0")] public static ITitleScreenMenu TitleScreenMenu { get; private set; } = null!;
+    [PluginService][RequiredVersion("1.0")] public static IGameGui GameGui { get; private set; } = null!;
+    [PluginService][RequiredVersion("1.0")] public static IKeyState KeyState { get; private set; } = null!;
+    [PluginService][RequiredVersion("1.0")] public static IDutyState DutyState { get; private set; } = null!;
     // @formatter:on
 }
