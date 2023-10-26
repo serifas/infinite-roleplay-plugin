@@ -164,7 +164,7 @@ namespace InfiniteRoleplay
 
             imagePreview = new ImagePreview(this, this.pluginInterface, targetManager);
 
-            bookmarksWindow = new BookmarksWindow(this, this.pluginInterface);
+            bookmarksWindow = new BookmarksWindow(this, this.pluginInterface, targetWindow);
 
             optionsWindow = new OptionsWindow(this, this.pluginInterface, targetManager);
 
@@ -201,6 +201,13 @@ namespace InfiniteRoleplay
             {
                 images[i].Dispose();
             }
+            targetWindow.Dispose();
+            targetMenu.Dispose();
+            optionsWindow.Dispose();
+            bookmarksWindow.Dispose();
+            loginWindow.Dispose();
+            profileWindow.Dispose();
+            imagePreview.Dispose();
            
             
         }

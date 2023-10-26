@@ -1501,7 +1501,7 @@ namespace InfiniteRoleplay.Windows
                         galleryThumbBytes[i] = scaledImageBytes;
 
                         SortedList<SortedList<int, bool>, SortedList<int, byte[]>> newImageList = new SortedList<SortedList<int, bool>, SortedList<int, byte[]>>();
-                        await DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
+                        DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
                                                     NSFW[i], galleryImageBytes[i], i);
 
                     }

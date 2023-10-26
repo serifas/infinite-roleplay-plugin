@@ -35,7 +35,8 @@ namespace InfiniteRoleplay.Windows
         private float _modVersionWidth;
         public static SortedList<string, string> profiles = new SortedList<string, string>();
         private DalamudPluginInterface pg;
-        public BookmarksWindow(Plugin plugin, DalamudPluginInterface Interface) : base(
+        private TargetWindow TargetWindow;
+        public BookmarksWindow(Plugin plugin, DalamudPluginInterface Interface, TargetWindow targetWindow) : base(
        "BOOKMARKS", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
             this.SizeConstraints = new WindowSizeConstraints
@@ -47,6 +48,7 @@ namespace InfiniteRoleplay.Windows
             this.pg = Interface;
             this._nameFont = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
             this._infoFont = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter16));
+            this.TargetWindow = targetWindow;
         }
         public override void Draw()
         {
@@ -67,6 +69,7 @@ namespace InfiniteRoleplay.Windows
                     {
                         LoginWindow.loginRequest = true;
                         plugin.ReloadClient();
+                        TargetWindow.Dispose();
                         DataSender.RequestTargetProfile(profiles.Keys[i], profiles.Values[i]);
 
                     }
@@ -85,7 +88,7 @@ namespace InfiniteRoleplay.Windows
         }
         public void Dispose()
         {
-
+            
         }
         public override void Update()
         {
