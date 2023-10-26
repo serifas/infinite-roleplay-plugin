@@ -32,6 +32,7 @@ using InfiniteRP.Windows;
 using InfiniteRoleplay.Helpers;
 using Dalamud.Plugin.Services;
 using Dalamud.Interface.Internal.Windows;
+using Dalamud.Interface.Internal;
 
 namespace InfiniteRoleplay
 {
@@ -54,6 +55,7 @@ namespace InfiniteRoleplay
         public OptionsWindow optionsWindow;
         public LoginWindow loginWindow;
         public ProfileWindow profileWindow;
+        public IDalamudTextureWrap[] images;
         public string Name => "Infinite Roleplay";
         private const string CommandName = "/infinite";
         private DalamudPluginInterface pluginInterface { get; init; }
@@ -149,6 +151,9 @@ namespace InfiniteRoleplay
             byte[] emptyByteImage = File.ReadAllBytes(blank_holder);
 
             byte[] blankTabBytes = Imaging.ScaleImageBytes(emptyByteImage, 300, 300);
+
+
+            images = new IDalamudTextureWrap[18] {lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil, lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar };
             System.Drawing.Image blankTab = Imaging.byteArrayToImage(blankTabBytes);
 
 
@@ -191,6 +196,10 @@ namespace InfiniteRoleplay
             if (IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
                 DisconnectFromServer();
+            }
+            for(int i = 0; i < images.Length; i++)
+            {
+                images[i].Dispose();
             }
            
             

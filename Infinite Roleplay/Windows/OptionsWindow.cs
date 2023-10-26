@@ -139,6 +139,10 @@ namespace InfiniteRoleplay.Windows
         public void Dispose()
         {
             WindowOpen = false;
+            profilesImage.Dispose();
+            documentImage.Dispose();
+            groupsImage.Dispose();
+            systemsImage.Dispose();
         }
         public override void Update()
         {

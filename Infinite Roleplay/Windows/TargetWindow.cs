@@ -123,7 +123,7 @@ namespace InfiniteRoleplay.Windows
         private readonly FileDialogManager _manager;
         private bool _isOpen;
         private IDalamudTextureWrap[] otherImages;
-        
+        private List<IDalamudTextureWrap> OtherImages;
         private bool _showFileDialogError = false;
         private IDalamudTextureWrap lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil;
         private int lawfulGoodWidthVal = 0, neutralGoodWidthVal = 0, chaoticGoodWidthVal = 0, lawfulNeutralWidthVal = 0, trueNeutralWidthVal = 0, chaoticNeutralWidthVal = 0, lawfulEvilWidthVal = 0, neutralEvilWidthVal = 0, chaoticEvilWidthVal = 0;
@@ -164,6 +164,8 @@ namespace InfiniteRoleplay.Windows
             this.lawfulEvil = lawfulevil; this.neutralEvil = neutralevil; this.chaoticEvil = chaoticevil;
             this.chatGui = chatGui;
             this.otherImages = new IDalamudTextureWrap[19] { this.currentAvatarImg, this.lawfulGood, this.neutralGood, this.chaoticGood, this.lawfulNeutral, this.trueNeutral, this.chaoticNeutral, this.lawfulEvil, this.neutralEvil, this.chaoticEvil, this.lawfulGoodBar, this.neutralGoodBar, this.chaoticGoodBar, this.lawfulNeutralBar, this.trueNeutralBar, this.chaoticNeutralBar, this.lawfulEvilBar, this.neutralEvilBar, this.chaoticEvilBar };
+           
+            
             galleryImages = new IDalamudTextureWrap[30] { galleryImg1, galleryImg2, galleryImg3, galleryImg4, galleryImg5, galleryImg6, galleryImg7, galleryImg8, galleryImg9, galleryImg10, galleryImg11, galleryImg12, galleryImg13, galleryImg14, galleryImg15, galleryImg16, galleryImg17, galleryImg18, galleryImg19, galleryImg20, galleryImg21, galleryImg22, galleryImg23, galleryImg24, galleryImg25, galleryImg26, galleryImg27, galleryImg28, galleryImg29, galleryImg30 };
             galleryThumbs = new IDalamudTextureWrap[30] { galleryEditThm1, galleryEditThm2, galleryEditThm3, galleryEditThm4, galleryEditThm5, galleryEditThm6, galleryEditThm7, galleryEditThm8, galleryEditThm9, galleryEditThm10, galleryEditThm11, galleryEditThm12, galleryEditThm13, galleryEditThm14, galleryEditThm15, galleryEditThm16, galleryEditThm17, galleryEditThm18, galleryEditThm19, galleryEditThm20, galleryEditThm21, galleryEditThm22, galleryEditThm23, galleryEditThm24, galleryEditThm25, galleryEditThm26, galleryEditThm27, galleryEditThm28, galleryEditThm29, galleryEditThm30 };
 
@@ -567,6 +569,7 @@ namespace InfiniteRoleplay.Windows
 
                 galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(existingGalleryImgBytes[i]);
                 galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(existingGalleryThumbBytes[i]);
+                
             });
         }
         public static void ClearUI()
@@ -585,14 +588,17 @@ namespace InfiniteRoleplay.Windows
             for(int o = 0; o < otherImages.Length; o++)
             {                
                 otherImages[o].Dispose();
+                Array.Clear(otherImages);
             }
             for(int i = 0; i < galleryImages.Length; i++)
             {
-                galleryImages[i].Dispose();                
+                galleryImages[i].Dispose();
+                Array.Clear(galleryImages);
             }
             for(int t = 0; t < galleryThumbs.Length; t++)
             {
                 galleryThumbs[t].Dispose();
+                Array.Clear(galleryThumbs);
             }
         }
         public override void Update()

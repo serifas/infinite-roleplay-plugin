@@ -1331,17 +1331,20 @@ namespace InfiniteRoleplay.Windows
         }
         public void Dispose()
         {
-            foreach(IDalamudTextureWrap oi in otherImages)
-            {               
-                oi.Dispose();
-            }
             foreach (IDalamudTextureWrap ti in galleryImages)
             {
                 ti.Dispose();
+                Array.Clear(galleryImages);
             }
             foreach (IDalamudTextureWrap gt in galleryThumbs)
             {
                 gt.Dispose();
+                Array.Clear(galleryThumbs);
+            }
+            for(int o = 0; o < otherImages.Length; o++)
+            {
+                otherImages[o].Dispose();
+                Array.Clear(otherImages);
             }
            // timer.Dispose();
             storyTitle = "";

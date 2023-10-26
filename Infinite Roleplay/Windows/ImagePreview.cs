@@ -88,6 +88,7 @@ namespace InfiniteRoleplay.Windows
         public void Dispose()
         {
             WindowOpen = false;
+            PreviewImage.Dispose();
         }
         public override void Update()
         {
