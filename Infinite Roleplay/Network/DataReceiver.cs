@@ -229,8 +229,6 @@ namespace Networking
             buffer.Dispose();
             loggedIn = true;
             ExistingProfileData = false;
-            TargetMenu.DisableInput = false;
-            BookmarksWindow.DisableBookmarkSelection = false;
         }
         public static void NoTargetProfile(byte[] data)
         {
@@ -247,6 +245,8 @@ namespace Networking
             ExistingTargetGalleryData = false;
             plugin.targetWindow.IsOpen = true;
             TargetWindow.ClearUI();
+            TargetMenu.DisableInput = false;
+            BookmarksWindow.DisableBookmarkSelection = false;
         }
         public static void NoTargetGallery(byte[] data)
         {

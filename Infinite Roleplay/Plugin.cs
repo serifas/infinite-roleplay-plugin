@@ -119,7 +119,6 @@ namespace InfiniteRoleplay
         {
             var AvatarHolder = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
             //Icons
-
             var lawfulGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_good.png"));
             var neutralGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_good.png"));
             var chaoticGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_good.png"));
@@ -197,12 +196,16 @@ namespace InfiniteRoleplay
             {
                 DisconnectFromServer();
             }
-            for(int i = 0; i < images.Length; i++)
-            {
-             //   images[i].Dispose();
-            }
-           
-            
+           // if(images != null && images.Length > 0)
+            //{
+             //   for (int i = 0; i < images.Length; i++)
+            //    {
+             //       images[i].Dispose();
+            //   }
+
+
+        //    }
+
         }
 
         public void RefreshConnection()

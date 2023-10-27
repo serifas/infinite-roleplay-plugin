@@ -4,9 +4,9 @@
     "net7.0-windows7.0": {
       "Aspose.Imaging": {
         "type": "Direct",
-        "requested": "[23.9.0, )",
-        "resolved": "23.9.0",
-        "contentHash": "KWbIHpF7zAaIAoItyh/Y4xnnRLZRuUqrfPAic7yl64rMcp45YECZxiMAfEwA240HIq8LCnJOwtwrdZa2BFen6A==",
+        "requested": "[23.7.0, )",
+        "resolved": "23.7.0",
+        "contentHash": "hLlQX1FL9BH9YQAKS2RuRRgRglEeswnhlsthJtJYSh8EiwbvVTRVQqTjlKGQxt9siUg4Vt9vmQ3xHVmm0J0PNw==",
         "dependencies": {
           "Newtonsoft.Json": "13.0.1",
           "System.Text.Encoding.CodePages": "7.0.0"

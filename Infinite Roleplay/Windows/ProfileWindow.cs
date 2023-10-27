@@ -341,15 +341,15 @@ namespace InfiniteRoleplay.Windows
                     //age input
                     ImGui.Text("Age:    ");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##age", $"If your character's age is not 18+, do not add nsfw images to your gallery", ref characterAddAge, 100, ImGuiInputTextFlags.CharsHexadecimal);
+                    ImGui.InputTextWithHint("##age", $"The IC age of your character if your character is not 18+, do not put nsfw images in your gallery (numbers only)", ref characterAddAge, 100, ImGuiInputTextFlags.CharsHexadecimal);
                     //age input
                     ImGui.Text("Height:");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##height", $"Height in Fulms", ref characterAddHeight, 100);
+                    ImGui.InputTextWithHint("##height", $"Height in Fulms (numbers only)", ref characterAddHeight, 100);
                     //age input
                     ImGui.Text("Weight:");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##weight", $"Weight in Ponze", ref characterAddWeight, 100);
+                    ImGui.InputTextWithHint("##weight", $"Weight in Ponze (numbers only)", ref characterAddWeight, 100);
                     //at first glance input
                     ImGui.Text("At First Glance:");
                     ImGui.SameLine();
@@ -621,19 +621,19 @@ namespace InfiniteRoleplay.Windows
                     //gender input
                     ImGui.Text("Gender: ");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##gender", $"Your IC Gender.", ref characterEditGender, 100);
+                    ImGui.InputTextWithHint("##gender", $"The IC Gender of your character", ref characterEditGender, 100);
                     //age input
                     ImGui.Text("Age:    ");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##age", $"If your character's age is not 18+, do not add nsfw images to your gallery", ref characterEditAge, 100, ImGuiInputTextFlags.CharsHexadecimal);
+                    ImGui.InputTextWithHint("##age", $"If your character's age is not 18+ do not put nsfw pictures in your gallery (numbers only)", ref characterEditAge, 100, ImGuiInputTextFlags.CharsHexadecimal);
                     //age input
                     ImGui.Text("Height:");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##height", $"Height in Fulms", ref characterEditHeight, 100);
+                    ImGui.InputTextWithHint("##height", $"Height in Fulms (numbers only)", ref characterEditHeight, 100);
                     //age input
                     ImGui.Text("Weight:");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##weight", $"Weight in Ponze", ref characterEditWeight, 100);
+                    ImGui.InputTextWithHint("##weight", $"Weight in Ponze (numbers only)", ref characterEditWeight, 100);
                     //at first glance input
                     ImGui.Text("At First Glance:");
                     ImGui.SameLine();
