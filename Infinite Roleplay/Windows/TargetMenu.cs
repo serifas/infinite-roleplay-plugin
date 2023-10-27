@@ -27,6 +27,7 @@ using Dalamud.Game.ClientState;
 using Networking;
 using Dalamud.Interface.Internal;
 using Dalamud.Plugin.Services;
+using Lumina.Excel.GeneratedSheets;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -55,6 +56,7 @@ namespace InfiniteRoleplay.Windows
         private bool _showFileDialogError = false;
         public bool openedProfile = false;
         public bool openedTargetProfile = false;
+        public static bool DisableInput = false;
         public TargetMenu(Plugin plugin, DalamudPluginInterface Interface, ITargetManager targetManager) : base(
        "TARGET OPTIONS", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
@@ -81,11 +83,15 @@ namespace InfiniteRoleplay.Windows
 
         public override void Draw()
         {
+            if(DisableInput == true)
+            {
+                ImGui.BeginDisabled();
+            }
             if (ImGui.ImageButton(this.profileViewImage.ImGuiHandle, new Vector2(50, 50)))
             {
                 LoginWindow.loginRequest = true;
                 plugin.ReloadClient();
-
+                DisableInput = true;
                 var targetPlayer = targetManager.Target as PlayerCharacter;
                 if (targetPlayer != null)
                 {
@@ -136,6 +142,10 @@ namespace InfiniteRoleplay.Windows
             if (ImGui.IsItemHovered())
             {
                 ImGui.SetTooltip("Bookmark Profile");
+            }
+            if(DisableInput == true)
+            {
+                ImGui.EndDisabled();
             }
 
 

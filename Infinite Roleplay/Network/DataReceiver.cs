@@ -256,7 +256,7 @@ namespace Networking
             ExistingTargetGalleryData = false;
             plugin.targetWindow.IsOpen = true;
             BookmarksWindow.DisableBookmarkSelection = false;
-
+            TargetMenu.DisableInput = false;
         }
         public static void NoTargetStory(byte[] data)
         {
@@ -379,6 +379,7 @@ namespace Networking
                 TargetWindow.DrawImage(i, plugin);
             }
             BookmarksWindow.DisableBookmarkSelection = false;
+            TargetMenu.DisableInput = false;
             buffer.Dispose();
 
         }
