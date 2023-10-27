@@ -89,9 +89,9 @@ namespace InfiniteRoleplay.Windows
             }
             if (ImGui.ImageButton(this.profileViewImage.ImGuiHandle, new Vector2(50, 50)))
             {
+                DisableInput = true;
                 LoginWindow.loginRequest = true;
                 plugin.ReloadClient();
-                DisableInput = true;
                 var targetPlayer = targetManager.Target as PlayerCharacter;
                 if (targetPlayer != null)
                 {
@@ -113,7 +113,7 @@ namespace InfiniteRoleplay.Windows
             }
             if (ImGui.IsItemHovered())
             {
-                ImGui.SetTooltip("Friend Request");
+                ImGui.SetTooltip("Specify Relationships (Coming soon)");
             }
 
 
@@ -125,7 +125,7 @@ namespace InfiniteRoleplay.Windows
             }
             if (ImGui.IsItemHovered())
             {
-                ImGui.SetTooltip("Group Invite");
+                ImGui.SetTooltip("Invite to Event (Coming Soon)");
             }
 
 
