@@ -58,6 +58,8 @@ using Aspose.Imaging.ImageFilters.FilterOptions;
 using System.Timers;
 using Dalamud.Interface.Internal;
 using Dalamud.Plugin.Services;
+using InfiniteRoleplay.Windows.Defines;
+using static InfiniteRoleplay.Windows.Defines.ProfileDefines;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -325,8 +327,27 @@ namespace InfiniteRoleplay.Windows
                     {
                         addAvatar = true;
                     }
+                    
                     ImGui.Spacing();
-                    //name input
+                    for(int i = 0; i < ProfileDefines.ProfileBioFields().Count; i++) 
+                    {
+                        if (ProfileDefines.ProfileBioFields()[i].Item1 == ProfileDefines.InputTypes.single)
+                        {
+                            Tuple<InputTypes, string[], Vector2, int> data = ProfileDefines.ProfileBioFields()[i];
+                            ImGui.Text(data.Item2[0]);
+                            ImGui.SameLine();
+                            ImGui.InputTextWithHint(data.Item2[1], data.Item2[2], ref data.Item2[3], 100);
+                        }
+                        if(ProfileDefines.ProfileBioFields()[i].Item1 == ProfileDefines.InputTypes.multiline)
+                        {
+                            Tuple<InputTypes, string[], Vector2, int> data = ProfileDefines.ProfileBioFields()[i];
+                            ImGui.Text(data.Item2[0]);
+                            ImGui.SameLine();
+                            ImGui.InputTextMultiline(data.Item2[1], ref data.Item2[3], 500, new Vector2(400, 100));
+                        }
+
+                    }
+                        //Gather input values and add them
                     ImGui.Text("Name:   ");
                     ImGui.SameLine();
                     ImGui.InputTextWithHint("##playername", $"Character Name (The name or nickname of the character you are currently playing as)", ref characterAddName, 100);
