@@ -218,11 +218,8 @@ namespace Networking
             var packetID = buffer.ReadInt();
             buffer.Dispose();
             ExistingTargetProfileData = true;
-            ExistingTargetBioData = false;
-            ExistingTargetHooksData = false;
-            ExistingTargetStoryData = false;
-            ExistingTargetGalleryData = false;
             plugin.targetWindow.IsOpen = true;
+            TargetWindow.ClearUI();
         }
         public static void NoProfile(byte[] data)
         {
@@ -247,6 +244,7 @@ namespace Networking
             ExistingTargetOOCData = false;
             ExistingTargetGalleryData = false;
             plugin.targetWindow.IsOpen = true;
+            TargetWindow.ClearUI();
         }
         public static void NoTargetGallery(byte[] data)
         {
@@ -257,7 +255,22 @@ namespace Networking
             loggedIn = true;
             ExistingTargetGalleryData = false;
             plugin.targetWindow.IsOpen = true;
+            BookmarksWindow.DisableBookmarkSelection = false;
+
         }
+        public static void NoTargetStory(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            buffer.Dispose();
+            loggedIn = true;
+            ExistingTargetStoryData = false;
+            plugin.targetWindow.IsOpen = true;
+
+        }
+
+
         public static void NoProfileBio(byte[] data)
         {
             var buffer = new ByteBuffer();
@@ -276,15 +289,7 @@ namespace Networking
             buffer.Dispose();
             loggedIn = true;
         }
-        public static void NoTargetStory(byte[] data)
-        {
-            ExistingTargetStoryData = false;
-            var buffer = new ByteBuffer();
-            buffer.WriteBytes(data);
-            var packetID = buffer.ReadInt();
-            buffer.Dispose();
-            loggedIn = true;
-        }
+       
         public static void NoTargetHooks(byte[] data)
         {
             ExistingTargetHooksData = false;
@@ -360,19 +365,20 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             int imageCount = buffer.ReadInt();
+            ExistingTargetGalleryData = true;
             for (int i = 0; i < imageCount; i++)
             {
                 int imageBtLen = buffer.ReadInt();
                 byte[] imageBytes = buffer.ReadBytes(imageBtLen);
                 int thumbBtLen = buffer.ReadInt();
                 byte[] thumbBytes = buffer.ReadBytes(thumbBtLen);
-                ExistingTargetGalleryData = true;
                 TargetWindow.existingGalleryImageCount = imageCount;
                 TargetWindow.existingGalleryImgBytes[i] = imageBytes;
                 TargetWindow.existingGalleryThumbBytes[i] = thumbBytes;
                 //ProfileWindow.ReorderNoSend = true;
                 TargetWindow.DrawImage(i, plugin);
             }
+            BookmarksWindow.DisableBookmarkSelection = false;
             buffer.Dispose();
 
         }

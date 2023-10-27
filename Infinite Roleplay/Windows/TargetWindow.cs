@@ -77,17 +77,17 @@ namespace InfiniteRoleplay.Windows
         public static bool viewGallery = false;
         public static bool resetStory = false;
         public static bool[] galleryExists = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-        public bool ExistingBio;
+        public static bool ExistingBio;
         public static bool ExistingHooks;
         public static int hookCount;
         public static int hookEditCount, existingGalleryImageCount;
         private GameFontHandle _nameFont;
         private GameFontHandle _secionFont;
         public static string[] hooks;
-        public bool ExistingStory;
-        public bool ExistingOOC;
+        public static bool ExistingStory;
+        public static bool ExistingOOC;
         public static bool ExistingGallery;
-        public bool ExistingProfile;
+        public static bool ExistingProfile;
         public static string storyTitle = "";
         public static int lawfulGoodEditVal,
                           neutralGoodEditVal,
@@ -189,40 +189,41 @@ namespace InfiniteRoleplay.Windows
         }
         public override void Draw()
         {
+           
             //LoadFileSelection();
             //Vector2 addProfileBtnScale = new Vector2(playerCharacter.Name.ToString().Length * 20, 20);
             if(ExistingProfile == true)
             {
-                    if (ExistingBio == true)
-                    {
-                        if (ImGui.Button("Bio", new Vector2(100, 20))) { ClearUI(); viewBio = true; }
-                        if (ImGui.IsItemHovered()) { ImGui.SetTooltip("View bio section of this profile."); }
-                    }
-                    if (ExistingHooks == true)
-                    {
-                        ImGui.SameLine();
-                        if (ImGui.Button("Hooks", new Vector2(100, 20))) { ClearUI(); viewHooks = true; }
-                        if (ImGui.IsItemHovered()) { ImGui.SetTooltip("View hooks section of this profile."); }
-                    }
-                    if (ExistingStory == true)
-                    {
-                        ImGui.SameLine();
-                        if (ImGui.Button("Story", new Vector2(100, 20))) { ClearUI(); viewStory = true; }
-                        if (ImGui.IsItemHovered()) { ImGui.SetTooltip("View story section to your profile."); }
-                    }
-                    if (ExistingGallery == true)
-                    {
-                        ImGui.SameLine();
-                        if (ImGui.Button("Gallery", new Vector2(100, 20))) { ClearUI(); viewGallery = true; }
-                        if (ImGui.IsItemHovered()) { ImGui.SetTooltip("View gallery section of this profile."); }
-                    }
-                    if (ExistingOOC == true)
-                    {
-                        ImGui.SameLine();
-                        if (ImGui.Button("OOC Info", new Vector2(100, 20))) { ClearUI(); viewOOC = true; }
-                        if (ImGui.IsItemHovered()) { ImGui.SetTooltip("View OOC section of this profile."); }
-                    }
+                if (ExistingBio == true)
+                {
+                    if (ImGui.Button("Bio", new Vector2(100, 20))) { ClearUI(); viewBio = true; }
+                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("View bio section of this profile."); }
                 }
+                if (ExistingHooks == true)
+                {
+                    ImGui.SameLine();
+                    if (ImGui.Button("Hooks", new Vector2(100, 20))) { ClearUI(); viewHooks = true; }
+                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("View hooks section of this profile."); }
+                }
+                if (ExistingStory == true)
+                {
+                    ImGui.SameLine();
+                    if (ImGui.Button("Story", new Vector2(100, 20))) { ClearUI(); viewStory = true; }
+                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("View story section to your profile."); }
+                }
+                if (ExistingGallery == true)
+                {                        
+                    ImGui.SameLine();
+                    if (ImGui.Button("Gallery", new Vector2(100, 20))) { ClearUI(); viewGallery = true; }
+                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("View gallery section of this profile."); }
+                }
+                if (ExistingOOC == true)
+                {
+                    ImGui.SameLine();
+                    if (ImGui.Button("OOC Info", new Vector2(100, 20))) { ClearUI(); viewOOC = true; }
+                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("View OOC section of this profile."); }
+                }
+            }
                
               
 
@@ -560,6 +561,7 @@ namespace InfiniteRoleplay.Windows
 
 
         }
+
         public static void DrawImage(int i, Plugin plugin)
         {
 
@@ -611,7 +613,6 @@ namespace InfiniteRoleplay.Windows
             existingAvatarBytes = DataReceiver.currentTargetAvatar;
             ExistingGallery = DataReceiver.ExistingTargetGalleryData;
             hookEditCount = DataReceiver.targetHookEditCount;
-           
             if (viewBio == true)
             {
                 for (int i = 0; i < alignmentWidthVals.Length; i++)

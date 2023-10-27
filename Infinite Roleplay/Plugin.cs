@@ -201,13 +201,6 @@ namespace InfiniteRoleplay
             {
                 images[i].Dispose();
             }
-            targetWindow.Dispose();
-            targetMenu.Dispose();
-            optionsWindow.Dispose();
-            bookmarksWindow.Dispose();
-            loginWindow.Dispose();
-            profileWindow.Dispose();
-            imagePreview.Dispose();
            
             
         }
