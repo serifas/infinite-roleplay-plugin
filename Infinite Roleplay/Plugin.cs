@@ -275,6 +275,7 @@ namespace InfiniteRoleplay
         {
             this.WindowSystem.Draw();
         }
+
         public bool IsConnectedToServer(TcpClient _tcpClient)
         {
            
