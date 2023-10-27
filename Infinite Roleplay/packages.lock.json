@@ -41,6 +41,9 @@
         "type": "Transitive",
         "resolved": "7.0.0",
         "contentHash": "LSyCblMpvOe0N3E+8e0skHcrIhgV2huaNcjUUEa8hRtgEAm36aGkRoC8Jxlb6Ra6GSfF29ftduPNywin8XolzQ=="
+      },
+      "ottergui": {
+        "type": "Project"
       }
     }
   }
