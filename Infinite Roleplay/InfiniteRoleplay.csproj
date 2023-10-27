@@ -30,6 +30,9 @@
         <None Update="UI\alignments\lawful_good.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="UI\alignments\lawful_good.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="UI\alignments\lawful_good_bar.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
