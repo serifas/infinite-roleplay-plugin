@@ -229,6 +229,8 @@ namespace Networking
             buffer.Dispose();
             loggedIn = true;
             ExistingProfileData = false;
+            TargetMenu.DisableInput = false;
+            BookmarksWindow.DisableBookmarkSelection = false;
         }
         public static void NoTargetProfile(byte[] data)
         {

@@ -199,7 +199,7 @@ namespace InfiniteRoleplay
             }
             for(int i = 0; i < images.Length; i++)
             {
-                images[i].Dispose();
+             //   images[i].Dispose();
             }
            
             
