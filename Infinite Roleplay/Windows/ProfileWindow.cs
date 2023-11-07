@@ -58,8 +58,6 @@ using Aspose.Imaging.ImageFilters.FilterOptions;
 using System.Timers;
 using Dalamud.Interface.Internal;
 using Dalamud.Plugin.Services;
-using InfiniteRoleplay.Windows.Defines;
-using static InfiniteRoleplay.Windows.Defines.ProfileDefines;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -86,8 +84,8 @@ namespace InfiniteRoleplay.Windows
         public static int imageCount = 0;
         
         public static bool resetHooks;
-
-        public static bool[] ImageExists = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+       
+        public static bool[] ImageExists, ImageRendered = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         public static Vector4[] Cols = new Vector4[30] { new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255) };
         public static string[] galleryStatusVals = new string[30] { "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission" };
         public static int galleryUpdates = 0;
@@ -327,27 +325,8 @@ namespace InfiniteRoleplay.Windows
                     {
                         addAvatar = true;
                     }
-                    
                     ImGui.Spacing();
-                    for(int i = 0; i < ProfileDefines.ProfileBioFields().Count; i++) 
-                    {
-                        if (ProfileDefines.ProfileBioFields()[i].Item1 == ProfileDefines.InputTypes.single)
-                        {
-                            Tuple<InputTypes, string[], Vector2, int> data = ProfileDefines.ProfileBioFields()[i];
-                            ImGui.Text(data.Item2[0]);
-                            ImGui.SameLine();
-                            ImGui.InputTextWithHint(data.Item2[1], data.Item2[2], ref data.Item2[3], 100);
-                        }
-                        if(ProfileDefines.ProfileBioFields()[i].Item1 == ProfileDefines.InputTypes.multiline)
-                        {
-                            Tuple<InputTypes, string[], Vector2, int> data = ProfileDefines.ProfileBioFields()[i];
-                            ImGui.Text(data.Item2[0]);
-                            ImGui.SameLine();
-                            ImGui.InputTextMultiline(data.Item2[1], ref data.Item2[3], 500, new Vector2(400, 100));
-                        }
-
-                    }
-                        //Gather input values and add them
+                    //name input
                     ImGui.Text("Name:   ");
                     ImGui.SameLine();
                     ImGui.InputTextWithHint("##playername", $"Character Name (The name or nickname of the character you are currently playing as)", ref characterAddName, 100);
@@ -1222,7 +1201,7 @@ namespace InfiniteRoleplay.Windows
 
         public void DrawGalleryImage(int i, Plugin plugin)
         {
-            if (ImageExists[i] == true)
+            if (ImageExists[i] == true && ImageRendered[i] == false)
             {
                
                 if (ImGui.BeginChild("##GalleryImage" + i, new Vector2(150, 240)))
@@ -1244,8 +1223,6 @@ namespace InfiniteRoleplay.Windows
                         NSFW[i] = false;
                         DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
                                                     NSFW[i], galleryImageBytes[i], i);
-
-
                     }
 
                     if (nsfwImagesCheck[i] == false && nsfwImagesUncheck[i] == false)
@@ -1261,7 +1238,7 @@ namespace InfiniteRoleplay.Windows
                         // you might normally want to embed resources and load them from the manifest stream
                         galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryImageBytes[i]);
                         galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryThumbBytes[i]);
-
+                        ImageRendered[i] = true;
                         //this.imageTextures.Add(goatImage);
                     });
                     ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
@@ -1287,6 +1264,7 @@ namespace InfiniteRoleplay.Windows
                             ImageExists[i] = false;
                             Reorder = true;
                             removalIndexes[i] = 1;
+                            ImageRendered[i] = false;
                             DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, imageIndex);
                         }
 
