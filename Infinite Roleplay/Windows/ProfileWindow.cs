@@ -60,6 +60,7 @@ using Dalamud.Interface.Internal;
 using Dalamud.Plugin.Services;
 using InfiniteRoleplay.Windows.Defines;
 using static InfiniteRoleplay.Windows.Defines.ProfileDefines;
+using Lumina.Excel.GeneratedSheets2;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -96,6 +97,7 @@ namespace InfiniteRoleplay.Windows
         public static Vector4[] ImageUpdateColors = new Vector4[30] { Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero };
         public static int imageIndex = 0;
         public static bool[] nsfwImages = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+        public static bool[] galleryImageAdded = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         public static bool[] nsfwImagesCheck = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         public static bool[] nsfwImagesUncheck = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         public static bool[] NSFW = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
@@ -1127,7 +1129,8 @@ namespace InfiniteRoleplay.Windows
                         for (int i = firstOpen; i < imageIndex; i++)
                         {                            
                             galleryImageBytes[i] = galleryImageBytes[i + 1];
-                            galleryThumbBytes[i] = galleryThumbBytes[i + 1];                            
+                            galleryThumbBytes[i] = galleryThumbBytes[i + 1];
+                            DrawImage(i, plugin);
                         }
                     }
 
@@ -1256,14 +1259,11 @@ namespace InfiniteRoleplay.Windows
                     {
                         ImageExists[i] = true;
                     }
-                    Task.Run(async () =>
+                    if (galleryImageAdded[i] == false && galleryThumbBytes[i].Length > 0 && galleryImageBytes[i].Length > 0)
                     {
-                        // you might normally want to embed resources and load them from the manifest stream
-                        galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryImageBytes[i]);
-                        galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryThumbBytes[i]);
-
-                        //this.imageTextures.Add(goatImage);
-                    });
+                        DrawImage(i, plugin);
+                        galleryImageAdded[i] = true;
+                    }
                     ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
                     if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
                     if (ImGui.IsItemClicked())
@@ -1286,12 +1286,10 @@ namespace InfiniteRoleplay.Windows
                             imageIndexVal = i;
                             ImageExists[i] = false;
                             Reorder = true;
+                            galleryImageAdded[i] = false;
                             removalIndexes[i] = 1;
                             DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, imageIndex);
                         }
-
-
-
                     }
                     ImGui.EndChild();
                 }
@@ -1307,6 +1305,16 @@ namespace InfiniteRoleplay.Windows
 
 
     }
+        public void DrawImage(int i, Plugin plugin)
+        {
+            Task.Run(async () =>
+            {
+                // you might normally want to embed resources and load them from the manifest stream
+                galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryImageBytes[i]);
+                galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryThumbBytes[i]);
+                //this.imageTextures.Add(goatImage);
+            });
+        }
         public static void UpdateUploadStatus(int index)
         {
             ImageUpdateColors[index] = new Vector4(0, 255, 0, 255);
@@ -1524,7 +1532,7 @@ namespace InfiniteRoleplay.Windows
                         SortedList<SortedList<int, bool>, SortedList<int, byte[]>> newImageList = new SortedList<SortedList<int, bool>, SortedList<int, byte[]>>();
                         DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
                                                     NSFW[i], galleryImageBytes[i], i);
-
+                        DrawImage(i, plugin);
                     }
 
                 });

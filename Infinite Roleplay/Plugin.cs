@@ -191,13 +191,6 @@ namespace InfiniteRoleplay
         {
             this.framework.Update -= Update;
             this.WindowSystem.RemoveAllWindows();
-            this.targetMenu.Dispose();
-            this.bookmarksWindow.Dispose();
-            this.imagePreview.Dispose();
-            this.targetWindow.Dispose();
-            this.optionsWindow.Dispose();
-            this.loginWindow.Dispose();
-            this.profileWindow.Dispose();
             this.CommandManager.RemoveHandler(CommandName);
             if (IsConnectedToServer(ClientTCP.clientSocket) == true)
             {

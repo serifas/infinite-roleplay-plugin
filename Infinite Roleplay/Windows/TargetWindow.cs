@@ -62,7 +62,7 @@ namespace InfiniteRoleplay.Windows
         public static byte[][] existingGalleryImgBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
         public static byte[][] existingGalleryThumbBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
 
-
+        
         public static string[] StoryContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static string[] ChapterContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static string[] ChapterTitle = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
@@ -506,7 +506,12 @@ namespace InfiniteRoleplay.Windows
 
                                 // you might normally want to embed resources and load them from the manifest stream
                                 //this.imageTextures.Add(goatImage);
-                                DrawImage(i, plugin);
+                                if(existingGalleryThumbBytes.Length > 0 && existingGalleryImgBytes.Length > 0 && galleryExists[i] == false)
+                                {
+                                    DrawImage(i, plugin);
+                                    galleryExists[i] = true;
+                                }
+                                
                                 ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
                                 if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
                                 if (ImGui.IsItemClicked())
@@ -524,9 +529,12 @@ namespace InfiniteRoleplay.Windows
 
                                 // you might normally want to embed resources and load them from the manifest stream
                                 //this.imageTextures.Add(goatImage);
+                                if (existingGalleryThumbBytes.Length > 0 && existingGalleryImgBytes.Length > 0 && galleryExists[i] == false)
+                                {
+                                    DrawImage(i, plugin);
+                                    galleryExists[i] = true;
+                                }
 
-
-                                DrawImage(i, plugin);
                                 ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
                                 if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
                                 if (ImGui.IsItemClicked())
@@ -594,6 +602,7 @@ namespace InfiniteRoleplay.Windows
             }
             for(int i = 0; i < galleryImages.Length; i++)
             {
+                galleryExists[i] = false;
                 galleryImages[i].Dispose();
                 Array.Clear(galleryImages);
             }
