@@ -1312,14 +1312,21 @@ namespace InfiniteRoleplay.Windows
         {
             Task.Run(async () =>
             {
-
                 System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/picturetab.png"));
                 for(int i = 0; i < galleryImages.Length; i++)
                 {
                     // you might normally want to embed resources and load them from the manifest stream
                     galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(Imaging.ScaleImageBytes(Imaging.ImageToByteArray(image1), 150, 150));
                     galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(Imaging.ScaleImageBytes(Imaging.ImageToByteArray(image1), 150, 150));
-                    galleryImageAdded[i] = false;
+                   
+                }
+                for (int tb = 0; tb < galleryThumbBytes.Length; tb++)
+                {
+                    galleryThumbBytes[tb] = Imaging.ScaleImageBytes(Imaging.ImageToByteArray(image1), 150, 150);
+                }
+                for (int ib = 0; ib < galleryImageBytes.Length; ib++)
+                {
+                    galleryImageBytes[ib] = Imaging.ImageToByteArray(image1);
                 }
                 //this.imageTextures.Add(goatImage);
             });
@@ -1327,7 +1334,8 @@ namespace InfiniteRoleplay.Windows
         
         public void ResetUI(Plugin plugin)
         {
-            ResetImages(plugin); ;
+            ResetImages(plugin);
+
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
             this.avatarBytes = Imaging.ImageToByteArray(image1);
             this.avatarImg = this.persistAvatarHolder;
@@ -1360,7 +1368,13 @@ namespace InfiniteRoleplay.Windows
             for(int g = 0; g < galleryImages.Length; g++)
             {
                 ImageExists[g] = false;
+                imageIndexVal = 0;
+                imageIndex = 0;
+                Reorder = true;
+                galleryImageAdded[g] = false;
+                removalIndexes[g] = 1;
             }
+
             for(int s = 0; s < chapterEditCount; s++)
             {
                 ChapterTitle[s] = string.Empty;
