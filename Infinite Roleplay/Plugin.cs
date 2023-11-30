@@ -190,8 +190,8 @@ namespace InfiniteRoleplay
         public void Dispose()
         {
             this.framework.Update -= Update;
-            this.WindowSystem.RemoveAllWindows();
             this.CommandManager.RemoveHandler(CommandName);
+            this.WindowSystem.RemoveAllWindows();
             if (IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
                 DisconnectFromServer();

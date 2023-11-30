@@ -54,6 +54,7 @@ namespace InfiniteRoleplay.Windows
         private bool _showFileDialogError = false;
         public bool openedProfile = false;
         public bool openedTargetProfile = false;
+        public static bool DisableInput = false;
         public OptionsWindow(Plugin plugin, DalamudPluginInterface Interface, ITargetManager targetManager) : base(
        "OPTIONS", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
@@ -79,11 +80,18 @@ namespace InfiniteRoleplay.Windows
 
         public override void Draw()
         {
+            if(DisableInput == true)
+            {
+                ImGui.BeginDisabled();
+            }
             if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
             {
                 LoginWindow.loginRequest = true;
                 plugin.ReloadClient();
                 plugin.profileWindow.IsOpen = true;
+                plugin.profileWindow.ResetUI();
+                DisableInput = true;
+                DataSender.FetchProfile(configuration.username.ToString(), playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
             }
             if (ImGui.IsItemHovered())
             {
@@ -116,6 +124,10 @@ namespace InfiniteRoleplay.Windows
             if (ImGui.IsItemHovered())
             {
                 ImGui.SetTooltip("Events - Comming Soon");
+            }
+            if (DisableInput == true)
+            {
+                ImGui.EndDisabled();
             }
             if (isAdmin == true)
             {

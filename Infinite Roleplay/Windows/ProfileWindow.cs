@@ -99,7 +99,7 @@ namespace InfiniteRoleplay.Windows
         public static bool[] nsfwImages = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         public static bool[] galleryImageAdded = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         public static bool[] nsfwImagesCheck = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-        public static bool[] nsfwImagesUncheck = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+        public static bool[] nsfwImagesUncheck = new bool[30] { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
         public static bool[] NSFW = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         public static int[] nsfw = new int[30] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         public static int[] removalIndexes = new int[30] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
@@ -172,20 +172,20 @@ namespace InfiniteRoleplay.Windows
         private GameFontHandle _Font;
         //BIO VARS
         private IDalamudTextureWrap avatarImg, currentAvatarImg;
-        public static string characterAddName = "",
-                                characterAddRace = "",
-                                characterAddGender = "",
-                                characterAddAge = "",
-                                characterAddAfg = "",
-                                characterAddHeight = "",
-                                characterAddWeight = "",
-                                characterEditName = "",
-                                characterEditRace = "",
-                                characterEditGender = "",
-                                characterEditAge = "",
-                                characterEditAfg = "",
-                                characterEditHeight = "",
-                                characterEditWeight = "";
+        public static string characterAddName = string.Empty,
+                                characterAddRace = string.Empty,
+                                characterAddGender = string.Empty,
+                                characterAddAge = string.Empty,
+                                characterAddAfg = string.Empty,
+                                characterAddHeight = string.Empty,
+                                characterAddWeight = string.Empty,
+                                characterEditName = string.Empty,
+                                characterEditRace = string.Empty,
+                                characterEditGender = string.Empty,
+                                characterEditAge = string.Empty,
+                                characterEditAfg = string.Empty,
+                                characterEditHeight = string.Empty,
+                                characterEditWeight = string.Empty;
 
         private IDalamudTextureWrap lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil;
         private float lawfulGoodWidth = 0, neutralGoodWidth = 0, chaoticGoodWidth = 0, lawfulNeutralWidth = 0, trueNeutralWidth = 0, chaoticNeutralWidth = 0, lawfulEvilWidth = 0, neutralEvilWidth = 0, chaoticEvilWidth = 0;
@@ -220,6 +220,7 @@ namespace InfiniteRoleplay.Windows
                 MaximumSize = new Vector2(750, 950)
                 
             };
+            this.Size = new Vector2(750, 950);
             bl = blank_holder;
             this.plugin = plugin;
             this.pg = plugin.PluginInterfacePub;
@@ -329,26 +330,10 @@ namespace InfiniteRoleplay.Windows
                     {
                         addAvatar = true;
                     }
-                    
+                    ImGui.SameLine();
+                    ImGui.TextColored(new Vector4(255,0,0,255), "All fields are required including the avatar... If you wish to have a text field empty, just put a blank space in the field.");
                     ImGui.Spacing();
-                    for(int i = 0; i < ProfileDefines.ProfileBioFields().Count; i++) 
-                    {
-                        if (ProfileDefines.ProfileBioFields()[i].Item1 == ProfileDefines.InputTypes.single)
-                        {
-                            Tuple<InputTypes, string[], Vector2, int> data = ProfileDefines.ProfileBioFields()[i];
-                            ImGui.Text(data.Item2[0]);
-                            ImGui.SameLine();
-                            ImGui.InputTextWithHint(data.Item2[1], data.Item2[2], ref data.Item2[3], 100);
-                        }
-                        if(ProfileDefines.ProfileBioFields()[i].Item1 == ProfileDefines.InputTypes.multiline)
-                        {
-                            Tuple<InputTypes, string[], Vector2, int> data = ProfileDefines.ProfileBioFields()[i];
-                            ImGui.Text(data.Item2[0]);
-                            ImGui.SameLine();
-                            ImGui.InputTextMultiline(data.Item2[1], ref data.Item2[3], 500, new Vector2(400, 100));
-                        }
 
-                    }
                         //Gather input values and add them
                     ImGui.Text("Name:   ");
                     ImGui.SameLine();
@@ -364,15 +349,15 @@ namespace InfiniteRoleplay.Windows
                     //age input
                     ImGui.Text("Age:    ");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##age", $"The IC age of your character if your character is not 18+, do not put nsfw images in your gallery (numbers only)", ref characterAddAge, 100, ImGuiInputTextFlags.CharsHexadecimal);
+                    ImGui.InputTextWithHint("##age", $"The IC age of your character. If your character is not 18+, do not put nsfw images in your gallery", ref characterAddAge, 100, ImGuiInputTextFlags.CharsHexadecimal);
                     //age input
                     ImGui.Text("Height:");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##height", $"Height in Fulms (numbers only)", ref characterAddHeight, 100);
+                    ImGui.InputTextWithHint("##height", $"Height in Fulms", ref characterAddHeight, 100);
                     //age input
                     ImGui.Text("Weight:");
                     ImGui.SameLine();
-                    ImGui.InputTextWithHint("##weight", $"Weight in Ponze (numbers only)", ref characterAddWeight, 100);
+                    ImGui.InputTextWithHint("##weight", $"Weight in Ponze", ref characterAddWeight, 100);
                     //at first glance input
                     ImGui.Text("At First Glance:");
                     ImGui.SameLine();
@@ -608,11 +593,11 @@ namespace InfiniteRoleplay.Windows
                         if (characterAddName == string.Empty || characterAddRace == string.Empty || characterAddGender == string.Empty || characterAddAge == string.Empty ||
                             characterAddHeight == string.Empty || characterAddWeight == string.Empty || characterAddAfg == string.Empty)
                         {
-                            chatGui.PrintError("Please fill out all text fields. If you want a field to be empty please put a space in the text field to submit the application.");
+                            chatGui.PrintError("Please fill out all text fields. If you want a field to be empty please put a space in the text field to submit the form.");
                         }
                         else
                         {
-                            DataSender.SubmitProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), avatarBytes, characterAddName.Replace("'", "''"),
+                            DataSender.SubmitProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), this.avatarBytes, characterAddName.Replace("'", "''"),
                                                    characterAddRace.Replace("'", "''"), characterAddGender.Replace("'", "''"), int.Parse(characterAddAge), characterAddHeight.Replace("'", "''"), characterAddWeight.Replace("'", "''"), characterAddAfg.Replace("'", "''"),
                                                    alignmentVals[0], alignmentVals[1], alignmentVals[2], alignmentVals[3], alignmentVals[4], alignmentVals[5], alignmentVals[6], alignmentVals[7], alignmentVals[8]);
 
@@ -632,6 +617,8 @@ namespace InfiniteRoleplay.Windows
                     {
                         editAvatar = true;
                     }
+                    ImGui.SameLine();
+                    ImGui.TextColored(new Vector4(255, 0, 0, 255), "All fields are required including the avatar... If you wish to have a text field empty, just put a blank space in the field.");
                     ImGui.Spacing();
                     //name input
                     ImGui.Text("Name:   ");
@@ -1254,6 +1241,7 @@ namespace InfiniteRoleplay.Windows
                     if (nsfwImagesCheck[i] == false && nsfwImagesUncheck[i] == false)
                     {
                         nsfw[i] = 0;
+                        nsfwImagesUncheck[i] = true;
                     }
                     else
                     {
@@ -1314,6 +1302,51 @@ namespace InfiniteRoleplay.Windows
                 galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryThumbBytes[i]);
                 //this.imageTextures.Add(goatImage);
             });
+        }
+        public void ResetUI()
+        {
+
+            System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
+            this.avatarBytes = Imaging.ImageToByteArray(image1);
+            avatarImg = plugin.PluginInterfacePub.UiBuilder.LoadImage(this.avatarBytes);
+            characterAddName = string.Empty;
+            characterAddRace = string.Empty;
+            characterAddGender = string.Empty;
+            characterAddAge = string.Empty;
+            characterAddAfg = string.Empty;
+            characterAddHeight = string.Empty;
+            characterAddWeight = string.Empty;
+            characterEditName = string.Empty;
+            characterEditRace = string.Empty;
+            characterEditGender = string.Empty;
+            characterEditAge = string.Empty;
+            characterEditAfg = string.Empty;
+            characterEditHeight = string.Empty;
+            characterEditWeight = string.Empty;
+            for(int h = 0; h < hookCount; h++)
+            {
+                HookContent[h] = string.Empty;
+                HookEditContent[h] = string.Empty;
+            }
+            hookCount = 0;
+            for(int a = 0; a < alignmentWidthVals.Length; a++)
+            {
+                alignmentWidthVals[a] = 0f;
+            }
+            for(int g = 0; g < galleryImages.Length; g++)
+            {
+                ImageExists[g] = false;
+            }
+            for(int s = 0; s < chapterCount; s++)
+            {
+                storyTitle = string.Empty;
+                ChapterTitle[s] = string.Empty;
+                ChapterEditTitle[s] = string.Empty;
+                ChapterContent[s] = string.Empty;
+                ChapterEditContent[s] = string.Empty;
+                chapterCount = 0;
+            }
+            availablePercentage = 50;
         }
         public static void UpdateUploadStatus(int index)
         {

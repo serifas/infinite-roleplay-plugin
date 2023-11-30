@@ -220,6 +220,7 @@ namespace Networking
             ExistingTargetProfileData = true;
             plugin.targetWindow.IsOpen = true;
             TargetWindow.ClearUI();
+
         }
         public static void NoProfile(byte[] data)
         {
@@ -229,6 +230,7 @@ namespace Networking
             buffer.Dispose();
             loggedIn = true;
             ExistingProfileData = false;
+            OptionsWindow.DisableInput = false;
         }
         public static void NoTargetProfile(byte[] data)
         {
@@ -438,6 +440,7 @@ namespace Networking
                 }
               
             }
+
             buffer.Dispose();
 
         }
@@ -529,6 +532,7 @@ namespace Networking
             ExistingBioData = true;
             buffer.Dispose();
 
+            OptionsWindow.DisableInput = false;
         }
         public static void ExistingProfile(byte[] data)
         {
