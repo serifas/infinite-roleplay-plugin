@@ -168,10 +168,10 @@ namespace InfiniteRoleplay.Windows
         public int[] flaggedHookIndexes = new int[] { };
         public static bool addImageToGallery = false;
         //Font Vars
-      
+       
         private GameFontHandle _Font;
         //BIO VARS
-        private IDalamudTextureWrap avatarImg, currentAvatarImg;
+        private IDalamudTextureWrap avatarImg, currentAvatarImg, picHolder;
         public static string characterAddName = string.Empty,
                                 characterAddRace = string.Empty,
                                 characterAddGender = string.Empty,
@@ -220,8 +220,8 @@ namespace InfiniteRoleplay.Windows
                 MaximumSize = new Vector2(750, 950)
                 
             };
-            this.Size = new Vector2(750, 950);
             bl = blank_holder;
+
             this.plugin = plugin;
             this.pg = plugin.PluginInterfacePub;
             this.configuration = plugin.Configuration;
@@ -237,7 +237,7 @@ namespace InfiniteRoleplay.Windows
             //timer.Elapsed += OnEventExecution;
             imageHolder = Imaging.ImageToByteArray(pictureTab);
             thumbHolder = Imaging.ImageToByteArray(Imaging.byteArrayToImage(Imaging.ScaleImageBytes(picBytes, 150, 150)));
-            
+            picHolder = plugin.PluginInterfacePub.UiBuilder.LoadImage(thumbHolder);
             for (int tb = 0; tb < galleryThumbBytes.Length; tb++)
             {
                 galleryThumbBytes[tb] = Imaging.ScaleImageBytes(picBytes, 150, 150);   
@@ -270,7 +270,6 @@ namespace InfiniteRoleplay.Windows
         {
             _fileDialogManager.Draw();
             //LoadFileSelection();
-
             //Vector2 addProfileBtnScale = new Vector2(playerCharacter.Name.ToString().Length * 20, 20);
             if (this.ExistingProfile == true)
             {
@@ -1333,11 +1332,21 @@ namespace InfiniteRoleplay.Windows
             {
                 alignmentWidthVals[a] = 0f;
             }
-            for(int g = 0; g < galleryImages.Length; g++)
+            for (int tb = 0; tb < galleryThumbBytes.Length; tb++)
             {
-                ImageExists[g] = false;
+                galleryThumbBytes[tb] = Imaging.ScaleImageBytes(picBytes, 150, 150);
             }
-            for(int s = 0; s < chapterCount; s++)
+            for (int ib = 0; ib < galleryImageBytes.Length; ib++)
+            {
+                galleryImageBytes[ib] = Imaging.ScaleImageBytes(picBytes, 150, 150);
+            }
+            for(int gi = 0; gi < galleryImages.Length; gi++)
+            {
+                ImageExists[gi] = false;
+                galleryImages[gi] = picHolder;
+                galleryThumbs[gi] = picHolder;
+            }
+            for (int s = 0; s < chapterCount; s++)
             {
                 storyTitle = string.Empty;
                 ChapterTitle[s] = string.Empty;

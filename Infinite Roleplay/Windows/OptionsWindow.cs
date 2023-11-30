@@ -80,18 +80,14 @@ namespace InfiniteRoleplay.Windows
 
         public override void Draw()
         {
-            if(DisableInput == true)
-            {
-                ImGui.BeginDisabled();
-            }
             if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
             {
                 LoginWindow.loginRequest = true;
                 plugin.ReloadClient();
                 plugin.profileWindow.IsOpen = true;
-                plugin.profileWindow.ResetUI();
                 DisableInput = true;
-                DataSender.FetchProfile(configuration.username.ToString(), playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
+                ProfileWindow.ClearUI();
+                DataSender.Login(configuration.username, configuration.password, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString()) ;
             }
             if (ImGui.IsItemHovered())
             {
@@ -124,10 +120,6 @@ namespace InfiniteRoleplay.Windows
             if (ImGui.IsItemHovered())
             {
                 ImGui.SetTooltip("Events - Comming Soon");
-            }
-            if (DisableInput == true)
-            {
-                ImGui.EndDisabled();
             }
             if (isAdmin == true)
             {

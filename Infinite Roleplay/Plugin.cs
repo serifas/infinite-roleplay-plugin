@@ -44,6 +44,7 @@ namespace InfiniteRoleplay
         public bool toggleconnection;
         public bool firstload = true;
         public bool targeted = false;
+        public bool reload = false;
         public bool loadCallback = false;
         public bool loadPreview = false;
         public string socketStatus;
@@ -219,15 +220,19 @@ namespace InfiniteRoleplay
                
          
         }
-
+       
         public void Update(IFramework framework)
         {
             if (IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
                 toggleconnection = false; 
-                if (IsLoggedIn() == false)
-                {                   
+                if (IsLoggedIn() == false && reload == true)
+                {
+                    loggedIn = false;
                     DisconnectFromServer();
+                    loginWindow.IsOpen = true;
+                    optionsWindow.IsOpen = false;
+                    reload = false;
                 }
                 if (loadCallback == true)
                 {
@@ -266,7 +271,6 @@ namespace InfiniteRoleplay
                 imagePreview.IsOpen = true;
                 loadPreview = false;
             }
-            
         }
 
         private void OnCommand(string command, string args)
