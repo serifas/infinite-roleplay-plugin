@@ -899,18 +899,18 @@ namespace InfiniteRoleplay.Windows
                     string hookMsg = "";
                     if (ImGui.Button("+", new Vector2(30, 30)))
                     {
-                        chapterCount++;
+                        hookCount++;
                     }
                     ImGui.SameLine();
                     if (ImGui.Button("-", new Vector2(30, 30)))
                     {
-                        chapterCount--;
-                        if (chapterCount < 1)
+                        hookCount--;
+                        if (hookCount < 1)
                         {
-                            chapterCount = 0;
+                            hookCount = 0;
                         }
                     }
-                    for (int i = 0; i < chapterCount; i++)
+                    for (int i = 0; i < hookCount; i++)
                     {
                         int index = i + 1;
                         ImGui.InputTextMultiline("##content" + i, ref HookContent[i], 3000, new Vector2(450, 100));
@@ -1335,9 +1335,9 @@ namespace InfiniteRoleplay.Windows
         public void ResetUI(Plugin plugin)
         {
             ResetImages(plugin);
-
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
             this.avatarBytes = Imaging.ImageToByteArray(image1);
+            DataReceiver.currentAvatar = avatarBytes;
             this.avatarImg = this.persistAvatarHolder;
             this.currentAvatarImg = this.persistAvatarHolder;
             characterAddName = string.Empty;
