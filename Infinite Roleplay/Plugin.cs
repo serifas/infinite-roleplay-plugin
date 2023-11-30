@@ -190,13 +190,13 @@ namespace InfiniteRoleplay
         public void Dispose()
         {
             this.framework.Update -= Update;
-            this.WindowSystem.RemoveAllWindows();
             this.CommandManager.RemoveHandler(CommandName);
+            this.WindowSystem.RemoveAllWindows();
             if (IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
                 DisconnectFromServer();
             }
-           // if(images != null && images.Length > 0)
+            //if(images != null && images.Length > 0)
             //{
              //   for (int i = 0; i < images.Length; i++)
             //    {
@@ -238,6 +238,17 @@ namespace InfiniteRoleplay
             else
             {
                 toggleconnection = true;
+            }
+            if(IsLoggedIn() == false)
+            {
+
+                targetWindow.IsOpen = false;
+                targetMenu.IsOpen = false;
+                loginWindow.IsOpen = false;
+                optionsWindow.IsOpen = false;
+                profileWindow.IsOpen = false;
+                bookmarksWindow.IsOpen = false;
+                imagePreview.IsOpen = false;
             }
             if (IsLoggedIn() == true && toggleconnection == true)
             {

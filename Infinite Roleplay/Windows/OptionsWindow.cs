@@ -54,6 +54,7 @@ namespace InfiniteRoleplay.Windows
         private bool _showFileDialogError = false;
         public bool openedProfile = false;
         public bool openedTargetProfile = false;
+        public static bool DisableInput = false;
         public OptionsWindow(Plugin plugin, DalamudPluginInterface Interface, ITargetManager targetManager) : base(
        "OPTIONS", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
@@ -83,7 +84,9 @@ namespace InfiniteRoleplay.Windows
             {
                 LoginWindow.loginRequest = true;
                 plugin.ReloadClient();
+                plugin.profileWindow.ResetUI(plugin);
                 plugin.profileWindow.IsOpen = true;
+                DataSender.FetchProfile(configuration.username.ToString(), playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
             }
             if (ImGui.IsItemHovered())
             {

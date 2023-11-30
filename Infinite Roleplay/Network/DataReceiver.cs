@@ -220,6 +220,7 @@ namespace Networking
             ExistingTargetProfileData = true;
             plugin.targetWindow.IsOpen = true;
             TargetWindow.ClearUI();
+
         }
         public static void NoProfile(byte[] data)
         {
@@ -229,6 +230,12 @@ namespace Networking
             buffer.Dispose();
             loggedIn = true;
             ExistingProfileData = false;
+            ExistingBioData = false;
+            ExistingGalleryData = false;
+            ExistingHooksData = false;
+            ExistingStoryData = false;
+            ExistingOOCData = false;
+            OptionsWindow.DisableInput = false;
         }
         public static void NoTargetProfile(byte[] data)
         {
@@ -404,7 +411,6 @@ namespace Networking
                     ExistingGalleryData = true;
                     ProfileWindow.imageIndex = imageCount;
                     ProfileWindow.ImageExists[i] = true;
-        
                     ProfileWindow.galleryImageBytes[i] = imageBytes;
                     ProfileWindow.Cols[i] = new System.Numerics.Vector4(0, 255, 0, 255);
                     ProfileWindow.galleryStatusVals[i] = "Uploaded";
@@ -439,6 +445,7 @@ namespace Networking
                 }
               
             }
+
             buffer.Dispose();
 
         }
@@ -529,7 +536,7 @@ namespace Networking
             currentAvatar = avatarBytes;
             ExistingBioData = true;
             buffer.Dispose();
-
+            plugin.profileWindow.UpdateUI();
         }
         public static void ExistingProfile(byte[] data)
         {
@@ -538,6 +545,7 @@ namespace Networking
             var packetID = buffer.ReadInt();
             buffer.Dispose();
             ExistingProfileData = true;
+
         }
         public static void ReceiveProfileHooks(byte[] data)
         {
