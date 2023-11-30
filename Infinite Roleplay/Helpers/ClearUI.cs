@@ -9,14 +9,7 @@ namespace InfiniteRoleplay.Helpers
 {
     internal class ClearUI
     {
-        public void ClearStrings(List<string> vals)
-        {
-
-        }
-        public void ClearTextureWraps(List<IDalamudTextureWrap> vals)
-        {
-
-        }
+       
        
     }
 }
