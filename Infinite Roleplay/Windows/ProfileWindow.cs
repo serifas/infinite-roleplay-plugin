@@ -166,7 +166,7 @@ namespace InfiniteRoleplay.Windows
                           lawfulEvilEditVal,
                           neutralEvilEditVal,
                           chaoticEvilEditVal;
-        public static int[] alignmentVals, alignmentEditVals = new int[] { };
+        public static int[] alignmentVals = new int[] { };
         private float[] alignmentWidthVals = new float[] { };
         private string[] alignmentNames = new string[]{};
         public byte[] avatarBytes, existingAvatarBytes;
@@ -263,7 +263,6 @@ namespace InfiniteRoleplay.Windows
             this._Font = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
             //plus and minus
             alignmentVals = new int[9] { lawfulGoodVal, neutralGoodVal, chaoticGoodVal, lawfulNeutralVal, trueNeutralVal, chaoticNeutralVal, lawfulEvilVal, neutralEvilVal, chaoticEvilVal };
-            alignmentEditVals = new int[9] { lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal };
             this.alignmentWidthVals = new float[9] { lawfulGoodWidthVal, neutralGoodWidthVal, chaoticGoodWidthVal, lawfulNeutralWidthVal, trueNeutralWidthVal, chaoticNeutralWidthVal, lawfulEvilWidthVal, neutralEvilWidthVal, chaoticEvilWidthVal };
             this.alignmentNames = new string[9] { "lawfulgood", "neutralgood", "chaoticgood", "lawfulneutral", "trueneutral", "chaoticneutral", "lawfulevil", "neutralevil", "chaoticevil" };
         }
@@ -302,38 +301,16 @@ namespace InfiniteRoleplay.Windows
                     if (ImGui.Button("Add Profile", new Vector2(100, 20))) { addProfile = true; DataSender.CreateProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString()); }
                 }
 
-                if (addProfile == true)
-                {
-                    editProfile = false;
-                    ImGui.Spacing();
-                    if (ImGui.Button("Add Bio", new Vector2(100, 20)))
-                    {
-                        ClearUI(); addBio = true;
-                    }
-                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add a bio section to your profile."); }
-                    ImGui.SameLine();
-                    if (ImGui.Button("Add Hooks", new Vector2(100, 20))) { ClearUI(); addHooks = true; }
-                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add a hooks section to your profile."); }
-                    ImGui.SameLine();
-                    if (ImGui.Button("Add Story", new Vector2(100, 20))) { ClearUI(); addStory = true; }
-                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add a story section to your profile."); }
-                    ImGui.SameLine();
-                    if (ImGui.Button("Add OOC Info", new Vector2(100, 20))) { ClearUI(); addOOC = true; }
-                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add an OOC section to your profile."); }
-                    ImGui.SameLine();
-                    if (ImGui.Button("Add Gallery", new Vector2(100, 20))) { ClearUI(); addGallery = true; }
-                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add a gallery section to your profile."); }
-
-                }
+                
                 if (editProfile == true)
                 {
                     addProfile = false;
                     ImGui.Spacing();
-                    if (this.ExistingBio == true) { if (ImGui.Button("Edit Bio", new Vector2(100, 20))) { ClearUI(); editBio = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your bio."); } } else { if (ImGui.Button("Add Bio", new Vector2(100, 20))) { ClearUI(); addBio = true; } }
+                    if (this.ExistingBio == true) { if (ImGui.Button("Edit Bio", new Vector2(100, 20))) { ClearUI(); editBio = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your bio."); } } else { if (ImGui.Button("Add Bio", new Vector2(100, 20))) { ClearUI(); editBio = true; } }
                     ImGui.SameLine();
-                    if (this.ExistingHooks == true) { if (ImGui.Button("Edit Hooks", new Vector2(100, 20))) { ClearUI(); editHooks = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Hooks."); } } else { if (ImGui.Button("Add Hooks", new Vector2(100, 20))) { ClearUI(); addHooks = true; } }
+                    if (this.ExistingHooks == true) { if (ImGui.Button("Edit Hooks", new Vector2(100, 20))) { ClearUI(); editHooks = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Hooks."); } } else { if (ImGui.Button("Add Hooks", new Vector2(100, 20))) { ClearUI(); editHooks = true; } }
                     ImGui.SameLine();
-                    if (this.ExistingStory == true) { if (ImGui.Button("Edit Story", new Vector2(100, 20))) { ClearUI(); editStory = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Story."); } } else { if (ImGui.Button("Add Story", new Vector2(100, 20))) { ClearUI(); addStory = true; } }
+                    if (this.ExistingStory == true) { if (ImGui.Button("Edit Story", new Vector2(100, 20))) { ClearUI(); editStory = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Story."); } } else { if (ImGui.Button("Add Story", new Vector2(100, 20))) { ClearUI(); editStory = true; } }
                     ImGui.SameLine();
                     if (this.ExistingOOC == true) { if (ImGui.Button("Edit OOC Info", new Vector2(100, 20))) { ClearUI(); editOOC = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your OOC Info."); } } else { if (ImGui.Button("Add OOC Info", new Vector2(100, 20))) { ClearUI(); addOOC = true; } }
                     ImGui.SameLine();
@@ -345,292 +322,6 @@ namespace InfiniteRoleplay.Windows
                 int currentAvailablePointsLeft = AvailablePercentageLeft(currentLawfulGood, currentNeutralGood, currentChaoticGood, currentLawfulNeutral, currentTrueNeutral, currentChaoticNeutral, currentLawfulEvil, currentNeutralEvil, currentChaoticEvil);
                 if (ImGui.BeginChild("PROFILE"))
                 {
-                    if (addBio == true)
-                    {
-                        ImGui.Image(this.avatarImg.ImGuiHandle, new Vector2(100, 100));
-
-                        if (ImGui.Button("Add Avatar"))
-                        {
-                            addAvatar = true;
-                        }
-                        ImGui.SameLine();
-                        ImGui.TextColored(new Vector4(255, 0, 0, 255), "All fields are required including the avatar... If you wish to have a text field empty, just put a blank space in the field.");
-                        ImGui.Spacing();
-
-                        //Gather input values and add them
-                        ImGui.Text("Name:   ");
-                        ImGui.SameLine();
-                        ImGui.InputTextWithHint("##playername", $"Character Name (The name or nickname of the character you are currently playing as)", ref characterAddName, 100);
-                        //race input
-                        ImGui.Text("Race:    ");
-                        ImGui.SameLine();
-                        ImGui.InputTextWithHint("##race", $"The IC Race of your character", ref characterAddRace, 100);
-                        //gender input
-                        ImGui.Text("Gender: ");
-                        ImGui.SameLine();
-                        ImGui.InputTextWithHint("##gender", $"The IC gender of your character", ref characterAddGender, 100);
-                        //age input
-                        ImGui.Text("Age:    ");
-                        ImGui.SameLine();
-                        ImGui.InputTextWithHint("##age", $"The IC age of your character. If your character is not 18+, do not put nsfw images in your gallery", ref characterAddAge, 100, ImGuiInputTextFlags.CharsHexadecimal);
-                        //age input
-                        ImGui.Text("Height:");
-                        ImGui.SameLine();
-                        ImGui.InputTextWithHint("##height", $"Height in Fulms", ref characterAddHeight, 100);
-                        //age input
-                        ImGui.Text("Weight:");
-                        ImGui.SameLine();
-                        ImGui.InputTextWithHint("##weight", $"Weight in Ponze", ref characterAddWeight, 100);
-                        //at first glance input
-                        ImGui.Text("At First Glance:");
-                        ImGui.SameLine();
-                        ImGui.InputTextMultiline("##afg", ref characterAddAfg, 500, new Vector2(400, 100));
-
-                        ImGui.TextColored(new Vector4(1, 1, 0, 1), "ALIGNMENT:");
-                        ImGui.SameLine();
-                        ImGui.Text(availablePercentage + " Points Available:");
-
-                        #region ALIGNMENTS
-                        #region LAWFUL GOOD
-                        //LAWFUL GOOD
-                        ImGui.Image(this.lawfulGood.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("LAWFUL GOOD:\n" +
-                                            "    These characters always do the right thing as expected by society.\n" +
-                                            "    They always follow the rules, tell the truth and help people out.\n" +
-                                            "    They like order, trust and believe in people with social authority, \n" +
-                                            "    and they aim to be an upstanding citizen.");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##lawfulgoodplus", new Vector2(20, 20))) { ModAlignment("lawfulgood", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##lawfulgoodminus", new Vector2(20, 20))) { ModAlignment("lawfulgood", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(this.lawfulGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[0] * 30, 20));
-                        ImGui.SameLine();
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[0].ToString());
-                        #endregion
-
-                        #region NEUTRAL GOOD
-                        // NEUTRAL GOOD
-                        ImGui.Image(this.neutralGood.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("NEUTRAL GOOD:\n" +
-                                            "    These characters do their best to help others, \n" +
-                                            "    but they do it because they want to, not because they have \n" +
-                                            "    been told to by a person in authority or by society’s laws.\n" +
-                                            "    A Neutral Good person will break the rules if they are doing it \n" +
-                                            "    for good reasons and they will feel confident \n" +
-                                            "    and justified in their actions.  ");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##neutralgoodplus", new Vector2(20, 20))) { ModAlignment("neutralgood", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##neutralgoodminus", new Vector2(20, 20))) { ModAlignment("neutralgood", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(this.neutralGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[1] * 30, 20));
-                        ImGui.SameLine();
-                        int formattedNeutralGoodVal = neutralGoodVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[1].ToString());
-                        #endregion
-
-                        #region CHAOTIC GOOD
-                        // CHAOTIC GOOD
-                        ImGui.Image(this.chaoticGood.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("CHAOTIC GOOD:\n" +
-                                            "    Chaotic Good characters do what their conscience tells \n" +
-                                            "    them to for the greater good. They do not care about following society’s rules, \n" +
-                                            "    they care about doing what’s right. \n" +
-                                            "\n" +
-                                            "    A Chaotic Good character will speak up for and help, those who are being needlessly \n" +
-                                            "    held back because of arbitrary rules and laws. They do not like seeing people \n" +
-                                            "    being told what to do for nonsensical reasons. ");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##chaoticgoodplus", new Vector2(20, 20))) { ModAlignment("chaoticgood", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##chaoticgoodminus", new Vector2(20, 20))) { ModAlignment("chaoticgood", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(this.chaoticGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[2] * 30, 20));
-                        ImGui.SameLine();
-                        int formattedChaoticGoodVal = chaoticGoodVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[2].ToString());
-                        #endregion
-
-                        #region LAWFUL NEUTRAL
-                        // LAWFUL NEUTRAL
-                        ImGui.Image(this.lawfulNeutral.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("LAWFUL NEUTRAL:\n" +
-                                            "    A Lawful Neutral character behaves in a way that matches \n" +
-                                            "    the organization, authority or tradition they follow. \n" +
-                                            "    They live by this code and uphold it above all else, taking actions \n" +
-                                            "    that are sometimes considered Good and sometimes considered Evil by others.\n" +
-                                            "    The Lawful Neutral character does not care about what others think of \n" +
-                                            "    their actions, they only care about their actions being correct according \n" +
-                                            "    to their code.But they do not preach their code to others and try to convert them. ");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##lawfulneutralplus", new Vector2(20, 20))) { ModAlignment("lawfulneutral", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##lawfulneutralminus", new Vector2(20, 20))) { ModAlignment("lawfulneutral", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(this.lawfulNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[3] * 30, 20));
-                        ImGui.SameLine();
-                        int formattedLawfulNeutralVal = lawfulNeutralVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[3].ToString());
-                        #endregion
-
-                        #region TRUE NEUTRAL
-                        // CHAOTIC GOOD
-                        ImGui.Image(this.trueNeutral.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("TRUE NEUTRAL:\n" +
-                                            "    True Neutral characters don’t like to take sides.\n" +
-                                            "    They are pragmatic rather than emotional in their actions, \n" +
-                                            "    choosing the response which makes the most sense for them in each situation. " +
-                                            "\n" +
-                                            "    Neutral characters don’t believe in upholding the rules and laws of society, but nor \n" +
-                                            "    do they feel the need to rebel against them. There will be times when a Neutral character \n" +
-                                            "    has to make a choice between siding with Good or Evil, perhaps casting the deciding vote \n" +
-                                            "    in a party. They will make a choice in these situations, usually siding with whichever causes \n" +
-                                            "    them the least hassle, or they stand to gain the most from. ");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##trueneutralplus", new Vector2(20, 20))) { ModAlignment("trueneutral", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##trueneutralminus", new Vector2(20, 20))) { ModAlignment("trueneutral", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(this.trueNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[4] * 30, 20));
-                        ImGui.SameLine();
-                        int formattedTrueNeutralVal = trueNeutralVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[4].ToString());
-                        #endregion
-
-                        #region CHAOTIC NEUTRAL
-                        // CHAOTIC GOOD
-                        ImGui.Image(this.chaoticNeutral.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("CHAOTIC NEUTRAL:\n" +
-                                            "    Chaotic Neutral characters are free spirits. \n" +
-                                            "    They do what they want but don’t seek to disrupt the usual norms and laws of society. \n" +
-                                            "    These individuals don’t like being told what to do, following traditions, \n" +
-                                            "    or being controlled. That said, they will not work to change these restrictions,\n" +
-                                            "    instead, they will just try to avoid them in the first place.\n" +
-                                            "    Their need to be free is the most important thing. ");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##chaoticneutralplus", new Vector2(20, 20))) { ModAlignment("chaoticneutral", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##chaoticneutralminus", new Vector2(20, 20))) { ModAlignment("chaoticneutral", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(this.chaoticNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[5] * 30, 20));
-                        ImGui.SameLine();
-                        int formattedChaoticNeutralVal = chaoticNeutralVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[5].ToString());
-                        #endregion
-
-                        #region LAWFUL EVIL
-                        // CHAOTIC GOOD
-                        ImGui.Image(this.lawfulEvil.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("LAWFUL EVIL:\n" +
-                                            "    Lawful Evil characters operate within a strict code of laws and traditions.\n" +
-                                            "    Upholding these values and living by these is more important than anything, \n" +
-                                            "    even the lives of others. They may not consider themselves to be Evil, \n" +
-                                            "    they may believe what they are doing is right. \n" +
-
-                                            "    These characters enforce their system of control through force.\n" +
-                                            "    Anyone who doesn’t follow their code or acts out of line will face consequences. \n" +
-                                            "    Lawful Evil characters feel no guilt or remorse for causing harm to others in this way.");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##lawfulevilplus", new Vector2(20, 20))) { ModAlignment("lawfulevil", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##lawfulevilminus", new Vector2(20, 20))) { ModAlignment("lawfulevil", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(this.lawfulEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[6] * 30, 20));
-                        ImGui.SameLine();
-                        int formattedLawfulEvilVal = lawfulEvilVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[6].ToString());
-                        #endregion
-
-                        #region NEUTRAL EVIL
-                        // CHAOTIC GOOD
-                        ImGui.Image(this.neutralEvil.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("NEUTRAL EVIL:\n" +
-                                            "    Neutral Evil characters are selfish. Their actions are driven by their own wants \n" +
-                                            "    whether that’s power, greed, attention, or something else. \n" +
-                                            "    They will follow laws if they happen to align with their ambitions, but they will not \n" +
-                                            "    hesitate to break them if they don’t.They don’t believe that following laws \n" +
-                                            "    and traditions makes anyone a better person. \n" +
-                                            "    Instead, they use other people’s beliefs in codes and loyalty against them, using it \n" +
-                                            "    as a tool to influence their behaviour. ");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##neutralevilplus", new Vector2(20, 20))) { ModAlignment("neutralevil", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##neutralevilminus", new Vector2(20, 20))) { ModAlignment("neutralevil", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(this.neutralEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[7] * 30, 20));
-                        ImGui.SameLine();
-                        int formattedNeutralEvilVal = neutralEvilVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[7].ToString());
-                        #endregion
-
-                        #region CHAOTIC EVIL
-                        // CHAOTIC GOOD
-                        ImGui.Image(this.chaoticEvil.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("CHAOTIC EVIL:\n" +
-                                            "    Chaotic Evil characters care only for themselves with a complete disregard \n" +
-                                            "    for all law and order and for the welfare and freedom of others. \n" +
-                                            "    They harm others out of anger or just for fun.\n" +
-                                            "    Characters aligned with Chaotic Evil usually operate alone \n" +
-                                            "    because they do not work well with others.");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##chaoticevilplus", new Vector2(20, 20))) { ModAlignment("chaoticevil", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##chaoticevilminus", new Vector2(20, 20))) { ModAlignment("chaoticevil", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(this.chaoticEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[8] * 30, 20));
-                        ImGui.SameLine();
-                        int formattedChaoticEvilVal = chaoticEvilVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[8].ToString());
-                        #endregion
-                        #endregion
-                        if (ImGui.Button("Save Bio"))
-                        {
-                            if (characterAddName == string.Empty || characterAddRace == string.Empty || characterAddGender == string.Empty || characterAddAge == string.Empty ||
-                                characterAddHeight == string.Empty || characterAddWeight == string.Empty || characterAddAfg == string.Empty)
-                            {
-                                chatGui.PrintError("Please fill out all text fields. If you want a field to be empty please put a space in the text field to submit the form.");
-                            }
-                            else
-                            {
-                                DataSender.SubmitProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), this.avatarBytes, characterAddName.Replace("'", "''"),
-                                                       characterAddRace.Replace("'", "''"), characterAddGender.Replace("'", "''"), int.Parse(characterAddAge), characterAddHeight.Replace("'", "''"), characterAddWeight.Replace("'", "''"), characterAddAfg.Replace("'", "''"),
-                                                       alignmentVals[0], alignmentVals[1], alignmentVals[2], alignmentVals[3], alignmentVals[4], alignmentVals[5], alignmentVals[6], alignmentVals[7], alignmentVals[8]);
-
-                            }
-
-
-                        }
-
-
-                    }
                     if (editBio == true)
                     {
                         this.currentAvatarImg = pg.UiBuilder.LoadImage(existingAvatarBytes);
@@ -694,7 +385,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         ImGui.Image(this.lawfulGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[0] * 30, 20));
                         ImGui.SameLine();
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[0].ToString());
+                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[0].ToString());
                         #endregion
 
                         #region NEUTRAL GOOD
@@ -717,7 +408,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         ImGui.Image(this.neutralGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[1] * 30, 20));
                         ImGui.SameLine();
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[1].ToString());
+                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[1].ToString());
                         #endregion
 
                         #region CHAOTIC GOOD
@@ -742,7 +433,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.Image(this.chaoticGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[2] * 30, 20));
                         ImGui.SameLine();
                         int formattedChaoticGoodVal = chaoticGoodVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[2].ToString());
+                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[2].ToString());
                         #endregion
 
                         #region LAWFUL NEUTRAL
@@ -767,7 +458,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.Image(this.lawfulNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[3] * 30, 20));
                         ImGui.SameLine();
                         int formattedLawfulNeutralVal = lawfulNeutralVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[3].ToString());
+                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[3].ToString());
                         #endregion
 
                         #region TRUE NEUTRAL
@@ -794,7 +485,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.Image(this.trueNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[4] * 30, 20));
                         ImGui.SameLine();
                         int formattedTrueNeutralVal = trueNeutralVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[4].ToString());
+                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[4].ToString());
                         #endregion
 
                         #region CHAOTIC NEUTRAL
@@ -818,7 +509,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.Image(this.chaoticNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[5] * 30, 20));
                         ImGui.SameLine();
                         int formattedChaoticNeutralVal = chaoticNeutralVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[5].ToString());
+                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[5].ToString());
                         #endregion
 
                         #region LAWFUL EVIL
@@ -844,7 +535,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.Image(this.lawfulEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[6] * 30, 20));
                         ImGui.SameLine();
                         int formattedLawfulEvilVal = lawfulEvilVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[6].ToString());
+                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[6].ToString());
                         #endregion
 
                         #region NEUTRAL EVIL
@@ -869,7 +560,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.Image(this.neutralEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[7] * 30, 20));
                         ImGui.SameLine();
                         int formattedNeutralEvilVal = neutralEvilVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[7].ToString());
+                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[7].ToString());
                         #endregion
 
                         #region CHAOTIC EVIL
@@ -891,7 +582,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         ImGui.Image(this.chaoticEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[8] * 30, 20));
                         ImGui.SameLine();
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentEditVals[8].ToString());
+                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[8].ToString());
                         #endregion
 
                         #endregion
@@ -911,35 +602,8 @@ namespace InfiniteRoleplay.Windows
                             {
                                 DataSender.SubmitProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), existingAvatarBytes, characterEditName.Replace("'", "''"),
                                                        characterEditRace.Replace("'", "''"), characterEditGender.Replace("'", "''"), int.Parse(characterEditAge), characterEditHeight.Replace("'", "''"), characterEditWeight.Replace("'", "''"), characterEditAfg.Replace("'", "''"),
-                                                       alignmentEditVals[0], alignmentEditVals[1], alignmentEditVals[2], alignmentEditVals[3], alignmentEditVals[4], alignmentEditVals[5], alignmentEditVals[6], alignmentEditVals[7], alignmentEditVals[8]);
+                                                       alignmentVals[0], alignmentVals[1], alignmentVals[2], alignmentVals[3], alignmentVals[4], alignmentVals[5], alignmentVals[6], alignmentVals[7], alignmentVals[8]);
                             }
-                        }
-                    }
-                    if (addHooks == true)
-                    {
-                        string hookMsg = "";
-                        if (ImGui.Button("+", new Vector2(30, 30)))
-                        {
-                            hookCount++;
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-", new Vector2(30, 30)))
-                        {
-                            hookCount--;
-                            if (hookCount < 1)
-                            {
-                                hookCount = 0;
-                            }
-                        }
-                        for (int i = 0; i < hookCount; i++)
-                        {
-                            int index = i + 1;
-                            ImGui.InputTextMultiline("##content" + i, ref HookContent[i], 3000, new Vector2(450, 100));
-                            hookMsg += "<hook>" + index + "," + HookContent[i].Replace("\n", "---===---") + "</hook>|||";
-                        }
-                        if (ImGui.Button("Submit Hooks"))
-                        {
-                            DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, hookMsg);
                         }
                     }
                     if (editHooks == true)
@@ -986,42 +650,6 @@ namespace InfiniteRoleplay.Windows
                         if (ImGui.Button("Submit Hooks"))
                         {
                             DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), hookMsg);
-                        }
-                    }
-                    if (addStory == true)
-                    {
-                        string storyMsg = "";
-                        ImGui.Text("Story Title:");
-                        ImGui.SameLine();
-                        ImGui.InputText("##storytitle", ref storyTitle, 100);
-                        if (ImGui.Button("Add Chapter"))
-                        {
-                            chapterCount++;
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("Remove Chapter"))
-                        {
-                            chapterCount--;
-                            if (chapterCount < 1)
-                            {
-                                chapterCount = 0;
-                            }
-                        }
-                        for (int i = 0; i < chapterCount; i++)
-                        {
-                            int index = i + 1;
-                            ImGui.Text("Chapter Title:");
-                            ImGui.SameLine();
-                            ImGui.InputText("##chaptertitle" + i, ref ChapterTitle[i], 100);
-
-                            ImGui.Text("Chapter:");
-                            ImGui.SameLine();
-                            ImGui.InputTextMultiline("##content" + i, ref ChapterContent[i], 3000, new Vector2(450, 100));
-                            storyMsg += "<chapter><chapterTitle>" + ChapterTitle[i] + "</chapterTitle><chapterContent>" + ChapterContent[i].Replace("\n", "---===---") + "</chapterContent></chapter>|||";
-                        }
-                        if (ImGui.Button("Submit Story"))
-                        {
-                            DataSender.SendStory(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name, storyTitle, storyMsg);
                         }
                     }
                     if (editStory == true)
@@ -1378,6 +1006,13 @@ namespace InfiniteRoleplay.Windows
                 //this.imageTextures.Add(goatImage);
             });
         }
+        public void Reset(Plugin plugin)
+        {
+            ResetBio(plugin);
+            ResetGallery(plugin);
+            ResetHooks();
+            ResetStory();
+        }
         public void ResetBio(Plugin plugin)
         {
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
@@ -1412,9 +1047,9 @@ namespace InfiniteRoleplay.Windows
             {
                 alignmentVals[av] = 0;
             }
-            for (int al = 0; al < alignmentEditVals.Length; al++)
+            for (int al = 0; al < alignmentVals.Length; al++)
             {
-                alignmentEditVals[al] = 0;
+                alignmentVals[al] = 0;
             }
             availablePercentage = 50;
            
@@ -1512,9 +1147,9 @@ namespace InfiniteRoleplay.Windows
         public void UpdateUI()
         {
             int usedAlignmentVals = 0;
-            for (int al = 0; al < alignmentEditVals.Length; al++)
+            for (int al = 0; al < alignmentVals.Length; al++)
             {
-                usedAlignmentVals += alignmentEditVals[al];
+                usedAlignmentVals += alignmentVals[al];
             }
             availablePercentage = 50 - usedAlignmentVals;
         }
@@ -1535,13 +1170,6 @@ namespace InfiniteRoleplay.Windows
 
             if (editBio == true)
             {
-                for (int i = 0; i < alignmentWidthVals.Length; i++)
-                {
-                    if (alignmentWidthVals[i] < alignmentEditVals[i]) { alignmentWidthVals[i] += 0.1f; }
-                    if (alignmentWidthVals[i] > alignmentEditVals[i]) { alignmentWidthVals[i] -= 0.1f; }
-                }
-            }
-            if (addBio == true) {
                 for (int i = 0; i < alignmentWidthVals.Length; i++)
                 {
                     if (alignmentWidthVals[i] < alignmentVals[i]) { alignmentWidthVals[i] += 0.1f; }
@@ -1583,18 +1211,18 @@ namespace InfiniteRoleplay.Windows
                     {
                         if (add)
                         {
-                            if(availablePercentage > 0 && alignmentEditVals[i] < 10)
+                            if(availablePercentage > 0 && alignmentVals[i] < 10)
                             {
                                 availablePercentage -= 1;
-                                alignmentEditVals[i] += 1;
+                                alignmentVals[i] += 1;
                             }
                         }
                         else
                         {
-                            if (alignmentEditVals[i] > 0)
+                            if (alignmentVals[i] > 0)
                             {
                                 availablePercentage +=1;
-                                alignmentEditVals[i] -= 1;
+                                alignmentVals[i] -= 1;
                             }
                         }
 

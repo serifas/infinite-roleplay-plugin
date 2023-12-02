@@ -133,6 +133,7 @@ namespace InfiniteRoleplay
             DataReceiver.HooksLoadStatus = -1;
             DataReceiver.StoryLoadStatus = -1;
         }
+
         public void LoadUI()
         {
             var AvatarHolder = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));

@@ -554,15 +554,15 @@ namespace Networking
             ProfileWindow.characterEditAge = age.ToString().Replace("''", "'"); ProfileWindow.characterEditHeight = height.Replace("''", "'"); ProfileWindow.characterEditWeight = weight.ToString().Replace("''", "'");
             ProfileWindow.characterEditAfg = atFirstGlance;
 
-            ProfileWindow.alignmentEditVals[0] = lawful_good;
-            ProfileWindow.alignmentEditVals[1] = neutral_good;
-            ProfileWindow.alignmentEditVals[2] = chaotic_good;
-            ProfileWindow.alignmentEditVals[3] = lawful_neutral;
-            ProfileWindow.alignmentEditVals[4] = true_neutral;
-            ProfileWindow.alignmentEditVals[5] = chaotic_neutral;
-            ProfileWindow.alignmentEditVals[6] = lawful_evil;
-            ProfileWindow.alignmentEditVals[7] = neutral_evil;
-            ProfileWindow.alignmentEditVals[8] = chaotic_evil;
+            ProfileWindow.alignmentVals[0] = lawful_good;
+            ProfileWindow.alignmentVals[1] = neutral_good;
+            ProfileWindow.alignmentVals[2] = chaotic_good;
+            ProfileWindow.alignmentVals[3] = lawful_neutral;
+            ProfileWindow.alignmentVals[4] = true_neutral;
+            ProfileWindow.alignmentVals[5] = chaotic_neutral;
+            ProfileWindow.alignmentVals[6] = lawful_evil;
+            ProfileWindow.alignmentVals[7] = neutral_evil;
+            ProfileWindow.alignmentVals[8] = chaotic_evil;
 
             buffer.Dispose();
             currentAvatar = avatarBytes;

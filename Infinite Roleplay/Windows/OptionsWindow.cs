@@ -84,6 +84,7 @@ namespace InfiniteRoleplay.Windows
             {
 
                 LoginWindow.loginRequest = true;
+                plugin.profileWindow.Reset(plugin);
                 plugin.ReloadProfile();
                 plugin.profileWindow.IsOpen = true;
                 if (playerCharacter != null)
