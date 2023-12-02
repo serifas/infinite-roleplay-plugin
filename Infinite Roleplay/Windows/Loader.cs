@@ -55,10 +55,7 @@ namespace InfiniteRoleplay.Windows
             var timer = new Timer(30);
             timer.Elapsed += OnEventExecution;
             timer.Start();
-            if (window == plugin.profileWindow)
-            {
-                currentCount = ProfileWindow.imageIndex;
-            }
+           
         }
 
         public override void Draw()

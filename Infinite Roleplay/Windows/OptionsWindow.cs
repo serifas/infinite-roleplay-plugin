@@ -84,9 +84,9 @@ namespace InfiniteRoleplay.Windows
             {
                 LoginWindow.loginRequest = true;
                 plugin.ReloadClient();
-                plugin.profileWindow.ResetUI(plugin);
+                ProfileWindow.turnLoaderOff = false;
+                ProfileWindow.turnLoaderOn = false;
                 plugin.profileWindow.IsOpen = true;
-                DataSender.FetchProfile(configuration.username.ToString(), playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
             }
             if (ImGui.IsItemHovered())
             {
@@ -129,8 +129,8 @@ namespace InfiniteRoleplay.Windows
             }
             if (ImGui.Button("Logout", new Vector2(225, 25)))
             {
+                plugin.CloseAllWindows();
                 plugin.loggedIn = false;
-                plugin.DisconnectFromServer();
                 plugin.loginWindow.IsOpen = true;
                 plugin.optionsWindow.IsOpen = false;
             }

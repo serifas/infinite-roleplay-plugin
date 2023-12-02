@@ -33,12 +33,12 @@ using InfiniteRoleplay.Helpers;
 using Dalamud.Plugin.Services;
 using Dalamud.Interface.Internal.Windows;
 using Dalamud.Interface.Internal;
+using Aspose.Imaging.MemoryManagement;
 
 namespace InfiniteRoleplay
 {
     public sealed class Plugin : IDalamudPlugin
     {
-      
 
         public bool loggedIn;
         public bool toggleconnection;
@@ -64,6 +64,7 @@ namespace InfiniteRoleplay
         public IClientState clientState { get; init; }
         public static IClientState _clientState;
         private IFramework framework { get; init; }
+        private IChatGui chatGUI { get; init; }
         private IDutyState dutyState { get; init; }
         private ICommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
@@ -73,7 +74,8 @@ namespace InfiniteRoleplay
                       [RequiredVersion("1.0")] IFramework framework,
                       [RequiredVersion("1.0")] ITargetManager targetManager,
                       [RequiredVersion("1.0")] IDutyState dutyState,
-                      [RequiredVersion("1.0")] ICommandManager commandManager)
+                      [RequiredVersion("1.0")] ICommandManager commandManager,
+                      [RequiredVersion("1.0")] IChatGui chatG)
         {
 
             
@@ -84,6 +86,7 @@ namespace InfiniteRoleplay
             _clientState = ClientState;
             this.targetManager = targetManager;
             this.framework = framework;
+            this.chatGUI = chatG;
             this.dutyState = dutyState;
             this.Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(pluginInterface);
@@ -114,6 +117,11 @@ namespace InfiniteRoleplay
             ProfileWindow.playerCharacter = this.clientState.LocalPlayer;
             OptionsWindow.playerCharacter = this.clientState.LocalPlayer;
             OptionsWindow.targetManager = this.targetManager;
+            DataReceiver.BioLoadStatus = -1;
+            DataReceiver.GalleryLoadStatus = -1;
+            DataReceiver.HooksLoadStatus = -1;
+            DataReceiver.StoryLoadStatus = -1;
+            DataSender.FetchProfile(Configuration.username, this.clientState.LocalPlayer.Name.ToString(), this.clientState.LocalPlayer.HomeWorld.GameData.Name.ToString()) ;
         }
         public void LoadUI()
         {
@@ -168,7 +176,7 @@ namespace InfiniteRoleplay
             optionsWindow = new OptionsWindow(this, this.pluginInterface, targetManager);
 
             loginWindow = new LoginWindow(this, this.clientState.LocalPlayer);
-            profileWindow = new ProfileWindow(this, this.pluginInterface, this.Configuration, AvatarHolder,
+            profileWindow = new ProfileWindow(this, this.pluginInterface, chatGUI, this.Configuration, AvatarHolder,
                                                                 lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
                                                                 lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar, picTab, blankTab);
             // this.WindowSystem.AddWindow(new Loader(this.pluginInterface, this));
@@ -185,7 +193,6 @@ namespace InfiniteRoleplay
             this.WindowSystem.AddWindow(targetMenu);
             this.WindowSystem.AddWindow(bookmarksWindow);
             this.WindowSystem.AddWindow(imagePreview);
-
         }
         public void Dispose()
         {
@@ -207,18 +214,17 @@ namespace InfiniteRoleplay
         //    }
 
         }
-
-        public void RefreshConnection()
+        public void CloseAllWindows()
         {
-            if(IsConnectedToServer(ClientTCP.clientSocket) != true)
-            {
-                ConnectToServer();
-                ReloadClient();
-
-            }
-               
-         
+            profileWindow.IsOpen = false;
+            loginWindow.IsOpen = false;
+            optionsWindow.IsOpen = false;
+            bookmarksWindow.IsOpen = false;
+            imagePreview.IsOpen = false;
+            targetMenu.IsOpen = false;
+            targetWindow.IsOpen = false;
         }
+  
 
         public void Update(IFramework framework)
         {
@@ -226,8 +232,10 @@ namespace InfiniteRoleplay
             {
                 toggleconnection = false; 
                 if (IsLoggedIn() == false)
-                {                   
+                {
                     DisconnectFromServer();
+                    CloseAllWindows();
+                    profileWindow.ResetUI(this);
                 }
                 if (loadCallback == true)
                 {
@@ -239,21 +247,11 @@ namespace InfiniteRoleplay
             {
                 toggleconnection = true;
             }
-            if(IsLoggedIn() == false)
-            {
-
-                targetWindow.IsOpen = false;
-                targetMenu.IsOpen = false;
-                loginWindow.IsOpen = false;
-                optionsWindow.IsOpen = false;
-                profileWindow.IsOpen = false;
-                bookmarksWindow.IsOpen = false;
-                imagePreview.IsOpen = false;
-            }
             if (IsLoggedIn() == true && toggleconnection == true)
             {
                 ConnectToServer();
                 ReloadClient();
+                this.profileWindow.ResetUI(this);
             }
             if(firstload == true && IsConnectedToServer(ClientTCP.clientSocket) == true)
             {

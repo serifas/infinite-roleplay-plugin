@@ -73,8 +73,8 @@ namespace InfiniteRoleplay.Windows
                     if (ImGui.Button(profiles.Keys[i] + " @ " + profiles.Values[i]))
                     {
                         LoginWindow.loginRequest = true;
-                        plugin.ReloadClient();
                         DisableBookmarkSelection = true;
+                        plugin.targetWindow.IsOpen = true;
                         DataSender.RequestTargetProfile(profiles.Keys[i], profiles.Values[i]);
 
                     }

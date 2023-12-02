@@ -30,6 +30,7 @@ namespace Networking
                 packets.Add((int)ServerPackets.SSendNoProfileHooks, DataReceiver.NoProfileHooks);
                 packets.Add((int)ServerPackets.SRecProfileStory, DataReceiver.ReceiveProfileStory);
                 packets.Add((int)ServerPackets.SRecNoProfileStory, DataReceiver.NoProfileStory);
+                packets.Add((int)ServerPackets.SRecNoProfileGallery, DataReceiver.ReceiveNoProfileGallery);
                 packets.Add((int)ServerPackets.SRecBookmarks, DataReceiver.RecBookmarks);
                 //target packets
                 packets.Add((int)ServerPackets.SRecNoTargetProfile, DataReceiver.NoTargetProfile);
