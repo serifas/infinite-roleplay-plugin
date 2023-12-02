@@ -91,7 +91,7 @@ namespace InfiniteRoleplay.Windows
             {
                 DisableInput = true;
                 LoginWindow.loginRequest = true;
-                plugin.ReloadClient();
+                plugin.ReloadProfile();
                 var targetPlayer = targetManager.Target as PlayerCharacter;
                 if (targetPlayer != null)
                 {

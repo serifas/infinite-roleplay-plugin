@@ -205,7 +205,7 @@ namespace InfiniteRoleplay.Windows
 
                 this.SizeConstraints = new WindowSizeConstraints
                 {
-                    MinimumSize = new Vector2(400, 400),
+                    MinimumSize = new Vector2(600, 400),
                     MaximumSize = new Vector2(750, 950)
                 };
                 //LoadFileSelection();

@@ -117,11 +117,22 @@ namespace InfiniteRoleplay
             ProfileWindow.playerCharacter = this.clientState.LocalPlayer;
             OptionsWindow.playerCharacter = this.clientState.LocalPlayer;
             OptionsWindow.targetManager = this.targetManager;
+
+            DataSender.FetchProfile(Configuration.username, this.clientState.LocalPlayer.Name.ToString(), this.clientState.LocalPlayer.HomeWorld.GameData.Name.ToString()) ;
+        }
+        public void ReloadTarget()
+        {
+            DataReceiver.TargetBioLoadStatus = -1;
+            DataReceiver.TargetGalleryLoadStatus = -1;
+            DataReceiver.TargetHooksLoadStatus = -1;
+            DataReceiver.TargetStoryLoadStatus = -1;
+        }
+        public void ReloadProfile()
+        {
             DataReceiver.BioLoadStatus = -1;
             DataReceiver.GalleryLoadStatus = -1;
             DataReceiver.HooksLoadStatus = -1;
             DataReceiver.StoryLoadStatus = -1;
-            DataSender.FetchProfile(Configuration.username, this.clientState.LocalPlayer.Name.ToString(), this.clientState.LocalPlayer.HomeWorld.GameData.Name.ToString()) ;
         }
         public void LoadUI()
         {

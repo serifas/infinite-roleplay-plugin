@@ -254,6 +254,11 @@ namespace Networking
             ExistingTargetOOCData = false;
             ExistingTargetGalleryData = false;
             plugin.targetWindow.IsOpen = true;
+            TargetBioLoadStatus = 0;
+            TargetHooksLoadStatus = 0;
+            TargetStoryLoadStatus = 0;
+            TargetOOCLoadStatus = 0;
+            TargetGalleryLoadStatus = 0;
             TargetWindow.ClearUI();
             TargetMenu.DisableInput = false;
             BookmarksWindow.DisableBookmarkSelection = false;

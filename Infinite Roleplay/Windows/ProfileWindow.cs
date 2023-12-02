@@ -226,7 +226,6 @@ namespace InfiniteRoleplay.Windows
             var timer = new Timer(30);
             timer.Elapsed += OnEventExecution;
             timer.Start();
-            this.Size = new Vector2(750, 950);
             bl = blank_holder;
             this.plugin = plugin;
             this.pg = plugin.PluginInterfacePub;
@@ -279,7 +278,7 @@ namespace InfiniteRoleplay.Windows
             {
                 this.SizeConstraints = new WindowSizeConstraints
                 {
-                    MinimumSize = new Vector2(400, 400),
+                    MinimumSize = new Vector2(600, 400),
                     MaximumSize = new Vector2(750, 950)
                 };
                 _fileDialogManager.Draw();
