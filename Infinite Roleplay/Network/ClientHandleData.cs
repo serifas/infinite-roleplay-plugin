@@ -25,6 +25,7 @@ namespace Networking
                 packets.Add((int)ServerPackets.SRecProfileBio, DataReceiver.ReceiveProfileBio);
                 packets.Add((int)ServerPackets.SNoProfileBio, DataReceiver.NoProfileBio);
                 packets.Add((int)ServerPackets.SNoProfile, DataReceiver.NoProfile);
+                packets.Add((int)ServerPackets.SSendProfile, DataReceiver.ReceiveProfile);
                 packets.Add((int)ServerPackets.SRecExistingProfile, DataReceiver.ExistingProfile);
                 packets.Add((int)ServerPackets.SSendProfileHook, DataReceiver.ReceiveProfileHooks);
                 packets.Add((int)ServerPackets.SSendNoProfileHooks, DataReceiver.NoProfileHooks);

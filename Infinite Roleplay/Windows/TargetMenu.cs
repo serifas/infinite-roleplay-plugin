@@ -91,12 +91,15 @@ namespace InfiniteRoleplay.Windows
             {
                 DisableInput = true;
                 LoginWindow.loginRequest = true;
-                plugin.ReloadProfile();
+                plugin.ReloadTarget();
+                plugin.targetWindow.IsOpen = true;
                 var targetPlayer = targetManager.Target as PlayerCharacter;
                 if (targetPlayer != null)
                 {
                     DataSender.RequestTargetProfile(targetPlayer.Name.ToString(), targetPlayer.HomeWorld.GameData.Name.ToString());
                 }
+
+
             }
             if (ImGui.IsItemHovered())
             {

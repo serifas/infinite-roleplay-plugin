@@ -81,6 +81,7 @@ namespace InfiniteRoleplay.Windows
         public static bool ExistingBio;
         public static bool ExistingHooks;
         public static int hookCount;
+        public static bool sizeReset = false;
         public static int hookEditCount, existingGalleryImageCount;
         private GameFontHandle _nameFont;
         private GameFontHandle _secionFont;
@@ -92,7 +93,9 @@ namespace InfiniteRoleplay.Windows
         public static bool ExistingOOC;
         public static bool ExistingGallery;
         public static bool ExistingProfile;
+        public static bool loadSize = false;
         public static string storyTitle = "";
+        public static Timer timer;
         public static int lawfulGoodEditVal,
                           neutralGoodEditVal,
                           chaoticGoodEditVal,
@@ -154,9 +157,8 @@ namespace InfiniteRoleplay.Windows
             this.configuration = plugin.Configuration;
             this.avatarImg = avatarHolder;
 
-            var timer = new Timer(30);
+            timer = new Timer(30);
             timer.Elapsed += OnEventExecution;
-            timer.Start();
             this._nameFont = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
             this.avatarBytes = ImageToByteArray(image1);
@@ -202,7 +204,12 @@ namespace InfiniteRoleplay.Windows
         {
             if (AllLoaded == true)
             {
-
+                timer.Stop();
+                if (sizeReset == true)
+                {
+                    this.Size = configuration.targetWindowSize;
+                    sizeReset = false;
+                }
                 this.SizeConstraints = new WindowSizeConstraints
                 {
                     MinimumSize = new Vector2(600, 400),
@@ -587,6 +594,7 @@ namespace InfiniteRoleplay.Windows
             }
             else
             {
+                timer.Start();
                 this.SizeConstraints = new WindowSizeConstraints
                 {
                     MinimumSize = new Vector2(360, 200),
@@ -620,7 +628,6 @@ namespace InfiniteRoleplay.Windows
         public void Dispose()
         {
             WindowOpen = false;
-
             this.currentAvatarImg.Dispose();
             for(int o = 0; o < otherImages.Length; o++)
             {                
@@ -638,6 +645,11 @@ namespace InfiniteRoleplay.Windows
                 galleryThumbs[t].Dispose();
                 Array.Clear(galleryThumbs);
             }
+        }
+        public void UpdateSize()
+        {
+            configuration.targetWindowSize = Size.Value;
+            sizeReset = true;
         }
         public override void Update()
         {

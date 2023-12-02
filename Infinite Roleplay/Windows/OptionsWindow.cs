@@ -82,12 +82,15 @@ namespace InfiniteRoleplay.Windows
         {
             if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
             {
+
                 LoginWindow.loginRequest = true;
                 plugin.ReloadProfile();
-                plugin.ReloadClient();
-                ProfileWindow.turnLoaderOff = false;
-                ProfileWindow.turnLoaderOn = false;
                 plugin.profileWindow.IsOpen = true;
+                if (playerCharacter != null)
+                {
+                    DataSender.FetchProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
+                }
+                
             }
             if (ImGui.IsItemHovered())
             {

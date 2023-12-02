@@ -148,6 +148,7 @@ namespace Networking
             string bookmarkVals = buffer.ReadString();
 
             plugin.bookmarksWindow.IsOpen = true;
+            
             Regex nameRx = new Regex(@"<bookmarkName>(.*?)</bookmarkName>");
             Regex worldRx = new Regex(@"<bookmarkWorld>(.*?)</bookmarkWorld>");
             string[] bookmarkSplit = bookmarkVals.Replace("|||", "~").Split('~');
@@ -238,7 +239,10 @@ namespace Networking
             OOCLoadStatus = 0;
             GalleryLoadStatus = 0;
             BookmarkLoadStatus = 0;
-            plugin.profileWindow.ResetUI(plugin);
+            ProfileWindow.ClearUI();
+            ProfileWindow.addProfile = false;
+            ProfileWindow.editProfile = false;
+            ExistingProfileData = false;
         }
         public static void NoTargetProfile(byte[] data)
         {
@@ -322,6 +326,7 @@ namespace Networking
         }
         public static void ReceiveProfile(byte[] data)
         {
+            ExistingProfileData = true;
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
@@ -329,7 +334,8 @@ namespace Networking
             string profileName = buffer.ReadString();
             buffer.Dispose();     
             loggedIn = true;
-            plugin.profileWindow.ResetUI(plugin);
+            ProfileWindow.ClearUI();
+           
         }
         public static void ReceiveVerificationUpdate(byte[] data)
         {
@@ -414,6 +420,7 @@ namespace Networking
             var packetID = buffer.ReadInt();
             buffer.Dispose();
             GalleryLoadStatus = 0;
+            ExistingGalleryData = false;
         }
         public static void ReceiveProfileGalleryImage(byte[] data)
         {
@@ -424,6 +431,7 @@ namespace Networking
             int thumbsLen = buffer.ReadInt();
             int imageCount = buffer.ReadInt();
             int NSFWImages = buffer.ReadInt();
+            ExistingGalleryData = true;
             for (int i = 0; i < imagesLen; i++)
             {
                 int imageBtLen = buffer.ReadInt();
@@ -447,7 +455,6 @@ namespace Networking
                 {
                     byte[] thumbBytes = buffer.ReadBytes(thumbBtLen);
 
-                    ExistingGalleryData = true;
                     ExistingGalleryThumbCount = f + 1;
                     ProfileWindow.galleryThumbBytes[f] = thumbBytes;
                 }
@@ -541,7 +548,8 @@ namespace Networking
             int lawful_evil = buffer.ReadInt();
             int neutral_evil = buffer.ReadInt();
             int chaotic_evil = buffer.ReadInt();
-            
+
+            ExistingBioData = true;
             ProfileWindow.characterEditName = name.Replace("''", "'"); ProfileWindow.characterEditRace = race.Replace("''", "'"); ProfileWindow.characterEditGender = gender.Replace("''", "'");
             ProfileWindow.characterEditAge = age.ToString().Replace("''", "'"); ProfileWindow.characterEditHeight = height.Replace("''", "'"); ProfileWindow.characterEditWeight = weight.ToString().Replace("''", "'");
             ProfileWindow.characterEditAfg = atFirstGlance;
@@ -556,9 +564,8 @@ namespace Networking
             ProfileWindow.alignmentEditVals[7] = neutral_evil;
             ProfileWindow.alignmentEditVals[8] = chaotic_evil;
 
-            currentAvatar = avatarBytes;
-            ExistingBioData = true;
             buffer.Dispose();
+            currentAvatar = avatarBytes;
             BioLoadStatus = 1;
             plugin.profileWindow.UpdateUI();
         }
@@ -691,6 +698,7 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             ExistingHooksData = false;
+
             buffer.Dispose();
             HooksLoadStatus = 0;
         }

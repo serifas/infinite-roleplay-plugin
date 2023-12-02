@@ -67,8 +67,8 @@ namespace InfiniteRoleplay.Windows
     public class ProfileWindow : Window, IDisposable
     {
         public static bool turnLoaderOff, turnLoaderOn = false;
-        public static bool AllLoaded = false;
-        public static Timer timer = new Timer(1000);
+        public static bool AllLoaded;
+        public static Timer timer;
         public static bool resetGalleryTimer = true;
         public static bool Reorder = false, Reordered = false, ReorderNoSend = false;
         private Plugin plugin;
@@ -138,22 +138,22 @@ namespace InfiniteRoleplay.Windows
         public static bool addProfile = false;
         public static bool editProfile = false;
         public static bool LoadPreview = false;
-        public bool ExistingBio;
-        public static bool ExistingHooks;
         public static int hookCount = 0;
         public static int hookEditCount;
         public static int galleryImageCount = 0;
         public static int editImageIndexVal = 0;
         public static int chapterCount = 0;
-        public static int ExistingGalleryImageCount = 0;
         public static int loaderIndex = 0;
         public static int chapterEditCount;
-        public bool ExistingStory;
-        public bool ExistingOOC;
         public static byte[] picBytes;
-        public bool ExistingGallery;
         public static int imageIndexVal = 0;
         public bool ExistingProfile;
+        public bool ExistingStory;
+        public bool ExistingOOC;
+        public bool ExistingGallery;
+        public bool ExistingBio;
+        public bool ExistingHooks;
+        public static int ExistingGalleryImageCount = 0;
         public static byte[] imageHolder, thumbHolder;
         public string storyTitle = "";
         public static string storyEditTitle = "";
@@ -222,10 +222,8 @@ namespace InfiniteRoleplay.Windows
        "PROFILE", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
 
-
-            var timer = new Timer(30);
+            timer = new Timer(30);
             timer.Elapsed += OnEventExecution;
-            timer.Start();
             bl = blank_holder;
             this.plugin = plugin;
             this.pg = plugin.PluginInterfacePub;
@@ -239,8 +237,7 @@ namespace InfiniteRoleplay.Windows
             this.configuration = configuration;
             
             picBytes = Imaging.ImageToByteArray(pictureTab);
-
-            //timer.Elapsed += OnEventExecution;
+            
             imageHolder = Imaging.ImageToByteArray(pictureTab);
             thumbHolder = Imaging.ImageToByteArray(Imaging.byteArrayToImage(Imaging.ScaleImageBytes(picBytes, 150, 150)));
             
@@ -270,20 +267,31 @@ namespace InfiniteRoleplay.Windows
             this.alignmentWidthVals = new float[9] { lawfulGoodWidthVal, neutralGoodWidthVal, chaoticGoodWidthVal, lawfulNeutralWidthVal, trueNeutralWidthVal, chaoticNeutralWidthVal, lawfulEvilWidthVal, neutralEvilWidthVal, chaoticEvilWidthVal };
             this.alignmentNames = new string[9] { "lawfulgood", "neutralgood", "chaoticgood", "lawfulneutral", "trueneutral", "chaoticneutral", "lawfulevil", "neutralevil", "chaoticevil" };
         }
-
+        public void OnEventExecution(System.Object? sender, ElapsedEventArgs eventArgs)
+        {
+            loaderIndex++;
+            if (loaderIndex >= 59)
+            {
+                loaderIndex = 1;
+            }
+            loaderAnimInd = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(pg.AssemblyLocation.Directory?.FullName!, "UI/common/loader/loader (" + loaderIndex + ").gif"));
+        }
 
         public override void Draw()
         {
             if (AllLoaded == true)
             {
-                this.SizeConstraints = new WindowSizeConstraints
-                {
-                    MinimumSize = new Vector2(600, 400),
-                    MaximumSize = new Vector2(750, 950)
-                };
+
                 _fileDialogManager.Draw();
                 //LoadFileSelection();
 
+                timer.Stop();
+                this.SizeConstraints = new WindowSizeConstraints
+                {
+
+                    MinimumSize = new Vector2(600, 400),
+                    MaximumSize = new Vector2(750, 950)
+                };
                 //Vector2 addProfileBtnScale = new Vector2(playerCharacter.Name.ToString().Length * 20, 20);
                 if (this.ExistingProfile == true)
                 {
@@ -321,15 +329,15 @@ namespace InfiniteRoleplay.Windows
                 {
                     addProfile = false;
                     ImGui.Spacing();
-                    if (ExistingBio == true) { if (ImGui.Button("Edit Bio", new Vector2(100, 20))) { ClearUI(); editBio = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your bio."); } } else { if (ImGui.Button("Add Bio", new Vector2(100, 20))) { ClearUI(); addBio = true; } }
+                    if (this.ExistingBio == true) { if (ImGui.Button("Edit Bio", new Vector2(100, 20))) { ClearUI(); editBio = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your bio."); } } else { if (ImGui.Button("Add Bio", new Vector2(100, 20))) { ClearUI(); addBio = true; } }
                     ImGui.SameLine();
-                    if (ExistingHooks == true) { if (ImGui.Button("Edit Hooks", new Vector2(100, 20))) { ClearUI(); editHooks = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Hooks."); } } else { if (ImGui.Button("Add Hooks", new Vector2(100, 20))) { ClearUI(); addHooks = true; } }
+                    if (this.ExistingHooks == true) { if (ImGui.Button("Edit Hooks", new Vector2(100, 20))) { ClearUI(); editHooks = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Hooks."); } } else { if (ImGui.Button("Add Hooks", new Vector2(100, 20))) { ClearUI(); addHooks = true; } }
                     ImGui.SameLine();
-                    if (ExistingStory == true) { if (ImGui.Button("Edit Story", new Vector2(100, 20))) { ClearUI(); editStory = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Story."); } } else { if (ImGui.Button("Add Story", new Vector2(100, 20))) { ClearUI(); addStory = true; } }
+                    if (this.ExistingStory == true) { if (ImGui.Button("Edit Story", new Vector2(100, 20))) { ClearUI(); editStory = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Story."); } } else { if (ImGui.Button("Add Story", new Vector2(100, 20))) { ClearUI(); addStory = true; } }
                     ImGui.SameLine();
-                    if (ExistingOOC == true) { if (ImGui.Button("Edit OOC Info", new Vector2(100, 20))) { ClearUI(); editOOC = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your OOC Info."); } } else { if (ImGui.Button("Add OOC Info", new Vector2(100, 20))) { ClearUI(); addOOC = true; } }
+                    if (this.ExistingOOC == true) { if (ImGui.Button("Edit OOC Info", new Vector2(100, 20))) { ClearUI(); editOOC = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your OOC Info."); } } else { if (ImGui.Button("Add OOC Info", new Vector2(100, 20))) { ClearUI(); addOOC = true; } }
                     ImGui.SameLine();
-                    if (ExistingGallery == true) { if (ImGui.Button("Edit Gallery", new Vector2(100, 20))) { ClearUI(); addGallery = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Gallery."); } } else { if (ImGui.Button("Add Gallery", new Vector2(100, 20))) { ClearUI(); addGallery = true; } }
+                    if (this.ExistingGallery == true) { if (ImGui.Button("Edit Gallery", new Vector2(100, 20))) { ClearUI(); addGallery = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Gallery."); } } else { if (ImGui.Button("Add Gallery", new Vector2(100, 20))) { ClearUI(); addGallery = true; } }
 
                 }
                 bool warning = false;
@@ -1163,7 +1171,7 @@ namespace InfiniteRoleplay.Windows
             }
             else
             {
-
+                timer.Start();
                 this.SizeConstraints = new WindowSizeConstraints
                 {
                     MinimumSize = new Vector2(360, 200),
@@ -1172,15 +1180,7 @@ namespace InfiniteRoleplay.Windows
                 ImGui.Image(loaderAnimInd.ImGuiHandle, new Vector2(340, 180));
             }
         }
-        public void OnEventExecution(System.Object? sender, ElapsedEventArgs eventArgs)
-        {
-            loaderIndex++;
-            if (loaderIndex >= 59)
-            {
-                loaderIndex = 1;
-            }
-           loaderAnimInd = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(pg.AssemblyLocation.Directory?.FullName!, "UI/common/loader/loader (" + loaderIndex + ").gif"));
-        }
+    
         /*public static void OnEventExecution(System.Object? sender, ElapsedEventArgs e)
         {
             int time = 60 - e.SignalTime.Second;
@@ -1341,10 +1341,24 @@ namespace InfiniteRoleplay.Windows
                 //this.imageTextures.Add(goatImage);
             });
         }
-        public void ResetImages(Plugin plugin)
+        public void ResetGallery(Plugin plugin)
         {
             Task.Run(async () =>
             {
+
+
+                for (int g = 0; g < galleryImages.Length; g++)
+                {
+                    imageIndexVal = 0;
+                    imageIndex = 0;
+                    Reorder = true;
+                    galleryImageAdded[g] = false;
+                    removalIndexes[g] = 1;
+                }
+                for (int i = 0; i < 30; i++)
+                {
+                    ImageExists[i] = false;
+                }
                 System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/picturetab.png"));
                 for(int i = 0; i < galleryImages.Length; i++)
                 {
@@ -1364,17 +1378,11 @@ namespace InfiniteRoleplay.Windows
                 //this.imageTextures.Add(goatImage);
             });
         }
-        public void ResetUI(Plugin plugin)
+        public void ResetBio(Plugin plugin)
         {
-            ResetImages(plugin);
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
             this.avatarBytes = Imaging.ImageToByteArray(image1);
             DataReceiver.currentAvatar = avatarBytes;
-            DataReceiver.ExistingProfileData = false;
-            DataReceiver.ExistingStoryData = false;
-            DataReceiver.ExistingBioData = false;
-            DataReceiver.ExistingHooksData = false;
-            DataReceiver.ExistingGalleryData = false;
             this.avatarImg = this.persistAvatarHolder;
             this.currentAvatarImg = this.persistAvatarHolder;
             characterAddName = string.Empty;
@@ -1391,46 +1399,15 @@ namespace InfiniteRoleplay.Windows
             characterEditAfg = string.Empty;
             characterEditHeight = string.Empty;
             characterEditWeight = string.Empty;
-            for(int h = 0; h < hookCount; h++)
-            {
-                HookContent[h] = string.Empty;
-                HookEditContent[h] = string.Empty;
-            }
-            hookCount = 0;
+           
             
             for(int a = 0; a < alignmentWidthVals.Length; a++)
             {
                 alignmentWidthVals[a] = 0f;
             }
-            for(int g = 0; g < galleryImages.Length; g++)
-            {
-                ImageExists[g] = false;
-                imageIndexVal = 0;
-                imageIndex = 0;
-                Reorder = true;
-                galleryImageAdded[g] = false;
-                removalIndexes[g] = 1;
-            }
-
-            for(int s = 0; s < chapterEditCount; s++)
-            {
-                ChapterTitle[s] = string.Empty;
-                ChapterEditTitle[s] = string.Empty;
-                ChapterContent[s] = string.Empty;
-                ChapterEditContent[s] = string.Empty;
-                chapterCount = 0;
-            }
-
-            for(int i = 0; i < 30; i++)
-            {
-                ImageExists[i] = false;
-            }
            
 
-            chapterCount = 0;
-            chapterEditCount = 0;
-            storyTitle = string.Empty;
-            storyEditTitle = string.Empty;
+           
             for (int av = 0; av < alignmentVals.Length; av++)
             {
                 alignmentVals[av] = 0;
@@ -1441,6 +1418,33 @@ namespace InfiniteRoleplay.Windows
             }
             availablePercentage = 50;
            
+        }
+        public void ResetHooks()
+        {
+            for (int h = 0; h < hookCount; h++)
+            {
+                HookContent[h] = string.Empty;
+                HookEditContent[h] = string.Empty;
+            }
+            hookCount = 0;
+        }
+        public void ResetStory()
+        {
+            for (int s = 0; s < chapterEditCount; s++)
+            {
+                ChapterTitle[s] = string.Empty;
+                ChapterEditTitle[s] = string.Empty;
+                ChapterContent[s] = string.Empty;
+                ChapterEditContent[s] = string.Empty;
+                chapterCount = 0;
+            }
+
+
+
+            chapterCount = 0;
+            chapterEditCount = 0;
+            storyTitle = string.Empty;
+            storyEditTitle = string.Empty;
         }
         public static void UpdateUploadStatus(int index)
         {
@@ -1526,18 +1530,7 @@ namespace InfiniteRoleplay.Windows
             loadedSelf = DataReceiver.LoadedSelf;
             
 
-            if(DataReceiver.StoryLoadStatus != -1&&
-               DataReceiver.HooksLoadStatus != -1&&
-               DataReceiver.BioLoadStatus != -1 &&
-               DataReceiver.GalleryLoadStatus != -1)
-            {
-               
-                AllLoaded = true;
-            }
-            else
-            {
-                AllLoaded = false;
-            }
+          
            
 
             if (editBio == true)
@@ -1556,7 +1549,18 @@ namespace InfiniteRoleplay.Windows
                 }
             }
 
-            
+            if (DataReceiver.StoryLoadStatus != -1 &&
+               DataReceiver.HooksLoadStatus != -1 &&
+               DataReceiver.BioLoadStatus != -1 &&
+               DataReceiver.GalleryLoadStatus != -1)
+            {
+
+                AllLoaded = true;
+            }
+            else
+            {
+                AllLoaded = false;
+            }
 
 
 

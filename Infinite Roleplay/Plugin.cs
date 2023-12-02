@@ -117,8 +117,7 @@ namespace InfiniteRoleplay
             ProfileWindow.playerCharacter = this.clientState.LocalPlayer;
             OptionsWindow.playerCharacter = this.clientState.LocalPlayer;
             OptionsWindow.targetManager = this.targetManager;
-
-            DataSender.FetchProfile(Configuration.username, this.clientState.LocalPlayer.Name.ToString(), this.clientState.LocalPlayer.HomeWorld.GameData.Name.ToString()) ;
+            
         }
         public void ReloadTarget()
         {
@@ -246,7 +245,6 @@ namespace InfiniteRoleplay
                 {
                     DisconnectFromServer();
                     CloseAllWindows();
-                    profileWindow.ResetUI(this);
                 }
                 if (loadCallback == true)
                 {
@@ -262,7 +260,6 @@ namespace InfiniteRoleplay
             {
                 ConnectToServer();
                 ReloadClient();
-                this.profileWindow.ResetUI(this);
             }
             if(firstload == true && IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
