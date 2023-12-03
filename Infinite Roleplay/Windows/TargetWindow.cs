@@ -152,6 +152,11 @@ namespace InfiniteRoleplay.Windows
                             ) : base(
        "TARGET", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
+            this.SizeConstraints = new WindowSizeConstraints
+            {
+                MinimumSize = new Vector2(600, 400),
+                MaximumSize = new Vector2(750, 950)
+            };
             this.plugin = plugin;
             this.pg = plugin.PluginInterfacePub;
             this.configuration = plugin.Configuration;
@@ -205,16 +210,7 @@ namespace InfiniteRoleplay.Windows
             if (AllLoaded == true)
             {
                 timer.Stop();
-                if (sizeReset == true)
-                {
-                    this.Size = configuration.targetWindowSize;
-                    sizeReset = false;
-                }
-                this.SizeConstraints = new WindowSizeConstraints
-                {
-                    MinimumSize = new Vector2(600, 400),
-                    MaximumSize = new Vector2(750, 950)
-                };
+              
                 //LoadFileSelection();
                 //Vector2 addProfileBtnScale = new Vector2(playerCharacter.Name.ToString().Length * 20, 20);
                 if (ExistingProfile == true)
@@ -595,11 +591,17 @@ namespace InfiniteRoleplay.Windows
             else
             {
                 timer.Start();
-                this.SizeConstraints = new WindowSizeConstraints
+                int LoaderWidth = 360;
+                var decidingWidth = Math.Max(500, ImGui.GetWindowWidth());
+                var offsetWidth = (decidingWidth - LoaderWidth) / 2;
+                var offsetVersion = LoaderWidth > 0
+                    ? _modVersionWidth + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().WindowPadding.X
+                    : 0;
+                var offset = Math.Max(offsetWidth, offsetVersion);
+                if (offset > 0)
                 {
-                    MinimumSize = new Vector2(360, 200),
-                    MaximumSize = new Vector2(360, 200)
-                };
+                    ImGui.SetCursorPosX(offset);
+                }
                 ImGui.Image(loaderAnimInd.ImGuiHandle, new Vector2(340, 180));
             }
 
