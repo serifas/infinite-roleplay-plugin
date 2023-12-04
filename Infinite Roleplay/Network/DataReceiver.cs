@@ -365,7 +365,6 @@ namespace Networking
             int status = buffer.ReadInt();
             buffer.Dispose();
 
-            plugin.loggedIn = true;
              if(status == -1)
              {
                  plugin.loggedIn = false;
@@ -381,7 +380,7 @@ namespace Networking
              if (status == 1)
              {
                  plugin.loginWindow.IsOpen = false;
-                 plugin.optionsWindow.IsOpen = true;
+                 plugin.panelWindow.IsOpen = true;
                  plugin.loggedIn = true;
              }
 

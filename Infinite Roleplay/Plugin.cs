@@ -52,9 +52,11 @@ namespace InfiniteRoleplay
         public TargetMenu targetMenu;
         public ImagePreview imagePreview;
         public BookmarksWindow bookmarksWindow;
-        public OptionsWindow optionsWindow;
+        public PanelWindow panelWindow;
         public LoginWindow loginWindow;
         public ProfileWindow profileWindow;
+        public OptionsWindow optionsWindow;
+        public AdminWindow adminWindow;
         public IDalamudTextureWrap[] images;
         public string Name => "Infinite Roleplay";
         private const string CommandName = "/infinite";
@@ -107,17 +109,23 @@ namespace InfiniteRoleplay
             DataReceiver.plugin = this;
             ConnectToServer();
             ReloadClient();
+            LoadUI();
             this.framework.Update += Update;
-            
+            this.clientState.Login += ConnectToServer;
+            this.clientState.EnterPvP += CloseAllWindows;
+
 
         }
-
+        public void LogOut()
+        {
+            CloseAllWindows();
+            loginWindow.IsOpen = true;
+        }
         public void ReloadClient()
         {
             ProfileWindow.playerCharacter = this.clientState.LocalPlayer;
-            OptionsWindow.playerCharacter = this.clientState.LocalPlayer;
-            OptionsWindow.targetManager = this.targetManager;
-            
+            PanelWindow.playerCharacter = this.clientState.LocalPlayer;
+            PanelWindow.targetManager = this.targetManager;            
         }
         public void ReloadTarget()
         {
@@ -184,7 +192,11 @@ namespace InfiniteRoleplay
 
             bookmarksWindow = new BookmarksWindow(this, this.pluginInterface, targetWindow);
 
-            optionsWindow = new OptionsWindow(this, this.pluginInterface, targetManager);
+            optionsWindow = new OptionsWindow(this, this.pluginInterface);
+
+            adminWindow = new AdminWindow(this, this.pluginInterface);
+
+            panelWindow = new PanelWindow(this, this.pluginInterface, targetManager);
 
             loginWindow = new LoginWindow(this, this.clientState.LocalPlayer);
             profileWindow = new ProfileWindow(this, this.pluginInterface, chatGUI, this.Configuration, AvatarHolder,
@@ -197,7 +209,7 @@ namespace InfiniteRoleplay
             //  this.WindowSystem.AddWindow(new Rulebook(this));
             this.WindowSystem.AddWindow(loginWindow);
             //this.WindowSystem.AddWindow(new SystemsWindow(this));
-            this.WindowSystem.AddWindow(optionsWindow);
+            this.WindowSystem.AddWindow(panelWindow);
             //   this.WindowSystem.AddWindow(new MessageBox(this));
             //  this.WindowSystem.AddWindow(new AdminWindow(this, this.pluginInterface));
             this.WindowSystem.AddWindow(targetWindow);
@@ -208,7 +220,10 @@ namespace InfiniteRoleplay
         public void Dispose()
         {
             this.framework.Update -= Update;
+            this.clientState.Login -= ConnectToServer;
+            this.clientState.EnterPvP -= CloseAllWindows;
             this.CommandManager.RemoveHandler(CommandName);
+            CloseAllWindows();
             this.WindowSystem.RemoveAllWindows();
             if (IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
@@ -229,50 +244,22 @@ namespace InfiniteRoleplay
         {
             profileWindow.IsOpen = false;
             loginWindow.IsOpen = false;
-            optionsWindow.IsOpen = false;
+            panelWindow.IsOpen = false;
             bookmarksWindow.IsOpen = false;
             imagePreview.IsOpen = false;
             targetMenu.IsOpen = false;
             targetWindow.IsOpen = false;
         }
   
-
+       
         public void Update(IFramework framework)
-        {
-            if (IsConnectedToServer(ClientTCP.clientSocket) == true)
-            {
-                toggleconnection = false; 
-                if (IsLoggedIn() == false)
-                {
-                    DisconnectFromServer();
-                    CloseAllWindows();
-                }
-                if (loadCallback == true)
-                {
-                    ClientTCP.ClientConnectionCallback();
-                    loadCallback = false;
-                }
-            }
-            else
-            {
-                toggleconnection = true;
-            }
-            if (IsLoggedIn() == true && toggleconnection == true)
-            {
-                ConnectToServer();
-                ReloadClient();
-            }
-            if(firstload == true && IsConnectedToServer(ClientTCP.clientSocket) == true)
-            {
-                firstload = false;
-                LoadUI();
-            }
+        {            
             var targetPlayer = targetManager.Target as PlayerCharacter;
             if(loggedIn == true)
             {
-                if (targetPlayer != null && dutyState.IsDutyStarted == false)
+                if (targetPlayer != null &&  dutyState.IsDutyStarted == false)
                 {
-                   targetMenu.IsOpen = true;
+                    targetMenu.IsOpen = true;
                 }
                 else
                 {
@@ -353,10 +340,12 @@ namespace InfiniteRoleplay
         }
         public void ConnectToServer()
         {
-            ClientHandleData.InitializePackets(true);
-            ClientTCP.InitializingNetworking(true);
-
-            loadCallback = true;
+            if (!IsConnectedToServer(ClientTCP.clientSocket))
+            {
+                ClientHandleData.InitializePackets(true);
+                ClientTCP.InitializingNetworking(true);
+                ClientTCP.ClientConnectionCallback();
+            }
         }
         public void DisconnectFromServer()
         {
@@ -368,7 +357,7 @@ namespace InfiniteRoleplay
             
             if (loggedIn == true)
             {
-                optionsWindow.IsOpen = true;
+                panelWindow.IsOpen = true;
                 loginWindow.IsOpen = false;
             }
             else
