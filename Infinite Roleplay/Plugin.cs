@@ -42,7 +42,7 @@ namespace InfiniteRoleplay
 
         public bool loggedIn;
         public bool toggleconnection;
-        public bool firstload = true;
+        public bool firstload;
         public bool targeted = false;
         public bool loadCallback = false;
         public bool loadPreview = false;
@@ -81,7 +81,8 @@ namespace InfiniteRoleplay
                       [RequiredVersion("1.0")] IChatGui chatG)
         {
 
-            
+
+            firstload = true;
             this.pluginInterface = pluginInterface;
             this.CommandManager = commandManager;
             this.PluginInterfacePub = pluginInterface;
@@ -93,7 +94,6 @@ namespace InfiniteRoleplay
             this.dutyState = dutyState;
             this.Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(pluginInterface);
-        
 
 
             string name = "";
@@ -109,10 +109,9 @@ namespace InfiniteRoleplay
             this.pluginInterface.UiBuilder.OpenConfigUi += DrawLoginUI;
             
             DataReceiver.plugin = this;
-            ConnectToServer();
             ReloadClient();
+            ConnectToServer();
             this.framework.Update += Update;
-
 
         }
         
@@ -237,6 +236,7 @@ namespace InfiniteRoleplay
         }
         public void CloseAllWindows()
         {
+            panelWindow.IsOpen = false;
             profileWindow.IsOpen = false;
             loginWindow.IsOpen = false;
             optionsWindow.IsOpen = false;
@@ -251,26 +251,12 @@ namespace InfiniteRoleplay
         {
             if (IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
-                toggleconnection = false;
-                if (IsLoggedIn() == false)
-                {
-                    DisconnectFromServer();
-                    CloseAllWindows();
-                }
+                
                 if (loadCallback == true)
                 {
                     ClientTCP.ClientConnectionCallback();
                     loadCallback = false;
                 }
-            }
-            else
-            {
-                toggleconnection = true;
-            }
-            if (IsLoggedIn() == true && toggleconnection == true)
-            {
-                ConnectToServer();
-                ReloadClient();
             }
             if (firstload == true && IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
@@ -378,11 +364,12 @@ namespace InfiniteRoleplay
 
             if (loggedIn == true)
             {
-                optionsWindow.IsOpen = true;
+                panelWindow.IsOpen = true;
                 loginWindow.IsOpen = false;
             }
             else
             {
+                CloseAllWindows();
                 loginWindow.IsOpen = true;
             }
         }
