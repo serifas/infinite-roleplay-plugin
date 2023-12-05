@@ -226,7 +226,7 @@ namespace Networking
             ExistingTargetProfileData = true;
             plugin.targetWindow.IsOpen = true;
             TargetWindow.ClearUI();
-
+            ReportWindow.reportStatus = "";
         }
         public static void RecProfileReportedSuccessfully(byte[] data)
         {
@@ -285,6 +285,7 @@ namespace Networking
             TargetWindow.ClearUI();
             TargetMenu.DisableInput = false;
             BookmarksWindow.DisableBookmarkSelection = false;
+            ReportWindow.reportStatus = "";
         }
         public static void NoTargetGallery(byte[] data)
         {
