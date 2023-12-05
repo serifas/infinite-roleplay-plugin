@@ -111,10 +111,7 @@ namespace InfiniteRoleplay
             DataReceiver.plugin = this;
             ConnectToServer();
             ReloadClient();
-            LoadUI();
             this.framework.Update += Update;
-            this.clientState.Login += ConnectToServer;
-            this.clientState.EnterPvP += CloseAllWindows;
 
 
         }
@@ -225,8 +222,6 @@ namespace InfiniteRoleplay
         public void Dispose()
         {
             this.framework.Update -= Update;
-            this.clientState.Login -= ConnectToServer;
-            this.clientState.EnterPvP -= CloseAllWindows;
             this.CommandManager.RemoveHandler(CommandName);
             CloseAllWindows();
             this.WindowSystem.RemoveAllWindows();
@@ -277,7 +272,12 @@ namespace InfiniteRoleplay
                 imagePreview.IsOpen = true;
                 loadPreview = false;
             }
-            
+            if (firstload == true && IsConnectedToServer(ClientTCP.clientSocket) == true)
+            {
+                firstload = false;
+                LoadUI();
+            }
+
         }
 
         private void OnCommand(string command, string args)
