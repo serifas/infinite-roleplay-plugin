@@ -74,11 +74,13 @@ namespace InfiniteRoleplay.Windows
                     {
                         ReportWindow.reportCharacterName = profiles.Keys[i];
                         ReportWindow.reportCharacterWorld = profiles.Values[i];
+                        TargetWindow.characterNameVal = profiles.Keys[i];
+                        TargetWindow.characterWorldVal = profiles.Values[i];
                         plugin.ReloadTarget();
                         LoginWindow.loginRequest = true;
                         DisableBookmarkSelection = true;
                         plugin.targetWindow.IsOpen = true;
-                        DataSender.RequestTargetProfile(profiles.Keys[i], profiles.Values[i]);
+                        DataSender.RequestTargetProfile(profiles.Keys[i], profiles.Values[i], plugin.Configuration.username);
 
                     }
                     ImGui.SameLine();

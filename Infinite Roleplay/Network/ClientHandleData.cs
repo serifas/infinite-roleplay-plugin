@@ -31,6 +31,8 @@ namespace Networking
                 packets.Add((int)ServerPackets.SSendNoProfileHooks, DataReceiver.NoProfileHooks);
                 packets.Add((int)ServerPackets.SRecProfileStory, DataReceiver.ReceiveProfileStory);
                 packets.Add((int)ServerPackets.SRecNoProfileStory, DataReceiver.NoProfileStory);
+                packets.Add((int)ServerPackets.SSendNoProfileNotes, DataReceiver.NoProfileNotes);
+                packets.Add((int)ServerPackets.SSendProfileNotes, DataReceiver.RecProfileNotes);
                 packets.Add((int)ServerPackets.SRecNoProfileGallery, DataReceiver.ReceiveNoProfileGallery);
                 packets.Add((int)ServerPackets.SRecBookmarks, DataReceiver.RecBookmarks);
                 packets.Add((int)ServerPackets.CProfileReportedSuccessfully, DataReceiver.RecProfileReportedSuccessfully);

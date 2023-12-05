@@ -8,11 +8,15 @@ using System.Net.NetworkInformation;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Timers;
+using InfiniteRoleplay.Windows.Functions;
+using InfiniteRoleplay;
+using System.IO;
 
 namespace Networking
 {
     public class ClientTCP
     {
+        public static bool loadCallback;
         public float targetTime = 60.0f;
         public static bool Connected;
         public static TcpClient clientSocket;
@@ -20,6 +24,88 @@ namespace Networking
         private static byte[] recBuffer;
         private static string server = "47.158.183.250";
         private static int port = 25565;
+        public static Timer timer;
+        public static Plugin plugin;
+        public static void LoadConnectionTimer()
+        {
+            timer = new Timer(3000);
+            timer.Elapsed += OnTick;
+            timer.Start();
+        }
+        public static bool IsConnectedToServer(TcpClient _tcpClient)
+        {
+
+            try
+            {
+                if (_tcpClient != null && _tcpClient.Client != null && _tcpClient.Client.Connected)
+                {
+                    /* pear to the documentation on Poll:
+                     * When passing SelectMode.SelectRead as a parameter to the Poll method it will return 
+                     * -either- true if Socket.Listen(Int32) has been called and a connection is pending;
+                     * -or- true if data is available for reading; 
+                     * -or- true if the connection has been closed, reset, or terminated; 
+                     * otherwise, returns false
+                     */
+
+                    // Detect if client disconnected
+                    if (_tcpClient.Client.Poll(0, SelectMode.SelectRead))
+                    {
+                        byte[] buff = new byte[1];
+                        if (_tcpClient.Client.Receive(buff, SocketFlags.Peek) == 0)
+                        {
+                            // Client disconnected
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public static void CheckStatus()
+        {
+            if (IsConnectedToServer(ClientTCP.clientSocket) == true)
+            {
+                if (loadCallback == true)
+                {
+                    ClientConnectionCallback();
+                    loadCallback = false;
+                }
+                if (plugin.uiLoaded == false)
+                {
+                    plugin.LoadUI();
+                }
+            }
+            else
+            {
+                ConnectToServer();
+            }
+        }
+
+        public static void OnTick(System.Object? sender, ElapsedEventArgs eventArgs)
+        {
+            CheckStatus();
+        }
+        public static void ConnectToServer()
+        {
+            ClientHandleData.InitializePackets(true);
+            InitializingNetworking(true);
+
+            loadCallback = true;
+        }
+
         public static void InitializingNetworking(bool start)
         {
 

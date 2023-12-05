@@ -89,7 +89,7 @@ namespace InfiniteRoleplay.Windows
                 plugin.profileWindow.IsOpen = true;
                 if (playerCharacter != null)
                 {
-                    DataSender.FetchProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
+                    DataSender.FetchProfile(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
                 }
                 
             }
@@ -142,7 +142,7 @@ namespace InfiniteRoleplay.Windows
                 plugin.loggedIn = false;
                 plugin.CloseAllWindows();
                 plugin.loginWindow.IsOpen = true;
-                this.IsOpen = false;                
+                           
                 
             }
 

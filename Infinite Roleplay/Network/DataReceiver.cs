@@ -56,14 +56,16 @@ namespace Networking
         SRecNoProfileGallery = 42,
         CProfileAlreadyReported = 43,
         CProfileReportedSuccessfully = 44,
+        SSendProfileNotes = 45,
+        SSendNoProfileNotes = 46,
     }
     class DataReceiver
     {
         public static string accountStatus = "status...";
         public static bool LoadedSelf = false;
-        public static bool ExistingProfileData, ExistingBioData, ExistingHooksData, ExistingStoryData, ExistingOOCData, ExistingGalleryData = false;
+        public static bool ExistingProfileData, ExistingProfileNotes, ExistingBioData, ExistingHooksData, ExistingStoryData, ExistingOOCData, ExistingGalleryData = false;
         public static int BioLoadStatus = -1, HooksLoadStatus = -1, StoryLoadStatus = -1, OOCLoadStatus = -1, GalleryLoadStatus = -1, BookmarkLoadStatus = -1;
-        public static int TargetBioLoadStatus = -1, TargetHooksLoadStatus = -1, TargetStoryLoadStatus = -1, TargetOOCLoadStatus = -1, TargetGalleryLoadStatus = -1;
+        public static int TargetBioLoadStatus = -1, TargetHooksLoadStatus = -1, TargetStoryLoadStatus = -1, TargetOOCLoadStatus = -1, TargetGalleryLoadStatus = -1, TargetNotesLoadStatus = -1;
         public static bool ExistingTargetProfileData, ExistingTargetBioData, ExistingTargetHooksData, ExistingTargetStoryData, ExistingTargetOOCData, ExistingTargetGalleryData = false;
         public static string bookmarks;
         public static byte[] currentAvatar , currentTargetAvatar;
@@ -88,6 +90,7 @@ namespace Networking
         public static string ConnectionMsg;
         public static bool loggedIn;
         public static bool isAdmin;
+
         // public NSWorld.World world = new NSWorld.World();
         //EXAMPLE PACKET//
         /*
@@ -282,6 +285,7 @@ namespace Networking
             TargetStoryLoadStatus = 0;
             TargetOOCLoadStatus = 0;
             TargetGalleryLoadStatus = 0;
+            TargetNotesLoadStatus = 0;
             TargetWindow.ClearUI();
             TargetMenu.DisableInput = false;
             BookmarksWindow.DisableBookmarkSelection = false;
@@ -730,6 +734,26 @@ namespace Networking
             ExistingStoryData = false;
             buffer.Dispose();
             StoryLoadStatus = 0;
+        }
+        public static void NoProfileNotes(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            ExistingProfileNotes = false;
+            TargetNotesLoadStatus = 0;
+            buffer.Dispose();
+        }
+        public static void RecProfileNotes(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            string notes = buffer.ReadString();
+            ExistingProfileNotes = true;
+            TargetWindow.profileNotes = notes;
+            buffer.Dispose();
+            TargetNotesLoadStatus = 1;
         }
     }
 }

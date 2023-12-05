@@ -63,7 +63,7 @@ namespace InfiniteRoleplay.Windows
         public static byte[][] existingGalleryImgBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
         public static byte[][] existingGalleryThumbBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
 
-        
+        public static string characterNameVal, characterWorldVal;
         public static string[] StoryContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static string[] ChapterContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static string[] ChapterTitle = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
@@ -128,7 +128,7 @@ namespace InfiniteRoleplay.Windows
                                 characterEditAfg = "",
                                 characterEditHeight = "",
                                 characterEditWeight = "";
-        public static string fileName, reportInfo = "";
+        public static string fileName, reportInfo, profileNotes = "";
         private readonly FileDialogManager _manager;
         private bool _isOpen, AllLoaded;
         private IDalamudTextureWrap[] otherImages;
@@ -138,7 +138,8 @@ namespace InfiniteRoleplay.Windows
         private int lawfulGoodWidthVal = 0, neutralGoodWidthVal = 0, chaoticGoodWidthVal = 0, lawfulNeutralWidthVal = 0, trueNeutralWidthVal = 0, chaoticNeutralWidthVal = 0, lawfulEvilWidthVal = 0, neutralEvilWidthVal = 0, chaoticEvilWidthVal = 0;
         private int lawfulGoodVal = 0, neutralGoodVal = 0, chaoticGoodVal = 0, lawfulNeutralVal = 0, trueNeutralVal = 0, chaoticNeutralVal = 0, lawfulEvilVal = 0, neutralEvilVal = 0, chaoticEvilVal = 0;
         private IDalamudTextureWrap lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar;
-     
+
+        public bool addProfileNote = false;
 
         public TargetWindow(Plugin plugin, DalamudPluginInterface Interface, IDalamudTextureWrap avatarHolder,
                              //alignment icon
@@ -249,7 +250,7 @@ namespace InfiniteRoleplay.Windows
                     }
 
                     ImGui.Text("Controls");
-                    if (ImGui.Button("Add Notes", new Vector2(100, 20))) { ClearUI(); addNotes = true; }
+                    if (ImGui.Button("Notes", new Vector2(100, 20))) { ClearUI(); addNotes = true; }
                     if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add personal notes about this profile or the user."); }
                     ImGui.SameLine();
                     if (ImGui.Button("Report!", new Vector2(100, 20))) {
@@ -589,6 +590,37 @@ namespace InfiniteRoleplay.Windows
 
                         }
                     }
+                    if(addNotes == true)
+                    {
+
+                        int NameWidth = 50;
+                        var decidingWidth = Math.Max(500, ImGui.GetWindowWidth());
+                        var offsetWidth = (decidingWidth - NameWidth) / 2;
+                        var offsetVersion = storyTitle.Length > 0
+                            ? _modVersionWidth + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().WindowPadding.X
+                            : 0;
+                        var offset = Math.Max(offsetWidth, offsetVersion);
+                        if (offset > 0)
+                        {
+                            ImGui.SetCursorPosX(offset);
+                        }
+
+
+                        using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
+                        using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+                        using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
+                        ImGuiUtil.DrawTextButton("Notes", Vector2.Zero, 0);
+
+                        using var defInfFontDen = ImRaii.DefaultFont();
+                        using var defCol = ImRaii.DefaultColors();
+                        using var defStyle = ImRaii.DefaultStyle();
+                        ImGui.InputTextMultiline("##info", ref profileNotes, 500, new Vector2(400, 100));
+                        if(ImGui.Button("Add Notes"))
+                        {
+                            DataSender.AddProfileNotes(plugin.Configuration.username, characterNameVal, characterWorldVal, profileNotes);
+                        }
+                        
+                    }
                 }
 
                 else
@@ -604,10 +636,10 @@ namespace InfiniteRoleplay.Windows
             else
             {
                 timer.Start();
-                int LoaderWidth = 360;
+                var LoaderWidth = 360f;
                 var decidingWidth = Math.Max(500, ImGui.GetWindowWidth());
                 var offsetWidth = (decidingWidth - LoaderWidth) / 2;
-                var offsetVersion = LoaderWidth > 0
+                var offsetVersion = storyTitle.Length > 0
                     ? _modVersionWidth + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().WindowPadding.X
                     : 0;
                 var offset = Math.Max(offsetWidth, offsetVersion);
@@ -639,6 +671,7 @@ namespace InfiniteRoleplay.Windows
             viewStory = false;
             viewOOC= false;
             viewGallery = false;
+            addNotes = false;
         }
         public void Dispose()
         {
@@ -687,7 +720,8 @@ namespace InfiniteRoleplay.Windows
             if (DataReceiver.TargetStoryLoadStatus != -1 &&
                DataReceiver.TargetHooksLoadStatus != -1 &&
                DataReceiver.TargetBioLoadStatus != -1 &&
-               DataReceiver.TargetGalleryLoadStatus != -1)
+               DataReceiver.TargetGalleryLoadStatus != -1 &&
+               DataReceiver.TargetNotesLoadStatus != -1)
             {
                 AllLoaded = true;
             }

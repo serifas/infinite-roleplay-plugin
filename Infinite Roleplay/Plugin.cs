@@ -34,6 +34,7 @@ using Dalamud.Plugin.Services;
 using Dalamud.Interface.Internal.Windows;
 using Dalamud.Interface.Internal;
 using Aspose.Imaging.MemoryManagement;
+using System.Threading;
 
 namespace InfiniteRoleplay
 {
@@ -42,10 +43,10 @@ namespace InfiniteRoleplay
 
         public bool loggedIn;
         public bool toggleconnection;
-        public bool firstload;
         public bool targeted = false;
         public bool loadCallback = false;
         public bool loadPreview = false;
+        public bool uiLoaded = false;
         public string socketStatus;
         public DalamudPluginInterface PluginInterfacePub;
         public TargetWindow targetWindow;
@@ -62,15 +63,16 @@ namespace InfiniteRoleplay
         public string Name => "Infinite Roleplay";
         private const string CommandName = "/infinite";
         private DalamudPluginInterface pluginInterface { get; init; }
-       
         public ITargetManager targetManager { get; init; }
         public IClientState clientState { get; init; }
         public static IClientState _clientState;
         private IFramework framework { get; init; }
-        private IChatGui chatGUI { get; init; }
+        public IChatGui chatGUI { get; init; }
         private IDutyState dutyState { get; init; }
         private ICommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
+        public int OnEventExecution { get; }
+
         public WindowSystem WindowSystem = new("InfiniteRoleplay");
         public Plugin([RequiredVersion("1.0")] IClientState ClientState,
                       [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
@@ -80,9 +82,6 @@ namespace InfiniteRoleplay
                       [RequiredVersion("1.0")] ICommandManager commandManager,
                       [RequiredVersion("1.0")] IChatGui chatG)
         {
-
-
-            firstload = true;
             this.pluginInterface = pluginInterface;
             this.CommandManager = commandManager;
             this.PluginInterfacePub = pluginInterface;
@@ -94,7 +93,9 @@ namespace InfiniteRoleplay
             this.dutyState = dutyState;
             this.Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(pluginInterface);
-
+            DataSender.plugin = this;
+            ClientTCP.plugin = this;
+            ClientTCP.LoadConnectionTimer();
 
             string name = "";
 
@@ -109,12 +110,12 @@ namespace InfiniteRoleplay
             this.pluginInterface.UiBuilder.OpenConfigUi += DrawLoginUI;
             
             DataReceiver.plugin = this;
-            ReloadClient();
-            ConnectToServer();
             this.framework.Update += Update;
+            this.clientState.Login += ReloadClient;
+            ClientTCP.CheckStatus();
+            ClientTCP.CheckStatus();
 
         }
-        
         public void ReloadClient()
         {
             ProfileWindow.playerCharacter = this.clientState.LocalPlayer;
@@ -127,6 +128,7 @@ namespace InfiniteRoleplay
             DataReceiver.TargetGalleryLoadStatus = -1;
             DataReceiver.TargetHooksLoadStatus = -1;
             DataReceiver.TargetStoryLoadStatus = -1;
+            DataReceiver.TargetNotesLoadStatus = -1;
         }
         public void ReloadProfile()
         {
@@ -135,94 +137,109 @@ namespace InfiniteRoleplay
             DataReceiver.HooksLoadStatus = -1;
             DataReceiver.StoryLoadStatus = -1;
         }
-
+        public void UnloadUI()
+        {
+            if(uiLoaded == true)
+            {
+                this.WindowSystem.RemoveAllWindows();
+                uiLoaded = false;
+            }           
+        }
         public void LoadUI()
         {
-            var AvatarHolder = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
-            //Icons
-            var lawfulGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_good.png"));
-            var neutralGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_good.png"));
-            var chaoticGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_good.png"));
-            var lawfulNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_neutral.png"));
-            var trueNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/true_neutral.png"));
-            var chaoticNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_neutral.png"));
-            var lawfulEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_evil.png"));
-            var neutralEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_evil.png"));
-            var chaoticEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil.png"));
+            if (uiLoaded == false)
+            {
+                var AvatarHolder = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
+                //Icons
+                var lawfulGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_good.png"));
+                var neutralGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_good.png"));
+                var chaoticGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_good.png"));
+                var lawfulNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_neutral.png"));
+                var trueNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/true_neutral.png"));
+                var chaoticNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_neutral.png"));
+                var lawfulEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_evil.png"));
+                var neutralEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_evil.png"));
+                var chaoticEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil.png"));
 
-            //bars
+                //bars
 
-            var lawfulGoodBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_good_bar.png"));
-            var neutralGoodBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_good_bar.png"));
-            var chaoticGoodBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_good_bar.png"));
-            var lawfulNeutralBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_neutral_bar.png"));
-            var trueNeutralBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/true_neutral_bar.png"));
-            var chaoticNeutralBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_neutral_bar.png"));
-            var lawfulEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_evil_bar.png"));
-            var neutralEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_evil_bar.png"));
-            var chaoticEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil_bar.png"));
-            var pictureTab = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/picturetab.png");
-            var blank_holder = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/blank.png");
+                var lawfulGoodBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_good_bar.png"));
+                var neutralGoodBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_good_bar.png"));
+                var chaoticGoodBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_good_bar.png"));
+                var lawfulNeutralBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_neutral_bar.png"));
+                var trueNeutralBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/true_neutral_bar.png"));
+                var chaoticNeutralBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_neutral_bar.png"));
+                var lawfulEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_evil_bar.png"));
+                var neutralEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_evil_bar.png"));
+                var chaoticEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil_bar.png"));
+                var pictureTab = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/picturetab.png");
+                var blank_holder = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/blank.png");
 
-            byte[] imgBytes = File.ReadAllBytes(pictureTab);
+                byte[] imgBytes = File.ReadAllBytes(pictureTab);
 
-            byte[] picTabBytes = Imaging.ScaleImageBytes(imgBytes, 300, 300);
-            System.Drawing.Image picTab = Imaging.byteArrayToImage(picTabBytes);
-            byte[] emptyByteImage = File.ReadAllBytes(blank_holder);
+                byte[] picTabBytes = Imaging.ScaleImageBytes(imgBytes, 300, 300);
+                System.Drawing.Image picTab = Imaging.byteArrayToImage(picTabBytes);
+                byte[] emptyByteImage = File.ReadAllBytes(blank_holder);
 
-            byte[] blankTabBytes = Imaging.ScaleImageBytes(emptyByteImage, 300, 300);
-
-
-            images = new IDalamudTextureWrap[18] {lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil, lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar };
-            System.Drawing.Image blankTab = Imaging.byteArrayToImage(blankTabBytes);
+                byte[] blankTabBytes = Imaging.ScaleImageBytes(emptyByteImage, 300, 300);
 
 
-            targetWindow = new TargetWindow(this, this.pluginInterface, AvatarHolder,
-                                                             lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
-                                                             lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar);
-            targetMenu = new TargetMenu(this, this.pluginInterface, targetManager);
+                images = new IDalamudTextureWrap[19] {AvatarHolder, lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil, lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar };
+                System.Drawing.Image blankTab = Imaging.byteArrayToImage(blankTabBytes);
 
-            imagePreview = new ImagePreview(this, this.pluginInterface, targetManager);
 
-            bookmarksWindow = new BookmarksWindow(this, this.pluginInterface, targetWindow);
+                targetWindow = new TargetWindow(this, this.pluginInterface, AvatarHolder,
+                                                                 lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
+                                                                 lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar);
+                targetMenu = new TargetMenu(this, this.pluginInterface, targetManager);
 
-            optionsWindow = new OptionsWindow(this, this.pluginInterface);
+                imagePreview = new ImagePreview(this, this.pluginInterface, targetManager);
 
-            reportWindow = new ReportWindow(this, this.pluginInterface);
+                bookmarksWindow = new BookmarksWindow(this, this.pluginInterface, targetWindow);
 
-            adminWindow = new AdminWindow(this, this.pluginInterface);
+                optionsWindow = new OptionsWindow(this, this.pluginInterface);
 
-            panelWindow = new PanelWindow(this, this.pluginInterface, targetManager);
+                reportWindow = new ReportWindow(this, this.pluginInterface);
 
-            loginWindow = new LoginWindow(this, this.clientState.LocalPlayer);
-            profileWindow = new ProfileWindow(this, this.pluginInterface, chatGUI, this.Configuration, AvatarHolder,
-                                                                lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
-                                                                lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar, picTab, blankTab);
-            // this.WindowSystem.AddWindow(new Loader(this.pluginInterface, this));
-            // this.WindowSystem.AddWindow(new SystemsWindow(this));
-            this.WindowSystem.AddWindow(profileWindow);
+                adminWindow = new AdminWindow(this, this.pluginInterface);
 
-            //  this.WindowSystem.AddWindow(new Rulebook(this));
-            this.WindowSystem.AddWindow(loginWindow);
-            //this.WindowSystem.AddWindow(new SystemsWindow(this));
-            this.WindowSystem.AddWindow(panelWindow);
-            //   this.WindowSystem.AddWindow(new MessageBox(this));
-            //  this.WindowSystem.AddWindow(new AdminWindow(this, this.pluginInterface));
-            this.WindowSystem.AddWindow(targetWindow);
-            this.WindowSystem.AddWindow(targetMenu);
-            this.WindowSystem.AddWindow(bookmarksWindow);
-            this.WindowSystem.AddWindow(imagePreview);
-            this.WindowSystem.AddWindow(reportWindow);
+                panelWindow = new PanelWindow(this, this.pluginInterface, targetManager);
+
+                loginWindow = new LoginWindow(this, this.clientState.LocalPlayer);
+                profileWindow = new ProfileWindow(this, this.pluginInterface, chatGUI, this.Configuration, AvatarHolder,
+                                                                    lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil,
+                                                                    lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar, picTab, blankTab);
+                // this.WindowSystem.AddWindow(new Loader(this.pluginInterface, this));
+                // this.WindowSystem.AddWindow(new SystemsWindow(this));
+                this.WindowSystem.AddWindow(profileWindow);
+
+                //  this.WindowSystem.AddWindow(new Rulebook(this));
+                this.WindowSystem.AddWindow(loginWindow);
+                //this.WindowSystem.AddWindow(new SystemsWindow(this));
+                this.WindowSystem.AddWindow(panelWindow);
+                //   this.WindowSystem.AddWindow(new MessageBox(this));
+                //  this.WindowSystem.AddWindow(new AdminWindow(this, this.pluginInterface));
+                this.WindowSystem.AddWindow(targetWindow);
+                this.WindowSystem.AddWindow(targetMenu);
+                this.WindowSystem.AddWindow(bookmarksWindow);
+                this.WindowSystem.AddWindow(imagePreview);
+                this.WindowSystem.AddWindow(reportWindow);
+                uiLoaded = true;
+
+            }
         }
         public void Dispose()
         {
             this.framework.Update -= Update;
             this.CommandManager.RemoveHandler(CommandName);
             this.WindowSystem.RemoveAllWindows();
-            if (IsConnectedToServer(ClientTCP.clientSocket) == true)
+            if (ClientTCP.IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
                 DisconnectFromServer();
             }
+            ClientTCP.timer.Dispose();
+            ProfileWindow.timer.Dispose();
+            TargetWindow.timer.Dispose();
             //if(images != null && images.Length > 0)
             //{
              //   for (int i = 0; i < images.Length; i++)
@@ -236,7 +253,6 @@ namespace InfiniteRoleplay
         }
         public void CloseAllWindows()
         {
-            panelWindow.IsOpen = false;
             profileWindow.IsOpen = false;
             loginWindow.IsOpen = false;
             optionsWindow.IsOpen = false;
@@ -244,25 +260,12 @@ namespace InfiniteRoleplay
             imagePreview.IsOpen = false;
             targetMenu.IsOpen = false;
             targetWindow.IsOpen = false;
+            panelWindow.IsOpen = false;
         }
 
 
         public void Update(IFramework framework)
         {
-            if (IsConnectedToServer(ClientTCP.clientSocket) == true)
-            {
-                
-                if (loadCallback == true)
-                {
-                    ClientTCP.ClientConnectionCallback();
-                    loadCallback = false;
-                }
-            }
-            if (firstload == true && IsConnectedToServer(ClientTCP.clientSocket) == true)
-            {
-                firstload = false;
-                LoadUI();
-            }
             var targetPlayer = targetManager.Target as PlayerCharacter;
             if (loggedIn == true)
             {
@@ -293,48 +296,7 @@ namespace InfiniteRoleplay
             this.WindowSystem.Draw();
         }
 
-        public bool IsConnectedToServer(TcpClient _tcpClient)
-        {
-
-            try
-            {
-                if (_tcpClient != null && _tcpClient.Client != null && _tcpClient.Client.Connected)
-                {
-                    /* pear to the documentation on Poll:
-                     * When passing SelectMode.SelectRead as a parameter to the Poll method it will return 
-                     * -either- true if Socket.Listen(Int32) has been called and a connection is pending;
-                     * -or- true if data is available for reading; 
-                     * -or- true if the connection has been closed, reset, or terminated; 
-                     * otherwise, returns false
-                     */
-
-                    // Detect if client disconnected
-                    if (_tcpClient.Client.Poll(0, SelectMode.SelectRead))
-                    {
-                        byte[] buff = new byte[1];
-                        if (_tcpClient.Client.Receive(buff, SocketFlags.Peek) == 0)
-                        {
-                            // Client disconnected
-                            return false;
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                    }
-
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch
-            {
-                return false;
-            }
-        }
+      
 
         public bool IsLoggedIn()
         {
@@ -347,13 +309,7 @@ namespace InfiniteRoleplay
                 return false;
             }
         }
-        public void ConnectToServer()
-        {
-            ClientHandleData.InitializePackets(true);
-            ClientTCP.InitializingNetworking(true);
-
-            loadCallback = true;
-        }
+       
         public void DisconnectFromServer()
         {
             ClientHandleData.InitializePackets(false);
@@ -361,16 +317,20 @@ namespace InfiniteRoleplay
         }
         public void DrawLoginUI()
         {
+            ReloadClient();
+            if(uiLoaded == true)
+            {
+                if (loggedIn == true)
+                {
+                    panelWindow.IsOpen = true;
+                    loginWindow.IsOpen = false;
+                }
+                else
+                {
+                    CloseAllWindows();
+                    loginWindow.IsOpen = true;
+                }
 
-            if (loggedIn == true)
-            {
-                panelWindow.IsOpen = true;
-                loginWindow.IsOpen = false;
-            }
-            else
-            {
-                CloseAllWindows();
-                loginWindow.IsOpen = true;
             }
         }
 

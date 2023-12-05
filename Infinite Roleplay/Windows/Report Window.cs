@@ -45,10 +45,18 @@ namespace InfiniteRoleplay.Windows
         public override void Draw()
         {
             ImGui.TextColored(new Vector4(100, 0, 0, 100), reportStatus);
-            ImGui.InputTextMultiline("##afg", ref reportInfo, 500, new Vector2(400, 100));
+            ImGui.Text("Reason for report");
+            ImGui.InputTextMultiline("##info", ref reportInfo, 500, new Vector2(400, 100));
             if (ImGui.Button("Report!"))
             {
-                DataSender.ReportProfile(reportCharacterName, reportCharacterWorld, pg.Configuration.username, reportInfo);
+                if(reportInfo.Length > 15)
+                {
+                    DataSender.ReportProfile(reportCharacterName, reportCharacterWorld, pg.Configuration.username, reportInfo);
+                }
+                else
+                {
+                    reportStatus = "Please give a reason for the report.";
+                }
             }
         }
         public void Dispose()

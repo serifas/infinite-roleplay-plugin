@@ -48,10 +48,12 @@ namespace Networking
         CSendNSFWStatus = 28,
         CSendGallery = 29,
         CReportProfile = 30,
+        CSendProfileNotes = 31,
     }
     public class DataSender
     {
         public static int userID;
+        public static Plugin plugin;
         // public static LoadCharacter assets = new LoadCharacter();
         public static void SendHelloServer()
         {                     
@@ -212,11 +214,10 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void FetchProfile(string username, string characterName, string world)
+        public static void FetchProfile( string characterName, string world)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CFetchProfiles);
-            buffer.WriteString(username);
             buffer.WriteString(characterName);
             buffer.WriteString(world);
             ClientTCP.SendData(buffer.ToArray());
@@ -352,10 +353,11 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void RequestTargetProfile(string targetPlayerName, string targetPlayerWorld)
+        public static void RequestTargetProfile(string targetPlayerName, string targetPlayerWorld, string requesterUsername)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.SRequestTargetProfile);
+            buffer.WriteString(requesterUsername);
             buffer.WriteString(targetPlayerName);
             buffer.WriteString(targetPlayerWorld);
             ClientTCP.SendData(buffer.ToArray());
@@ -414,7 +416,19 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-      
+
+        public static void AddProfileNotes(string username, string characterNameVal, string characterWorldVal, string notes)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CSendProfileNotes);
+            buffer.WriteString(username);
+            buffer.WriteString(characterNameVal);
+            buffer.WriteString(characterWorldVal);
+            buffer.WriteString(notes);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+
         /*
          * PACKET STRUCTURE
          * 
