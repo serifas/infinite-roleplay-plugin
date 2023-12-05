@@ -100,13 +100,14 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void ReportProfile(string characterName, string characterWorld, string reporterAccountName)
+        public static void ReportProfile(string characterName, string characterWorld, string reporterAccountName, string reportInfo)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CReportProfile);
             buffer.WriteString(characterName);
             buffer.WriteString(characterWorld);
             buffer.WriteString(reporterAccountName);
+            buffer.WriteString(reportInfo);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
 

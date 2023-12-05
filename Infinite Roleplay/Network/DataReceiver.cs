@@ -54,6 +54,8 @@ namespace Networking
         SRecNoTargetGallery = 40,
         SRecTargetGallery = 41,
         SRecNoProfileGallery = 42,
+        CProfileAlreadyReported = 43,
+        CProfileReportedSuccessfully = 44,
     }
     class DataReceiver
     {
@@ -224,6 +226,23 @@ namespace Networking
             ExistingTargetProfileData = true;
             plugin.targetWindow.IsOpen = true;
             TargetWindow.ClearUI();
+
+        }
+        public static void RecProfileReportedSuccessfully(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            buffer.Dispose();
+            ReportWindow.reportStatus = "Profile reported successfully. We are on it!";
+        }
+        public static void RecProfileAlreadyReported(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            buffer.Dispose();
+            ReportWindow.reportStatus = "Profile has already been reported!";
 
         }
         public static void NoProfile(byte[] data)

@@ -33,6 +33,8 @@ namespace Networking
                 packets.Add((int)ServerPackets.SRecNoProfileStory, DataReceiver.NoProfileStory);
                 packets.Add((int)ServerPackets.SRecNoProfileGallery, DataReceiver.ReceiveNoProfileGallery);
                 packets.Add((int)ServerPackets.SRecBookmarks, DataReceiver.RecBookmarks);
+                packets.Add((int)ServerPackets.CProfileReportedSuccessfully, DataReceiver.RecProfileReportedSuccessfully);
+                packets.Add((int)ServerPackets.CProfileAlreadyReported, DataReceiver.RecProfileAlreadyReported);
                 //target packets
                 packets.Add((int)ServerPackets.SRecNoTargetProfile, DataReceiver.NoTargetProfile);
                 packets.Add((int)ServerPackets.SRecTargetProfile, DataReceiver.ExistingTargetProfile);
