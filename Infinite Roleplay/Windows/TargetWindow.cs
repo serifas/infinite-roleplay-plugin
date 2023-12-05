@@ -76,7 +76,9 @@ namespace InfiniteRoleplay.Windows
         public static bool viewStory = false;
         public static bool viewOOC = false;
         public static bool viewGallery = false;
+        public static bool reportProfile = false;
         public static bool resetStory = false;
+        public static bool addNotes = false;
         public static bool[] galleryExists = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
         public static bool ExistingBio;
         public static bool ExistingHooks;
@@ -126,7 +128,7 @@ namespace InfiniteRoleplay.Windows
                                 characterEditAfg = "",
                                 characterEditHeight = "",
                                 characterEditWeight = "";
-        public static string fileName = "";
+        public static string fileName, reportInfo = "";
         private readonly FileDialogManager _manager;
         private bool _isOpen, AllLoaded;
         private IDalamudTextureWrap[] otherImages;
@@ -245,6 +247,16 @@ namespace InfiniteRoleplay.Windows
                         if (ImGui.Button("OOC Info", new Vector2(100, 20))) { ClearUI(); viewOOC = true; }
                         if (ImGui.IsItemHovered()) { ImGui.SetTooltip("View OOC section of this profile."); }
                     }
+
+                    ImGui.Text("Controls");
+                    if (ImGui.Button("Add Notes", new Vector2(100, 20))) { ClearUI(); addNotes = true; }
+                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add personal notes about this profile or the user."); }
+                    ImGui.SameLine();
+                    if (ImGui.Button("Report!", new Vector2(100, 20))) {
+                        plugin.reportWindow.IsOpen = true;
+                    }
+                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Report this profile for inappropriate use.\n(Repeat false reports may result in your report ability being revoked.)"); }
+                    
                 }
 
 

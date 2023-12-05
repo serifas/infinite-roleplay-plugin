@@ -717,7 +717,7 @@ namespace InfiniteRoleplay.Windows
                     {
                         if (ImGui.Button("Add Image"))
                         {
-                            if (imageIndex < 30)
+                            if (imageIndex < 29)
                             {
                                 imageIndex++;
                             }

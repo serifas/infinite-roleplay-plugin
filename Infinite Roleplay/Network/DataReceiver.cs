@@ -382,6 +382,7 @@ namespace Networking
                  plugin.loginWindow.IsOpen = false;
                  plugin.panelWindow.IsOpen = true;
                  plugin.loggedIn = true;
+                 
              }
 
         }

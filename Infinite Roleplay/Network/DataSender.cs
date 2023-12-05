@@ -47,6 +47,7 @@ namespace Networking
         CReorderGallery = 27,
         CSendNSFWStatus = 28,
         CSendGallery = 29,
+        CReportProfile = 30,
     }
     public class DataSender
     {
@@ -92,13 +93,23 @@ namespace Networking
         }
         public static void Register(string username, string password)
         {
-
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CRegister);
             buffer.WriteString(username);
             buffer.WriteString(password);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
+        }
+        public static void ReportProfile(string characterName, string characterWorld, string reporterAccountName)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.CReportProfile);
+            buffer.WriteString(characterName);
+            buffer.WriteString(characterWorld);
+            buffer.WriteString(reporterAccountName);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+
         }
         public static void SendSystemStats(string username, string SystemName, string Msg)
         {

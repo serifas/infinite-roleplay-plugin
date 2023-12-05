@@ -33,7 +33,7 @@ public class LoginWindow : Window, IDisposable
         ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
         ImGuiWindowFlags.NoScrollWithMouse)
     {
-        this.Size = new Vector2(232, 180);
+        this.Size = new Vector2(232, 200);
         this.SizeCondition = ImGuiCond.Always;
 
         this.Configuration = plugin.Configuration;
@@ -95,6 +95,11 @@ public class LoginWindow : Window, IDisposable
                     }
                 }
 
+            }
+            if (ImGui.Button("Back"))
+            {
+                login = true;
+                register = false;
             }
 
         }

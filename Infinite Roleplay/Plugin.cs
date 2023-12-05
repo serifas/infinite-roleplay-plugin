@@ -57,6 +57,7 @@ namespace InfiniteRoleplay
         public ProfileWindow profileWindow;
         public OptionsWindow optionsWindow;
         public AdminWindow adminWindow;
+        public ReportWindow reportWindow;
         public IDalamudTextureWrap[] images;
         public string Name => "Infinite Roleplay";
         private const string CommandName = "/infinite";
@@ -106,6 +107,7 @@ namespace InfiniteRoleplay
             });
             this.pluginInterface.UiBuilder.Draw += DrawUI;
             this.pluginInterface.UiBuilder.OpenConfigUi += DrawLoginUI;
+            
             DataReceiver.plugin = this;
             ConnectToServer();
             ReloadClient();
@@ -194,6 +196,8 @@ namespace InfiniteRoleplay
 
             optionsWindow = new OptionsWindow(this, this.pluginInterface);
 
+            reportWindow = new ReportWindow(this, this.pluginInterface);
+
             adminWindow = new AdminWindow(this, this.pluginInterface);
 
             panelWindow = new PanelWindow(this, this.pluginInterface, targetManager);
@@ -216,6 +220,7 @@ namespace InfiniteRoleplay
             this.WindowSystem.AddWindow(targetMenu);
             this.WindowSystem.AddWindow(bookmarksWindow);
             this.WindowSystem.AddWindow(imagePreview);
+            this.WindowSystem.AddWindow(reportWindow);
         }
         public void Dispose()
         {
@@ -249,6 +254,7 @@ namespace InfiniteRoleplay
             imagePreview.IsOpen = false;
             targetMenu.IsOpen = false;
             targetWindow.IsOpen = false;
+            reportWindow.IsOpen = false;
         }
   
        
