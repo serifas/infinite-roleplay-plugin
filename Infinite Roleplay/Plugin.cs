@@ -115,11 +115,7 @@ namespace InfiniteRoleplay
 
 
         }
-        public void LogOut()
-        {
-            CloseAllWindows();
-            loginWindow.IsOpen = true;
-        }
+        
         public void ReloadClient()
         {
             ProfileWindow.playerCharacter = this.clientState.LocalPlayer;
@@ -223,7 +219,6 @@ namespace InfiniteRoleplay
         {
             this.framework.Update -= Update;
             this.CommandManager.RemoveHandler(CommandName);
-            CloseAllWindows();
             this.WindowSystem.RemoveAllWindows();
             if (IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
@@ -244,21 +239,48 @@ namespace InfiniteRoleplay
         {
             profileWindow.IsOpen = false;
             loginWindow.IsOpen = false;
-            panelWindow.IsOpen = false;
+            optionsWindow.IsOpen = false;
             bookmarksWindow.IsOpen = false;
             imagePreview.IsOpen = false;
             targetMenu.IsOpen = false;
             targetWindow.IsOpen = false;
-            reportWindow.IsOpen = false;
         }
-  
-       
+
+
         public void Update(IFramework framework)
-        {            
-            var targetPlayer = targetManager.Target as PlayerCharacter;
-            if(loggedIn == true)
+        {
+            if (IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
-                if (targetPlayer != null &&  dutyState.IsDutyStarted == false)
+                toggleconnection = false;
+                if (IsLoggedIn() == false)
+                {
+                    DisconnectFromServer();
+                    CloseAllWindows();
+                }
+                if (loadCallback == true)
+                {
+                    ClientTCP.ClientConnectionCallback();
+                    loadCallback = false;
+                }
+            }
+            else
+            {
+                toggleconnection = true;
+            }
+            if (IsLoggedIn() == true && toggleconnection == true)
+            {
+                ConnectToServer();
+                ReloadClient();
+            }
+            if (firstload == true && IsConnectedToServer(ClientTCP.clientSocket) == true)
+            {
+                firstload = false;
+                LoadUI();
+            }
+            var targetPlayer = targetManager.Target as PlayerCharacter;
+            if (loggedIn == true)
+            {
+                if (targetPlayer != null && dutyState.IsDutyStarted == false)
                 {
                     targetMenu.IsOpen = true;
                 }
@@ -267,15 +289,10 @@ namespace InfiniteRoleplay
                     targetMenu.IsOpen = false;
                 }
             }
-            if(loadPreview == true)
+            if (loadPreview == true)
             {
                 imagePreview.IsOpen = true;
                 loadPreview = false;
-            }
-            if (firstload == true && IsConnectedToServer(ClientTCP.clientSocket) == true)
-            {
-                firstload = false;
-                LoadUI();
             }
 
         }
@@ -292,47 +309,47 @@ namespace InfiniteRoleplay
 
         public bool IsConnectedToServer(TcpClient _tcpClient)
         {
-           
-                try
+
+            try
+            {
+                if (_tcpClient != null && _tcpClient.Client != null && _tcpClient.Client.Connected)
                 {
-                    if (_tcpClient != null && _tcpClient.Client != null && _tcpClient.Client.Connected)
-                    {
-                        /* pear to the documentation on Poll:
-                         * When passing SelectMode.SelectRead as a parameter to the Poll method it will return 
-                         * -either- true if Socket.Listen(Int32) has been called and a connection is pending;
-                         * -or- true if data is available for reading; 
-                         * -or- true if the connection has been closed, reset, or terminated; 
-                         * otherwise, returns false
-                         */
+                    /* pear to the documentation on Poll:
+                     * When passing SelectMode.SelectRead as a parameter to the Poll method it will return 
+                     * -either- true if Socket.Listen(Int32) has been called and a connection is pending;
+                     * -or- true if data is available for reading; 
+                     * -or- true if the connection has been closed, reset, or terminated; 
+                     * otherwise, returns false
+                     */
 
-                        // Detect if client disconnected
-                        if (_tcpClient.Client.Poll(0, SelectMode.SelectRead))
+                    // Detect if client disconnected
+                    if (_tcpClient.Client.Poll(0, SelectMode.SelectRead))
+                    {
+                        byte[] buff = new byte[1];
+                        if (_tcpClient.Client.Receive(buff, SocketFlags.Peek) == 0)
                         {
-                            byte[] buff = new byte[1];
-                            if (_tcpClient.Client.Receive(buff, SocketFlags.Peek) == 0)
-                            {
-                                // Client disconnected
-                                return false;
-                            }
-                            else
-                            {
-                                return true;
-                            }
+                            // Client disconnected
+                            return false;
                         }
+                        else
+                        {
+                            return true;
+                        }
+                    }
 
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return true;
                 }
-                catch
+                else
                 {
                     return false;
                 }
+            }
+            catch
+            {
+                return false;
+            }
         }
-      
+
         public bool IsLoggedIn()
         {
             if (clientState.IsLoggedIn == true && clientState.LocalPlayer != null)
@@ -346,12 +363,10 @@ namespace InfiniteRoleplay
         }
         public void ConnectToServer()
         {
-            if (!IsConnectedToServer(ClientTCP.clientSocket))
-            {
-                ClientHandleData.InitializePackets(true);
-                ClientTCP.InitializingNetworking(true);
-                ClientTCP.ClientConnectionCallback();
-            }
+            ClientHandleData.InitializePackets(true);
+            ClientTCP.InitializingNetworking(true);
+
+            loadCallback = true;
         }
         public void DisconnectFromServer()
         {
@@ -360,10 +375,10 @@ namespace InfiniteRoleplay
         }
         public void DrawLoginUI()
         {
-            
+
             if (loggedIn == true)
             {
-                panelWindow.IsOpen = true;
+                optionsWindow.IsOpen = true;
                 loginWindow.IsOpen = false;
             }
             else
@@ -371,7 +386,7 @@ namespace InfiniteRoleplay
                 loginWindow.IsOpen = true;
             }
         }
-        
+
 
 
 

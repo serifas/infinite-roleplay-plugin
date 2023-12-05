@@ -140,7 +140,7 @@ namespace InfiniteRoleplay.Windows
             if (ImGui.Button("Logout", new Vector2(225, 25)))
             {
                 plugin.CloseAllWindows();
-                plugin.LogOut();
+                plugin.loggedIn = false;
             }
 
 
