@@ -62,6 +62,7 @@ namespace InfiniteRoleplay
         public IDalamudTextureWrap[] images;
         public string Name => "Infinite Roleplay";
         private const string CommandName = "/infinite";
+        private const string TargetWindowCommandName = "/inftarget";
         private DalamudPluginInterface pluginInterface { get; init; }
         public ITargetManager targetManager { get; init; }
         public IClientState clientState { get; init; }
@@ -99,9 +100,13 @@ namespace InfiniteRoleplay
 
 
 
-             this.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
+            this.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
             {
-                HelpMessage = "to open the plugin window"
+                HelpMessage = "to open the plugin panel window"
+            });
+            this.CommandManager.AddHandler(TargetWindowCommandName, new CommandInfo(OnViewTarget)
+            {
+                HelpMessage = "to open the target window"
             });
             this.pluginInterface.UiBuilder.Draw += DrawUI;
             this.pluginInterface.UiBuilder.OpenConfigUi += LoadOptions;
@@ -274,7 +279,7 @@ namespace InfiniteRoleplay
             var targetPlayer = targetManager.Target as PlayerCharacter;
             if (loggedIn == true)
             {
-                if (targetPlayer != null && dutyState.IsDutyStarted == false)
+                if (targetPlayer != null && dutyState.IsDutyStarted == false && Configuration.showTargetOptions == true)
                 {
                     targetMenu.IsOpen = true;
                 }
@@ -295,6 +300,10 @@ namespace InfiniteRoleplay
         {
             DrawLoginUI();
             // in response to the slash command, just display our main ui          
+        }
+        private void OnViewTarget(string command, string args)
+        {
+            this.targetWindow.IsOpen = true;
         }
         private void DrawUI()
         {

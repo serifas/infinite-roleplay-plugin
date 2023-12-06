@@ -13,9 +13,11 @@ namespace InfiniteRoleplay
         public bool StayOnline { get; set; }
         public string username { get; set; } = "";
         public string password { get; set; } = "";
-        public Vector2 profileWindowSize { get; set; } = new Vector2(750, 900);
-        public Vector2 targetWindowSize { get; set; } = new Vector2(750, 900);
-        public bool SomePropertyToBeSavedAndWithADefault { get; set; } = true;
+        //Config options
+        public bool showWIP { get; set; } = true;
+        public bool showLoader { get; set; } = true;
+        public bool showTargetOptions { get; set; } = false;
+        public bool showProfileGalleries { get; set; } = true;
 
         // the below exist just to make saving less cumbersome
         [NonSerialized]

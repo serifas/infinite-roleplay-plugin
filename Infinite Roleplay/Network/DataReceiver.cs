@@ -391,20 +391,21 @@ namespace Networking
 
              if(status == -1)
              {
-                 plugin.loggedIn = false;
-                 accounStatusColor = new Vector4(255, 0, 0, 255);
-                 accountStatus = "Account Banned";
+                plugin.loggedIn = false;
+                accounStatusColor = new Vector4(255, 0, 0, 255);
+                accountStatus = "Account Banned";
              }
              if(status == 0)
              {
-                 plugin.loggedIn = false;
-                 accounStatusColor = new Vector4(255, 255, 0, 255);
-                 accountStatus = "Inactive Account";
+                plugin.loggedIn = false;
+                accounStatusColor = new Vector4(255, 255, 0, 255);
+                accountStatus = "Inactive Account";
              }
              if (status == 1)
              {
-                 plugin.CloseAllWindows();
-                 plugin.panelWindow.IsOpen = true;                
+                plugin.loggedIn = true;
+                plugin.CloseAllWindows();
+                plugin.panelWindow.IsOpen = true;                
                  
              }
 

@@ -87,56 +87,97 @@ namespace InfiniteRoleplay.Windows
                     plugin.adminWindow.IsOpen = true;
                 }
             }
-            if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
-            {
 
-                LoginWindow.loginRequest = true;
-                plugin.profileWindow.Reset(plugin);
-                plugin.ReloadProfile();
-                plugin.profileWindow.IsOpen = true;
-                if (playerCharacter != null)
+            if (configuration.showWIP == true)
+            {
+                if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
                 {
-                    DataSender.FetchProfile(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
+
+                    LoginWindow.loginRequest = true;
+                    plugin.profileWindow.Reset(plugin);
+                    plugin.ReloadProfile();
+                    plugin.profileWindow.IsOpen = true;
+                    if (playerCharacter != null)
+                    {
+                        DataSender.FetchProfile(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
+                    }
+
+                }
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.SetTooltip("Profile");
+                }
+                ImGui.SameLine();
+                if (ImGui.ImageButton(this.documentImage.ImGuiHandle, new Vector2(100, 50)))
+                {
+                    // plugin.WindowSystem.GetWindow("SHINE RULEBOOK").IsOpen = true;
+
+                }
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.SetTooltip("Connections - Comming Soon");
+                }
+                if (ImGui.ImageButton(this.systemsImage.ImGuiHandle, new Vector2(225, 50)))
+                {
+                    DataSender.RequestBookmarks(configuration.username);
+                }
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.SetTooltip("Bookmarks");
+                }
+
+                ImGui.SameLine();
+                if (ImGui.ImageButton(this.groupsImage.ImGuiHandle, new Vector2(100, 50)))
+                {
+
+                }
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.SetTooltip("Events - Comming Soon");
+                }
+
+                if (ImGui.Button("Options", new Vector2(225, 25)))
+                {
+                    //plugin.window("ADMINISTRATION").IsOpen = true;
+                    plugin.optionsWindow.IsOpen = true;
+                }
+            }
+            else
+            {
+                if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
+                {
+
+                    LoginWindow.loginRequest = true;
+                    plugin.profileWindow.Reset(plugin);
+                    plugin.ReloadProfile();
+                    plugin.profileWindow.IsOpen = true;
+                    if (playerCharacter != null)
+                    {
+                        DataSender.FetchProfile(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
+                    }
+
+                }
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.SetTooltip("Profile");
                 }
                 
-            }
-            if (ImGui.IsItemHovered())
-            {
-                ImGui.SetTooltip("Profile");
-            }
-            ImGui.SameLine();
-            if (ImGui.ImageButton(this.documentImage.ImGuiHandle, new Vector2(100, 50)))
-            {
-               // plugin.WindowSystem.GetWindow("SHINE RULEBOOK").IsOpen = true;
+                if (ImGui.ImageButton(this.systemsImage.ImGuiHandle, new Vector2(225, 50)))
+                {
+                    DataSender.RequestBookmarks(configuration.username);
+                }
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.SetTooltip("Bookmarks");
+                }
 
-            }
-            if (ImGui.IsItemHovered())
-            {
-                ImGui.SetTooltip("Connections - Comming Soon");
-            }
-            if (ImGui.ImageButton(this.systemsImage.ImGuiHandle, new Vector2(100, 50)))
-            {
-                DataSender.RequestBookmarks(configuration.username);
-            }
-            if (ImGui.IsItemHovered())
-            {
-                ImGui.SetTooltip("Bookmarks");
-            }
+                
 
-            ImGui.SameLine();
-            if (ImGui.ImageButton(this.groupsImage.ImGuiHandle, new Vector2(100, 50)))
-            {
-
-            }
-            if (ImGui.IsItemHovered())
-            {
-                ImGui.SetTooltip("Events - Comming Soon");
-            }
-           
-            if (ImGui.Button("Options", new Vector2(225, 25)))
-            {
-                //plugin.window("ADMINISTRATION").IsOpen = true;
-                plugin.optionsWindow.IsOpen = true;
+                if (ImGui.Button("Options", new Vector2(225, 25)))
+                {
+                    //plugin.window("ADMINISTRATION").IsOpen = true;
+                    plugin.optionsWindow.IsOpen = true;
+                }
             }
             if (ImGui.Button("Logout", new Vector2(225, 25)))
             {

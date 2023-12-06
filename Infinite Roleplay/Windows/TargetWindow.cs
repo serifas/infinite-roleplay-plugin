@@ -694,11 +694,6 @@ namespace InfiniteRoleplay.Windows
                 Array.Clear(galleryThumbs);
             }
         }
-        public void UpdateSize()
-        {
-            configuration.targetWindowSize = Size.Value;
-            sizeReset = true;
-        }
         public override void Update()
         {
             ExistingProfile = DataReceiver.ExistingTargetProfileData;
