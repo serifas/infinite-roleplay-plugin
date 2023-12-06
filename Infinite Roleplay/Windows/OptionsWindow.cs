@@ -31,14 +31,14 @@ namespace InfiniteRoleplay.Windows
         {
             this.SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(1200, 950),
-                MaximumSize = new Vector2(1200, 950)
+                MinimumSize = new Vector2(200, 300),
+                MaximumSize = new Vector2(600, 800)
             };
           
         }
         public override void Draw()
         {
-            
+            ImGui.Text("Placeholder");
         }
         public void Dispose()
         {

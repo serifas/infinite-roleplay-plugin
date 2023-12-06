@@ -403,9 +403,8 @@ namespace Networking
              }
              if (status == 1)
              {
-                 plugin.loginWindow.IsOpen = false;
-                 plugin.panelWindow.IsOpen = true;
-                 plugin.loggedIn = true;
+                 plugin.CloseAllWindows();
+                 plugin.panelWindow.IsOpen = true;                
                  
              }
 

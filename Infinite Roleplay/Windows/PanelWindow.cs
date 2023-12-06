@@ -60,8 +60,8 @@ namespace InfiniteRoleplay.Windows
         {
             this.SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(250, 225),
-                MaximumSize = new Vector2(250, 225)
+                MinimumSize = new Vector2(250, 250),
+                MaximumSize = new Vector2(250, 250)
             };
             
             this.plugin = plugin;
@@ -80,6 +80,13 @@ namespace InfiniteRoleplay.Windows
 
         public override void Draw()
         {
+            if (isAdmin == true)
+            {
+                if (ImGui.Button("Administration", new Vector2(225, 25)))
+                {
+                    plugin.adminWindow.IsOpen = true;
+                }
+            }
             if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
             {
 
@@ -125,13 +132,7 @@ namespace InfiniteRoleplay.Windows
             {
                 ImGui.SetTooltip("Events - Comming Soon");
             }
-            if (isAdmin == true)
-            {
-                if (ImGui.Button("Administration", new Vector2(225, 25)))
-                {
-                   plugin.adminWindow.IsOpen = true;
-                }
-            }
+           
             if (ImGui.Button("Options", new Vector2(225, 25)))
             {
                 //plugin.window("ADMINISTRATION").IsOpen = true;

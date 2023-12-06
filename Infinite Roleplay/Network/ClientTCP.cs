@@ -82,6 +82,7 @@ namespace Networking
                 {
                     ClientConnectionCallback();
                     loadCallback = false;
+                    plugin.chatGUI.PrintError("Callback Loaded");
                 }
                 if (plugin.uiLoaded == false)
                 {
@@ -102,8 +103,9 @@ namespace Networking
         {
             ClientHandleData.InitializePackets(true);
             InitializingNetworking(true);
-
             loadCallback = true;
+            CheckStatus();
+            plugin.chatGUI.PrintError("We connected and are checking status");
         }
 
         public static void InitializingNetworking(bool start)

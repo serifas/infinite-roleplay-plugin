@@ -71,8 +71,6 @@ namespace InfiniteRoleplay
         private IDutyState dutyState { get; init; }
         private ICommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
-        public int OnEventExecution { get; }
-
         public WindowSystem WindowSystem = new("InfiniteRoleplay");
         public Plugin([RequiredVersion("1.0")] IClientState ClientState,
                       [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
@@ -95,7 +93,6 @@ namespace InfiniteRoleplay
             this.Configuration.Initialize(pluginInterface);
             DataSender.plugin = this;
             ClientTCP.plugin = this;
-            ClientTCP.LoadConnectionTimer();
 
             string name = "";
 
@@ -107,20 +104,19 @@ namespace InfiniteRoleplay
                 HelpMessage = "to open the plugin window"
             });
             this.pluginInterface.UiBuilder.Draw += DrawUI;
-            this.pluginInterface.UiBuilder.OpenConfigUi += DrawLoginUI;
+            this.pluginInterface.UiBuilder.OpenConfigUi += LoadOptions;
+            this.pluginInterface.UiBuilder.OpenMainUi += DrawLoginUI;
             
             DataReceiver.plugin = this;
             this.framework.Update += Update;
-            this.clientState.Login += ReloadClient;
-            ClientTCP.CheckStatus();
-            ClientTCP.CheckStatus();
 
         }
         public void ReloadClient()
         {
             ProfileWindow.playerCharacter = this.clientState.LocalPlayer;
             PanelWindow.playerCharacter = this.clientState.LocalPlayer;
-            PanelWindow.targetManager = this.targetManager;            
+            PanelWindow.targetManager = this.targetManager;
+            ClientTCP.CheckStatus();
         }
         public void ReloadTarget()
         {
@@ -129,6 +125,11 @@ namespace InfiniteRoleplay
             DataReceiver.TargetHooksLoadStatus = -1;
             DataReceiver.TargetStoryLoadStatus = -1;
             DataReceiver.TargetNotesLoadStatus = -1;
+        }
+        public void LoadOptions()
+        {
+            ReloadClient();
+            optionsWindow.IsOpen= true;
         }
         public void ReloadProfile()
         {
@@ -215,6 +216,7 @@ namespace InfiniteRoleplay
 
                 //  this.WindowSystem.AddWindow(new Rulebook(this));
                 this.WindowSystem.AddWindow(loginWindow);
+                this.WindowSystem.AddWindow(optionsWindow);
                 //this.WindowSystem.AddWindow(new SystemsWindow(this));
                 this.WindowSystem.AddWindow(panelWindow);
                 //   this.WindowSystem.AddWindow(new MessageBox(this));
@@ -230,14 +232,17 @@ namespace InfiniteRoleplay
         }
         public void Dispose()
         {
+            this.pluginInterface.UiBuilder.Draw -= DrawUI;
+            this.pluginInterface.UiBuilder.OpenConfigUi -= LoadOptions;
+            this.pluginInterface.UiBuilder.OpenMainUi -= DrawLoginUI;
             this.framework.Update -= Update;
+
             this.CommandManager.RemoveHandler(CommandName);
             this.WindowSystem.RemoveAllWindows();
             if (ClientTCP.IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
                 DisconnectFromServer();
             }
-            ClientTCP.timer.Dispose();
             ProfileWindow.timer.Dispose();
             TargetWindow.timer.Dispose();
             //if(images != null && images.Length > 0)

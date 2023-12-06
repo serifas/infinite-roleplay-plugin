@@ -57,21 +57,28 @@ public class LoginWindow : Window, IDisposable
         var passwordvalue = this.Configuration.password;
         if (login == true)
         {
-
-            ImGui.InputTextWithHint("##username", $"Username", ref this.username, 100);
-            ImGui.InputTextWithHint("##password", $"Password", ref this.password, 100, ImGuiInputTextFlags.Password);
-
-            if (ImGui.Button("Login"))
+            if(ClientTCP.clientSocket.Connected == true)
             {
-                this.Configuration.username = this.username;
-                this.Configuration.password = this.password;
-                this.Configuration.Save();
-                loginRequest = true;
+                ImGui.InputTextWithHint("##username", $"Username", ref this.username, 100);
+                ImGui.InputTextWithHint("##password", $"Password", ref this.password, 100, ImGuiInputTextFlags.Password);
+
+                if (ImGui.Button("Login"))
+                {
+                    this.Configuration.username = this.username;
+                    this.Configuration.password = this.password;
+                    this.Configuration.Save();
+                    DataSender.Login(username, password, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
+                }
+                if (ImGui.Button("Register"))
+                {
+                    login = false;
+                    register = true;
+                }
+
             }
-            if (ImGui.Button("Register"))
+            else
             {
-                login = false;
-                register = true;
+                ImGui.Text("Loading...");
             }
         }
         if (register == true)
@@ -118,18 +125,6 @@ public class LoginWindow : Window, IDisposable
     {
         this.status = DataReceiver.accountStatus;
         this.statusColor = DataReceiver.accounStatusColor;
-        if (ClientTCP.clientSocket.Connected == false)
-        {
-            plugin.ReloadClient();
-        }
-        if (loginRequest == true && ClientTCP.clientSocket.Connected == true)
-        {
-            DataSender.Login(username, password, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
-            loginRequest = false;
-        }
-
-
-
     }
 
 
