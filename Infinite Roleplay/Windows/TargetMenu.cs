@@ -80,6 +80,10 @@ namespace InfiniteRoleplay.Windows
             this.targetManager = targetManager;
 
         }
+        public override void OnClose()
+        {
+            plugin.targetMenuToggle = false;
+        }
 
         public override void Draw()
         {

@@ -15,9 +15,7 @@ namespace InfiniteRoleplay
         public string password { get; set; } = "";
         //Config options
         public bool showWIP { get; set; } = true;
-        public bool showLoader { get; set; } = true;
         public bool showTargetOptions { get; set; } = false;
-        public bool showProfileGalleries { get; set; } = true;
 
         // the below exist just to make saving less cumbersome
         [NonSerialized]

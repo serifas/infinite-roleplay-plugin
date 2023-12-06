@@ -44,6 +44,7 @@ namespace InfiniteRoleplay
         public bool loggedIn;
         public bool toggleconnection;
         public bool targeted = false;
+        public bool targetMenuToggle = false;
         public bool loadCallback = false;
         public bool loadPreview = false;
         public bool uiLoaded = false;
@@ -106,7 +107,7 @@ namespace InfiniteRoleplay
             });
             this.CommandManager.AddHandler(TargetWindowCommandName, new CommandInfo(OnViewTarget)
             {
-                HelpMessage = "to open the target window"
+                HelpMessage = "to open the target menu"
             });
             this.pluginInterface.UiBuilder.Draw += DrawUI;
             this.pluginInterface.UiBuilder.OpenConfigUi += LoadOptions;
@@ -303,7 +304,7 @@ namespace InfiniteRoleplay
         }
         private void OnViewTarget(string command, string args)
         {
-            this.targetWindow.IsOpen = true;
+            this.targetMenu.IsOpen = true;
         }
         private void DrawUI()
         {

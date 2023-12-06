@@ -36,11 +36,15 @@ namespace InfiniteRoleplay.Windows
 
         private Plugin plugin;
         private string profilesImagePath;
+        private string profilesNoWIPImagePath;
         private IDalamudTextureWrap profilesImage;
+        private IDalamudTextureWrap profilesNoWIPImage;
         private string documentImagePath;
         private IDalamudTextureWrap documentImage;
         private string systemsImagePath;
         private IDalamudTextureWrap systemsImage;
+        private string systemsNoWIPImagePath;
+        private IDalamudTextureWrap systemsNoWIPImage;
         private string groupsImagePath;
         private IDalamudTextureWrap groupsImage;
         public static bool isAdmin;
@@ -68,14 +72,18 @@ namespace InfiniteRoleplay.Windows
             this.configuration = plugin.Configuration;
             this.profilesImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/profiles.png");
             this.profilesImage = Interface.UiBuilder.LoadImage(profilesImagePath);
+            this.profilesNoWIPImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/profiles_NoWIP.png");
+            this.profilesNoWIPImage = Interface.UiBuilder.LoadImage(profilesNoWIPImagePath);
             this.documentImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/friends.png");
             this.documentImage = Interface.UiBuilder.LoadImage(documentImagePath);
             this.groupsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/groups.png");
             this.groupsImage = Interface.UiBuilder.LoadImage(groupsImagePath);
             this.systemsImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/bookmarks.png");
             this.systemsImage = Interface.UiBuilder.LoadImage(systemsImagePath);
+            this.systemsNoWIPImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/bookmarks_NoWIP.png");
+            this.systemsNoWIPImage = Interface.UiBuilder.LoadImage(systemsNoWIPImagePath);
 
-         
+
         }
 
         public override void Draw()
@@ -87,7 +95,6 @@ namespace InfiniteRoleplay.Windows
                     plugin.adminWindow.IsOpen = true;
                 }
             }
-
             if (configuration.showWIP == true)
             {
                 if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
@@ -117,7 +124,7 @@ namespace InfiniteRoleplay.Windows
                 {
                     ImGui.SetTooltip("Connections - Comming Soon");
                 }
-                if (ImGui.ImageButton(this.systemsImage.ImGuiHandle, new Vector2(225, 50)))
+                if (ImGui.ImageButton(this.systemsImage.ImGuiHandle, new Vector2(100, 50)))
                 {
                     DataSender.RequestBookmarks(configuration.username);
                 }
@@ -135,16 +142,10 @@ namespace InfiniteRoleplay.Windows
                 {
                     ImGui.SetTooltip("Events - Comming Soon");
                 }
-
-                if (ImGui.Button("Options", new Vector2(225, 25)))
-                {
-                    //plugin.window("ADMINISTRATION").IsOpen = true;
-                    plugin.optionsWindow.IsOpen = true;
-                }
             }
             else
             {
-                if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
+                if (ImGui.ImageButton(this.profilesNoWIPImage.ImGuiHandle, new Vector2(216, 50)))
                 {
 
                     LoginWindow.loginRequest = true;
@@ -162,7 +163,7 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SetTooltip("Profile");
                 }
                 
-                if (ImGui.ImageButton(this.systemsImage.ImGuiHandle, new Vector2(225, 50)))
+                if (ImGui.ImageButton(this.systemsNoWIPImage.ImGuiHandle, new Vector2(216, 50)))
                 {
                     DataSender.RequestBookmarks(configuration.username);
                 }
@@ -171,13 +172,11 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SetTooltip("Bookmarks");
                 }
 
-                
-
-                if (ImGui.Button("Options", new Vector2(225, 25)))
-                {
-                    //plugin.window("ADMINISTRATION").IsOpen = true;
-                    plugin.optionsWindow.IsOpen = true;
-                }
+            }
+            if (ImGui.Button("Options", new Vector2(225, 25)))
+            {
+                //plugin.window("ADMINISTRATION").IsOpen = true;
+                plugin.optionsWindow.IsOpen = true;
             }
             if (ImGui.Button("Logout", new Vector2(225, 25)))
             {

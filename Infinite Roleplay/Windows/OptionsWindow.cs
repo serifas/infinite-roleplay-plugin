@@ -36,34 +36,23 @@ namespace InfiniteRoleplay.Windows
         {
             this.SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(200, 300),
-                MaximumSize = new Vector2(600, 800)
+                MinimumSize = new Vector2(300, 150),
+                MaximumSize = new Vector2(300, 150)
             };
             pg = plugin;
             this._nameFont = plugin.PluginInterfacePub.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
-
+            showWIP = plugin.Configuration.showWIP;
+            showTargetOptions = plugin.Configuration.showTargetOptions;
         }
         public override void Draw()
         {
-            //yes all this for a title
-            var Name = "Options";
-            var NameWidth = Name.Length * 10;
-            var decidingWidth = Math.Max(500, ImGui.GetWindowWidth());
-            var offsetWidth = (decidingWidth - NameWidth) / 2;
-            var offsetVersion = Name.Length > 0
-                ? _modVersionWidth + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().WindowPadding.X
-                : 0;
-            var offset = Math.Max(offsetWidth, offsetVersion);
-            if (offset > 0)
-            {
-                ImGui.SetCursorPosX(offset);
-            }
+            
 
 
             using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
             using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
             using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
-            ImGuiUtil.DrawTextButton(Name, Vector2.Zero, 0);
+            ImGuiUtil.DrawTextButton("Options", Vector2.Zero, 0);
             //set everything back
             using var defCol = ImRaii.DefaultColors();
             using var defStyle = ImRaii.DefaultStyle();
@@ -79,6 +68,7 @@ namespace InfiniteRoleplay.Windows
             if(ImGui.Checkbox("Show WIP modules", ref showWIP))
             {
                 pg.Configuration.showWIP = showWIP;
+                pg.Configuration.Save();
             }
         }
         public void Dispose()

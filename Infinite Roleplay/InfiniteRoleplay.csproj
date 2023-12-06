@@ -96,6 +96,9 @@
         <None Update="UI\common\profiles.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="UI\common\profiles_NoWIP.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="UI\common\profile_view.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
@@ -112,6 +115,12 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="UI\common\bookmarks.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="UI\common\bookmarks_NoWIP.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="UI\common\bookmarks_NoWIP.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="UI\common\remove_bookmark.png">
