@@ -45,6 +45,8 @@ using Dalamud.Plugin.Services;
 using Dalamud.Interface.Internal;
 using Dalamud.Interface.Utility;
 using System.Timers;
+using InfiniteRoleplay.Helpers;
+using Dalamud.Plugin.Internal;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -53,7 +55,7 @@ namespace InfiniteRoleplay.Windows
         private readonly ConcurrentDictionary<string, string> _startPaths = new();
         private Plugin plugin;
 
-
+        public static System.Timers.Timer timer;
         private float _modVersionWidth;
         private PlayerCharacter playerCharacter;
         private IChatGui chatGui;
@@ -87,6 +89,7 @@ namespace InfiniteRoleplay.Windows
         public static int hookEditCount, existingGalleryImageCount;
         private GameFontHandle _nameFont;
         private GameFontHandle _secionFont;
+        public static Misc misc = new Misc();
 
         public static IDalamudTextureWrap loaderAnimInd;
         public static int loaderIndex;
@@ -97,7 +100,6 @@ namespace InfiniteRoleplay.Windows
         public static bool ExistingProfile;
         public static bool loadSize = false;
         public static string storyTitle = "";
-        public static Timer timer;
         public static int lawfulGoodEditVal,
                           neutralGoodEditVal,
                           chaoticGoodEditVal,
@@ -166,7 +168,7 @@ namespace InfiniteRoleplay.Windows
             this.avatarImg = avatarHolder;
 
             timer = new Timer(30);
-            timer.Elapsed += OnEventExecution;
+            timer.Elapsed += misc.OnEventExecution;
             this._nameFont = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
             this.avatarBytes = ImageToByteArray(image1);
@@ -200,20 +202,12 @@ namespace InfiniteRoleplay.Windows
                 return ms.ToArray();
             }
         }
-        public void OnEventExecution(System.Object? sender, ElapsedEventArgs eventArgs)
-        {
-            loaderIndex++;
-            if (loaderIndex >= 59)
-            {
-                loaderIndex = 1;
-            }
-            loaderAnimInd = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(pg.AssemblyLocation.Directory?.FullName!, "UI/common/loader/loader (" + loaderIndex + ").gif"));
-        }
+        
         public override void Draw()
         {
             if (AllLoaded == true)
             {
-                timer.Stop();
+                Misc.RemoveLoader(timer);
               
                 //LoadFileSelection();
                 //Vector2 addProfileBtnScale = new Vector2(playerCharacter.Name.ToString().Length * 20, 20);
@@ -277,6 +271,7 @@ namespace InfiniteRoleplay.Windows
                     {
                         if (viewBio == true)
                         {
+                            Misc.SetTitle(plugin, characterEditName);
                             this.currentAvatarImg = pg.UiBuilder.LoadImage(existingAvatarBytes);
                             ImGui.Image(this.currentAvatarImg.ImGuiHandle, new Vector2(100, 100));
 
@@ -485,7 +480,7 @@ namespace InfiniteRoleplay.Windows
 
                     if (viewHooks == true)
                     {
-
+                        Misc.SetTitle(plugin, "Hooks");
                         for (int h = 0; h < hookEditCount; h++)
                         {
                             ImGui.Text(HookEditContent[h].Replace("---===---", "\n").Replace("''", "'"));
@@ -495,24 +490,7 @@ namespace InfiniteRoleplay.Windows
 
                     if (viewStory == true)
                     {
-
-                        int NameWidth = storyTitle.Length * 10;
-                        var decidingWidth = Math.Max(500, ImGui.GetWindowWidth());
-                        var offsetWidth = (decidingWidth - NameWidth) / 2;
-                        var offsetVersion = storyTitle.Length > 0
-                            ? _modVersionWidth + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().WindowPadding.X
-                            : 0;
-                        var offset = Math.Max(offsetWidth, offsetVersion);
-                        if (offset > 0)
-                        {
-                            ImGui.SetCursorPosX(offset);
-                        }
-
-
-                        using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
-                        using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
-                        using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
-                        ImGuiUtil.DrawTextButton(storyTitle, Vector2.Zero, 0);
+                        Misc.SetTitle(plugin, storyTitle);
                         string chapterMsg = "";
 
 
@@ -530,6 +508,7 @@ namespace InfiniteRoleplay.Windows
                     if (viewGallery == true)
                     {
 
+                        Misc.SetTitle(plugin, "Gallery");
                         if (ImGui.BeginTable("##GalleryTargetTable", 4))
                         {
                             for (int i = 0; i < existingGalleryImageCount; i++)
@@ -593,27 +572,9 @@ namespace InfiniteRoleplay.Windows
                     if(addNotes == true)
                     {
 
-                        int NameWidth = 50;
-                        var decidingWidth = Math.Max(500, ImGui.GetWindowWidth());
-                        var offsetWidth = (decidingWidth - NameWidth) / 2;
-                        var offsetVersion = storyTitle.Length > 0
-                            ? _modVersionWidth + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().WindowPadding.X
-                            : 0;
-                        var offset = Math.Max(offsetWidth, offsetVersion);
-                        if (offset > 0)
-                        {
-                            ImGui.SetCursorPosX(offset);
-                        }
+                        Misc.SetTitle(plugin, "Personal Notes");
 
-
-                        using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
-                        using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
-                        using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
-                        ImGuiUtil.DrawTextButton("Notes", Vector2.Zero, 0);
-
-                        using var defInfFontDen = ImRaii.DefaultFont();
-                        using var defCol = ImRaii.DefaultColors();
-                        using var defStyle = ImRaii.DefaultStyle();
+                        ImGui.Text("Here you can add personal notes about this player or profile");
                         ImGui.InputTextMultiline("##info", ref profileNotes, 500, new Vector2(400, 100));
                         if(ImGui.Button("Add Notes"))
                         {
@@ -635,19 +596,8 @@ namespace InfiniteRoleplay.Windows
             }
             else
             {
-                timer.Start();
-                var LoaderWidth = 360f;
-                var decidingWidth = Math.Max(500, ImGui.GetWindowWidth());
-                var offsetWidth = (decidingWidth - LoaderWidth) / 2;
-                var offsetVersion = storyTitle.Length > 0
-                    ? _modVersionWidth + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().WindowPadding.X
-                    : 0;
-                var offset = Math.Max(offsetWidth, offsetVersion);
-                if (offset > 0)
-                {
-                    ImGui.SetCursorPosX(offset);
-                }
-                ImGui.Image(loaderAnimInd.ImGuiHandle, new Vector2(340, 180));
+                misc.AddLoader(timer);
+                
             }
 
         }

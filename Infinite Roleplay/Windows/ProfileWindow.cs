@@ -68,11 +68,11 @@ namespace InfiniteRoleplay.Windows
     {
         public static bool turnLoaderOff, turnLoaderOn = false;
         public static bool AllLoaded;
-        public static Timer timer;
         public static bool resetGalleryTimer = true;
         public static bool Reorder = false, Reordered = false, ReorderNoSend = false;
         private Plugin plugin;
         public static Plugin pluginP;
+        public static Misc misc = new Misc();
         public static bool loadedSelf = false;
         public static PlayerCharacter playerCharacter;
         public static IChatGui chatGui;
@@ -88,7 +88,7 @@ namespace InfiniteRoleplay.Windows
         public static bool editHooks = false;
         public static bool addStory = false;
         public static int imageCount = 0;
-        
+        public static Timer timer;
         public static bool resetHooks;
 
         public static bool[] ImageExists = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
@@ -228,8 +228,6 @@ namespace InfiniteRoleplay.Windows
                 MinimumSize = new Vector2(600, 400),
                 MaximumSize = new Vector2(750, 950)
             };
-            timer = new Timer(30);
-            timer.Elapsed += OnEventExecution;
             bl = blank_holder;
             this.plugin = plugin;
             this.pg = plugin.PluginInterfacePub;
@@ -243,7 +241,9 @@ namespace InfiniteRoleplay.Windows
             this.configuration = configuration;
             
             picBytes = Imaging.ImageToByteArray(pictureTab);
-            
+
+            timer = new Timer(30);
+            timer.Elapsed += misc.OnEventExecution;
             imageHolder = Imaging.ImageToByteArray(pictureTab);
             thumbHolder = Imaging.ImageToByteArray(Imaging.byteArrayToImage(Imaging.ScaleImageBytes(picBytes, 150, 150)));
             
@@ -272,15 +272,7 @@ namespace InfiniteRoleplay.Windows
             this.alignmentWidthVals = new float[9] { lawfulGoodWidthVal, neutralGoodWidthVal, chaoticGoodWidthVal, lawfulNeutralWidthVal, trueNeutralWidthVal, chaoticNeutralWidthVal, lawfulEvilWidthVal, neutralEvilWidthVal, chaoticEvilWidthVal };
             this.alignmentNames = new string[9] { "lawfulgood", "neutralgood", "chaoticgood", "lawfulneutral", "trueneutral", "chaoticneutral", "lawfulevil", "neutralevil", "chaoticevil" };
         }
-        public void OnEventExecution(System.Object? sender, ElapsedEventArgs eventArgs)
-        {
-            loaderIndex++;
-            if (loaderIndex >= 59)
-            {
-                loaderIndex = 1;
-            }
-            loaderAnimInd = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(pg.AssemblyLocation.Directory?.FullName!, "UI/common/loader/loader (" + loaderIndex + ").gif"));
-        }
+      
 
         public override void Draw()
         {
@@ -290,7 +282,7 @@ namespace InfiniteRoleplay.Windows
                 _fileDialogManager.Draw();
                 //LoadFileSelection();
 
-                timer.Stop();
+                Misc.RemoveLoader(timer);
                
                 //Vector2 addProfileBtnScale = new Vector2(playerCharacter.Name.ToString().Length * 20, 20);
                 if (this.ExistingProfile == true)
@@ -800,19 +792,8 @@ namespace InfiniteRoleplay.Windows
             }
             else
             {
-                timer.Start();
-                int LoaderWidth = 360;
-                var decidingWidth = Math.Max(500, ImGui.GetWindowWidth());
-                var offsetWidth = (decidingWidth - LoaderWidth) / 2;
-                var offsetVersion = LoaderWidth > 0
-                    ? _modVersionWidth + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().WindowPadding.X
-                    : 0;
-                var offset = Math.Max(offsetWidth, offsetVersion);
-                if (offset > 0)
-                {
-                    ImGui.SetCursorPosX(offset);
-                }
-                ImGui.Image(loaderAnimInd.ImGuiHandle, new Vector2(340, 180));
+
+                misc.AddLoader(timer);
             }
         }
     
