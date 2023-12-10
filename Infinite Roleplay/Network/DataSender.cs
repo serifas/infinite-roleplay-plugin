@@ -156,15 +156,14 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SendGalleryImage(string username, string playername, string playerworld, bool NSFW, byte[] imageBytes, int index)
+        public static void SendGalleryImage(string username, string playername, string playerworld, bool NSFW, string url, int index)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendGallery);
             buffer.WriteString(playername);
             buffer.WriteString(playerworld);
             buffer.WriteBool(NSFW);
-            buffer.WriteInteger(imageBytes.Length);
-            buffer.WriteBytes(imageBytes);
+            buffer.WriteString(url);
             buffer.WriteInteger(index);
 
             ClientTCP.SendData(buffer.ToArray());

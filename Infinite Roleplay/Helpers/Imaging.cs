@@ -1,4 +1,7 @@
 using Aspose.Imaging;
+using Aspose.Imaging.FileFormats.Bmp;
+using Aspose.Imaging.FileFormats.Emf.EmfPlus.Objects;
+using Aspose.Imaging.ImageFilters.FilterOptions;
 using Lumina.Data.Parsing;
 using Lumina.Excel.GeneratedSheets;
 using System;
@@ -7,8 +10,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace InfiniteRoleplay.Helpers
 {
@@ -94,6 +99,36 @@ namespace InfiniteRoleplay.Helpers
                 System.Drawing.Image img = System.Drawing.Image.FromStream(memstr);
                 return img;
             }
+        }
+        public static byte[] bytesFromURL(string url)
+        {
+            byte[] imageBytes = null;
+            using (var webClient = new WebClient())
+            {
+                imageBytes = webClient.DownloadData(url);
+                return imageBytes;
+            }
+            return imageBytes;
+        }
+        public static byte[] NSFWBlur(string url)
+        {
+            byte[] nsfwBytes = null;
+            using (MemoryStream memory = new MemoryStream())
+            {
+                WebClient client = new WebClient();
+                Stream stream = client.OpenRead(url);
+                Aspose.Imaging.Image inputImage = Aspose.Imaging.Image.Load(stream);
+                BmpImage rasterImage = (BmpImage)inputImage;
+                rasterImage.Filter(rasterImage.Bounds, new GaussianBlurFilterOptions(5, 5));
+                inputImage.Save(memory);
+                memory.Position = 0;
+                nsfwBytes = memory.ToArray();
+                byte[] NSFWImageBytes = ScaleImageBytes(nsfwBytes, 150, 150);
+                return NSFWImageBytes;
+            }
+            
+            
+
         }
         
     }

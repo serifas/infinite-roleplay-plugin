@@ -78,12 +78,13 @@ namespace InfiniteRoleplay.Windows
             this.groupInviteImagePath = Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/group_invite.png");
             this.groupInviteImage = Interface.UiBuilder.LoadImage(groupInviteImagePath);
             this.targetManager = targetManager;
+
         }
         public override void OnClose()
         {
-            plugin.targeted = false;
+            plugin.targetMenuToggle = false;
         }
-       
+
         public override void Draw()
         {
             if(DisableInput == true)

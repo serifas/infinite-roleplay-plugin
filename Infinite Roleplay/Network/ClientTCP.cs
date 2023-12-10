@@ -11,6 +11,7 @@ using System.Timers;
 using InfiniteRoleplay.Windows.Functions;
 using InfiniteRoleplay;
 using System.IO;
+using InfiniteRoleplay.Windows;
 
 namespace Networking
 {
@@ -22,7 +23,7 @@ namespace Networking
         public static TcpClient clientSocket;
         private static NetworkStream myStream;
         private static byte[] recBuffer;
-        private static string server = "47.158.183.250";
+        private static string server = "185.28.22.232";
         private static int port = 25565;
         public static Timer timer;
         public static Plugin plugin;
@@ -76,23 +77,28 @@ namespace Networking
         }
         public static void CheckStatus()
         {
-            if (IsConnectedToServer(ClientTCP.clientSocket) == true)
+            if (PingHost(server, port) == true)
             {
-                if (loadCallback == true)
+                if (IsConnectedToServer(clientSocket) == true)
                 {
-                    ClientConnectionCallback();
-                    loadCallback = false;
-                    plugin.chatGUI.PrintError("Callback Loaded");
+                    if (loadCallback == true)
+                    {
+                        ClientConnectionCallback();
+                        loadCallback = false;
+                        plugin.chatGUI.PrintError("Callback Loaded");
+                    }
+                    if (plugin.uiLoaded == false)
+                    {
+                        plugin.LoadUI();
+                    }
                 }
-                if (plugin.uiLoaded == false)
+                else
                 {
-                    plugin.LoadUI();
+                    ConnectToServer();
                 }
+                
             }
-            else
-            {
-                ConnectToServer();
-            }
+            
         }
 
         public static void OnTick(System.Object? sender, ElapsedEventArgs eventArgs)
@@ -126,30 +132,20 @@ namespace Networking
 
 
 
-       
-    
-       public static void PingHost(string _HostURI, int _PortNumber)
+        public static bool PingHost(string hostUri, int portNumber)
         {
             try
             {
-                TcpClient client = new TcpClient(_HostURI, _PortNumber);        
-            
-            
-                if(client.Connected == true)
-                {
-                    client.Close();
-                }
-
-
+                using (var client = new TcpClient(hostUri, portNumber))
+                    return true;
             }
-            catch
+            catch (SocketException ex)
             {
-
+                return false;
             }
-
-
-
         }
+
+
         public static void EstablishConnection()
         {
             try
@@ -166,6 +162,7 @@ namespace Networking
             }
 
         }
+        
         public static void ClientConnectionCallback()
         {           
             Connected = true;

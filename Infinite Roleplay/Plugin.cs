@@ -44,7 +44,7 @@ namespace InfiniteRoleplay
         public bool loggedIn;
         public bool toggleconnection;
         public bool targeted = false;
-        public bool targetMenuClosed = true;
+        public bool targetMenuToggle = false;
         public bool loadCallback = false;
         public bool loadPreview = false;
         public bool uiLoaded = false;
@@ -60,7 +60,6 @@ namespace InfiniteRoleplay
         public OptionsWindow optionsWindow;
         public AdminWindow adminWindow;
         public ReportWindow reportWindow;
-        public static Misc misc = new Misc();
         public IDalamudTextureWrap[] images;
         public string Name => "Infinite Roleplay";
         private const string CommandName = "/infinite";
@@ -96,7 +95,7 @@ namespace InfiniteRoleplay
             this.Configuration.Initialize(pluginInterface);
             DataSender.plugin = this;
             ClientTCP.plugin = this;
-            Misc.pg = this;
+
             string name = "";
 
 
@@ -250,17 +249,24 @@ namespace InfiniteRoleplay
             {
                 DisconnectFromServer();
             }
-            TargetWindow.timer.Dispose();
-            ProfileWindow.timer.Dispose();
+            if(ProfileWindow.timer != null)
+            {
+                ProfileWindow.timer.Dispose();
+            }
+            if(TargetWindow.timer != null)
+            {
+                TargetWindow.timer.Dispose();
+            }
+           
             //if(images != null && images.Length > 0)
             //{
-            //   for (int i = 0; i < images.Length; i++)
+             //   for (int i = 0; i < images.Length; i++)
             //    {
-            //       images[i].Dispose();
+             //       images[i].Dispose();
             //   }
 
 
-            //    }
+        //    }
 
         }
         public void CloseAllWindows()
@@ -287,10 +293,7 @@ namespace InfiniteRoleplay
                 }
                 else
                 {
-                    if(targeted == false)
-                    {
-                        targetMenu.IsOpen = false;
-                    }
+                    targetMenu.IsOpen = false;
                 }
             }
             if (loadPreview == true)
@@ -298,7 +301,7 @@ namespace InfiniteRoleplay
                 imagePreview.IsOpen = true;
                 loadPreview = false;
             }
-            
+
         }
 
         private void OnCommand(string command, string args)
@@ -308,16 +311,7 @@ namespace InfiniteRoleplay
         }
         private void OnViewTarget(string command, string args)
         {
-            var targetPlayer = targetManager.Target as PlayerCharacter;
-            if (loggedIn == true)
-            {
-                if (targetPlayer != null && dutyState.IsDutyStarted == false)
-                {
-
-                    targeted = true;
-                    this.targetMenu.IsOpen = true;
-                }
-            }
+            this.targetMenu.IsOpen = true;
         }
         private void DrawUI()
         {
