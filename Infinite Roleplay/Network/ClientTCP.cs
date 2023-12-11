@@ -96,9 +96,15 @@ namespace Networking
                 {
                     ConnectToServer();
                 }
+<<<<<<< HEAD
+
+            }
+
+=======
                 
             }
             
+>>>>>>> eedb86992d141d4cf74cea1e139740a108133520
         }
 
         public static void OnTick(System.Object? sender, ElapsedEventArgs eventArgs)
@@ -162,14 +168,18 @@ namespace Networking
             }
 
         }
+<<<<<<< HEAD
+
+=======
         
+>>>>>>> eedb86992d141d4cf74cea1e139740a108133520
         public static void ClientConnectionCallback()
-        {           
+        {
             Connected = true;
             clientSocket.NoDelay = true;
             myStream = clientSocket.GetStream();
             myStream.BeginRead(recBuffer, 0, 4096 * 2, ReceiveCallback, null);
-            
+
         }
         private static void ReceiveCallback(IAsyncResult result)
         {
@@ -205,8 +215,8 @@ namespace Networking
             {
 
             }
-                
-           
+
+
 
         }
         public static void Disconnect()

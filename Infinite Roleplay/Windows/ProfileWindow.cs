@@ -95,6 +95,10 @@ namespace InfiniteRoleplay.Windows
         public static Vector4[] Cols = new Vector4[30] { new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255) };
         public static string[] galleryStatusVals = new string[30] { "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission" };
         public static int galleryUpdates = 0;
+<<<<<<< HEAD
+
+=======
+>>>>>>> eedb86992d141d4cf74cea1e139740a108133520
         public static string[] urls = new string[30] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static string[] galleryUpdateTxts = new string[30] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static Vector4[] ImageUpdateColors = new Vector4[30] { Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero };
@@ -718,6 +722,29 @@ namespace InfiniteRoleplay.Windows
                                 imageIndex++;
                             }
                         }
+                        if (ImGui.Button("Submit Gallery"))
+                        {
+                            for (int u = 0; u < urls.Length; u++)
+                            {
+                                if (urls[u] != string.Empty)
+                                {
+                                    int ind = u + 1;
+
+                                    DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
+                                                       nsfwImagesCheck[u], urls[u], ind);
+
+                                }
+
+                            }
+                            LoginWindow.loginRequest = true;
+                            plugin.profileWindow.Reset(plugin);
+                            plugin.ReloadProfile();
+                            plugin.profileWindow.IsOpen = true;
+                            if (playerCharacter != null)
+                            {
+                                DataSender.FetchProfile(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
+                            }
+                        }
                         if (resetGalleryTimer == true)
                         {
                             // timer.Stop();
@@ -847,6 +874,7 @@ namespace InfiniteRoleplay.Windows
                             DrawGalleryImage(i, plugin);
                         }
                     }
+                   
                     ImGui.EndTable();
                 }
            
@@ -880,6 +908,14 @@ namespace InfiniteRoleplay.Windows
                
                 if (ImGui.BeginChild("##GalleryImage" + i, new Vector2(150, 240)))
                 {
+<<<<<<< HEAD
+                    ImGui.Checkbox("18+", ref nsfwImagesCheck[i]);
+                   
+                    ImGui.InputTextWithHint("URL", "Valid Image URL", ref urls[i], 9000);
+
+
+                    int ind = i + 1;
+=======
                     ImGui.Text("Will this image be 18+ ?");
                     if (ImGui.Checkbox("Yes", ref nsfwImagesCheck[i]))
                     {
@@ -913,6 +949,7 @@ namespace InfiniteRoleplay.Windows
 
                     ImGui.InputTextWithHint("URL##", "Enter URL of image", ref urls[i], 5000);
                     
+>>>>>>> eedb86992d141d4cf74cea1e139740a108133520
                     if (galleryImageAdded[i] == false && galleryThumbBytes[i].Length > 0 && galleryImageBytes[i].Length > 0)
                     {
                         DrawImage(i, plugin);
@@ -929,29 +966,34 @@ namespace InfiniteRoleplay.Windows
                     }
                     if (ImGui.BeginChild("##GalleryImageControls" + i))
                     {
+<<<<<<< HEAD
+=======
                         if (ImGui.Button("Add Image##" + "gallery_add" + i))
                         {
                             DataSender.SendGalleryImage(configuration.username.ToString(), playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), NSFW[i], urls[i], i);
                             imageIndexVal = i;                             
                         }
+>>>>>>> eedb86992d141d4cf74cea1e139740a108133520
                         ImGui.SameLine();
                         if (ImGui.Button("Remove##" + "gallery_remove" + i))
                         {
+                            urls[i] = string.Empty;
                             imageIndexVal = i;
                             ImageExists[i] = false;
                             Reorder = true;
                             galleryImageAdded[i] = false;
                             removalIndexes[i] = 1;
-                            DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, imageIndex);
+                            DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), ind, imageIndex);
                         }
                     }
-                    ImGui.EndChild();
+                    ImGui.EndChild(); 
+                   
                 }
+                
 
-
-        ImGui.EndChild();
-
-        }
+                ImGui.EndChild();
+                
+            }
 
 
 
@@ -1313,9 +1355,15 @@ namespace InfiniteRoleplay.Windows
                         galleryThumbBytes[i] = scaledImageBytes;
 
                         SortedList<SortedList<int, bool>, SortedList<int, byte[]>> newImageList = new SortedList<SortedList<int, bool>, SortedList<int, byte[]>>();
+<<<<<<< HEAD
+                      //  DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
+                      //                              NSFW[i], galleryImageBytes[i], i);
+                        DrawImage(i, plugin);
+=======
                        /* DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
                                                     NSFW[i], galleryImageBytes[i], i);
                         */DrawImage(i, plugin);
+>>>>>>> eedb86992d141d4cf74cea1e139740a108133520
                     }
 
                 });

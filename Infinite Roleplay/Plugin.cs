@@ -249,6 +249,10 @@ namespace InfiniteRoleplay
             {
                 DisconnectFromServer();
             }
+<<<<<<< HEAD
+            ProfileWindow.timer.Dispose();
+            TargetWindow.timer.Dispose();
+=======
             if(ProfileWindow.timer != null)
             {
                 ProfileWindow.timer.Dispose();
@@ -258,6 +262,7 @@ namespace InfiniteRoleplay
                 TargetWindow.timer.Dispose();
             }
            
+>>>>>>> eedb86992d141d4cf74cea1e139740a108133520
             //if(images != null && images.Length > 0)
             //{
              //   for (int i = 0; i < images.Length; i++)
