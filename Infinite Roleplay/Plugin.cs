@@ -35,6 +35,7 @@ using Dalamud.Interface.Internal.Windows;
 using Dalamud.Interface.Internal;
 using Aspose.Imaging.MemoryManagement;
 using System.Threading;
+using InfiniteRoleplay.Windows.Defines;
 
 namespace InfiniteRoleplay
 {
@@ -156,6 +157,7 @@ namespace InfiniteRoleplay
         {
             if (uiLoaded == false)
             {
+                UIDefines.plugin = this;
                 var AvatarHolder = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
                 //Icons
                 var lawfulGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_good.png"));
@@ -249,20 +251,8 @@ namespace InfiniteRoleplay
             {
                 DisconnectFromServer();
             }
-<<<<<<< HEAD
             ProfileWindow.timer.Dispose();
             TargetWindow.timer.Dispose();
-=======
-            if(ProfileWindow.timer != null)
-            {
-                ProfileWindow.timer.Dispose();
-            }
-            if(TargetWindow.timer != null)
-            {
-                TargetWindow.timer.Dispose();
-            }
-           
->>>>>>> eedb86992d141d4cf74cea1e139740a108133520
             //if(images != null && images.Length > 0)
             //{
              //   for (int i = 0; i < images.Length; i++)

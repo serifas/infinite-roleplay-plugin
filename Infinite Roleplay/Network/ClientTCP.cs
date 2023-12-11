@@ -96,15 +96,9 @@ namespace Networking
                 {
                     ConnectToServer();
                 }
-<<<<<<< HEAD
 
             }
 
-=======
-                
-            }
-            
->>>>>>> eedb86992d141d4cf74cea1e139740a108133520
         }
 
         public static void OnTick(System.Object? sender, ElapsedEventArgs eventArgs)
@@ -168,11 +162,7 @@ namespace Networking
             }
 
         }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> eedb86992d141d4cf74cea1e139740a108133520
         public static void ClientConnectionCallback()
         {
             Connected = true;
