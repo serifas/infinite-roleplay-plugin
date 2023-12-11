@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InfiniteRoleplay.Windows.Defines
+namespace InfiniteRoleplay.Defines
 {
     internal class ProfileDefines
     {
@@ -49,23 +49,23 @@ namespace InfiniteRoleplay.Windows.Defines
         public static List<Tuple<InputTypes, string[], Vector2, int>> ProfileBioFields()
         {
             string name = "", race = "", gender = "", age = "", height = "", weight = "", afg = "";
-            List<Tuple<InputTypes, string[], Vector2, int>> result = new List<Tuple<InputTypes, string[], Vector2, int>>();
-            string[] nameFields = new string[] { "Name:   ", "##playername", $"Character Name (The name or nickname of the character you are currently playing as)", name};
-            string[] raceFields = new string[] { "Race:    ", "##race", $"The IC Race of your character", race };
-            string[] genderFields = new string[] { "Gender: ", "##gender", $"The IC gender of your character", gender };
-            string[] ageFields = new string[] { "Age:   ", "##age", $"If not 18+, do not put nsfw images in your gallery (numbers only)", age };
-            string[] heightFields = new string[] { "Height:", "##height", $"Character Name (The name or nickname of the character you are currently playing as)", height };
-            string[] weightFields = new string[] { "Weight:", "##weight", $"Character Name (The name or nickname of the character you are currently playing as)", weight };
-            string[] atFirstGlance = new string[] { "At First Glance:", "##afg", $"Character Name (The name or nickname of the character you are currently playing as)", afg };
+            var result = new List<Tuple<InputTypes, string[], Vector2, int>>();
+            var nameFields = new string[] { "Name:   ", "##playername", $"Character Name (The name or nickname of the character you are currently playing as)", name };
+            var raceFields = new string[] { "Race:    ", "##race", $"The IC Race of your character", race };
+            var genderFields = new string[] { "Gender: ", "##gender", $"The IC gender of your character", gender };
+            var ageFields = new string[] { "Age:   ", "##age", $"If not 18+, do not put nsfw images in your gallery (numbers only)", age };
+            var heightFields = new string[] { "Height:", "##height", $"Character Name (The name or nickname of the character you are currently playing as)", height };
+            var weightFields = new string[] { "Weight:", "##weight", $"Character Name (The name or nickname of the character you are currently playing as)", weight };
+            var atFirstGlance = new string[] { "At First Glance:", "##afg", $"Character Name (The name or nickname of the character you are currently playing as)", afg };
 
 
-            Tuple<InputTypes, string[], Vector2, int> BioName = Tuple.Create(InputTypes.single, nameFields, new Vector2(0, 0), 100);
-            Tuple<InputTypes, string[], Vector2, int> BioRace = Tuple.Create(InputTypes.single, nameFields, new Vector2(0, 0), 100);
-            Tuple<InputTypes, string[], Vector2, int> BioGender = Tuple.Create(InputTypes.single, nameFields, new Vector2(0, 0), 100);
-            Tuple<InputTypes, string[], Vector2, int> BioAge = Tuple.Create(InputTypes.single, nameFields, new Vector2(0, 0), 100);
-            Tuple<InputTypes, string[], Vector2, int> BioHeight = Tuple.Create(InputTypes.single, nameFields, new Vector2(0, 0), 100);
-            Tuple<InputTypes, string[], Vector2, int> BioWeight = Tuple.Create(InputTypes.single, nameFields, new Vector2(0, 0), 100);
-            Tuple<InputTypes, string[], Vector2, int> BioAFG = Tuple.Create(InputTypes.multiline, nameFields, new Vector2(400, 100), 500);
+            var BioName = Tuple.Create(InputTypes.single, nameFields, new Vector2(0, 0), 100);
+            var BioRace = Tuple.Create(InputTypes.single, nameFields, new Vector2(0, 0), 100);
+            var BioGender = Tuple.Create(InputTypes.single, nameFields, new Vector2(0, 0), 100);
+            var BioAge = Tuple.Create(InputTypes.single, nameFields, new Vector2(0, 0), 100);
+            var BioHeight = Tuple.Create(InputTypes.single, nameFields, new Vector2(0, 0), 100);
+            var BioWeight = Tuple.Create(InputTypes.single, nameFields, new Vector2(0, 0), 100);
+            var BioAFG = Tuple.Create(InputTypes.multiline, nameFields, new Vector2(400, 100), 500);
 
 
             result.Add(BioName);

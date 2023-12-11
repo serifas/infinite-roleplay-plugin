@@ -58,9 +58,9 @@ using Aspose.Imaging.ImageFilters.FilterOptions;
 using System.Timers;
 using Dalamud.Interface.Internal;
 using Dalamud.Plugin.Services;
-using InfiniteRoleplay.Windows.Defines;
-using static InfiniteRoleplay.Windows.Defines.ProfileDefines;
+using static InfiniteRoleplay.Defines.ProfileDefines;
 using Lumina.Excel.GeneratedSheets2;
+using InfiniteRoleplay.Defines;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -118,11 +118,8 @@ namespace InfiniteRoleplay.Windows
         public static byte[][] galleryThumbBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
         public static byte[][] galleryEditImageBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
         public static byte[][] galleryEditThumbBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
-        public static IDalamudTextureWrap galleryImg1, galleryImg2, galleryImg3, galleryImg4, galleryImg5, galleryImg6, galleryImg7, galleryImg8, galleryImg9, galleryImg10, galleryImg11, galleryImg12, galleryImg13, galleryImg14, galleryImg15, galleryImg16, galleryImg17, galleryImg18, galleryImg19, galleryImg20, galleryImg21, galleryImg22, galleryImg23, galleryImg24, galleryImg25, galleryImg26, galleryImg27, galleryImg28, galleryImg29, galleryImg30;
-        public static IDalamudTextureWrap[] galleryImages, galleryThumbs;
-
+        public static List<IDalamudTextureWrap> galleryThumbs, galleryImages;
         public static IDalamudTextureWrap loaderAnimInd;
-        public static IDalamudTextureWrap galleryEditThm1, galleryEditThm2, galleryEditThm3, galleryEditThm4, galleryEditThm5, galleryEditThm6, galleryEditThm7, galleryEditThm8, galleryEditThm9, galleryEditThm10, galleryEditThm11, galleryEditThm12, galleryEditThm13, galleryEditThm14, galleryEditThm15, galleryEditThm16, galleryEditThm17, galleryEditThm18, galleryEditThm19, galleryEditThm20, galleryEditThm21, galleryEditThm22, galleryEditThm23, galleryEditThm24, galleryEditThm25, galleryEditThm26, galleryEditThm27, galleryEditThm28, galleryEditThm29, galleryEditThm30;
         public static string[] HookContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static string[] HookEditContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static string[] ChapterContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
@@ -155,7 +152,7 @@ namespace InfiniteRoleplay.Windows
         public bool ExistingBio;
         public bool ExistingHooks;
         public static int ExistingGalleryImageCount = 0;
-        public static byte[] imageHolder, thumbHolder;
+        public static byte[] thumbHolder;
         public string storyTitle = "";
         public static string storyEditTitle = "";
         public static int lawfulGoodEditVal,
@@ -195,10 +192,8 @@ namespace InfiniteRoleplay.Windows
                                 characterEditHeight = string.Empty,
                                 characterEditWeight = string.Empty;
 
-        private IDalamudTextureWrap lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil;
         private int lawfulGoodWidthVal = 0, neutralGoodWidthVal = 0, chaoticGoodWidthVal = 0, lawfulNeutralWidthVal = 0, trueNeutralWidthVal = 0, chaoticNeutralWidthVal = 0, lawfulEvilWidthVal = 0, neutralEvilWidthVal = 0, chaoticEvilWidthVal = 0;
         private int lawfulGoodVal = 0, neutralGoodVal = 0, chaoticGoodVal = 0, lawfulNeutralVal = 0, trueNeutralVal = 0, chaoticNeutralVal = 0, lawfulEvilVal = 0, neutralEvilVal = 0, chaoticEvilVal = 0;
-        private IDalamudTextureWrap lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar;
         private int currentLawfulGood, currentNeutralGood, currentChaoticGood, currentLawfulNeutral, currentTrueNeutral, currentChaoticNeutral, currentLawfulEvil, currentNeutralEvil, currentChaoticEvil;
         public bool reduceChapters = false;
         public bool reduceHooks = false;
@@ -206,18 +201,7 @@ namespace InfiniteRoleplay.Windows
         public static System.Drawing.Image bl;
         private IDalamudTextureWrap persistAvatarHolder;
         private IDalamudTextureWrap[] otherImages;
-        public ProfileWindow(Plugin plugin, DalamudPluginInterface Interface, IChatGui chatGUI, Configuration configuration, IDalamudTextureWrap avatarHolder,
-                             //alignment icon
-                             IDalamudTextureWrap lawfulgood, IDalamudTextureWrap neutralgood, IDalamudTextureWrap chaoticgood,
-                             IDalamudTextureWrap lawfulneutral, IDalamudTextureWrap trueneutral, IDalamudTextureWrap chaoticneutral,
-                             IDalamudTextureWrap lawfulevil, IDalamudTextureWrap neutralevil, IDalamudTextureWrap chaoticevil,
-
-                             //bars
-
-                             IDalamudTextureWrap lawfulgoodBar, IDalamudTextureWrap neutralgoodBar, IDalamudTextureWrap chaoticgoodBar,
-                             IDalamudTextureWrap lawfulneutralBar, IDalamudTextureWrap trueneutralBar, IDalamudTextureWrap chaoticneutralBar,
-                             IDalamudTextureWrap lawfulevilBar, IDalamudTextureWrap neutralevilBar, IDalamudTextureWrap chaoticevilBar,
-                             System.Drawing.Image pictureTab, System.Drawing.Image blank_holder
+        public ProfileWindow(Plugin plugin, DalamudPluginInterface Interface, IChatGui chatGUI, Configuration configuration
 
                             ) : base(
        "PROFILE", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
@@ -230,21 +214,21 @@ namespace InfiniteRoleplay.Windows
             };
             timer = new Timer(30);
             timer.Elapsed += OnEventExecution;
-            bl = blank_holder;
+            bl = UIDefines.blankTab;
             this.plugin = plugin;
             this.pg = plugin.PluginInterfacePub;
             this.configuration = plugin.Configuration;
             this._fileDialogManager = new FileDialogManager();
-            this.avatarImg = avatarHolder;
-            this.persistAvatarHolder = avatarHolder;
-            this.otherImages = new IDalamudTextureWrap[21] { blank, avatarImg, currentAvatarImg, lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil, lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar };
-            galleryImages = new IDalamudTextureWrap[30] { galleryImg1, galleryImg2, galleryImg3, galleryImg4, galleryImg5, galleryImg6, galleryImg7, galleryImg8, galleryImg9, galleryImg10, galleryImg11, galleryImg12, galleryImg13, galleryImg14, galleryImg15, galleryImg16, galleryImg17, galleryImg18, galleryImg19, galleryImg20, galleryImg21, galleryImg22, galleryImg23, galleryImg24, galleryImg25, galleryImg26, galleryImg27, galleryImg28, galleryImg29, galleryImg30 };
-            galleryThumbs = new IDalamudTextureWrap[30] { galleryEditThm1, galleryEditThm2, galleryEditThm3, galleryEditThm4, galleryEditThm5, galleryEditThm6, galleryEditThm7, galleryEditThm8, galleryEditThm9, galleryEditThm10, galleryEditThm11, galleryEditThm12, galleryEditThm13, galleryEditThm14, galleryEditThm15, galleryEditThm16, galleryEditThm17, galleryEditThm18, galleryEditThm19, galleryEditThm20, galleryEditThm21, galleryEditThm22, galleryEditThm23, galleryEditThm24, galleryEditThm25, galleryEditThm26, galleryEditThm27, galleryEditThm28, galleryEditThm29, galleryEditThm30 };
+            this.avatarImg = UIDefines.AvatarHolder;
+            this.persistAvatarHolder = UIDefines.AvatarHolder;
             this.configuration = configuration;
+            for(int i = 0; i < 30; i++)
+            {
+                galleryThumbs.Add(UIDefines.pictureTabWrap);
+                galleryImages.Add(UIDefines.pictureTabWrap);
+            }
+            picBytes = Imaging.ImageToByteArray(UIDefines.picTab);
             
-            picBytes = Imaging.ImageToByteArray(pictureTab);
-            
-            imageHolder = Imaging.ImageToByteArray(pictureTab);
             thumbHolder = Imaging.ImageToByteArray(Imaging.byteArrayToImage(Imaging.ScaleImageBytes(picBytes, 150, 150)));
             
             for (int tb = 0; tb < galleryThumbBytes.Length; tb++)
@@ -253,19 +237,11 @@ namespace InfiniteRoleplay.Windows
             }
             for (int ib = 0; ib < galleryImageBytes.Length; ib++)
             {
-                galleryImageBytes[ib]= Imaging.ImageToByteArray(pictureTab);               
+                galleryImageBytes[ib]= Imaging.ImageToByteArray(UIDefines.picTab);               
             }
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
             this.avatarBytes = Imaging.ImageToByteArray(image1);
             //alignment icons
-            this.lawfulGood = lawfulgood; this.neutralGood = neutralgood; this.chaoticGood = chaoticgood;
-            this.lawfulNeutral = lawfulneutral; this.trueNeutral = trueneutral; this.chaoticNeutral = chaoticneutral;
-            this.lawfulEvil = lawfulevil; this.neutralEvil = neutralevil; this.chaoticEvil = chaoticevil;
-            chatGui = chatGUI;
-            //bars
-            this.lawfulGoodBar = lawfulgoodBar; this.neutralGoodBar = neutralgoodBar; this.chaoticGoodBar = chaoticgoodBar;
-            this.lawfulNeutralBar = lawfulneutralBar; this.trueNeutralBar = trueneutralBar; this.chaoticNeutralBar = chaoticneutralBar;
-            this.lawfulEvilBar = lawfulevilBar; this.neutralEvilBar = neutralevilBar; this.chaoticEvilBar = chaoticevilBar;
             this._Font = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
             //plus and minus
             alignmentVals = new int[9] { lawfulGoodVal, neutralGoodVal, chaoticGoodVal, lawfulNeutralVal, trueNeutralVal, chaoticNeutralVal, lawfulEvilVal, neutralEvilVal, chaoticEvilVal };
@@ -370,7 +346,7 @@ namespace InfiniteRoleplay.Windows
                         #region ALIGNMENTS
                         #region LAWFUL GOOD
                         //LAWFUL GOOD
-                        ImGui.Image(this.lawfulGood.ImGuiHandle, new Vector2(32, 32));
+                        ImGui.Image(UIDefines.lawfulGood.ImGuiHandle, new Vector2(32, 32));
                         if (ImGui.IsItemHovered())
                         {
                             ImGui.SetTooltip("LAWFUL GOOD:\n" +
@@ -384,14 +360,14 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         if (ImGui.Button("-##editlawfulgoodminus", new Vector2(20, 20))) { ModAlignment("lawfulgood", false); }
                         ImGui.SameLine();
-                        ImGui.Image(this.lawfulGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[0] * 30, 20));
+                        ImGui.Image(UIDefines.lawfulGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[0] * 30, 20));
                         ImGui.SameLine();
                         ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[0].ToString());
                         #endregion
 
                         #region NEUTRAL GOOD
                         // NEUTRAL GOOD
-                        ImGui.Image(this.neutralGood.ImGuiHandle, new Vector2(32, 32));
+                        ImGui.Image(UIDefines.neutralGood.ImGuiHandle, new Vector2(32, 32));
                         if (ImGui.IsItemHovered())
                         {
                             ImGui.SetTooltip("NEUTRAL GOOD:\n" +
@@ -407,14 +383,14 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         if (ImGui.Button("-##editneutralgoodminus", new Vector2(20, 20))) { ModAlignment("neutralgood", false); }
                         ImGui.SameLine();
-                        ImGui.Image(this.neutralGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[1] * 30, 20));
+                        ImGui.Image(UIDefines.neutralGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[1] * 30, 20));
                         ImGui.SameLine();
                         ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[1].ToString());
                         #endregion
 
                         #region CHAOTIC GOOD
                         // CHAOTIC GOOD
-                        ImGui.Image(this.chaoticGood.ImGuiHandle, new Vector2(32, 32));
+                        ImGui.Image(UIDefines.chaoticGood.ImGuiHandle, new Vector2(32, 32));
                         if (ImGui.IsItemHovered())
                         {
                             ImGui.SetTooltip("CHAOTIC GOOD:\n" +
@@ -431,7 +407,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         if (ImGui.Button("-##editchaoticgoodminus", new Vector2(20, 20))) { ModAlignment("chaoticgood", false); }
                         ImGui.SameLine();
-                        ImGui.Image(this.chaoticGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[2] * 30, 20));
+                        ImGui.Image(UIDefines.chaoticGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[2] * 30, 20));
                         ImGui.SameLine();
                         int formattedChaoticGoodVal = chaoticGoodVal / 10;
                         ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[2].ToString());
@@ -439,7 +415,7 @@ namespace InfiniteRoleplay.Windows
 
                         #region LAWFUL NEUTRAL
                         // LAWFUL NEUTRAL
-                        ImGui.Image(this.lawfulNeutral.ImGuiHandle, new Vector2(32, 32));
+                        ImGui.Image(UIDefines.lawfulNeutral.ImGuiHandle, new Vector2(32, 32));
                         if (ImGui.IsItemHovered())
                         {
                             ImGui.SetTooltip("LAWFUL NEUTRAL:\n" +
@@ -456,7 +432,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         if (ImGui.Button("-##editlawfulneutralminus", new Vector2(20, 20))) { ModAlignment("lawfulneutral", false); }
                         ImGui.SameLine();
-                        ImGui.Image(this.lawfulNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[3] * 30, 20));
+                        ImGui.Image(UIDefines.lawfulNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[3] * 30, 20));
                         ImGui.SameLine();
                         int formattedLawfulNeutralVal = lawfulNeutralVal / 10;
                         ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[3].ToString());
@@ -464,7 +440,7 @@ namespace InfiniteRoleplay.Windows
 
                         #region TRUE NEUTRAL
                         // CHAOTIC GOOD
-                        ImGui.Image(this.trueNeutral.ImGuiHandle, new Vector2(32, 32));
+                        ImGui.Image(UIDefines.trueNeutral.ImGuiHandle, new Vector2(32, 32));
                         if (ImGui.IsItemHovered())
                         {
                             ImGui.SetTooltip("TRUE NEUTRAL:\n" +
@@ -483,7 +459,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         if (ImGui.Button("-##edittrueneutralminus", new Vector2(20, 20))) { ModAlignment("trueneutral", false); }
                         ImGui.SameLine();
-                        ImGui.Image(this.trueNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[4] * 30, 20));
+                        ImGui.Image(UIDefines.trueNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[4] * 30, 20));
                         ImGui.SameLine();
                         int formattedTrueNeutralVal = trueNeutralVal / 10;
                         ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[4].ToString());
@@ -491,7 +467,7 @@ namespace InfiniteRoleplay.Windows
 
                         #region CHAOTIC NEUTRAL
                         // CHAOTIC GOOD
-                        ImGui.Image(this.chaoticNeutral.ImGuiHandle, new Vector2(32, 32));
+                        ImGui.Image(UIDefines.chaoticNeutral.ImGuiHandle, new Vector2(32, 32));
                         if (ImGui.IsItemHovered())
                         {
                             ImGui.SetTooltip("CHAOTIC NEUTRAL:\n" +
@@ -507,7 +483,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         if (ImGui.Button("-##editchaoticneutralminus", new Vector2(20, 20))) { ModAlignment("chaoticneutral", false); }
                         ImGui.SameLine();
-                        ImGui.Image(this.chaoticNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[5] * 30, 20));
+                        ImGui.Image(UIDefines.chaoticNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[5] * 30, 20));
                         ImGui.SameLine();
                         int formattedChaoticNeutralVal = chaoticNeutralVal / 10;
                         ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[5].ToString());
@@ -515,7 +491,7 @@ namespace InfiniteRoleplay.Windows
 
                         #region LAWFUL EVIL
                         // CHAOTIC GOOD
-                        ImGui.Image(this.lawfulEvil.ImGuiHandle, new Vector2(32, 32));
+                        ImGui.Image(UIDefines.lawfulEvil.ImGuiHandle, new Vector2(32, 32));
                         if (ImGui.IsItemHovered())
                         {
                             ImGui.SetTooltip("LAWFUL EVIL:\n" +
@@ -533,7 +509,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         if (ImGui.Button("-##editlawfulevilminus", new Vector2(20, 20))) { ModAlignment("lawfulevil", false); }
                         ImGui.SameLine();
-                        ImGui.Image(this.lawfulEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[6] * 30, 20));
+                        ImGui.Image(UIDefines.lawfulEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[6] * 30, 20));
                         ImGui.SameLine();
                         int formattedLawfulEvilVal = lawfulEvilVal / 10;
                         ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[6].ToString());
@@ -541,7 +517,7 @@ namespace InfiniteRoleplay.Windows
 
                         #region NEUTRAL EVIL
                         // CHAOTIC GOOD
-                        ImGui.Image(this.neutralEvil.ImGuiHandle, new Vector2(32, 32));
+                        ImGui.Image(UIDefines.neutralEvil.ImGuiHandle, new Vector2(32, 32));
                         if (ImGui.IsItemHovered())
                         {
                             ImGui.SetTooltip("NEUTRAL EVIL:\n" +
@@ -558,7 +534,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         if (ImGui.Button("-##editneutralevilminus", new Vector2(20, 20))) { ModAlignment("neutralevil", false); }
                         ImGui.SameLine();
-                        ImGui.Image(this.neutralEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[7] * 30, 20));
+                        ImGui.Image(UIDefines.neutralEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[7] * 30, 20));
                         ImGui.SameLine();
                         int formattedNeutralEvilVal = neutralEvilVal / 10;
                         ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[7].ToString());
@@ -566,7 +542,7 @@ namespace InfiniteRoleplay.Windows
 
                         #region CHAOTIC EVIL
                         // CHAOTIC GOOD
-                        ImGui.Image(this.chaoticEvil.ImGuiHandle, new Vector2(32, 32));
+                        ImGui.Image(UIDefines.chaoticEvil.ImGuiHandle, new Vector2(32, 32));
                         if (ImGui.IsItemHovered())
                         {
                             ImGui.SetTooltip("CHAOTIC EVIL:\n" +
@@ -581,7 +557,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         if (ImGui.Button("-##editchaoticevilminus", new Vector2(20, 20))) { ModAlignment("chaoticevil", false); }
                         ImGui.SameLine();
-                        ImGui.Image(this.chaoticEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[8] * 30, 20));
+                        ImGui.Image(UIDefines.chaoticEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[8] * 30, 20));
                         ImGui.SameLine();
                         ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[8].ToString());
                         #endregion
@@ -972,9 +948,7 @@ namespace InfiniteRoleplay.Windows
         {
             Task.Run(async () =>
             {
-
-
-                for (int g = 0; g < galleryImages.Length; g++)
+                for (int g = 0; g < galleryImages.Count; g++)
                 {
                     imageIndexVal = 0;
                     imageIndex = 0;
@@ -987,7 +961,7 @@ namespace InfiniteRoleplay.Windows
                     ImageExists[i] = false;
                 }
                 System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/picturetab.png"));
-                for(int i = 0; i < galleryImages.Length; i++)
+                for(int i = 0; i < galleryImages.Count; i++)
                 {
                     // you might normally want to embed resources and load them from the manifest stream
                     galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(Imaging.ScaleImageBytes(Imaging.ImageToByteArray(image1), 150, 150));
@@ -1128,12 +1102,10 @@ namespace InfiniteRoleplay.Windows
             foreach (IDalamudTextureWrap ti in galleryImages)
             {
                 ti.Dispose();
-                Array.Clear(galleryImages);
             }
             foreach (IDalamudTextureWrap gt in galleryThumbs)
             {
                 gt.Dispose();
-                Array.Clear(galleryThumbs);
             }
             for(int o = 0; o < otherImages.Length; o++)
             {
