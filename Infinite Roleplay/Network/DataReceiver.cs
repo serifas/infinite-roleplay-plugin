@@ -499,6 +499,11 @@ namespace Networking
                 }
               
             }
+            for(int i = 0; i < imageCount; i++)
+            {
+                string url = buffer.ReadString();
+                ProfileWindow.urls[i] = url;
+            }
             GalleryLoadStatus = 1;
             buffer.Dispose();
 
