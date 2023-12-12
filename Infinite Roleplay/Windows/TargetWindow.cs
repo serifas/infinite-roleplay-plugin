@@ -63,7 +63,8 @@ namespace InfiniteRoleplay.Windows
         public static bool WindowOpen;
         public static byte[][] existingGalleryImgBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
         public static byte[][] existingGalleryThumbBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
-        public static List<IDalamudTextureWrap> galleryThumbList, galleryImagesList = new List<IDalamudTextureWrap>();
+        public static List<IDalamudTextureWrap>  galleryImagesList = new List<IDalamudTextureWrap>();
+        public static List<IDalamudTextureWrap> galleryThumbList = new List<IDalamudTextureWrap>();
         public static string characterNameVal, characterWorldVal;
         public static string[] StoryContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static string[] ChapterContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
@@ -153,10 +154,14 @@ namespace InfiniteRoleplay.Windows
             this.avatarBytes = ImageToByteArray(image1);
             //alignment icons
             this.chatGui = chatGui;
-            
-            
-          
-            
+
+            for (int i = 0; i < 30; i++)
+            {
+                galleryImagesList.Add(UIDefines.pictureTabWrap);
+                galleryThumbList.Add(UIDefines.pictureTabWrap);
+            }
+
+
             //bars
             this._Font = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
             alignmentVals = new int[9] { lawfulGoodVal, neutralGoodVal, chaoticGoodVal, lawfulNeutralVal, trueNeutralVal, chaoticNeutralVal, lawfulEvilVal, neutralEvilVal, chaoticEvilVal };
@@ -504,8 +509,6 @@ namespace InfiniteRoleplay.Windows
 
                         if (ImGui.BeginTable("##GalleryTargetTable", 4))
                         {
-                            var galleryThumbs = galleryThumbList.ToArray();
-                            var galleryImages = galleryImagesList.ToArray();
                             for (int i = 0; i < existingGalleryImageCount; i++)
                             {
                                 if (i % 4 == 0)
@@ -520,13 +523,13 @@ namespace InfiniteRoleplay.Windows
                                         DrawImage(i, plugin);
                                         galleryExists[i] = true;
                                     }
-                                    ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
+                                    ImGui.Image(galleryThumbList[i].ImGuiHandle, new Vector2(galleryThumbList[i].Width, galleryThumbList[i].Height));
                                     if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
                                     if (ImGui.IsItemClicked())
                                     {
-                                        ImagePreview.width = galleryImages[i].Width;
-                                        ImagePreview.height = galleryImages[i].Height;
-                                        ImagePreview.PreviewImage = galleryImages[i];
+                                        ImagePreview.width = galleryImagesList[i].Width;
+                                        ImagePreview.height = galleryImagesList[i].Height;
+                                        ImagePreview.PreviewImage = galleryImagesList[i];
                                         plugin.loadPreview = true;
                                     }
                                 }
@@ -543,13 +546,13 @@ namespace InfiniteRoleplay.Windows
                                         galleryExists[i] = true;
                                     }
 
-                                    ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
+                                    ImGui.Image(galleryThumbList[i].ImGuiHandle, new Vector2(galleryThumbList[i].Width, galleryThumbList[i].Height));
                                     if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
                                     if (ImGui.IsItemClicked())
                                     {
-                                        ImagePreview.width = galleryImages[i].Width;
-                                        ImagePreview.height = galleryImages[i].Height;
-                                        ImagePreview.PreviewImage = galleryImages[i];
+                                        ImagePreview.width = galleryImagesList[i].Width;
+                                        ImagePreview.height = galleryImagesList[i].Height;
+                                        ImagePreview.PreviewImage = galleryImagesList[i];
                                         plugin.loadPreview = true;
                                     }
                                 }
@@ -609,17 +612,6 @@ namespace InfiniteRoleplay.Windows
             else
             {
                 timer.Start();
-                var LoaderWidth = 360f;
-                var decidingWidth = Math.Max(500, ImGui.GetWindowWidth());
-                var offsetWidth = (decidingWidth - LoaderWidth) / 2;
-                var offsetVersion = storyTitle.Length > 0
-                    ? _modVersionWidth + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().WindowPadding.X
-                    : 0;
-                var offset = Math.Max(offsetWidth, offsetVersion);
-                if (offset > 0)
-                {
-                    ImGui.SetCursorPosX(offset);
-                }
                 ImGui.Image(loaderAnimInd.ImGuiHandle, new Vector2(340, 180));
             }
 
@@ -631,11 +623,8 @@ namespace InfiniteRoleplay.Windows
             Task.Run(async () =>
             {
                 // simulate some work
-
-                var galleryThumbs = galleryThumbList.ToArray();
-                var galleryImages = galleryImagesList.ToArray();
-                galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(existingGalleryImgBytes[i]);
-                galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(existingGalleryThumbBytes[i]);
+                galleryImagesList[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(existingGalleryImgBytes[i]);
+                galleryThumbList[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(existingGalleryThumbBytes[i]);
                 
             });
         }

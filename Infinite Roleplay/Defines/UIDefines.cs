@@ -49,7 +49,7 @@ namespace InfiniteRoleplay.Defines
         public static byte[] blankTabBytes;
         public static System.Drawing.Image blankTab;
 
-        public static List<IDalamudTextureWrap> textureList;
+        public static List<IDalamudTextureWrap> textureList = new List<IDalamudTextureWrap>();
 
         public static void LoadTextures()
         {
@@ -94,16 +94,18 @@ namespace InfiniteRoleplay.Defines
             textureList.Add(neutralEvilBar);
             chaoticEvilBar = plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil_bar.png"));
             textureList.Add(chaoticEvilBar);
-            pictureTabWrap = plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/picturetab.png"));
-            textureList.Add(pictureTabWrap);
             pictureTab = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/picturetab.png");
             
             blank_holder = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/blank.png");
             
             imgBytes = File.ReadAllBytes(pictureTab);
-            
+
+
+
             picTabBytes = Imaging.ScaleImageBytes(imgBytes, 300, 300);
-            
+
+            pictureTabWrap = plugin.PluginInterfacePub.UiBuilder.LoadImage(picTabBytes);
+            textureList.Add(pictureTabWrap);
             picTab = Imaging.byteArrayToImage(picTabBytes);
 
             emptyByteImage = File.ReadAllBytes(blank_holder);

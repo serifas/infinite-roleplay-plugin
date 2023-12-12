@@ -100,6 +100,7 @@ namespace InfiniteRoleplay
             string name = "";
 
 
+            UIDefines.plugin = this;
 
 
             this.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
@@ -145,19 +146,11 @@ namespace InfiniteRoleplay
             DataReceiver.HooksLoadStatus = -1;
             DataReceiver.StoryLoadStatus = -1;
         }
-        public void UnloadUI()
-        {
-            if(uiLoaded == true)
-            {
-                this.WindowSystem.RemoveAllWindows();
-                uiLoaded = false;
-            }           
-        }
+        
         public void LoadUI()
         {
             if (uiLoaded == false)
             {
-                UIDefines.plugin = this;
                 UIDefines.LoadTextures();
 
                 targetWindow = new TargetWindow(this, this.pluginInterface);
@@ -203,16 +196,29 @@ namespace InfiniteRoleplay
             this.pluginInterface.UiBuilder.OpenConfigUi -= LoadOptions;
             this.pluginInterface.UiBuilder.OpenMainUi -= DrawLoginUI;
             this.framework.Update -= Update;
-
+            this.CommandManager.RemoveHandler(TargetWindowCommandName);
             this.CommandManager.RemoveHandler(CommandName);
-            this.WindowSystem.RemoveAllWindows();
+            if(this.WindowSystem.Windows.Count > 0)
+            {
+                this.WindowSystem.RemoveAllWindows();
+            }
             if (ClientTCP.IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
                 DisconnectFromServer();
             }
-            ProfileWindow.timer.Dispose();
-            TargetWindow.timer.Dispose();
-            UIDefines.DisposeTextures();
+            if(ProfileWindow.timer != null)
+            {
+                ProfileWindow.timer.Dispose();
+            }
+            if(TargetWindow.timer != null)
+            {
+                TargetWindow.timer.Dispose();
+            }
+            
+            if(UIDefines.textureList.Count > 0 )
+            {
+                UIDefines.DisposeTextures();
+            }
             //if(images != null && images.Length > 0)
             //{
             //   for (int i = 0; i < images.Length; i++)

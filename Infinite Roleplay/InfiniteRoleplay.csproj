@@ -26,7 +26,10 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <Visible>false</Visible>
         </Content>
-       
+
+        <None Update="UI\common\spacer.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="UI\alignments\lawful_good.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
