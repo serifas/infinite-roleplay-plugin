@@ -19,6 +19,8 @@ using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using InfiniteRoleplay.Helpers;
 using ImGuiNET;
+using InfiniteRoleplay.Windows.Defines;
+using InfiniteRoleplay.Scripts.Misc;
 
 namespace Networking
 {
@@ -448,59 +450,52 @@ namespace Networking
         }
         public static void ReceiveProfileGalleryImage(byte[] data)
         {
+           
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
-            int imagesLen = buffer.ReadInt();
-            int thumbsLen = buffer.ReadInt();
             int imageCount = buffer.ReadInt();
-            int NSFWImages = buffer.ReadInt();
             ExistingGalleryData = true;
-            for (int i = 0; i < imagesLen; i++)
+            for (int i = 0; i < imageCount; i++)
             {
                 int imageBtLen = buffer.ReadInt();
-                if(imageBtLen > 0)
-                {
-                    byte[] imageBytes = buffer.ReadBytes(imageBtLen);
-
-                    ExistingGalleryData = true;
-                    ProfileWindow.imageIndex = imageCount;
-                    ProfileWindow.ImageExists[i] = true;
-                    ProfileWindow.galleryImageBytes[i] = imageBytes;
-                    ProfileWindow.Cols[i] = new System.Numerics.Vector4(0, 255, 0, 255);
-                    ProfileWindow.galleryStatusVals[i] = "Uploaded";
-                    //ProfileWindow.ReorderNoSend = true;
-                }        
-            }
-            for (int f = 0; f < thumbsLen; f++)
-            {
+                byte[] imageBytes = buffer.ReadBytes(imageBtLen);
                 int thumbBtLen = buffer.ReadInt();
-                if (thumbBtLen > 0)
+                byte[] thumbBytes = buffer.ReadBytes(thumbBtLen);
+                bool nsfw = buffer.ReadBool();
+                string url = buffer.ReadString();
+                if (nsfw == true)
                 {
-                    byte[] thumbBytes = buffer.ReadBytes(thumbBtLen);
-
-                    ExistingGalleryThumbCount = f + 1;
-                    ProfileWindow.galleryThumbBytes[f] = thumbBytes;
-                }
-
-            }
-            for (int n = 0; n < NSFWImages; n++)
-            {
-                bool NSFW = buffer.ReadBool();
-                if(NSFW == true)
-                {
-                    ProfileWindow.nsfwImagesCheck[n] = true;
-                    ProfileWindow.nsfwImagesUncheck[n] = false;
+                    ProfileWindow.nsfwImagesCheck[i] = true;
                 }
                 else
                 {
-                    ProfileWindow.nsfwImagesCheck[n] = false;
-                    ProfileWindow.nsfwImagesUncheck[n] = true;
+                    ProfileWindow.nsfwImagesCheck[i] = false;
                 }
-              
+                ProfileWindow.urls[i] = url;
+                ProfileWindow.ExistingGalleryImageCount = imageCount;
+                ProfileWindow.galleryImageBytes[i] = imageBytes;
+                ProfileWindow.galleryThumbBytes[i] = thumbBytes;
+                ProfileWindow.imageIndex = imageCount;
+                ProfileWindow.ImageExists[i] = true;
+                //ProfileWindow.ReorderNoSend = true;
+                ProfileWindow.DrawImage(i, plugin);
+
+            }
+<<<<<<< HEAD
+            BookmarksWindow.DisableBookmarkSelection = false;
+            TargetMenu.DisableInput = false;
+            TargetGalleryLoadStatus = 1;
+=======
+            for(int i = 0; i < imageCount; i++)
+            {
+                string url = buffer.ReadString();
+                ProfileWindow.urls[i] = url;
             }
             GalleryLoadStatus = 1;
+>>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
             buffer.Dispose();
+            GalleryLoadStatus = 1;
 
         }
         public static void ReceiveTargetBio(byte[] data)
@@ -518,29 +513,13 @@ namespace Networking
             string height = buffer.ReadString();
             string weight = buffer.ReadString();
             string atFirstGlance = buffer.ReadString();
-            int lawful_good = buffer.ReadInt();
-            int neutral_good = buffer.ReadInt();
-            int chaotic_good = buffer.ReadInt();
-            int lawful_neutral = buffer.ReadInt();
-            int true_neutral = buffer.ReadInt();
-            int chaotic_neutral = buffer.ReadInt();
-            int lawful_evil = buffer.ReadInt();
-            int neutral_evil = buffer.ReadInt();
-            int chaotic_evil = buffer.ReadInt();
+            int alignment = buffer.ReadInt();
             TargetWindow.characterEditName = name; TargetWindow.characterEditRace = race; TargetWindow.characterEditGender = gender;
             TargetWindow.characterEditAge = age.ToString(); TargetWindow.characterEditHeight = height; TargetWindow.characterEditWeight = weight.ToString(); 
             TargetWindow.characterEditAfg = atFirstGlance;
-
-            TargetWindow.alignmentEditVals[0] = lawful_good;
-            TargetWindow.alignmentEditVals[1] = neutral_good;
-            TargetWindow.alignmentEditVals[2] = chaotic_good;
-            TargetWindow.alignmentEditVals[3] = lawful_neutral;
-            TargetWindow.alignmentEditVals[4] = true_neutral;
-            TargetWindow.alignmentEditVals[5] = chaotic_neutral;
-            TargetWindow.alignmentEditVals[6] =  lawful_evil;
-            TargetWindow.alignmentEditVals[7] = neutral_evil;
-            TargetWindow.alignmentEditVals[8] = chaotic_evil;
-
+            TargetWindow.alignmentImg = Constants.AlignementIcon(plugin.PluginInterfacePub, alignment);
+            var (text, desc) = Constants.AlignmentVals[alignment];
+            TargetWindow.alignmentTooltip = text + ": " + desc;
 
             currentTargetAvatar = avatarBytes;
             ExistingTargetBioData = true;
@@ -563,30 +542,22 @@ namespace Networking
             string height = buffer.ReadString();
             string weight = buffer.ReadString();
             string atFirstGlance = buffer.ReadString();
-            int lawful_good = buffer.ReadInt();
-            int neutral_good = buffer.ReadInt();
-            int chaotic_good = buffer.ReadInt();
-            int lawful_neutral = buffer.ReadInt();
-            int true_neutral = buffer.ReadInt();
-            int chaotic_neutral = buffer.ReadInt();
-            int lawful_evil = buffer.ReadInt();
-            int neutral_evil = buffer.ReadInt();
-            int chaotic_evil = buffer.ReadInt();
+            int alignment = buffer.ReadInt();
 
             ExistingBioData = true;
-            ProfileWindow.characterEditName = name.Replace("''", "'"); ProfileWindow.characterEditRace = race.Replace("''", "'"); ProfileWindow.characterEditGender = gender.Replace("''", "'");
-            ProfileWindow.characterEditAge = age.ToString().Replace("''", "'"); ProfileWindow.characterEditHeight = height.Replace("''", "'"); ProfileWindow.characterEditWeight = weight.ToString().Replace("''", "'");
-            ProfileWindow.characterEditAfg = atFirstGlance;
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.name] = name.Replace("''", "'");
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.race] = race.Replace("''", "'");
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.gender] = gender.Replace("''", "'");
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.age] = age.ToString().Replace("''", "'");
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.height] = height.Replace("''", "'");
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.weight] = weight.Replace("''", "'");
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.afg] = atFirstGlance;
+            ProfileWindow.currentAlignment = alignment;
+         
 
-            ProfileWindow.alignmentVals[0] = lawful_good;
-            ProfileWindow.alignmentVals[1] = neutral_good;
-            ProfileWindow.alignmentVals[2] = chaotic_good;
-            ProfileWindow.alignmentVals[3] = lawful_neutral;
-            ProfileWindow.alignmentVals[4] = true_neutral;
-            ProfileWindow.alignmentVals[5] = chaotic_neutral;
-            ProfileWindow.alignmentVals[6] = lawful_evil;
-            ProfileWindow.alignmentVals[7] = neutral_evil;
-            ProfileWindow.alignmentVals[8] = chaotic_evil;
+
+
+
 
             buffer.Dispose();
             currentAvatar = avatarBytes;

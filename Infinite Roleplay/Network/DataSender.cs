@@ -156,16 +156,18 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SendGalleryImage(string username, string playername, string playerworld, bool NSFW, string url, int index)
+        public static void SendGalleryImage(string username, string playername, string playerworld, bool[] NSFW, string[] url, int count)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendGallery);
             buffer.WriteString(playername);
             buffer.WriteString(playerworld);
-            buffer.WriteBool(NSFW);
-            buffer.WriteString(url);
-            buffer.WriteInteger(index);
-
+            buffer.WriteInteger(count);
+            for(int i = 0; i < count; i++)
+            {
+                buffer.WriteBool(NSFW[i]);
+                buffer.WriteString(url[i]);
+            }           
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
@@ -213,12 +215,13 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void FetchProfile( string characterName, string world)
+        public static void FetchProfile( string characterName, string world, bool submit)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CFetchProfiles);
             buffer.WriteString(characterName);
             buffer.WriteString(world);
+            buffer.WriteBool(submit);   
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
@@ -270,42 +273,9 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void EditProfileBio(string playerName, string playerServer, byte[] avatarBytes, string name, string race, string gender, int age,
-                                            string height, string weight, string atFirstGlance,
-                                            int lawful_good, int neutral_good, int chaotic_good,
-                                            int lawful_neutral, int true_neutral, int chaotic_neutral,
-                                            int lawful_evil, int neutral_evil, int chaotic_evil)
-        {
-            var buffer = new ByteBuffer();
-            buffer.WriteInteger((int)ClientPackets.CEditProfileBio);
-            buffer.WriteString(playerName);
-            buffer.WriteString(playerServer);
-            buffer.WriteInteger(avatarBytes.Length);
-            buffer.WriteBytes(avatarBytes);
-            buffer.WriteString(name);
-            buffer.WriteString(race);
-            buffer.WriteString(gender);
-            buffer.WriteInteger(age);
-            buffer.WriteString(height);
-            buffer.WriteString(weight);
-            buffer.WriteString(atFirstGlance);
-            buffer.WriteInteger(lawful_good);
-            buffer.WriteInteger(neutral_good);
-            buffer.WriteInteger(chaotic_good);
-            buffer.WriteInteger(lawful_neutral);
-            buffer.WriteInteger(true_neutral);
-            buffer.WriteInteger(chaotic_neutral);
-            buffer.WriteInteger(lawful_evil);
-            buffer.WriteInteger(neutral_evil);
-            buffer.WriteInteger(chaotic_evil);
-            ClientTCP.SendData(buffer.ToArray());
-            buffer.Dispose();
-        }
+        
         public static void SubmitProfileBio(string playerName, string playerServer, byte[] avatarBytes, string name, string race, string gender, int age, 
-                                            string height, string weight, string atFirstGlance, 
-                                            int lawful_good, int neutral_good, int chaotic_good, 
-                                            int lawful_neutral, int true_neutral, int chaotic_neutral, 
-                                            int lawful_evil, int neutral_evil, int chaotic_evil)
+                                            string height, string weight, string atFirstGlance, int alignment)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CCreateProfileBio);
@@ -320,17 +290,10 @@ namespace Networking
             buffer.WriteString(height);
             buffer.WriteString(weight);
             buffer.WriteString(atFirstGlance);
-            buffer.WriteInteger(lawful_good);
-            buffer.WriteInteger(neutral_good);
-            buffer.WriteInteger(chaotic_good);
-            buffer.WriteInteger(lawful_neutral);
-            buffer.WriteInteger(true_neutral);
-            buffer.WriteInteger(chaotic_neutral);
-            buffer.WriteInteger(lawful_evil);
-            buffer.WriteInteger(neutral_evil);
-            buffer.WriteInteger(chaotic_evil);
+            buffer.WriteInteger(alignment);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
+            
         }
 
         public static void SendRulebookPage(string username, string title)

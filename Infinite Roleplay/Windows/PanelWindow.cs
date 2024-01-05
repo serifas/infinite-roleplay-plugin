@@ -99,15 +99,7 @@ namespace InfiniteRoleplay.Windows
             {
                 if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
                 {
-
-                    LoginWindow.loginRequest = true;
-                    plugin.profileWindow.Reset(plugin);
-                    plugin.ReloadProfile();
-                    plugin.profileWindow.IsOpen = true;
-                    if (playerCharacter != null)
-                    {
-                        DataSender.FetchProfile(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
-                    }
+                    plugin.RefetchProfile();
 
                 }
                 if (ImGui.IsItemHovered())
@@ -122,7 +114,7 @@ namespace InfiniteRoleplay.Windows
                 }
                 if (ImGui.IsItemHovered())
                 {
-                    ImGui.SetTooltip("Connections - Comming Soon");
+                    ImGui.SetTooltip("Connections - Coming Soon");
                 }
                 if (ImGui.ImageButton(this.systemsImage.ImGuiHandle, new Vector2(100, 50)))
                 {
@@ -140,23 +132,14 @@ namespace InfiniteRoleplay.Windows
                 }
                 if (ImGui.IsItemHovered())
                 {
-                    ImGui.SetTooltip("Events - Comming Soon");
+                    ImGui.SetTooltip("Events - Coming Soon");
                 }
             }
             else
             {
                 if (ImGui.ImageButton(this.profilesNoWIPImage.ImGuiHandle, new Vector2(216, 50)))
                 {
-
-                    LoginWindow.loginRequest = true;
-                    plugin.profileWindow.Reset(plugin);
-                    plugin.ReloadProfile();
-                    plugin.profileWindow.IsOpen = true;
-                    if (playerCharacter != null)
-                    {
-                        DataSender.FetchProfile(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
-                    }
-
+                    plugin.RefetchProfile();
                 }
                 if (ImGui.IsItemHovered())
                 {

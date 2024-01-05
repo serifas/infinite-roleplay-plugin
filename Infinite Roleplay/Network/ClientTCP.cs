@@ -23,7 +23,7 @@ namespace Networking
         public static TcpClient clientSocket;
         private static NetworkStream myStream;
         private static byte[] recBuffer;
-        private static string server = "185.28.22.232";
+        private static string server = "79.141.173.150";
         private static int port = 25565;
         public static Timer timer;
         public static Plugin plugin;
@@ -85,7 +85,6 @@ namespace Networking
                     {
                         ClientConnectionCallback();
                         loadCallback = false;
-                        plugin.chatGUI.PrintError("Callback Loaded");
                     }
                     if (plugin.uiLoaded == false)
                     {
@@ -96,9 +95,9 @@ namespace Networking
                 {
                     ConnectToServer();
                 }
-                
+
             }
-            
+
         }
 
         public static void OnTick(System.Object? sender, ElapsedEventArgs eventArgs)
@@ -111,7 +110,6 @@ namespace Networking
             InitializingNetworking(true);
             loadCallback = true;
             CheckStatus();
-            plugin.chatGUI.PrintError("We connected and are checking status");
         }
 
         public static void InitializingNetworking(bool start)
@@ -162,14 +160,14 @@ namespace Networking
             }
 
         }
-        
+
         public static void ClientConnectionCallback()
-        {           
+        {
             Connected = true;
             clientSocket.NoDelay = true;
             myStream = clientSocket.GetStream();
             myStream.BeginRead(recBuffer, 0, 4096 * 2, ReceiveCallback, null);
-            
+
         }
         private static void ReceiveCallback(IAsyncResult result)
         {
@@ -205,8 +203,8 @@ namespace Networking
             {
 
             }
-                
-           
+
+
 
         }
         public static void Disconnect()
