@@ -492,6 +492,11 @@ namespace Networking
                 string url = buffer.ReadString();
                 ProfileWindow.urls[i] = url;
             }
+            for(int i = 0; i < imageCount; i++)
+            {
+                string url = buffer.ReadString();
+                ProfileWindow.urls[i] = url;
+            }
             GalleryLoadStatus = 1;
 >>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
             buffer.Dispose();
