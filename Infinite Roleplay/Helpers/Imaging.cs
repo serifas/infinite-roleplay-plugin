@@ -21,35 +21,36 @@ namespace InfiniteRoleplay.Helpers
     {
         public static void DownloadProfileImage(string url, int profileID, bool nsfw, DalamudPluginInterface pluginInterface, Plugin plugin, int index)
         {
-            WebClient webClient = new WebClient();
-            string GalleryPath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/");
-            string imagePath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + "gallery_" + profileID + "_" + index + ".png"); // Create a folder named 'Images' in your root directory
-            if (!Directory.Exists(GalleryPath))
-            {
-                Directory.CreateDirectory(GalleryPath);
-            }
-            webClient.DownloadFile(url, imagePath);
-            IDalamudTextureWrap galleryImage = pluginInterface.UiBuilder.LoadImage(imagePath);
-            IDalamudTextureWrap nsfwThumb = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/nsfw.png"));
+                WebClient webClient = new WebClient();
+                string GalleryPath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/");
+                string imagePath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + "gallery_" + profileID + "_" + index + ".png"); // Create a folder named 'Images' in your root directory
+                if (!Directory.Exists(GalleryPath))
+                {
+                    Directory.CreateDirectory(GalleryPath);
+                }
+                webClient.DownloadFile(url, imagePath);
+                IDalamudTextureWrap galleryImage = pluginInterface.UiBuilder.LoadImage(imagePath);
+                IDalamudTextureWrap nsfwThumb = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/nsfw.png"));
 
 
-            ProfileWindow.galleryImages[index] = galleryImage;
-            ProfileWindow.imageURLs[index] = url;
-            ProfileWindow.NSFW[index] = nsfw;
-            if (nsfw == true)
-            {
-                ProfileWindow.galleryThumbs[index] = nsfwThumb;
-            }
-            else
-            {
-                System.Drawing.Image thumb = System.Drawing.Image.FromFile(imagePath);
-                System.Drawing.Image img = ScaleImage(thumb, 120, 120);
-                SaveImage(img, GalleryPath, "gallery_thumb_" + profileID + "_" + index + ".png");
-                IDalamudTextureWrap imgThumb = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/gallery_thumb_" + profileID + "_" + index + ".png"));
-                ProfileWindow.galleryThumbs[index] = imgThumb;
-            }
-            plugin.chatGUI.Print(index + " Added");
+                ProfileWindow.galleryImages[index] = galleryImage;
+                ProfileWindow.imageURLs[index] = url;
+                ProfileWindow.NSFW[index] = nsfw;
+                if (nsfw == true)
+                {
+                    ProfileWindow.galleryThumbs[index] = nsfwThumb;
+                }
+                else
+                {
+                    System.Drawing.Image thumb = System.Drawing.Image.FromFile(imagePath);
+                    System.Drawing.Image img = ScaleImage(thumb, 120, 120);
+                    SaveImage(img, GalleryPath, "gallery_thumb_" + profileID + "_" + index + ".png");
+                    IDalamudTextureWrap imgThumb = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/gallery_thumb_" + profileID + "_" + index + ".png"));
+                    ProfileWindow.galleryThumbs[index] = imgThumb;
+                }
+                plugin.chatGUI.Print(index + " Added");
 
+            
         }
         public static void DownloadTargetProfileImage(string url, int profileID, bool nsfw, Plugin plugin, int index)
         {

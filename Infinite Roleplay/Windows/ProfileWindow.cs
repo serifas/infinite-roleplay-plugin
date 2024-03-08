@@ -63,9 +63,11 @@ using Lumina.Excel.GeneratedSheets2;
 using InfiniteRoleplay.Scripts.Misc;
 using OtterGui;
 using static FFXIVClientStructs.FFXIV.Common.Component.BGCollision.MeshPCB;
+using System.Linq.Expressions;
 
 namespace InfiniteRoleplay.Windows
 {
+    //changed
     public class ProfileWindow : Window, IDisposable
     {
         public static bool AllLoaded;
@@ -391,7 +393,16 @@ namespace InfiniteRoleplay.Windows
                                 imageIndex++;
                             }
                         }
-                      
+                        ImGui.SameLine();
+                        if(ImGui.Button("Submit Gallery"))
+                        {
+                            for(int i = 0; i < imageIndex; i++)
+                            {
+                                DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
+                                                  NSFW[i], imageURLs[i], i);
+                            }   
+                            
+                        }
                         ImGui.NewLine();
                         addGalleryImageGUI = true;
                         ImageExists[imageIndex] = true;
@@ -529,28 +540,34 @@ namespace InfiniteRoleplay.Windows
                                                     NSFW[i], imageURLs[i], i);
                     }
                     ImGui.InputText("##ImageURL" + i, ref imageURLs[i], 300);
-                 
-                    ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
-                    if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
-                    if (ImGui.IsItemClicked())
+                    try
                     {
-                        ImagePreview.width = galleryImages[i].Width;
-                        ImagePreview.height = galleryImages[i].Height;
-                        ImagePreview.PreviewImage = galleryImages[i];
-                        plugin.loadPreview = true;
-                    }
-                    if (ImGui.BeginChild("##GalleryImageControls" + i))
-                    { 
-                        if (ImGui.Button("Remove##" + "gallery_remove" + i))
+                        ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
+                        if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
+                        if (ImGui.IsItemClicked())
                         {
-                            imageIndexVal = i;
-                            ImageExists[i] = false;
-                            Reorder = true;
-                            DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, imageIndex);
+                            ImagePreview.width = galleryImages[i].Width;
+                            ImagePreview.height = galleryImages[i].Height;
+                            ImagePreview.PreviewImage = galleryImages[i];
+                            plugin.loadPreview = true;
                         }
+                        if (ImGui.BeginChild("##GalleryImageControls" + i))
+                        {
+                            if (ImGui.Button("Remove##" + "gallery_remove" + i))
+                            {
+                                imageIndexVal = i;
+                                ImageExists[i] = false;
+                                Reorder = true;
+                                DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, imageIndex);
+                            }
+                        }
+                        ImGui.EndChild();
                     }
-                    ImGui.EndChild();
-                }
+                    catch(Exception ex)
+                    {
+                        plugin.chatGUI.Print(ex.Message);
+                    }
+            }
 
 
         ImGui.EndChild();
