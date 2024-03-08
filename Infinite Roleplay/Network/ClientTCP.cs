@@ -11,7 +11,7 @@ using System.Timers;
 using InfiniteRoleplay.Windows.Functions;
 using InfiniteRoleplay;
 using System.IO;
-using InfiniteRoleplay.Windows;
+using System.Net.Http;
 
 namespace Networking
 {
@@ -23,7 +23,7 @@ namespace Networking
         public static TcpClient clientSocket;
         private static NetworkStream myStream;
         private static byte[] recBuffer;
-        private static string server = "79.141.173.150";
+        private static string server = "47.158.180.196";
         private static int port = 25565;
         public static Timer timer;
         public static Plugin plugin;
@@ -40,14 +40,6 @@ namespace Networking
             {
                 if (_tcpClient != null && _tcpClient.Client != null && _tcpClient.Client.Connected)
                 {
-                    /* pear to the documentation on Poll:
-                     * When passing SelectMode.SelectRead as a parameter to the Poll method it will return 
-                     * -either- true if Socket.Listen(Int32) has been called and a connection is pending;
-                     * -or- true if data is available for reading; 
-                     * -or- true if the connection has been closed, reset, or terminated; 
-                     * otherwise, returns false
-                     */
-
                     // Detect if client disconnected
                     if (_tcpClient.Client.Poll(0, SelectMode.SelectRead))
                     {
@@ -77,29 +69,44 @@ namespace Networking
         }
         public static void CheckStatus()
         {
-            if (PingHost(server, port) == true)
+            if (IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
-                if (IsConnectedToServer(clientSocket) == true)
+                if (loadCallback == true)
                 {
-                    if (loadCallback == true)
+                    ClientConnectionCallback();
+                    loadCallback = false;
+                    string internalIpString = GetLocalIPAddress();
+                    var externalIpTask = GetExternalIpAddress();
+                    GetExternalIpAddress().Wait();
+                    var externalIpString = externalIpTask.Result ?? IPAddress.Loopback;
+                    if (internalIpString == string.Empty)
                     {
-                        ClientConnectionCallback();
-                        loadCallback = false;
+                        return;
                     }
-                    if (plugin.uiLoaded == false)
+                    else
                     {
-                        plugin.LoadUI();
+                        DataSender.SendHelloServer(internalIpString, externalIpString.ToString());
                     }
-                }
-                else
-                {
-                    ConnectToServer();
-                }
+                    plugin.chatGUI.PrintError("Callback Loaded");
 
+                }
+                if (plugin.uiLoaded == false)
+                {
+                    plugin.LoadUI();
+                }
             }
-
+            else
+            {
+                ConnectToServer();
+            }
         }
-
+        public static async Task<IPAddress?> GetExternalIpAddress()
+        {
+            var externalIpString = (await new HttpClient().GetStringAsync("http://icanhazip.com"))
+                .Replace("\\r\\n", "").Replace("\\n", "").Trim();
+            if (!IPAddress.TryParse(externalIpString, out var ipAddress)) return null;
+            return ipAddress;
+        }
         public static void OnTick(System.Object? sender, ElapsedEventArgs eventArgs)
         {
             CheckStatus();
@@ -110,6 +117,7 @@ namespace Networking
             InitializingNetworking(true);
             loadCallback = true;
             CheckStatus();
+            plugin.chatGUI.PrintError("We connected and are checking status");
         }
 
         public static void InitializingNetworking(bool start)
@@ -130,20 +138,41 @@ namespace Networking
 
 
 
-        public static bool PingHost(string hostUri, int portNumber)
+        public static string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            return string.Empty;
+        }
+
+        public static void PingHost(string _HostURI, int _PortNumber)
         {
             try
             {
-                using (var client = new TcpClient(hostUri, portNumber))
-                    return true;
+                TcpClient client = new TcpClient(_HostURI, _PortNumber);        
+            
+            
+                if(client.Connected == true)
+                {
+                    client.Close();
+                }
+
+
             }
-            catch (SocketException ex)
+            catch
             {
-                return false;
+
             }
+
+
+
         }
-
-
         public static void EstablishConnection()
         {
             try
@@ -160,14 +189,13 @@ namespace Networking
             }
 
         }
-
         public static void ClientConnectionCallback()
-        {
+        {           
             Connected = true;
             clientSocket.NoDelay = true;
             myStream = clientSocket.GetStream();
             myStream.BeginRead(recBuffer, 0, 4096 * 2, ReceiveCallback, null);
-
+            
         }
         private static void ReceiveCallback(IAsyncResult result)
         {
@@ -203,8 +231,8 @@ namespace Networking
             {
 
             }
-
-
+                
+           
 
         }
         public static void Disconnect()

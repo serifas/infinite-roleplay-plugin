@@ -58,41 +58,25 @@ using Aspose.Imaging.ImageFilters.FilterOptions;
 using System.Timers;
 using Dalamud.Interface.Internal;
 using Dalamud.Plugin.Services;
-<<<<<<< HEAD
-using InfiniteRoleplay.Windows.Defines;
-using Lumina.Excel.GeneratedSheets2;
-using OtterGui;
-using System.Reflection.Metadata;
-using InfiniteRoleplay.Scripts.Misc;
-using static InfiniteRoleplay.Scripts.Misc.Constants;
-=======
 using static InfiniteRoleplay.Defines.ProfileDefines;
 using Lumina.Excel.GeneratedSheets2;
-using InfiniteRoleplay.Defines;
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
+using InfiniteRoleplay.Scripts.Misc;
+using OtterGui;
+using static FFXIVClientStructs.FFXIV.Common.Component.BGCollision.MeshPCB;
 
 namespace InfiniteRoleplay.Windows
 {
     public class ProfileWindow : Window, IDisposable
     {
-        public static bool turnLoaderOff, turnLoaderOn = false;
         public static bool AllLoaded;
-<<<<<<< HEAD
-        public static Timer timer = new Timer(30);
-=======
-        public static Timer timer;
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
-        public static bool resetGalleryTimer = true;
-        public static bool Reorder = false, Reordered = false, ReorderNoSend = false;
+        public static bool Reorder = false, ReorderNoSend = false;
         private Plugin plugin;
         public static Plugin pluginP;
+        public static Misc misc = new Misc();
         public static bool loadedSelf = false;
         public static PlayerCharacter playerCharacter;
-        public static IChatGui chatGui;
         private DalamudPluginInterface pg;
-        public static bool GalleryUpdateAvailable = false;
         public static bool addGalleryImageGUI = false;
-        public static SortedList<int, int> reordered = new SortedList<int, int>();
         private FileDialogManager _fileDialogManager;
         public Configuration configuration;
         public static bool addBio = false;
@@ -100,63 +84,27 @@ namespace InfiniteRoleplay.Windows
         public static bool addHooks = false;
         public static bool editHooks = false;
         public static bool addStory = false;
-        public static int imageCount = 0;
-
+        public static bool galleryTableAdded = false;
+        public static Timer timer;
         public static bool resetHooks;
 
-        public static int currentAlignment = 0;
-        public static bool[] ImageExists = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-        public static Vector4[] Cols = new Vector4[30] { new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255), new Vector4(255, 255, 255, 255) };
-        public static string[] galleryStatusVals = new string[30] { "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission", "Pending Submission" };
-        public static int galleryUpdates = 0;
-
-        public static string[] urls = new string[30] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-        public static string[] galleryUpdateTxts = new string[30] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-        public static Vector4[] ImageUpdateColors = new Vector4[30] { Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero, Vector4.Zero };
+        public static bool[] ImageExists = new bool[30];
+      
         public static int imageIndex = 0;
-        public static bool[] nsfwImages = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-        public static bool[] galleryImageAdded = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-        public static bool[] nsfwImagesCheck = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-        public static bool[] nsfwImagesUncheck = new bool[30] { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true };
-        public static bool[] NSFW = new bool[30] { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
-        public static int[] nsfw = new int[30] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        public static int[] removalIndexes = new int[30] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-        public static int[] galleryThumbWidths = new int[30] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        public static int[] galleryThumbHeights = new int[30] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        public static int[] galleryButtonWidths = new int[30] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        public static int[] galleryButtonHeights = new int[30] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        public static string CombinedGalleryString = "";
         public static bool resetStory;
-        public static string galleryUploadStatus = "";
-        public static byte[][] galleryImageBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
-        public static byte[][] galleryThumbBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
-        public static byte[][] galleryEditImageBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
-        public static byte[][] galleryEditThumbBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
-        public static List<IDalamudTextureWrap> galleryThumbs = new List<IDalamudTextureWrap>();
-        public static List<IDalamudTextureWrap> galleryImages = new List<IDalamudTextureWrap>();
+    
         public static IDalamudTextureWrap loaderAnimInd;
-        public static string[] HookContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-        public static string[] HookEditContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-        public static string[] ChapterContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-        public static string[] ChapterEditContent = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-        public static string[] ChapterTitle = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-        public static string[] ChapterEditTitle = new string[20] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
-        public static bool editStory = false;
-        public static bool addOOC = false;
-        public static bool editOOC = false;
-        public static bool addGallery = false;
-        public static bool editGallery = false;
-        public static bool addAvatar = false;
-        public static bool editAvatar = false;
-        public static bool addProfile = false;
-        public static bool editProfile = false;
-        public static bool LoadPreview = false;
+        public static string[] HookContent = new string[30];
+        public static string[] HookEditContent = new string[30];
+        public static string[] ChapterContent = new string[30];
+        public static string[] ChapterEditContent = new string[30];
+        public static string[] ChapterTitle = new string[30];
+        public static string[] ChapterEditTitle = new string[30];
+        public static bool[] NSFW = new bool[30];
+        public static bool editStory, addOOC, editOOC, addGallery, editGallery, addAvatar, editAvatar, addProfile, editProfile, LoadPreview = false;
         public static int hookCount = 0;
         public static int hookEditCount;
-        public static int galleryImageCount = 0;
-        public static int editImageIndexVal = 0;
         public static int chapterCount = 0;
-        public static int loaderIndex = 0;
         public static int chapterEditCount;
         public static byte[] picBytes;
         public static int imageIndexVal = 0;
@@ -166,61 +114,37 @@ namespace InfiniteRoleplay.Windows
         public bool ExistingGallery;
         public bool ExistingBio;
         public bool ExistingHooks;
-        public static int ExistingGalleryImageCount = 0;
         public static byte[] thumbHolder;
         public string storyTitle = "";
         public static string storyEditTitle = "";
-        public static int[] alignmentVals = new int[] { };
-        private float[] alignmentWidthVals = new float[] { };
-        private string[] alignmentNames = new string[] { };
+        public static int currentAlignment = 0;
         public byte[] avatarBytes, existingAvatarBytes;
         public static int availablePercentage = 50;
         public int[] flaggedHookIndexes = new int[] { };
         public static bool addImageToGallery = false;
         //Font Vars
-
+        public static string[] imageURLs = new string[30];
         private float _modVersionWidth;
         private GameFontHandle _Font;
         //BIO VARS
-        private IDalamudTextureWrap avatarImg, currentAvatarImg;
-<<<<<<< HEAD
-        public static string characterName = "", characterRace = "", characterGender = "", characterAge = "", characterHeight = "", characterWeight = "", characterAFG = "";
-        public static string[] bioFieldsArr = new string[7] { characterName, characterRace, characterGender, characterAge, characterHeight, characterWeight, characterAFG};
-=======
-        public static string characterAddName = string.Empty,
-                                characterAddRace = string.Empty,
-                                characterAddGender = string.Empty,
-                                characterAddAge = string.Empty,
-                                characterAddAfg = string.Empty,
-                                characterAddHeight = string.Empty,
-                                characterAddWeight = string.Empty,
-                                characterEditName = string.Empty,
-                                characterEditRace = string.Empty,
-                                characterEditGender = string.Empty,
-                                characterEditAge = string.Empty,
-                                characterEditAfg = string.Empty,
-                                characterEditHeight = string.Empty,
-                                characterEditWeight = string.Empty;
+        private IDalamudTextureWrap avatarImg, currentAvatarImg, pictureTab;
+        public static List<IDalamudTextureWrap> galleryThumbsList = new List<IDalamudTextureWrap>();
+        public static List<IDalamudTextureWrap> galleryImagesList = new List<IDalamudTextureWrap>();
+        public static IDalamudTextureWrap[] galleryImages, galleryThumbs;
+        public static string[] bioFieldsArr = new string[7];
 
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
-        private int lawfulGoodWidthVal = 0, neutralGoodWidthVal = 0, chaoticGoodWidthVal = 0, lawfulNeutralWidthVal = 0, trueNeutralWidthVal = 0, chaoticNeutralWidthVal = 0, lawfulEvilWidthVal = 0, neutralEvilWidthVal = 0, chaoticEvilWidthVal = 0;
-        private int lawfulGoodVal = 0, neutralGoodVal = 0, chaoticGoodVal = 0, lawfulNeutralVal = 0, trueNeutralVal = 0, chaoticNeutralVal = 0, lawfulEvilVal = 0, neutralEvilVal = 0, chaoticEvilVal = 0;
-        private int currentLawfulGood, currentNeutralGood, currentChaoticGood, currentLawfulNeutral, currentTrueNeutral, currentChaoticNeutral, currentLawfulEvil, currentNeutralEvil, currentChaoticEvil;
         public bool reduceChapters = false;
         public bool reduceHooks = false;
         public IDalamudTextureWrap blank;
         public static System.Drawing.Image bl;
         private IDalamudTextureWrap persistAvatarHolder;
         private IDalamudTextureWrap[] otherImages;
-<<<<<<< HEAD
-        public ProfileWindow(Plugin plugin, DalamudPluginInterface Interface, IChatGui chatGUI, Configuration configuration, IDalamudTextureWrap avatarHolder,
-                             //alignment icon
-                             System.Drawing.Image pictureTab, System.Drawing.Image blank_holder
-=======
-        public ProfileWindow(Plugin plugin, DalamudPluginInterface Interface, IChatGui chatGUI, Configuration configuration
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
+        public static int alignmentVal;
 
-                            ) : base(
+        public ProfileWindow(Plugin plugin,
+                             DalamudPluginInterface Interface,
+                             IChatGui chatGUI,
+                             Configuration configuration) : base(
        "PROFILE", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
             this.SizeConstraints = new WindowSizeConstraints
@@ -229,68 +153,48 @@ namespace InfiniteRoleplay.Windows
                 MinimumSize = new Vector2(600, 400),
                 MaximumSize = new Vector2(750, 950)
             };
-            timer.Elapsed += OnEventExecution;
-            bl = UIDefines.blankTab;
+          
             this.plugin = plugin;
             this.pg = plugin.PluginInterfacePub;
             this.configuration = plugin.Configuration;
             this._fileDialogManager = new FileDialogManager();
-<<<<<<< HEAD
+            string avatarPath = Path.Combine(pg.AssemblyLocation.Directory?.FullName!, @"UI/common/avatar_holder.png");
+            IDalamudTextureWrap avatarHolder = plugin.PluginInterfacePub.UiBuilder.LoadImage(File.ReadAllBytes(avatarPath));
+            string pictureTabPath = Path.Combine(pg.AssemblyLocation.Directory?.FullName!, @"UI/common/picturetab.png");
+            pictureTab = plugin.PluginInterfacePub.UiBuilder.LoadImage(File.ReadAllBytes(pictureTabPath));
             this.avatarImg = avatarHolder;
             this.persistAvatarHolder = avatarHolder;
-            galleryImages = new IDalamudTextureWrap[30] { galleryImg1, galleryImg2, galleryImg3, galleryImg4, galleryImg5, galleryImg6, galleryImg7, galleryImg8, galleryImg9, galleryImg10, galleryImg11, galleryImg12, galleryImg13, galleryImg14, galleryImg15, galleryImg16, galleryImg17, galleryImg18, galleryImg19, galleryImg20, galleryImg21, galleryImg22, galleryImg23, galleryImg24, galleryImg25, galleryImg26, galleryImg27, galleryImg28, galleryImg29, galleryImg30 };
-            galleryThumbs = new IDalamudTextureWrap[30] { galleryEditThm1, galleryEditThm2, galleryEditThm3, galleryEditThm4, galleryEditThm5, galleryEditThm6, galleryEditThm7, galleryEditThm8, galleryEditThm9, galleryEditThm10, galleryEditThm11, galleryEditThm12, galleryEditThm13, galleryEditThm14, galleryEditThm15, galleryEditThm16, galleryEditThm17, galleryEditThm18, galleryEditThm19, galleryEditThm20, galleryEditThm21, galleryEditThm22, galleryEditThm23, galleryEditThm24, galleryEditThm25, galleryEditThm26, galleryEditThm27, galleryEditThm28, galleryEditThm29, galleryEditThm30 };
             this.configuration = configuration;
-            picBytes = Imaging.ImageToByteArray(pictureTab);
+            
 
-            imageHolder = Imaging.ImageToByteArray(pictureTab);
-=======
-            this.avatarImg = UIDefines.AvatarHolder;
-            this.persistAvatarHolder = UIDefines.AvatarHolder;
-            this.configuration = configuration;
+            timer = new Timer(30);
+            timer.Elapsed += misc.OnEventExecution;
             for(int i = 0; i < 30; i++)
             {
-                galleryThumbs.Add(UIDefines.pictureTabWrap);
-                galleryImages.Add(UIDefines.pictureTabWrap);
+                ChapterTitle[i] = string.Empty;
+                ChapterEditTitle[i] = string.Empty;
+                ChapterContent[i] = string.Empty;
+                ChapterEditContent[i] = string.Empty;
+                HookContent[i] = string.Empty;
+                HookEditContent[i] = string.Empty;
+                NSFW[i] = false;
+                galleryImagesList.Add(pictureTab);
+                galleryThumbsList.Add(pictureTab);
+                imageURLs[i] = string.Empty;
             }
-            picBytes = Imaging.ImageToByteArray(UIDefines.picTab);
-            
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
-            thumbHolder = Imaging.ImageToByteArray(Imaging.byteArrayToImage(Imaging.ScaleImageBytes(picBytes, 150, 150)));
+            galleryImages = galleryImagesList.ToArray();
+            galleryThumbs = galleryThumbsList.ToArray();
+            for(int b = 0; b <bioFieldsArr.Length; b++)
+            {
+                bioFieldsArr[b] = string.Empty;
+            }
            
-            for (int tb = 0; tb < galleryThumbBytes.Length; tb++)
-            {
-                galleryThumbBytes[tb] = Imaging.ScaleImageBytes(picBytes, 150, 150);
-            }
-            for (int ib = 0; ib < galleryImageBytes.Length; ib++)
-            {
-<<<<<<< HEAD
-                galleryImageBytes[ib] = Imaging.ImageToByteArray(pictureTab);
-            }
-            System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
-            this.avatarBytes = Imaging.ImageToByteArray(image1);
-=======
-                galleryImageBytes[ib]= Imaging.ImageToByteArray(UIDefines.picTab);               
-            }
-            System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
-            this.avatarBytes = Imaging.ImageToByteArray(image1);
+            this.avatarBytes = File.ReadAllBytes(avatarPath) ;
             //alignment icons
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
-            this._Font = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
-            //plus and minus
-            alignmentVals = new int[9] { lawfulGoodVal, neutralGoodVal, chaoticGoodVal, lawfulNeutralVal, trueNeutralVal, chaoticNeutralVal, lawfulEvilVal, neutralEvilVal, chaoticEvilVal };
-            this.alignmentWidthVals = new float[9] { lawfulGoodWidthVal, neutralGoodWidthVal, chaoticGoodWidthVal, lawfulNeutralWidthVal, trueNeutralWidthVal, chaoticNeutralWidthVal, lawfulEvilWidthVal, neutralEvilWidthVal, chaoticEvilWidthVal };
-            this.alignmentNames = new string[9] { "lawfulgood", "neutralgood", "chaoticgood", "lawfulneutral", "trueneutral", "chaoticneutral", "lawfulevil", "neutralevil", "chaoticevil" };
-        }
-        public void OnEventExecution(System.Object? sender, ElapsedEventArgs eventArgs)
-        {
-            loaderIndex++;
-            if (loaderIndex >= 59)
-            {
-                loaderIndex = 1;
-            }
-            loaderAnimInd = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(pg.AssemblyLocation.Directory?.FullName!, "UI/common/loader/loader (" + loaderIndex + ").gif"));
-        }
+            
+             this._Font = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
+         }
+      
 
         public override void Draw()
         {
@@ -298,11 +202,9 @@ namespace InfiniteRoleplay.Windows
             {
 
                 _fileDialogManager.Draw();
-                //LoadFileSelection();
 
-                timer.Stop();
-
-                //Vector2 addProfileBtnScale = new Vector2(playerCharacter.Name.ToString().Length * 20, 20);
+                Misc.RemoveLoader(timer);
+               
                 if (this.ExistingProfile == true)
                 {
                     if (ImGui.Button("Edit Profile", new Vector2(100, 20))) { editProfile = true; }
@@ -312,7 +214,7 @@ namespace InfiniteRoleplay.Windows
                     if (ImGui.Button("Add Profile", new Vector2(100, 20))) { addProfile = true; DataSender.CreateProfile(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString()); }
                 }
 
-
+                
                 if (editProfile == true)
                 {
                     addProfile = false;
@@ -330,7 +232,6 @@ namespace InfiniteRoleplay.Windows
                 }
                 bool warning = false;
                 bool success = false;
-                int currentAvailablePointsLeft = AvailablePercentageLeft(currentLawfulGood, currentNeutralGood, currentChaoticGood, currentLawfulNeutral, currentTrueNeutral, currentChaoticNeutral, currentLawfulEvil, currentNeutralEvil, currentChaoticEvil);
                 if (ImGui.BeginChild("PROFILE"))
                 {
                     if (editBio == true)
@@ -345,15 +246,25 @@ namespace InfiniteRoleplay.Windows
                         ImGui.SameLine();
                         ImGui.TextColored(new Vector4(255, 0, 0, 255), "All fields are required including the avatar... If you wish to have a text field empty, just put a blank space in the field.");
                         ImGui.Spacing();
-                        AddBioFields();
-                        ImGui.Text("Alignment:");
-                        ImGui.SameLine();
-<<<<<<< HEAD
+                        for (int i = 0; i < Constants.BioFieldVals.Length; i++)
+                        {
+                            var BioField = Constants.BioFieldVals[i];
+                            if (BioField.Item4 == Constants.InputTypes.single)
+                            {
+                                ImGui.Text(BioField.Item1);
+                                ImGui.SameLine();
+                                ImGui.InputTextWithHint(BioField.Item2, BioField.Item3, ref bioFieldsArr[i], 100);
+
+                            }
+                        }
+
+                        ImGui.TextColored(new Vector4(1, 1, 0, 1), "ALIGNMENT:");
+
                         AddAlignmentSelection();
                         if (ImGui.Button("Save Bio"))
                         {
-                            DataSender.SubmitProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), 
-                                                    existingAvatarBytes, 
+                            DataSender.SubmitProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
+                                                    existingAvatarBytes,
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.name].Replace("'", "''"),
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.race].Replace("'", "''"),
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.gender].Replace("'", "''"),
@@ -362,275 +273,7 @@ namespace InfiniteRoleplay.Windows
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.weight].Replace("'", "''"),
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.afg].Replace("'", "''"),
                                                     currentAlignment);
-=======
-                        ImGui.InputTextWithHint("##playername", $"Character Name (The name or nickname of the character you are currently playing as)", ref characterEditName, 100);
-                        //race input
-                        ImGui.Text("Race:    ");
-                        ImGui.SameLine();
-                        ImGui.InputTextWithHint("##race", $"The IC Race of your character", ref characterEditRace, 100);
-                        //gender input
-                        ImGui.Text("Gender: ");
-                        ImGui.SameLine();
-                        ImGui.InputTextWithHint("##gender", $"The IC Gender of your character", ref characterEditGender, 100);
-                        //age input
-                        ImGui.Text("Age:    ");
-                        ImGui.SameLine();
-                        ImGui.InputTextWithHint("##age", $"If your character's age is not 18+ do not put nsfw pictures in your gallery (numbers only)", ref characterEditAge, 100, ImGuiInputTextFlags.CharsHexadecimal);
-                        //age input
-                        ImGui.Text("Height:");
-                        ImGui.SameLine();
-                        ImGui.InputTextWithHint("##height", $"Height in Fulms (numbers only)", ref characterEditHeight, 100);
-                        //age input
-                        ImGui.Text("Weight:");
-                        ImGui.SameLine();
-                        ImGui.InputTextWithHint("##weight", $"Weight in Ponze (numbers only)", ref characterEditWeight, 100);
-                        //at first glance input
-                        ImGui.Text("At First Glance:");
-                        ImGui.SameLine();
-                        ImGui.InputTextMultiline("##afg", ref characterEditAfg, 500, new Vector2(400, 100));
 
-                        ImGui.TextColored(new Vector4(1, 1, 0, 1), "ALIGNMENT:");
-                        ImGui.SameLine();
-                        ImGui.Text(currentAvailablePointsLeft + " Points Available:");
-                        #region ALIGNMENTS
-                        #region LAWFUL GOOD
-                        //LAWFUL GOOD
-                        ImGui.Image(UIDefines.lawfulGood.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("LAWFUL GOOD:\n" +
-                                            "    These characters always do the right thing as expected by society.\n" +
-                                            "    They always follow the rules, tell the truth and help people out.\n" +
-                                            "    They like order, trust and believe in people with social authority, \n" +
-                                            "    and they aim to be an upstanding citizen.");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##editlawfulgoodplus", new Vector2(20, 20))) { ModAlignment("lawfulgood", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##editlawfulgoodminus", new Vector2(20, 20))) { ModAlignment("lawfulgood", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(UIDefines.lawfulGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[0] * 30, 20));
-                        ImGui.SameLine();
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[0].ToString());
-                        #endregion
-
-                        #region NEUTRAL GOOD
-                        // NEUTRAL GOOD
-                        ImGui.Image(UIDefines.neutralGood.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("NEUTRAL GOOD:\n" +
-                                            "    These characters do their best to help others, \n" +
-                                            "    but they do it because they want to, not because they have \n" +
-                                            "    been told to by a person in authority or by society’s laws.\n" +
-                                            "    A Neutral Good person will break the rules if they are doing it \n" +
-                                            "    for good reasons and they will feel confident \n" +
-                                            "    and justified in their actions.  ");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##editneutralgoodplus", new Vector2(20, 20))) { ModAlignment("neutralgood", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##editneutralgoodminus", new Vector2(20, 20))) { ModAlignment("neutralgood", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(UIDefines.neutralGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[1] * 30, 20));
-                        ImGui.SameLine();
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[1].ToString());
-                        #endregion
-
-                        #region CHAOTIC GOOD
-                        // CHAOTIC GOOD
-                        ImGui.Image(UIDefines.chaoticGood.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("CHAOTIC GOOD:\n" +
-                                            "    Chaotic Good characters do what their conscience tells \n" +
-                                            "    them to for the greater good. They do not care about following society’s rules, \n" +
-                                            "    they care about doing what’s right. \n" +
-                                            "\n" +
-                                            "    A Chaotic Good character will speak up for and help, those who are being needlessly \n" +
-                                            "    held back because of arbitrary rules and laws. They do not like seeing people \n" +
-                                            "    being told what to do for nonsensical reasons. ");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##editchaoticgoodplus", new Vector2(20, 20))) { ModAlignment("chaoticgood", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##editchaoticgoodminus", new Vector2(20, 20))) { ModAlignment("chaoticgood", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(UIDefines.chaoticGoodBar.ImGuiHandle, new Vector2(alignmentWidthVals[2] * 30, 20));
-                        ImGui.SameLine();
-                        int formattedChaoticGoodVal = chaoticGoodVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[2].ToString());
-                        #endregion
-
-                        #region LAWFUL NEUTRAL
-                        // LAWFUL NEUTRAL
-                        ImGui.Image(UIDefines.lawfulNeutral.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("LAWFUL NEUTRAL:\n" +
-                                            "    A Lawful Neutral character behaves in a way that matches \n" +
-                                            "    the organization, authority or tradition they follow. \n" +
-                                            "    They live by this code and uphold it above all else, taking actions \n" +
-                                            "    that are sometimes considered Good and sometimes considered Evil by others.\n" +
-                                            "    The Lawful Neutral character does not care about what others think of \n" +
-                                            "    their actions, they only care about their actions being correct according \n" +
-                                            "    to their code.But they do not preach their code to others and try to convert them. ");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##editlawfulneutralplus", new Vector2(20, 20))) { ModAlignment("lawfulneutral", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##editlawfulneutralminus", new Vector2(20, 20))) { ModAlignment("lawfulneutral", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(UIDefines.lawfulNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[3] * 30, 20));
-                        ImGui.SameLine();
-                        int formattedLawfulNeutralVal = lawfulNeutralVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[3].ToString());
-                        #endregion
-
-                        #region TRUE NEUTRAL
-                        // CHAOTIC GOOD
-                        ImGui.Image(UIDefines.trueNeutral.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("TRUE NEUTRAL:\n" +
-                                            "    True Neutral characters don’t like to take sides.\n" +
-                                            "    They are pragmatic rather than emotional in their actions, \n" +
-                                            "    choosing the response which makes the most sense for them in each situation. " +
-                                            "\n" +
-                                            "    Neutral characters don’t believe in upholding the rules and laws of society, but nor \n" +
-                                            "    do they feel the need to rebel against them. There will be times when a Neutral character \n" +
-                                            "    has to make a choice between siding with Good or Evil, perhaps casting the deciding vote \n" +
-                                            "    in a party. They will make a choice in these situations, usually siding with whichever causes \n" +
-                                            "    them the least hassle, or they stand to gain the most from. ");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##edittrueneutralplus", new Vector2(20, 20))) { ModAlignment("trueneutral", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##edittrueneutralminus", new Vector2(20, 20))) { ModAlignment("trueneutral", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(UIDefines.trueNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[4] * 30, 20));
-                        ImGui.SameLine();
-                        int formattedTrueNeutralVal = trueNeutralVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[4].ToString());
-                        #endregion
-
-                        #region CHAOTIC NEUTRAL
-                        // CHAOTIC GOOD
-                        ImGui.Image(UIDefines.chaoticNeutral.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("CHAOTIC NEUTRAL:\n" +
-                                            "    Chaotic Neutral characters are free spirits. \n" +
-                                            "    They do what they want but don’t seek to disrupt the usual norms and laws of society. \n" +
-                                            "    These individuals don’t like being told what to do, following traditions, \n" +
-                                            "    or being controlled. That said, they will not work to change these restrictions,\n" +
-                                            "    instead, they will just try to avoid them in the first place.\n" +
-                                            "    Their need to be free is the most important thing. ");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##editchaoticneutralplus", new Vector2(20, 20))) { ModAlignment("chaoticneutral", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##editchaoticneutralminus", new Vector2(20, 20))) { ModAlignment("chaoticneutral", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(UIDefines.chaoticNeutralBar.ImGuiHandle, new Vector2(alignmentWidthVals[5] * 30, 20));
-                        ImGui.SameLine();
-                        int formattedChaoticNeutralVal = chaoticNeutralVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[5].ToString());
-                        #endregion
-
-                        #region LAWFUL EVIL
-                        // CHAOTIC GOOD
-                        ImGui.Image(UIDefines.lawfulEvil.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("LAWFUL EVIL:\n" +
-                                            "    Lawful Evil characters operate within a strict code of laws and traditions.\n" +
-                                            "    Upholding these values and living by these is more important than anything, \n" +
-                                            "    even the lives of others. They may not consider themselves to be Evil, \n" +
-                                            "    they may believe what they are doing is right. \n" +
-
-                                            "    These characters enforce their system of control through force.\n" +
-                                            "    Anyone who doesn’t follow their code or acts out of line will face consequences. \n" +
-                                            "    Lawful Evil characters feel no guilt or remorse for causing harm to others in this way.");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##editlawfulevilplus", new Vector2(20, 20))) { ModAlignment("lawfulevil", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##editlawfulevilminus", new Vector2(20, 20))) { ModAlignment("lawfulevil", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(UIDefines.lawfulEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[6] * 30, 20));
-                        ImGui.SameLine();
-                        int formattedLawfulEvilVal = lawfulEvilVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[6].ToString());
-                        #endregion
-
-                        #region NEUTRAL EVIL
-                        // CHAOTIC GOOD
-                        ImGui.Image(UIDefines.neutralEvil.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("NEUTRAL EVIL:\n" +
-                                            "    Neutral Evil characters are selfish. Their actions are driven by their own wants \n" +
-                                            "    whether that’s power, greed, attention, or something else. \n" +
-                                            "    They will follow laws if they happen to align with their ambitions, but they will not \n" +
-                                            "    hesitate to break them if they don’t.They don’t believe that following laws \n" +
-                                            "    and traditions makes anyone a better person. \n" +
-                                            "    Instead, they use other people’s beliefs in codes and loyalty against them, using it \n" +
-                                            "    as a tool to influence their behaviour. ");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##editneutralevilplus", new Vector2(20, 20))) { ModAlignment("neutralevil", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##editneutralevilminus", new Vector2(20, 20))) { ModAlignment("neutralevil", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(UIDefines.neutralEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[7] * 30, 20));
-                        ImGui.SameLine();
-                        int formattedNeutralEvilVal = neutralEvilVal / 10;
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[7].ToString());
-                        #endregion
-
-                        #region CHAOTIC EVIL
-                        // CHAOTIC GOOD
-                        ImGui.Image(UIDefines.chaoticEvil.ImGuiHandle, new Vector2(32, 32));
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGui.SetTooltip("CHAOTIC EVIL:\n" +
-                                            "    Chaotic Evil characters care only for themselves with a complete disregard \n" +
-                                            "    for all law and order and for the welfare and freedom of others. \n" +
-                                            "    They harm others out of anger or just for fun.\n" +
-                                            "    Characters aligned with Chaotic Evil usually operate alone \n" +
-                                            "    because they do not work well with others.");
-                        }
-                        ImGui.SameLine();
-                        if (ImGui.Button("+##editchaoticevilplus", new Vector2(20, 20))) { ModAlignment("chaoticevil", true); }
-                        ImGui.SameLine();
-                        if (ImGui.Button("-##editchaoticevilminus", new Vector2(20, 20))) { ModAlignment("chaoticevil", false); }
-                        ImGui.SameLine();
-                        ImGui.Image(UIDefines.chaoticEvilBar.ImGuiHandle, new Vector2(alignmentWidthVals[8] * 30, 20));
-                        ImGui.SameLine();
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), alignmentVals[8].ToString());
-                        #endregion
-
-                        #endregion
-                        if (ImGui.Button("Update Bio"))
-                        {
-                            if (characterEditGender.ToLower().Contains("futa") || characterEditGender.ToLower().Contains("trap"))
-                            {
-                                chatGui.PrintError("Your account " + "'" + configuration.username + "' received a strike, if you continue to post offensive conent you may be banned.");
-                                DataSender.StrikeAccount(configuration.username, configuration.username);
-                            }
-                            else if (characterEditName == string.Empty || characterEditRace == string.Empty || characterEditGender == string.Empty || characterEditAge == string.Empty ||
-                                characterEditHeight == string.Empty || characterEditWeight == string.Empty || characterEditAfg == string.Empty)
-                            {
-                                chatGui.PrintError("Please fill out all text fields. If you want a field to be empty please put a space in the text field to submit the application.");
-                            }
-                            else
-                            {
-                                DataSender.SubmitProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), existingAvatarBytes, characterEditName,
-                                                       characterEditRace, characterEditGender, int.Parse(characterEditAge), characterEditHeight, characterEditWeight, characterEditAfg,
-                                                       alignmentVals[0], alignmentVals[1], alignmentVals[2], alignmentVals[3], alignmentVals[4], alignmentVals[5], alignmentVals[6], alignmentVals[7], alignmentVals[8]);
-                            }
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
                         }
                     }
                     if (editHooks == true)
@@ -743,51 +386,31 @@ namespace InfiniteRoleplay.Windows
                     {
                         if (ImGui.Button("Add Image"))
                         {
-                            if (imageIndex < 29)
+                            if (imageIndex < 30)
                             {
                                 imageIndex++;
                             }
                         }
-                        if (ImGui.Button("Submit Gallery"))
-                        {
-<<<<<<< HEAD
-                            DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), nsfwImagesCheck, urls, imageIndex);
-=======
-                            for (int u = 0; u < urls.Length; u++)
-                            {
-                                if (urls[u] != string.Empty)
-                                {
-                                    int ind = u + 1;
-
-                                    DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
-                                                       nsfwImagesCheck[u], urls[u], ind);
-
-                                }
-
-                            }
-                            LoginWindow.loginRequest = true;
-                            plugin.profileWindow.Reset(plugin);
-                            plugin.ReloadProfile();
-                            plugin.profileWindow.IsOpen = true;
-                            if (playerCharacter != null)
-                            {
-                                DataSender.FetchProfile(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
-                            }
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
-                        }
-                        if (resetGalleryTimer == true)
-                        {
-                            // timer.Stop();
-                            //  EnableGallerySubmition();
-                        }
-                        else
-                        {
-                            ImGui.Text(galleryUploadStatus);
-                        }
+                      
                         ImGui.NewLine();
                         addGalleryImageGUI = true;
                         ImageExists[imageIndex] = true;
                     }
+
+                    if (addImageToGallery == true)
+                    {
+                        addImageToGallery = false;
+                        AddImage(false, imageIndexVal);
+                    }
+
+
+                   
+                    if (addGalleryImageGUI == true)
+                    {
+                        AddImageToGallery(plugin, imageIndex);
+                    }
+
+
 
                     if (addAvatar == true)
                     {
@@ -799,10 +422,7 @@ namespace InfiniteRoleplay.Windows
                         editAvatar = false;
                         EditImage(true, 0);
                     }
-                    if (addGalleryImageGUI == true)
-                    {
-                        AddImageToGallery(plugin, imageIndex);
-                    }
+                  
                     if (Reorder == true)
                     {
                         Reorder = false;
@@ -813,103 +433,52 @@ namespace InfiniteRoleplay.Windows
                         {
                             for (int i = firstOpen; i < imageIndex; i++)
                             {
-                                galleryImageBytes[i] = galleryImageBytes[i + 1];
-                                galleryThumbBytes[i] = galleryThumbBytes[i + 1];
-                                DrawImage(i, plugin);
+                                galleryImages[i] = galleryImages[i + 1];
+                                galleryThumbs[i] = galleryThumbs[i + 1];
+                               
                             }
                         }
+
                         imageIndex--;
-                        galleryImageBytes[imageIndex] = picBytes;
-                        galleryThumbBytes[imageIndex] = Imaging.ScaleImageBytes(picBytes, 150, 150);
+                        galleryImages[imageIndex] = pictureTab;
+                        galleryThumbs[imageIndex] = pictureTab;
                         ImageExists[imageIndex] = false;
 
                     }
-                    
+                    if (ReorderNoSend == true)
+                    {
+                        ReorderNoSend = false;
+                        bool nextExists = ImageExists[NextAvailableImageIndex() + 1];
+                        int firstOpen = NextAvailableImageIndex();
+                        for (int i = firstOpen; i < imageIndex; i++)
+                        {
+                            ImageExists[firstOpen] = true;
+                            if (nextExists)
+                            {
+                                galleryImages[i] = galleryImages[i + 1];
+                                galleryThumbs[i] = galleryThumbs[i + 1];
+
+                            }
+                        }
+                    }
 
                 }
             }
             else
             {
-                timer.Start();
-                int LoaderWidth = 360;
-                var decidingWidth = Math.Max(500, ImGui.GetWindowWidth());
-                var offsetWidth = (decidingWidth - LoaderWidth) / 2;
-                var offsetVersion = LoaderWidth > 0
-                    ? _modVersionWidth + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().WindowPadding.X
-                    : 0;
-                var offset = Math.Max(offsetWidth, offsetVersion);
-                //set image width to offset
 
-                ImGui.Image(loaderAnimInd.ImGuiHandle, new Vector2(340, 180));
+                misc.AddLoader(timer);
             }
         }
 
-        /*public static void OnEventExecution(System.Object? sender, ElapsedEventArgs e)
-        {
-            int time = 60 - e.SignalTime.Second;
-            galleryUploadStatus = "Please wait " + time + " seconds to submit gallery...";
-            if(time == 60)
-            {
-                resetGalleryTimer = true;            
-            }
-        }
-        public void EnableGallerySubmition()
-        {
-            if (ImGui.Button("Submit Gallery"))
-            {
-                resetGalleryTimer = false;
-                timer.Start();
-            }
-        }*/
-        public void AddBioFields()
-        {
-            for (int i = 0; i < Constants.BioFieldVals.Length; i++)
-            {
-                var (label, id, hint, inputtype) = Constants.BioFieldVals[i];
-                if (inputtype == InputTypes.single)
-                {
-                    //label
-                    ImGui.Text(label);
-                    ImGui.SameLine();
-                    //input single line
-                    ImGui.InputTextWithHint(id, hint, ref bioFieldsArr[i], 50, ImGuiInputTextFlags.None);
-
-                }
-                if (inputtype == InputTypes.multiline)
-                {
-                    //label
-                    ImGui.Text(label);
-                    ImGui.SameLine();
-                    //input single line
-                    ImGui.InputTextMultiline(id, ref bioFieldsArr[i], 500, new Vector2(400, 100));
-                }
-            }
-        }
-        public void AddAlignmentSelection()
-        {
-            var (text, desc) = Constants.AlignmentVals[currentAlignment];
-            using var combo = ImRaii.Combo("##Alignment", text);
-            ImGuiUtil.HoverTooltip(desc);
-            if (!combo)
-                return;
-
-            foreach (var ((newText, newDesc), idx) in Constants.AlignmentVals.WithIndex())
-            {
-                if (ImGui.Selectable(newText, idx == currentAlignment))
-                    currentAlignment = idx;
-
-                ImGuiUtil.SelectableHelpMarker(newDesc);
-            }
-        }
 
         public void AddImageToGallery(Plugin plugin, int imageIndex)
         {
             if(addGallery == true)
-            {                
+            {          
                 if (ImGui.BeginTable("##GalleryTable", 4))
-                {
-
-                    for (int i = 0; i < imageIndex + 1; i++)
+                {                    
+                    for (int i = 0; i < imageIndex; i++)
                     {                       
                         if (i % 4 == 0)
                         {
@@ -923,12 +492,8 @@ namespace InfiniteRoleplay.Windows
                             DrawGalleryImage(i, plugin);
                         }
                     }
-                   
                     ImGui.EndTable();
                 }
-           
-
-
             }
 
         }
@@ -957,17 +522,14 @@ namespace InfiniteRoleplay.Windows
                
                 if (ImGui.BeginChild("##GalleryImage" + i, new Vector2(150, 240)))
                 {
-                    ImGui.Checkbox("18+", ref nsfwImagesCheck[i]);
-                   
-                    ImGui.InputTextWithHint("URL", "Valid Image URL", ref urls[i], 9000);
-
-
-                    int ind = i + 1;
-                    if (galleryImageAdded[i] == false && galleryThumbBytes[i].Length > 0 && galleryImageBytes[i].Length > 0)
+                    ImGui.Text("Will this image be 18+ ?");
+                    if (ImGui.Checkbox("Yes", ref NSFW[i]))
                     {
-                        DrawImage(i, plugin);
-                        galleryImageAdded[i] = true;
+                        DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
+                                                    NSFW[i], imageURLs[i], i);
                     }
+                    ImGui.InputText("##ImageURL" + i, ref imageURLs[i], 300);
+                 
                     ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
                     if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
                     if (ImGui.IsItemClicked())
@@ -978,37 +540,22 @@ namespace InfiniteRoleplay.Windows
                         plugin.loadPreview = true;
                     }
                     if (ImGui.BeginChild("##GalleryImageControls" + i))
-                    {
-                        ImGui.SameLine();
+                    { 
                         if (ImGui.Button("Remove##" + "gallery_remove" + i))
                         {
-                            urls[i] = string.Empty;
                             imageIndexVal = i;
                             ImageExists[i] = false;
                             Reorder = true;
-                            galleryImageAdded[i] = false;
-                            removalIndexes[i] = 1;
-<<<<<<< HEAD
+                            DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), i, imageIndex);
                         }
                     }
-                    ImGui.EndChild();                    
+                    ImGui.EndChild();
                 }
-                ImGui.EndChild();                
-            }
-        }
-        public static void DrawImage(int i, Plugin plugin)
-=======
-                            DataSender.RemoveGalleryImage(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), ind, imageIndex);
-                        }
-                    }
-                    ImGui.EndChild(); 
-                   
-                }
-                
 
-                ImGui.EndChild();
-                
-            }
+
+        ImGui.EndChild();
+
+        }
 
 
 
@@ -1016,48 +563,28 @@ namespace InfiniteRoleplay.Windows
 
 
     }
-        public void DrawImage(int i, Plugin plugin)
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
-        {
-            Task.Run(async () =>
-            {
-                // you might normally want to embed resources and load them from the manifest stream
-                galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryImageBytes[i]);
-                galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(galleryThumbBytes[i]);
-                //this.imageTextures.Add(goatImage);
-            });
-        }
         public void ResetGallery(Plugin plugin)
         {
             Task.Run(async () =>
             {
-                for (int g = 0; g < galleryImages.Count; g++)
+
+
+                for (int g = 0; g < galleryImages.Length; g++)
                 {
                     imageIndexVal = 0;
                     imageIndex = 0;
                     Reorder = true;
-                    galleryImageAdded[g] = false;
-                    removalIndexes[g] = 1;
                 }
                 for (int i = 0; i < 30; i++)
                 {
                     ImageExists[i] = false;
                 }
-                System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/picturetab.png"));
-                for(int i = 0; i < galleryImages.Count; i++)
+                for(int i = 0; i < galleryImages.Length; i++)
                 {
                     // you might normally want to embed resources and load them from the manifest stream
-                    galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(Imaging.ScaleImageBytes(Imaging.ImageToByteArray(image1), 150, 150));
-                    galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(Imaging.ScaleImageBytes(Imaging.ImageToByteArray(image1), 150, 150));
+                    galleryImages[i] = pictureTab;
+                    galleryThumbs[i] = pictureTab;
                    
-                }
-                for (int tb = 0; tb < galleryThumbBytes.Length; tb++)
-                {
-                    galleryThumbBytes[tb] = Imaging.ScaleImageBytes(Imaging.ImageToByteArray(image1), 150, 150);
-                }
-                for (int ib = 0; ib < galleryImageBytes.Length; ib++)
-                {
-                    galleryImageBytes[ib] = Imaging.ImageToByteArray(image1);
                 }
                 //this.imageTextures.Add(goatImage);
             });
@@ -1076,16 +603,9 @@ namespace InfiniteRoleplay.Windows
             DataReceiver.currentAvatar = avatarBytes;
             this.avatarImg = this.persistAvatarHolder;
             this.currentAvatarImg = this.persistAvatarHolder;
-            characterName = string.Empty;
-            characterRace = string.Empty;
-            characterGender = string.Empty;
-            characterAge = string.Empty;
-            characterAFG = string.Empty;
-            characterHeight = string.Empty;
-            characterWeight = string.Empty;
            
             
-            for(int a = 0; a < alignmentWidthVals.Length; a++)
+           /* for(int a = 0; a < alignmentWidthVals.Length; a++)
             {
                 alignmentWidthVals[a] = 0f;
             }
@@ -1101,7 +621,7 @@ namespace InfiniteRoleplay.Windows
                 alignmentVals[al] = 0;
             }
             availablePercentage = 50;
-           
+           */
         }
         public void ResetHooks()
         {
@@ -1130,17 +650,7 @@ namespace InfiniteRoleplay.Windows
             storyTitle = string.Empty;
             storyEditTitle = string.Empty;
         }
-        public static void UpdateUploadStatus(int index)
-        {
-            ImageUpdateColors[index] = new Vector4(0, 255, 0, 255);
-            galleryUpdateTxts[index] = "Completed";
-            galleryUpdates = index;
-            
-            if(index == galleryEditImageBytes.Length)
-            {
-                DataSender.SendImagesReceived(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
-            }
-        }
+       
         public void SET_VAL(string mytype, string myvalue)
         {
             this.GetType().GetField(mytype).SetValue(this, myvalue);
@@ -1178,10 +688,12 @@ namespace InfiniteRoleplay.Windows
             foreach (IDalamudTextureWrap ti in galleryImages)
             {
                 ti.Dispose();
+                Array.Clear(galleryImages);
             }
             foreach (IDalamudTextureWrap gt in galleryThumbs)
             {
                 gt.Dispose();
+                Array.Clear(galleryThumbs);
             }
             for(int o = 0; o < otherImages.Length; o++)
             {
@@ -1191,7 +703,7 @@ namespace InfiniteRoleplay.Windows
            // timer.Dispose();
             storyTitle = "";
         }
-        public void UpdateUI()
+      /*  public void UpdateUI()
         {
             int usedAlignmentVals = 0;
             for (int al = 0; al < alignmentVals.Length; al++)
@@ -1199,6 +711,22 @@ namespace InfiniteRoleplay.Windows
                 usedAlignmentVals += alignmentVals[al];
             }
             availablePercentage = 50 - usedAlignmentVals;
+        }*/
+        public void AddAlignmentSelection()
+        {
+            var (text, desc) = Constants.AlignmentVals[currentAlignment];
+            using var combo = ImRaii.Combo("##Alignment", text);
+            ImGuiUtil.HoverTooltip(desc);
+            if (!combo)
+                return;
+
+            foreach (var ((newText, newDesc), idx) in Constants.AlignmentVals.WithIndex())
+            {
+                if (ImGui.Selectable(newText, idx == currentAlignment))
+                    currentAlignment = idx;
+
+                ImGuiUtil.SelectableHelpMarker(newDesc);
+            }
         }
         public override void Update()
         {
@@ -1214,19 +742,20 @@ namespace InfiniteRoleplay.Windows
           
            
 
-            if (editBio == true)
+           /* if (editBio == true)
             {
                 for (int i = 0; i < alignmentWidthVals.Length; i++)
                 {
                     if (alignmentWidthVals[i] < alignmentVals[i]) { alignmentWidthVals[i] += 0.1f; }
                     if (alignmentWidthVals[i] > alignmentVals[i]) { alignmentWidthVals[i] -= 0.1f; }
                 }
-            }
+            }*/
 
             if (DataReceiver.StoryLoadStatus != -1 &&
                DataReceiver.HooksLoadStatus != -1 &&
                DataReceiver.BioLoadStatus != -1 &&
-               DataReceiver.GalleryLoadStatus != -1)
+               DataReceiver.GalleryLoadStatus != -1
+               )
             {
 
                 AllLoaded = true;
@@ -1247,7 +776,7 @@ namespace InfiniteRoleplay.Windows
             int percentageLeft = availablePercentage - PercentageUsed;
             return percentageLeft;
         }
-        public void ModAlignment(string alignmentName, bool add) 
+       /* public void ModAlignment(string alignmentName, bool add) 
         {
             for(int i =0; i < alignmentNames.Length; i++)
             {
@@ -1296,7 +825,7 @@ namespace InfiniteRoleplay.Windows
             }
 
 
-        }
+        }*/
       
         public void EditImage(bool avatar, int imageIndex)
         {
@@ -1313,13 +842,7 @@ namespace InfiniteRoleplay.Windows
                     DataReceiver.currentAvatar = this.existingAvatarBytes;
                     this.currentAvatarImg = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(image);
                 }
-                else
-                {
-                    galleryThumbBytes[imageIndex] = Imaging.ScaleImageBytes(imageBytes, 150, 150);
-                    galleryImageBytes[imageIndex] = imageBytes;
-                    galleryThumbWidths[imageIndex] = Imaging.byteArrayToImage(galleryThumbBytes[imageIndex]).Width;
-                    galleryThumbHeights[imageIndex] = Imaging.byteArrayToImage(galleryThumbBytes[imageIndex]).Height;
-                }
+               
 
 
             }, 0, null, this.configuration.AlwaysOpenDefaultImport);
@@ -1344,32 +867,12 @@ namespace InfiniteRoleplay.Windows
 
                         this.avatarBytes = File.ReadAllBytes(AvatarPath);
                     }
-                    else
-                    {
-                        string imagePath = f[0].ToString();
-                        var image = Path.GetFullPath(imagePath);
-
-                        byte[] imgBytes = File.ReadAllBytes(imagePath);
-
-                        byte[] scaledImageBytes = Imaging.ScaleImageBytes(imgBytes, 150, 150);
-                        System.Drawing.Image scaledImage = Imaging.byteArrayToImage(scaledImageBytes);
-
-                        galleryImageBytes[i] = Imaging.ScaleImageBytes(imgBytes, 900, 900);
-
-                        galleryThumbBytes[i] = scaledImageBytes;
-
-                        SortedList<SortedList<int, bool>, SortedList<int, byte[]>> newImageList = new SortedList<SortedList<int, bool>, SortedList<int, byte[]>>();
-                      //  DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
-                      //                              NSFW[i], galleryImageBytes[i], i);
-                        DrawImage(i, plugin);
-                    }
+                   
 
                 });
             }, 0, null, this.configuration.AlwaysOpenDefaultImport);
         }
 
-
        
-
     }
 }

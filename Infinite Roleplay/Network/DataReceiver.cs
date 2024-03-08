@@ -19,7 +19,6 @@ using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using InfiniteRoleplay.Helpers;
 using ImGuiNET;
-using InfiniteRoleplay.Windows.Defines;
 using InfiniteRoleplay.Scripts.Misc;
 
 namespace Networking
@@ -263,7 +262,6 @@ namespace Networking
             OOCLoadStatus = 0;
             GalleryLoadStatus = 0;
             BookmarkLoadStatus = 0;
-            ProfileWindow.ClearUI();
             ProfileWindow.addProfile = false;
             ProfileWindow.editProfile = false;
             ExistingProfileData = false;
@@ -360,7 +358,6 @@ namespace Networking
             string profileName = buffer.ReadString();
             buffer.Dispose();     
             loggedIn = true;
-            ProfileWindow.ClearUI();
            
         }
         public static void ReceiveVerificationUpdate(byte[] data)
@@ -419,22 +416,19 @@ namespace Networking
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
+            int profileID = buffer.ReadInt();
             int imageCount = buffer.ReadInt();
             ExistingTargetGalleryData = true;
             for (int i = 0; i < imageCount; i++)
             {
-                int imageBtLen = buffer.ReadInt();
-                byte[] imageBytes = buffer.ReadBytes(imageBtLen);
-                int thumbBtLen = buffer.ReadInt();
-                byte[] thumbBytes = buffer.ReadBytes(thumbBtLen);
-                TargetWindow.existingGalleryImageCount = imageCount;
-                TargetWindow.existingGalleryImgBytes[i] = imageBytes;
-                TargetWindow.existingGalleryThumbBytes[i] = thumbBytes;
+                string url = buffer.ReadString();
+                bool nsfw = buffer.ReadBool();
+                Imaging.DownloadTargetProfileImage(url, profileID, nsfw, plugin, i);
                 //ProfileWindow.ReorderNoSend = true;
-                TargetWindow.DrawImage(i, plugin);
             }
             BookmarksWindow.DisableBookmarkSelection = false;
             TargetMenu.DisableInput = false;
+            
             TargetGalleryLoadStatus = 1;
             buffer.Dispose();
 
@@ -450,57 +444,25 @@ namespace Networking
         }
         public static void ReceiveProfileGalleryImage(byte[] data)
         {
-           
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             int imageCount = buffer.ReadInt();
-            ExistingGalleryData = true;
+            int profileID = buffer.ReadInt();
+          
             for (int i = 0; i < imageCount; i++)
             {
-                int imageBtLen = buffer.ReadInt();
-                byte[] imageBytes = buffer.ReadBytes(imageBtLen);
-                int thumbBtLen = buffer.ReadInt();
-                byte[] thumbBytes = buffer.ReadBytes(thumbBtLen);
+                string url = buffer.ReadString();
                 bool nsfw = buffer.ReadBool();
-                string url = buffer.ReadString();
-                if (nsfw == true)
-                {
-                    ProfileWindow.nsfwImagesCheck[i] = true;
-                }
-                else
-                {
-                    ProfileWindow.nsfwImagesCheck[i] = false;
-                }
-                ProfileWindow.urls[i] = url;
-                ProfileWindow.ExistingGalleryImageCount = imageCount;
-                ProfileWindow.galleryImageBytes[i] = imageBytes;
-                ProfileWindow.galleryThumbBytes[i] = thumbBytes;
-                ProfileWindow.imageIndex = imageCount;
+                Imaging.DownloadProfileImage(url, profileID, nsfw, plugin.PluginInterfacePub, plugin, i);
+                ProfileWindow.imageIndex = i + 2;
                 ProfileWindow.ImageExists[i] = true;
-                //ProfileWindow.ReorderNoSend = true;
-                ProfileWindow.DrawImage(i, plugin);
-
+                plugin.chatGUI.Print(i.ToString());
             }
-<<<<<<< HEAD
-            BookmarksWindow.DisableBookmarkSelection = false;
-            TargetMenu.DisableInput = false;
-            TargetGalleryLoadStatus = 1;
-=======
-            for(int i = 0; i < imageCount; i++)
-            {
-                string url = buffer.ReadString();
-                ProfileWindow.urls[i] = url;
-            }
-            for(int i = 0; i < imageCount; i++)
-            {
-                string url = buffer.ReadString();
-                ProfileWindow.urls[i] = url;
-            }
+            ExistingGalleryData = true;
+       
             GalleryLoadStatus = 1;
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
             buffer.Dispose();
-            GalleryLoadStatus = 1;
 
         }
         public static void ReceiveTargetBio(byte[] data)
@@ -520,7 +482,7 @@ namespace Networking
             string atFirstGlance = buffer.ReadString();
             int alignment = buffer.ReadInt();
             TargetWindow.characterEditName = name; TargetWindow.characterEditRace = race; TargetWindow.characterEditGender = gender;
-            TargetWindow.characterEditAge = age.ToString(); TargetWindow.characterEditHeight = height; TargetWindow.characterEditWeight = weight.ToString(); 
+            TargetWindow.characterEditAge = age.ToString(); TargetWindow.characterEditHeight = height; TargetWindow.characterEditWeight = weight.ToString();
             TargetWindow.characterEditAfg = atFirstGlance;
             TargetWindow.alignmentImg = Constants.AlignementIcon(plugin.PluginInterfacePub, alignment);
             var (text, desc) = Constants.AlignmentVals[alignment];
@@ -553,21 +515,14 @@ namespace Networking
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.name] = name.Replace("''", "'");
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.race] = race.Replace("''", "'");
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.gender] = gender.Replace("''", "'");
-            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.age] = age.ToString().Replace("''", "'");
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.age] = age.ToString();
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.height] = height.Replace("''", "'");
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.weight] = weight.Replace("''", "'");
-            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.afg] = atFirstGlance;
             ProfileWindow.currentAlignment = alignment;
-         
-
-
-
-
 
             buffer.Dispose();
             currentAvatar = avatarBytes;
             BioLoadStatus = 1;
-            plugin.profileWindow.UpdateUI();
         }
         public static void ExistingProfile(byte[] data)
         {
@@ -600,27 +555,7 @@ namespace Networking
             buffer.Dispose();
             HooksLoadStatus = 1;
         }
-        public static void ReceiveImageDeletionStatus(byte[] data)
-        {
-            var buffer = new ByteBuffer();
-            buffer.WriteBytes(data);
-            var packetID = buffer.ReadInt();
-            int index = buffer.ReadInt();
-            int status = buffer.ReadInt();
-            int imagesLen = buffer.ReadInt();
-            if (status == 0)
-            {
-                ProfileWindow.Cols[index] = new System.Numerics.Vector4(255, 0, 0, 255);
-                ProfileWindow.galleryStatusVals[index] = "Deleted";
-                
-            }
-            if (status == 1)
-            {
-                ProfileWindow.Cols[index] = new System.Numerics.Vector4(0, 255, 0, 255);
-                ProfileWindow.galleryStatusVals[index] = "Uploaded";
-            }
-            buffer.Dispose();
-        }
+      
         public static void ReceiveProfileStory(byte[] data)
         {
             var buffer = new ByteBuffer();

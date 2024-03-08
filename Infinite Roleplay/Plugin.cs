@@ -35,11 +35,6 @@ using Dalamud.Interface.Internal.Windows;
 using Dalamud.Interface.Internal;
 using Aspose.Imaging.MemoryManagement;
 using System.Threading;
-<<<<<<< HEAD
-using InfiniteRoleplay.Windows.Defines;
-=======
-using InfiniteRoleplay.Defines;
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
 
 namespace InfiniteRoleplay
 {
@@ -49,7 +44,7 @@ namespace InfiniteRoleplay
         public bool loggedIn;
         public bool toggleconnection;
         public bool targeted = false;
-        public bool targetMenuToggle = false;
+        public bool targetMenuClosed = true;
         public bool loadCallback = false;
         public bool loadPreview = false;
         public bool uiLoaded = false;
@@ -65,6 +60,7 @@ namespace InfiniteRoleplay
         public OptionsWindow optionsWindow;
         public AdminWindow adminWindow;
         public ReportWindow reportWindow;
+        public static Misc misc = new Misc();
         public IDalamudTextureWrap[] images;
         public string Name => "Infinite Roleplay";
         private const string CommandName = "/infinite";
@@ -100,11 +96,10 @@ namespace InfiniteRoleplay
             this.Configuration.Initialize(pluginInterface);
             DataSender.plugin = this;
             ClientTCP.plugin = this;
-
+            Misc.pg = this;
             string name = "";
 
 
-            UIDefines.plugin = this;
 
 
             this.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
@@ -143,17 +138,6 @@ namespace InfiniteRoleplay
             ReloadClient();
             optionsWindow.IsOpen= true;
         }
-        public void RefetchProfile()
-        {
-            LoginWindow.loginRequest = true;
-            profileWindow.Reset(this);
-            ReloadProfile();
-            profileWindow.IsOpen = true;
-            if (this.clientState.LocalPlayer != null)
-            {
-                DataSender.FetchProfile(this.clientState.LocalPlayer.Name.ToString(), this.clientState.LocalPlayer.HomeWorld.GameData.Name.ToString(), true);
-            }
-        }
         public void ReloadProfile()
         {
             DataReceiver.BioLoadStatus = -1;
@@ -161,33 +145,49 @@ namespace InfiniteRoleplay
             DataReceiver.HooksLoadStatus = -1;
             DataReceiver.StoryLoadStatus = -1;
         }
-        
+        public void UnloadUI()
+        {
+            if(uiLoaded == true)
+            {
+                this.WindowSystem.RemoveAllWindows();
+                uiLoaded = false;
+            }           
+        }
         public void LoadUI()
         {
             if (uiLoaded == false)
             {
-<<<<<<< HEAD
-                UIDefines.plugin = this;
-                var AvatarHolder = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
-                var pictureTab = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/picturetab.png");
+                IDalamudTextureWrap AvatarHolder = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
+                //Icons
+                IDalamudTextureWrap lawfulGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_good.png"));
+                IDalamudTextureWrap neutralGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_good.png"));
+                IDalamudTextureWrap chaoticGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_good.png"));
+                IDalamudTextureWrap lawfulNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_neutral.png"));
+                IDalamudTextureWrap trueNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/true_neutral.png"));
+                IDalamudTextureWrap chaoticNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_neutral.png"));
+                IDalamudTextureWrap lawfulEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_evil.png"));
+                IDalamudTextureWrap neutralEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_evil.png"));
+                IDalamudTextureWrap chaoticEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil.png"));
 
-                byte[] imgBytes = File.ReadAllBytes(pictureTab);
+                //bars
 
-                byte[] picTabBytes = Imaging.ScaleImageBytes(imgBytes, 300, 300);
-                System.Drawing.Image picTab = Imaging.byteArrayToImage(picTabBytes);;
+                IDalamudTextureWrap lawfulGoodBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_good_bar.png"));
+                IDalamudTextureWrap neutralGoodBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_good_bar.png"));
+                IDalamudTextureWrap chaoticGoodBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_good_bar.png"));
+                IDalamudTextureWrap lawfulNeutralBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_neutral_bar.png"));
+                IDalamudTextureWrap trueNeutralBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/true_neutral_bar.png"));
+                IDalamudTextureWrap chaoticNeutralBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_neutral_bar.png"));
+                IDalamudTextureWrap lawfulEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_evil_bar.png"));
+                IDalamudTextureWrap neutralEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_evil_bar.png"));
+                IDalamudTextureWrap chaoticEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil_bar.png"));
 
-                byte[] blankTabBytes = Imaging.ScaleImageBytes(imgBytes, 300, 300);
 
 
-                System.Drawing.Image blankTab = Imaging.byteArrayToImage(blankTabBytes);
+
+                images = new IDalamudTextureWrap[19] {AvatarHolder, lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil, lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar };
 
 
-                targetWindow = new TargetWindow(this, this.pluginInterface, AvatarHolder);
-=======
-                UIDefines.LoadTextures();
-
-                targetWindow = new TargetWindow(this, this.pluginInterface);
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
+                targetWindow = new TargetWindow(this, this.pluginInterface, AvatarHolder,  lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil);
                 targetMenu = new TargetMenu(this, this.pluginInterface, targetManager);
 
                 imagePreview = new ImagePreview(this, this.pluginInterface, targetManager);
@@ -203,11 +203,7 @@ namespace InfiniteRoleplay
                 panelWindow = new PanelWindow(this, this.pluginInterface, targetManager);
 
                 loginWindow = new LoginWindow(this, this.clientState.LocalPlayer);
-<<<<<<< HEAD
-                profileWindow = new ProfileWindow(this, this.pluginInterface, chatGUI, this.Configuration, AvatarHolder, picTab, blankTab);
-=======
                 profileWindow = new ProfileWindow(this, this.pluginInterface, chatGUI, this.Configuration);
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
                 // this.WindowSystem.AddWindow(new Loader(this.pluginInterface, this));
                 // this.WindowSystem.AddWindow(new SystemsWindow(this));
                 this.WindowSystem.AddWindow(profileWindow);
@@ -234,39 +230,15 @@ namespace InfiniteRoleplay
             this.pluginInterface.UiBuilder.OpenConfigUi -= LoadOptions;
             this.pluginInterface.UiBuilder.OpenMainUi -= DrawLoginUI;
             this.framework.Update -= Update;
-<<<<<<< HEAD
-=======
-            this.CommandManager.RemoveHandler(TargetWindowCommandName);
+
             this.CommandManager.RemoveHandler(CommandName);
-            if(this.WindowSystem.Windows.Count > 0)
-            {
-                this.WindowSystem.RemoveAllWindows();
-            }
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
+            this.WindowSystem.RemoveAllWindows();
             if (ClientTCP.IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
                 DisconnectFromServer();
             }
-<<<<<<< HEAD
-            this.CommandManager.RemoveHandler(CommandName);
-            this.WindowSystem.RemoveAllWindows();
-            ProfileWindow.timer.Dispose();
-            TargetWindow.timer.Dispose();
-=======
-            if(ProfileWindow.timer != null)
-            {
-                ProfileWindow.timer.Dispose();
-            }
-            if(TargetWindow.timer != null)
-            {
-                TargetWindow.timer.Dispose();
-            }
-            
-            if(UIDefines.textureList.Count > 0 )
-            {
-                UIDefines.DisposeTextures();
-            }
->>>>>>> e8d304e7f42ec8055a25557e5abaf03482e93f78
+            //TargetWindow.timer.Dispose();
+            //ProfileWindow.timer.Dispose();
             //if(images != null && images.Length > 0)
             //{
             //   for (int i = 0; i < images.Length; i++)
@@ -302,7 +274,10 @@ namespace InfiniteRoleplay
                 }
                 else
                 {
-                    targetMenu.IsOpen = false;
+                    if(targeted == false)
+                    {
+                        targetMenu.IsOpen = false;
+                    }
                 }
             }
             if (loadPreview == true)
@@ -310,7 +285,7 @@ namespace InfiniteRoleplay
                 imagePreview.IsOpen = true;
                 loadPreview = false;
             }
-
+            
         }
 
         private void OnCommand(string command, string args)
@@ -320,7 +295,16 @@ namespace InfiniteRoleplay
         }
         private void OnViewTarget(string command, string args)
         {
-            this.targetMenu.IsOpen = true;
+            var targetPlayer = targetManager.Target as PlayerCharacter;
+            if (loggedIn == true)
+            {
+                if (targetPlayer != null && dutyState.IsDutyStarted == false)
+                {
+
+                    targeted = true;
+                    this.targetMenu.IsOpen = true;
+                }
+            }
         }
         private void DrawUI()
         {

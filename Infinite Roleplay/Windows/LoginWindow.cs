@@ -7,6 +7,7 @@ using ImGuiNET;
 using Dalamud.Interface.ImGuiFileDialog;
 using Networking;
 using Dalamud.Game.ClientState.Objects.SubKinds;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Kernel;
 
 namespace InfiniteRoleplay.Windows;
 
@@ -35,10 +36,11 @@ public class LoginWindow : Window, IDisposable
     {
         this.Size = new Vector2(232, 200);
         this.SizeCondition = ImGuiCond.Always;
-
+        this.plugin = plugin;
         this.Configuration = plugin.Configuration;
         this.username = this.Configuration.username;
         this.password = this.Configuration.password;
+
         this.playerCharacter = playerCharacter;
     }
 
@@ -74,7 +76,6 @@ public class LoginWindow : Window, IDisposable
                     login = false;
                     register = true;
                 }
-
             }
             else
             {
@@ -82,7 +83,13 @@ public class LoginWindow : Window, IDisposable
             }
         }
         if (register == true)
-        {
+        {// Get the game client state
+
+            // Get the player character object
+            PlayerCharacter player = plugin.clientState.LocalPlayer;
+
+            // Get the player's user ID
+            string registerID = player.OwnerId.ToString();
             ImGui.InputTextWithHint("##username", $"Username", ref this.registerUser, 100);
             ImGui.InputTextWithHint("##passver", $"Password", ref this.registerPassword, 100, ImGuiInputTextFlags.Password);
             ImGui.InputTextWithHint("##regpassver", $"Verify Password", ref this.registerVerPassword, 100, ImGuiInputTextFlags.Password);
@@ -94,7 +101,7 @@ public class LoginWindow : Window, IDisposable
                     {
                         if (registerPassword == registerVerPassword)
                         {
-                            DataSender.Register(registerUser, registerPassword);
+                            DataSender.Register(registerUser, registerPassword, registerID);
                             login = true;
                             register = false;
                         }

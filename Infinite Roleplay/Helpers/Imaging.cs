@@ -1,4 +1,8 @@
 using Aspose.Imaging;
+using Dalamud.Interface.Internal;
+using Dalamud.IoC;
+using Dalamud.Plugin;
+using InfiniteRoleplay.Windows;
 using Lumina.Data.Parsing;
 using Lumina.Excel.GeneratedSheets;
 using System;
@@ -7,6 +11,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +19,83 @@ namespace InfiniteRoleplay.Helpers
 {
     internal static class Imaging
     {
+        public static void DownloadProfileImage(string url, int profileID, bool nsfw, DalamudPluginInterface pluginInterface, Plugin plugin, int index)
+        {
+            WebClient webClient = new WebClient();
+            string GalleryPath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/");
+            string imagePath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + "gallery_" + profileID + "_" + index + ".png"); // Create a folder named 'Images' in your root directory
+            if (!Directory.Exists(GalleryPath))
+            {
+                Directory.CreateDirectory(GalleryPath);
+            }
+            webClient.DownloadFile(url, imagePath);
+            IDalamudTextureWrap galleryImage = pluginInterface.UiBuilder.LoadImage(imagePath);
+            IDalamudTextureWrap nsfwThumb = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/nsfw.png"));
+
+
+            ProfileWindow.galleryImages[index] = galleryImage;
+            ProfileWindow.imageURLs[index] = url;
+            ProfileWindow.NSFW[index] = nsfw;
+            if (nsfw == true)
+            {
+                ProfileWindow.galleryThumbs[index] = nsfwThumb;
+            }
+            else
+            {
+                System.Drawing.Image thumb = System.Drawing.Image.FromFile(imagePath);
+                System.Drawing.Image img = ScaleImage(thumb, 120, 120);
+                SaveImage(img, GalleryPath, "gallery_thumb_" + profileID + "_" + index + ".png");
+                IDalamudTextureWrap imgThumb = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/gallery_thumb_" + profileID + "_" + index + ".png"));
+                ProfileWindow.galleryThumbs[index] = imgThumb;
+            }
+            plugin.chatGUI.Print(index + " Added");
+
+        }
+        public static void DownloadTargetProfileImage(string url, int profileID, bool nsfw, Plugin plugin, int index)
+        {
+            WebClient webClient = new WebClient();
+            string GalleryPath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/Galleries/");
+            string imagePath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + "gallery_" + profileID + "_" + index + ".png"); // Create a folder named 'Images' in your root directory
+            if (!Directory.Exists(GalleryPath))
+            {
+                Directory.CreateDirectory(GalleryPath);
+            }
+            webClient.DownloadFile(url, imagePath);
+            IDalamudTextureWrap galleryImage = plugin.PluginInterfacePub.UiBuilder.LoadImage(imagePath);
+            IDalamudTextureWrap nsfwThumb = plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/nsfw.png"));
+
+
+            TargetWindow.galleryImages[index] = galleryImage;
+            if (nsfw == true)
+            {
+                TargetWindow.galleryThumbs[index] = nsfwThumb;
+            }
+            else
+            {
+                System.Drawing.Image thumb = System.Drawing.Image.FromFile(imagePath);
+                System.Drawing.Image img = ScaleImage(thumb, 120, 120);
+                SaveImage(img, GalleryPath, "gallery_thumb_" + profileID + "_" + index + ".png");
+                IDalamudTextureWrap imgThumb = plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/Galleries/gallery_thumb_" + profileID + "_" + index + ".png"));
+                TargetWindow.galleryThumbs[index] = imgThumb;
+            }
+        }
+
+        static void SaveImage(System.Drawing.Image image, string directoryPath, string fileName)
+        {
+            // Check if the directory exists, if not, create it
+            if (!System.IO.Directory.Exists(directoryPath))
+            {
+                System.IO.Directory.CreateDirectory(directoryPath);
+            }
+
+            // Combine the directory path and file name to get the full file path
+            string filePath = System.IO.Path.Combine(directoryPath, fileName);
+
+            // Save the image to the specified file path
+            image.Save(filePath);
+
+            Console.WriteLine("Image saved successfully.");
+        }
         public static byte[] BlurBytes(this Bitmap image, Int32 blurSize)
         {
             var rectangle = new System.Drawing.Rectangle(0, 0, image.Width, image.Height);
@@ -59,6 +141,30 @@ namespace InfiniteRoleplay.Helpers
                 }
             }
             return ImageToByteArray(blurred);
+        }
+        public static System.Drawing.Image ScaleImage(System.Drawing.Image image, int maxWidth, int maxHeight)
+        {
+            int newWidth, newHeight;
+
+            // Calculate aspect ratio
+            double ratioX = (double)maxWidth / image.Width;
+            double ratioY = (double)maxHeight / image.Height;
+            double ratio = Math.Min(ratioX, ratioY);
+
+            // Calculate new dimensions
+            newWidth = (int)(image.Width * ratio);
+            newHeight = (int)(image.Height * ratio);
+
+            // Create new bitmap with new dimensions
+            Bitmap newImage = new Bitmap(newWidth, newHeight);
+
+            // Draw the original image on the new bitmap with scaled dimensions
+            using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(newImage))
+            {
+                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+            }
+
+            return newImage;
         }
         public static byte[] ScaleImageBytes(byte[] imgBytes, int maxWidth, int maxHeight)
         {

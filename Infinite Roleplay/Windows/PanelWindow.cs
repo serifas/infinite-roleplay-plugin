@@ -99,7 +99,15 @@ namespace InfiniteRoleplay.Windows
             {
                 if (ImGui.ImageButton(this.profilesImage.ImGuiHandle, new Vector2(100, 50)))
                 {
-                    plugin.RefetchProfile();
+
+                    LoginWindow.loginRequest = true;
+                    plugin.profileWindow.Reset(plugin);
+                    plugin.ReloadProfile();
+                    plugin.profileWindow.IsOpen = true;
+                    if (playerCharacter != null)
+                    {
+                        DataSender.FetchProfile(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
+                    }
 
                 }
                 if (ImGui.IsItemHovered())
@@ -114,7 +122,7 @@ namespace InfiniteRoleplay.Windows
                 }
                 if (ImGui.IsItemHovered())
                 {
-                    ImGui.SetTooltip("Connections - Coming Soon");
+                    ImGui.SetTooltip("Connections - Comming Soon");
                 }
                 if (ImGui.ImageButton(this.systemsImage.ImGuiHandle, new Vector2(100, 50)))
                 {
@@ -132,14 +140,23 @@ namespace InfiniteRoleplay.Windows
                 }
                 if (ImGui.IsItemHovered())
                 {
-                    ImGui.SetTooltip("Events - Coming Soon");
+                    ImGui.SetTooltip("Events - Comming Soon");
                 }
             }
             else
             {
                 if (ImGui.ImageButton(this.profilesNoWIPImage.ImGuiHandle, new Vector2(216, 50)))
                 {
-                    plugin.RefetchProfile();
+
+                    LoginWindow.loginRequest = true;
+                    plugin.profileWindow.Reset(plugin);
+                    plugin.ReloadProfile();
+                    plugin.profileWindow.IsOpen = true;
+                    if (playerCharacter != null)
+                    {
+                        DataSender.FetchProfile(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
+                    }
+
                 }
                 if (ImGui.IsItemHovered())
                 {
