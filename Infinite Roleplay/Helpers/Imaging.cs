@@ -21,15 +21,24 @@ namespace InfiniteRoleplay.Helpers
     {
         public static void DownloadProfileImage(string url, int profileID, bool nsfw, DalamudPluginInterface pluginInterface, Plugin plugin, int index)
         {
+            if(IsImageUrl(url))
+            {
                 WebClient webClient = new WebClient();
+                string extension = GetImageFileExtension(url);
                 string GalleryPath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/");
-                string imagePath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + "gallery_" + profileID + "_" + index + ".png"); // Create a folder named 'Images' in your root directory
+                string imagePath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + "gallery_" + profileID + "_" + index + "." + extension); // Create a folder named 'Images' in your root directory
                 if (!Directory.Exists(GalleryPath))
                 {
                     Directory.CreateDirectory(GalleryPath);
                 }
                 webClient.DownloadFile(url, imagePath);
-                IDalamudTextureWrap galleryImage = pluginInterface.UiBuilder.LoadImage(imagePath);
+
+                System.Drawing.Image baseImage = System.Drawing.Image.FromFile(imagePath);
+                System.Drawing.Image scaledImage = ScaleImage(baseImage, 1000, 800);
+                SaveImage(scaledImage, GalleryPath, "gallery_scaled_" + profileID + "_" + index + "." + extension);
+                string scaledImagePath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + "gallery_scaled_" + profileID + "_" + index + "." + extension);
+
+                IDalamudTextureWrap galleryImage = pluginInterface.UiBuilder.LoadImage(scaledImagePath);
                 IDalamudTextureWrap nsfwThumb = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/nsfw.png"));
 
 
@@ -44,13 +53,90 @@ namespace InfiniteRoleplay.Helpers
                 {
                     System.Drawing.Image thumb = System.Drawing.Image.FromFile(imagePath);
                     System.Drawing.Image img = ScaleImage(thumb, 120, 120);
-                    SaveImage(img, GalleryPath, "gallery_thumb_" + profileID + "_" + index + ".png");
-                    IDalamudTextureWrap imgThumb = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/gallery_thumb_" + profileID + "_" + index + ".png"));
+                    SaveImage(img, GalleryPath, "gallery_thumb_" + profileID + "_" + index + "." + extension);
+                    IDalamudTextureWrap imgThumb = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/gallery_thumb_" + profileID + "_" + index + "." + extension));
                     ProfileWindow.galleryThumbs[index] = imgThumb;
                 }
                 plugin.chatGUI.Print(index + " Added");
 
-            
+
+            }
+        }
+        static string GetImageFileExtension(string url)
+        {
+            try
+            {
+                // Send a HEAD request to fetch only the headers
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "HEAD";
+
+                // Get the response
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    // Check if the Content-Type header indicates an image
+                    if (response.ContentType.ToLower().StartsWith("image/"))
+                    {
+                        // Extract the file extension from the Content-Type header
+                        string contentType = response.ContentType;
+                        string fileExtension = GetFileExtensionFromContentType(contentType);
+
+                        return fileExtension;
+                    }
+                    else
+                    {
+                        throw new Exception("The URL does not point to an image.");
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                throw new Exception($"An error occurred: {ex.Message}");
+            }
+        }
+
+        static string GetFileExtensionFromContentType(string contentType)
+        {
+            switch (contentType.ToLower())
+            {
+                case "image/jpeg":
+                    return "jpg";
+                case "image/png":
+                    return "png";
+                default:
+                    throw new Exception("Unsupported image format.");
+            }
+        }
+
+        public static bool IsImageUrl(string url)
+        {
+            try
+            {
+                // Send a HEAD request to fetch only the headers
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "HEAD";
+
+                // Get the response
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    // Check if the Content-Type header indicates an image
+                    if (response.ContentType.ToLower().StartsWith("image/"))
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch (WebException)
+            {
+                // URL is invalid or inaccessible
+                return false;
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                throw new Exception($"An error occurred: {ex.Message}");
+            }
+
+            return false;
         }
         public static void DownloadTargetProfileImage(string url, int profileID, bool nsfw, Plugin plugin, int index)
         {
