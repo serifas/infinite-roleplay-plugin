@@ -49,6 +49,7 @@ namespace Networking
         CSendGallery = 29,
         CReportProfile = 30,
         CSendProfileNotes = 31,
+        SSubmitVerificationKey = 32,
     }
     public class DataSender
     {
@@ -95,12 +96,13 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void Register(string username, string password, string XIVID)
+        public static void Register(string username, string password, string email, string XIVID)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CRegister);
             buffer.WriteString(username);
             buffer.WriteString(password);
+            buffer.WriteString(email);
             buffer.WriteString(XIVID);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
@@ -220,6 +222,8 @@ namespace Networking
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CFetchProfiles);
+            buffer.WriteString(plugin.Configuration.username);
+            buffer.WriteString(plugin.Configuration.password);
             buffer.WriteString(characterName);
             buffer.WriteString(world);
             ClientTCP.SendData(buffer.ToArray());
@@ -229,7 +233,8 @@ namespace Networking
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CCreateProfile);
-            buffer.WriteString(username);
+            buffer.WriteString(plugin.Configuration.username);
+            buffer.WriteString(plugin.Configuration.password);
             buffer.WriteString(playerName);
             buffer.WriteString(playerServer);
             ClientTCP.SendData(buffer.ToArray());
@@ -309,6 +314,8 @@ namespace Networking
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CCreateProfileBio);
+            buffer.WriteString(plugin.Configuration.username);
+            buffer.WriteString(plugin.Configuration.password);
             buffer.WriteString(playerName);
             buffer.WriteString(playerServer);
             buffer.WriteInteger(avatarBytes.Length);
@@ -421,6 +428,17 @@ namespace Networking
             buffer.WriteString(notes);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
+        }
+
+        internal static void SendVerification(string username, string verificationKey)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.SSubmitVerificationKey);
+            buffer.WriteString(username);
+            buffer.WriteString(verificationKey);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+
         }
 
         /*

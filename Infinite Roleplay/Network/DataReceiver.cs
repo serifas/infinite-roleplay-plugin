@@ -20,6 +20,10 @@ using static System.Net.Mime.MediaTypeNames;
 using InfiniteRoleplay.Helpers;
 using ImGuiNET;
 using InfiniteRoleplay.Scripts.Misc;
+using static FFXIVClientStructs.FFXIV.Client.UI.Misc.GroupPoseModule;
+using System.Reflection;
+using System.Xml.Linq;
+using ImGuiScene;
 
 namespace Networking
 {
@@ -59,6 +63,8 @@ namespace Networking
         CProfileReportedSuccessfully = 44,
         SSendProfileNotes = 45,
         SSendNoProfileNotes = 46,
+        SSendNoAuthorization = 47,
+        SSendVerificationMessage = 48,
     }
     class DataReceiver
     {
@@ -324,9 +330,25 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             buffer.Dispose();
+
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.name] = "";
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.race] = "";
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.gender] = "";
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.age] = "";
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.height] = "";
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.weight] = "";
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.afg] = "";
+            ProfileWindow.currentAlignment = 0;
+
+            ProfileWindow.currentPersonality_1 = 0;
+            ProfileWindow.currentPersonality_2 = 0;
+            ProfileWindow.currentPersonality_3 = 0;
             loggedIn = true;
             ExistingBioData = false;
             BioLoadStatus = 0;
+
+
+
         }
         public static void NoTargetBio(byte[] data)
         {
@@ -439,6 +461,11 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             buffer.Dispose();
+            for (int i = 0; i < 30; i++)
+            {
+                ProfileWindow.galleryImages[i] = ProfileWindow.pictureTab;
+                ProfileWindow.imageURLs[i] = string.Empty;
+            }
             GalleryLoadStatus = 0;
             ExistingGalleryData = false;
         }
@@ -496,10 +523,10 @@ namespace Networking
             var (textpers1, descpers1) = Constants.PersonalityValues[personality_1];
             var (textpers2, descpers2) = Constants.PersonalityValues[personality_2];
             var (textpers3, descpers3) = Constants.PersonalityValues[personality_3];
-            TargetWindow.alignmentTooltip = text + ": " + desc;
-            TargetWindow.personality1Tooltip = textpers1 + ": " + descpers1;
-            TargetWindow.personality2Tooltip = textpers2 + ": " + descpers2;
-            TargetWindow.personality3Tooltip = textpers3 + ": " + descpers3;
+            TargetWindow.alignmentTooltip = text + ": \n" + desc;
+            TargetWindow.personality1Tooltip = textpers1 + ": \n" + descpers1;
+            TargetWindow.personality2Tooltip = textpers2 + ": \n" + descpers2;
+            TargetWindow.personality3Tooltip = textpers3 + ": \n" + descpers3;
 
             currentTargetAvatar = avatarBytes;
             ExistingTargetBioData = true;
@@ -523,7 +550,9 @@ namespace Networking
             string weight = buffer.ReadString();
             string atFirstGlance = buffer.ReadString();
             int alignment = buffer.ReadInt();
-
+            int personality_1 = buffer.ReadInt();
+            int personality_2 = buffer.ReadInt();
+            int personality_3 = buffer.ReadInt();
             ExistingBioData = true;
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.name] = name.Replace("''", "'");
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.race] = race.Replace("''", "'");
@@ -531,8 +560,12 @@ namespace Networking
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.age] = age.ToString();
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.height] = height.Replace("''", "'");
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.weight] = weight.Replace("''", "'");
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.afg] = atFirstGlance.Replace("''", "'");
             ProfileWindow.currentAlignment = alignment;
 
+            ProfileWindow.currentPersonality_1 = personality_1;
+            ProfileWindow.currentPersonality_2 = personality_2;
+            ProfileWindow.currentPersonality_3 = personality_3;
             buffer.Dispose();
             currentAvatar = avatarBytes;
             BioLoadStatus = 1;
@@ -664,8 +697,10 @@ namespace Networking
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
+            TargetWindow.profileNotes = string.Empty;
             ExistingProfileNotes = false;
             TargetNotesLoadStatus = 0;
+
             buffer.Dispose();
         }
         public static void RecProfileNotes(byte[] data)
@@ -678,6 +713,24 @@ namespace Networking
             TargetWindow.profileNotes = notes;
             buffer.Dispose();
             TargetNotesLoadStatus = 1;
+        }
+
+        public static void ReceiveNoAuthorization(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            PanelWindow.statusCol = new Vector4(1, 0, 0, 1);
+            PanelWindow.status = "Unauthorized Access to Profile.";
+            buffer.Dispose();
+        }
+        public static void ReceiveVerificationMessage(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            plugin.verificationWindow.IsOpen = true;
+            buffer.Dispose();
         }
     }
 }

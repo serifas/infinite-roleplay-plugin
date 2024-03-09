@@ -213,13 +213,13 @@ namespace InfiniteRoleplay.Scripts.Misc
         {
 
            // string[] nameFields = new string[] { "Name:   ", "##playername", $"Character Name (The name or nickname of the character you are currently playing as)", name};
-            ("Name:   ", "##playername",  $"Character Name (The name or nickname of the character you are currently playing as)",  InputTypes.single),
-            ("Race:    ", "##race", $"The IC Race of your character", InputTypes.single),
-            ("Gender: ", "##gender", $"The IC gender of your character", InputTypes.single),
-            ("Age:   ", "##age", $"If not 18+, do not put nsfw images in your gallery", InputTypes.single),
-            ("Height:", "##height", $"You're OC's IC Height", InputTypes.single),
-            ("Weight:", "##weight", $"You're OC's IC Weight", InputTypes.single),
-            ("At First Glance:", "##afg", $"What people see when they first glance at your character", InputTypes.multiline),
+            ("NAME:   ", "##playername",  $"Character Name (The name or nickname of the character you are currently playing as)",  InputTypes.single),
+            ("RACE:    ", "##race", $"The IC Race of your character", InputTypes.single),
+            ("GENDER: ", "##gender", $"The IC gender of your character", InputTypes.single),
+            ("AGE:   ", "##age", $"If not 18+, do not put nsfw images in your gallery", InputTypes.single),
+            ("HEIGHT:", "##height", $"You're OC's IC Height", InputTypes.single),
+            ("WEIGHT:", "##weight", $"You're OC's IC Weight", InputTypes.single),
+            ("AT FIRST GLANCE:", "##afg", $"What people see when they first glance at your character", InputTypes.multiline),
         
         };
 

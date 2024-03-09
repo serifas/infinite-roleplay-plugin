@@ -95,7 +95,7 @@ namespace InfiniteRoleplay.Windows
         public static int imageIndex = 0;
         public static bool resetStory;
     
-        public static IDalamudTextureWrap loaderAnimInd;
+        public static IDalamudTextureWrap loaderAnimInd, pictureTab;
         public static string[] HookContent = new string[30];
         public static string[] HookEditContent = new string[30];
         public static string[] ChapterContent = new string[30];
@@ -124,12 +124,10 @@ namespace InfiniteRoleplay.Windows
         public static int availablePercentage = 50;
         public int[] flaggedHookIndexes = new int[] { };
         public static bool addImageToGallery = false;
-        //Font Vars
         public static string[] imageURLs = new string[30];
         private float _modVersionWidth;
         private GameFontHandle _Font;
-        //BIO VARS
-        private IDalamudTextureWrap avatarImg, currentAvatarImg, pictureTab;
+        private IDalamudTextureWrap avatarImg, currentAvatarImg;
         public static List<IDalamudTextureWrap> galleryThumbsList = new List<IDalamudTextureWrap>();
         public static List<IDalamudTextureWrap> galleryImagesList = new List<IDalamudTextureWrap>();
         public static IDalamudTextureWrap[] galleryImages, galleryThumbs;
@@ -254,15 +252,24 @@ namespace InfiniteRoleplay.Windows
                             if (BioField.Item4 == Constants.InputTypes.single)
                             {
                                 ImGui.Text(BioField.Item1);
-                                ImGui.SameLine();
+                                if(BioField.Item1 != "AT FIRST GLANCE:")
+                                {
+                                    ImGui.SameLine();
+                                }                                
                                 ImGui.InputTextWithHint(BioField.Item2, BioField.Item3, ref bioFieldsArr[i], 100);
-
+                            }
+                            else
+                            {
+                                ImGui.Text(BioField.Item1);
+                                ImGui.InputTextMultiline(BioField.Item2, ref bioFieldsArr[i], 3000, new Vector2(500, 150));
                             }
                         }
-
-                        ImGui.TextColored(new Vector4(1, 1, 0, 1), "ALIGNMENT:");
-
+                        ImGui.Spacing();
+                        ImGui.Spacing();
+                        ImGui.TextColored(new Vector4(1, 1, 1, 1), "ALIGNMENT:");                       
                         AddAlignmentSelection();
+                        ImGui.Spacing();
+                        ImGui.TextColored(new Vector4(1, 1, 1, 1), "PERSONALITY TRAITS:");
                         AddPersonalitySelection_1();
                         AddPersonalitySelection_2();
                         AddPersonalitySelection_3();

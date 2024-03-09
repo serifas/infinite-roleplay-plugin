@@ -58,6 +58,8 @@ namespace InfiniteRoleplay.Windows
         private bool _showFileDialogError = false;
         public bool openedProfile = false;
         public bool openedTargetProfile = false;
+        public static string status = "";
+        public static Vector4 statusCol = new Vector4(0,0,0,0);    
         public static bool DisableInput = false;
         public PanelWindow(Plugin plugin, DalamudPluginInterface Interface, ITargetManager targetManager) : base(
        "INFINITE PANEL", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
@@ -186,7 +188,7 @@ namespace InfiniteRoleplay.Windows
                            
                 
             }
-
+            ImGui.TextColored(statusCol, status);
 
         }
        

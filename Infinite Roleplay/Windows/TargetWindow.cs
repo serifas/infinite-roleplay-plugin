@@ -240,13 +240,20 @@ namespace InfiniteRoleplay.Windows
 
 
                             ImGui.Spacing();
-                            ImGui.Text("Name:   " + characterEditName);
-                            ImGui.Text("Race:    " + characterEditRace);
-                            ImGui.Text("Gender: " + characterEditGender);
-                            ImGui.Text("Age:    " + characterEditAge);
-                            ImGui.Text("Height:" + characterEditHeight);
-                            ImGui.Text("Weight:" + characterEditWeight);
-                            ImGui.Text("At First Glance:" + characterEditAfg);
+                            ImGui.Text("NAME:   " + characterEditName);
+                            ImGui.Spacing();
+                            ImGui.Text("RACE:    " + characterEditRace);
+                            ImGui.Spacing();
+                            ImGui.Text("GENDER: " + characterEditGender);
+                            ImGui.Spacing();
+                            ImGui.Text("AGE:    " + characterEditAge);
+                            ImGui.Spacing();
+                            ImGui.Text("HEIGHT:" + characterEditHeight);
+                            ImGui.Spacing();
+                            ImGui.Text("WEIGHT:" + characterEditWeight);
+                            ImGui.Spacing();
+                            ImGui.Text("AT FIRST GLANCE: \n" + characterEditAfg);
+                            ImGui.Spacing();
                             ImGui.TextColored(new Vector4(1, 1, 1, 1), "ALIGNMENT:");
 
                             ImGui.Image(alignmentImg.ImGuiHandle, new Vector2(32, 32));
@@ -255,6 +262,7 @@ namespace InfiniteRoleplay.Windows
                             {
                                 ImGui.SetTooltip(alignmentTooltip);
                             }
+                            ImGui.Spacing();
                             ImGui.TextColored(new Vector4(1, 1, 1, 1), "PERSONALITY TRAITS:");
                             
                             ImGui.Image(personalityImg1.ImGuiHandle, new Vector2(32, 42));

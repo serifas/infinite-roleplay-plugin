@@ -60,6 +60,7 @@ namespace InfiniteRoleplay
         public OptionsWindow optionsWindow;
         public AdminWindow adminWindow;
         public ReportWindow reportWindow;
+        public VerificationWindow verificationWindow;
         public static Misc misc = new Misc();
         public IDalamudTextureWrap[] images;
         public string Name => "Infinite Roleplay";
@@ -204,6 +205,7 @@ namespace InfiniteRoleplay
 
                 loginWindow = new LoginWindow(this, this.clientState.LocalPlayer);
                 profileWindow = new ProfileWindow(this, this.pluginInterface, chatGUI, this.Configuration);
+                verificationWindow = new VerificationWindow(this, this.pluginInterface);
                 // this.WindowSystem.AddWindow(new Loader(this.pluginInterface, this));
                 // this.WindowSystem.AddWindow(new SystemsWindow(this));
                 this.WindowSystem.AddWindow(profileWindow);

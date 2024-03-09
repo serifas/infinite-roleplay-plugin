@@ -8,6 +8,7 @@ using Dalamud.Interface.ImGuiFileDialog;
 using Networking;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Kernel;
+using System.ComponentModel.DataAnnotations;
 
 namespace InfiniteRoleplay.Windows;
 
@@ -19,6 +20,7 @@ public class LoginWindow : Window, IDisposable
     public string registerUser = string.Empty;
     public string registerPassword = string.Empty;
     public string registerVerPassword = string.Empty;
+    public string email = string.Empty;
     public bool attemptedLogin = false;
     public bool updateWindow = false;
     public bool login = true;
@@ -92,6 +94,7 @@ public class LoginWindow : Window, IDisposable
             ImGui.InputTextWithHint("##username", $"Username", ref this.registerUser, 100);
             ImGui.InputTextWithHint("##passver", $"Password", ref this.registerPassword, 100, ImGuiInputTextFlags.Password);
             ImGui.InputTextWithHint("##regpassver", $"Verify Password", ref this.registerVerPassword, 100, ImGuiInputTextFlags.Password);
+            ImGui.InputTextWithHint("##email", $"Email", ref this.email, 100);
             ImGui.Checkbox("I am atleast 18 years of age", ref agree);
             {
                 if (agree == true)
@@ -100,7 +103,7 @@ public class LoginWindow : Window, IDisposable
                     {
                         if (registerPassword == registerVerPassword)
                         {
-                            DataSender.Register(registerUser, registerPassword, "");
+                            DataSender.Register(registerUser, registerPassword, email, "");
                             login = true;
                             register = false;
                         }
