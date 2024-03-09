@@ -119,7 +119,7 @@ namespace InfiniteRoleplay.Windows
         public static byte[] thumbHolder;
         public string storyTitle = "";
         public static string storyEditTitle = "";
-        public static int currentAlignment = 0;
+        public static int currentAlignment, currentPersonality_1, currentPersonality_2, currentPersonality_3 = 0;
         public byte[] avatarBytes, existingAvatarBytes;
         public static int availablePercentage = 50;
         public int[] flaggedHookIndexes = new int[] { };
@@ -263,6 +263,9 @@ namespace InfiniteRoleplay.Windows
                         ImGui.TextColored(new Vector4(1, 1, 0, 1), "ALIGNMENT:");
 
                         AddAlignmentSelection();
+                        AddPersonalitySelection_1();
+                        AddPersonalitySelection_2();
+                        AddPersonalitySelection_3();
                         if (ImGui.Button("Save Bio"))
                         {
                             DataSender.SubmitProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
@@ -274,7 +277,7 @@ namespace InfiniteRoleplay.Windows
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.height].Replace("'", "''"),
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.weight].Replace("'", "''"),
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.afg].Replace("'", "''"),
-                                                    currentAlignment);
+                                                    currentAlignment, currentPersonality_1, currentPersonality_2, currentPersonality_3);
 
                         }
                     }
@@ -720,15 +723,15 @@ namespace InfiniteRoleplay.Windows
            // timer.Dispose();
             storyTitle = "";
         }
-      /*  public void UpdateUI()
-        {
-            int usedAlignmentVals = 0;
-            for (int al = 0; al < alignmentVals.Length; al++)
-            {
-                usedAlignmentVals += alignmentVals[al];
-            }
-            availablePercentage = 50 - usedAlignmentVals;
-        }*/
+        /*  public void UpdateUI()
+          {
+              int usedAlignmentVals = 0;
+              for (int al = 0; al < alignmentVals.Length; al++)
+              {
+                  usedAlignmentVals += alignmentVals[al];
+              }
+              availablePercentage = 50 - usedAlignmentVals;
+          }*/
         public void AddAlignmentSelection()
         {
             var (text, desc) = Constants.AlignmentVals[currentAlignment];
@@ -741,6 +744,54 @@ namespace InfiniteRoleplay.Windows
             {
                 if (ImGui.Selectable(newText, idx == currentAlignment))
                     currentAlignment = idx;
+
+                ImGuiUtil.SelectableHelpMarker(newDesc);
+            }
+        }
+        public void AddPersonalitySelection_1()
+        {
+            var (text, desc) = Constants.PersonalityValues[currentPersonality_1];
+            using var combo = ImRaii.Combo("##Personality Feature #1", text);
+            ImGuiUtil.HoverTooltip(desc);
+            if (!combo)
+                return;
+
+            foreach (var ((newText, newDesc), idx) in Constants.PersonalityValues.WithIndex())
+            {
+                if (ImGui.Selectable(newText, idx == currentPersonality_1))
+                    currentPersonality_1 = idx;
+
+                ImGuiUtil.SelectableHelpMarker(newDesc);
+            }
+        }
+        public void AddPersonalitySelection_2()
+        {
+            var (text, desc) = Constants.PersonalityValues[currentPersonality_2];
+            using var combo = ImRaii.Combo("##Personality Feature #2", text);
+            ImGuiUtil.HoverTooltip(desc);
+            if (!combo)
+                return;
+
+            foreach (var ((newText, newDesc), idx) in Constants.PersonalityValues.WithIndex())
+            {
+                if (ImGui.Selectable(newText, idx == currentPersonality_2))
+                    currentPersonality_2 = idx;
+
+                ImGuiUtil.SelectableHelpMarker(newDesc);
+            }
+        }
+        public void AddPersonalitySelection_3()
+        {
+            var (text, desc) = Constants.PersonalityValues[currentPersonality_3];
+            using var combo = ImRaii.Combo("##Personality Feature #3", text);
+            ImGuiUtil.HoverTooltip(desc);
+            if (!combo)
+                return;
+
+            foreach (var ((newText, newDesc), idx) in Constants.PersonalityValues.WithIndex())
+            {
+                if (ImGui.Selectable(newText, idx == currentPersonality_3))
+                    currentPersonality_3 = idx;
 
                 ImGuiUtil.SelectableHelpMarker(newDesc);
             }

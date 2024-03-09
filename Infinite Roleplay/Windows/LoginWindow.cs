@@ -89,7 +89,6 @@ public class LoginWindow : Window, IDisposable
             PlayerCharacter player = plugin.clientState.LocalPlayer;
 
             // Get the player's user ID
-            string registerID = player.OwnerId.ToString();
             ImGui.InputTextWithHint("##username", $"Username", ref this.registerUser, 100);
             ImGui.InputTextWithHint("##passver", $"Password", ref this.registerPassword, 100, ImGuiInputTextFlags.Password);
             ImGui.InputTextWithHint("##regpassver", $"Verify Password", ref this.registerVerPassword, 100, ImGuiInputTextFlags.Password);
@@ -101,7 +100,7 @@ public class LoginWindow : Window, IDisposable
                     {
                         if (registerPassword == registerVerPassword)
                         {
-                            DataSender.Register(registerUser, registerPassword, registerID);
+                            DataSender.Register(registerUser, registerPassword, "");
                             login = true;
                             register = false;
                         }

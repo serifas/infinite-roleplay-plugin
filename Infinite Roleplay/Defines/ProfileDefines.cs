@@ -54,9 +54,9 @@ namespace InfiniteRoleplay.Defines
             var raceFields = new string[] { "Race:    ", "##race", $"The IC Race of your character", race };
             var genderFields = new string[] { "Gender: ", "##gender", $"The IC gender of your character", gender };
             var ageFields = new string[] { "Age:   ", "##age", $"If not 18+, do not put nsfw images in your gallery (numbers only)", age };
-            var heightFields = new string[] { "Height:", "##height", $"Character Name (The name or nickname of the character you are currently playing as)", height };
-            var weightFields = new string[] { "Weight:", "##weight", $"Character Name (The name or nickname of the character you are currently playing as)", weight };
-            var atFirstGlance = new string[] { "At First Glance:", "##afg", $"Character Name (The name or nickname of the character you are currently playing as)", afg };
+            var heightFields = new string[] { "Height:", "##height", $"Character's Height", height };
+            var weightFields = new string[] { "Weight:", "##weight", $"Character's Weight", weight };
+            var atFirstGlance = new string[] { "At First Glance:", "##afg", $"What people see when they first glance at your character.", afg };
 
 
             var BioName = Tuple.Create(InputTypes.single, nameFields, new Vector2(0, 0), 100);

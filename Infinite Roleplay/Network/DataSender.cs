@@ -305,7 +305,7 @@ namespace Networking
             buffer.Dispose();
         }
         public static void SubmitProfileBio(string playerName, string playerServer, byte[] avatarBytes, string name, string race, string gender, int age, 
-                                            string height, string weight, string atFirstGlance, int alignment)
+                                            string height, string weight, string atFirstGlance, int alignment, int personality_1, int personality_2, int personality_3)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CCreateProfileBio);
@@ -321,6 +321,9 @@ namespace Networking
             buffer.WriteString(weight);
             buffer.WriteString(atFirstGlance);
             buffer.WriteInteger(alignment);
+            buffer.WriteInteger(personality_1);
+            buffer.WriteInteger(personality_2);
+            buffer.WriteInteger(personality_3);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }

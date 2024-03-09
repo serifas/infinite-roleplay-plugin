@@ -62,9 +62,7 @@ namespace InfiniteRoleplay.Windows
         private DalamudPluginInterface pg;
         public Configuration configuration;
         public static bool WindowOpen;
-        public static byte[][] existingGalleryImgBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
-        public static byte[][] existingGalleryThumbBytes = new byte[30][] { new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0], new byte[0] };
-
+    
         public static string characterNameVal, characterWorldVal;
         public static string[] StoryContent = new string[30];
         public static string[] ChapterContent = new string[30];
@@ -93,7 +91,7 @@ namespace InfiniteRoleplay.Windows
         public static bool ExistingProfile;
         public static bool loadSize = false;
         public static string storyTitle = "";
-        public static string alignmentTooltip = "";
+        public static string alignmentTooltip, personality1Tooltip, personality2Tooltip, personality3Tooltip = "";
         public static int[] alignmentVals, alignmentEditVals = new int[] { };
         private float[] alignmentWidthVals = new float[] { };
         private string[] alignmentNames = new string[]{};
@@ -102,7 +100,7 @@ namespace InfiniteRoleplay.Windows
         //Font Vars
         private GameFontHandle _Font;
         //BIO VARS
-        public static IDalamudTextureWrap alignmentImg;
+        public static IDalamudTextureWrap alignmentImg, personalityImg1, personalityImg2, personalityImg3;
         public static IDalamudTextureWrap[] galleryImages, galleryThumbs;         
         
         private IDalamudTextureWrap avatarImg, currentAvatarImg;
@@ -249,16 +247,39 @@ namespace InfiniteRoleplay.Windows
                             ImGui.Text("Height:" + characterEditHeight);
                             ImGui.Text("Weight:" + characterEditWeight);
                             ImGui.Text("At First Glance:" + characterEditAfg);
-                            ImGui.TextColored(new Vector4(1, 1, 0, 1), "ALIGNMENT:");
+                            ImGui.TextColored(new Vector4(1, 1, 1, 1), "ALIGNMENT:");
 
                             ImGui.Image(alignmentImg.ImGuiHandle, new Vector2(32, 32));
-
+                            
                             if (ImGui.IsItemHovered())
                             {
                                 ImGui.SetTooltip(alignmentTooltip);
                             }
+                            ImGui.TextColored(new Vector4(1, 1, 1, 1), "PERSONALITY TRAITS:");
+                            
+                            ImGui.Image(personalityImg1.ImGuiHandle, new Vector2(32, 42));
 
-                        }
+                            if (ImGui.IsItemHovered())
+                            {
+                                ImGui.SetTooltip(personality1Tooltip);
+                            }
+                            ImGui.SameLine();
+                            ImGui.Image(personalityImg2.ImGuiHandle, new Vector2(32, 42));
+
+                            if (ImGui.IsItemHovered())
+                            {
+                                ImGui.SetTooltip(personality2Tooltip);
+                            }
+                            ImGui.SameLine();
+                            ImGui.Image(personalityImg3.ImGuiHandle, new Vector2(32, 42));
+
+                            if (ImGui.IsItemHovered())
+                            {
+                                ImGui.SetTooltip(personality3Tooltip);
+                            }
+
+
+                        }   
 
 
                     }
@@ -388,18 +409,7 @@ namespace InfiniteRoleplay.Windows
 
         }
 
-        public static void DrawImage(int i, Plugin plugin)
-        {
-
-            Task.Run(async () =>
-            {
-                // simulate some work
-
-                galleryImages[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(existingGalleryImgBytes[i]);
-                galleryThumbs[i] = plugin.PluginInterfacePub.UiBuilder.LoadImage(existingGalleryThumbBytes[i]);
-                
-            });
-        }
+       
         public static void ClearUI()
         {
             viewBio = false;

@@ -25,8 +25,8 @@ namespace InfiniteRoleplay.Helpers
             {
                 WebClient webClient = new WebClient();
                 string extension = GetImageFileExtension(url);
-                string GalleryPath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/");
-                string imagePath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + "gallery_" + profileID + "_" + index + "." + extension); // Create a folder named 'Images' in your root directory
+                string GalleryPath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + profileID + "/");
+                string imagePath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + profileID + "/" + "gallery_" + profileID + "_" + index + "." + extension); // Create a folder named 'Images' in your root directory
                 if (!Directory.Exists(GalleryPath))
                 {
                     Directory.CreateDirectory(GalleryPath);
@@ -36,7 +36,7 @@ namespace InfiniteRoleplay.Helpers
                 System.Drawing.Image baseImage = System.Drawing.Image.FromFile(imagePath);
                 System.Drawing.Image scaledImage = ScaleImage(baseImage, 1000, 800);
                 SaveImage(scaledImage, GalleryPath, "gallery_scaled_" + profileID + "_" + index + "." + extension);
-                string scaledImagePath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + "gallery_scaled_" + profileID + "_" + index + "." + extension);
+                string scaledImagePath = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + profileID + "/" + "gallery_scaled_" + profileID + "_" + index + "." + extension);
 
                 IDalamudTextureWrap galleryImage = pluginInterface.UiBuilder.LoadImage(scaledImagePath);
                 IDalamudTextureWrap nsfwThumb = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/nsfw.png"));
@@ -54,7 +54,7 @@ namespace InfiniteRoleplay.Helpers
                     System.Drawing.Image thumb = System.Drawing.Image.FromFile(imagePath);
                     System.Drawing.Image img = ScaleImage(thumb, 120, 120);
                     SaveImage(img, GalleryPath, "gallery_thumb_" + profileID + "_" + index + "." + extension);
-                    IDalamudTextureWrap imgThumb = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/gallery_thumb_" + profileID + "_" + index + "." + extension));
+                    IDalamudTextureWrap imgThumb = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + profileID + "/gallery_thumb_" + profileID + "_" + index + "." + extension));
                     ProfileWindow.galleryThumbs[index] = imgThumb;
                 }
                 plugin.chatGUI.Print(index + " Added");
@@ -232,26 +232,32 @@ namespace InfiniteRoleplay.Helpers
         public static System.Drawing.Image ScaleImage(System.Drawing.Image image, int maxWidth, int maxHeight)
         {
             int newWidth, newHeight;
-
-            // Calculate aspect ratio
-            double ratioX = (double)maxWidth / image.Width;
-            double ratioY = (double)maxHeight / image.Height;
-            double ratio = Math.Min(ratioX, ratioY);
-
-            // Calculate new dimensions
-            newWidth = (int)(image.Width * ratio);
-            newHeight = (int)(image.Height * ratio);
-
-            // Create new bitmap with new dimensions
-            Bitmap newImage = new Bitmap(newWidth, newHeight);
-
-            // Draw the original image on the new bitmap with scaled dimensions
-            using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(newImage))
+            if(image.Width > maxWidth || image.Height > maxHeight)
             {
-                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
-            }
+                // Calculate aspect ratio
+                double ratioX = (double)maxWidth / image.Width;
+                double ratioY = (double)maxHeight / image.Height;
+                double ratio = Math.Min(ratioX, ratioY);
 
-            return newImage;
+                // Calculate new dimensions
+                newWidth = (int)(image.Width * ratio);
+                newHeight = (int)(image.Height * ratio);
+
+                // Create new bitmap with new dimensions
+                Bitmap newImage = new Bitmap(newWidth, newHeight);
+
+                // Draw the original image on the new bitmap with scaled dimensions
+                using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(newImage))
+                {
+                    graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+                }
+
+                return newImage;
+            }
+            else
+            {
+                return image;
+            }
         }
         public static byte[] ScaleImageBytes(byte[] imgBytes, int maxWidth, int maxHeight)
         {

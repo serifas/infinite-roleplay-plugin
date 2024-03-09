@@ -481,12 +481,25 @@ namespace Networking
             string weight = buffer.ReadString();
             string atFirstGlance = buffer.ReadString();
             int alignment = buffer.ReadInt();
+            int personality_1 = buffer.ReadInt();
+            int personality_2 = buffer.ReadInt();
+            int personality_3 = buffer.ReadInt();
             TargetWindow.characterEditName = name; TargetWindow.characterEditRace = race; TargetWindow.characterEditGender = gender;
             TargetWindow.characterEditAge = age.ToString(); TargetWindow.characterEditHeight = height; TargetWindow.characterEditWeight = weight.ToString();
             TargetWindow.characterEditAfg = atFirstGlance;
             TargetWindow.alignmentImg = Constants.AlignementIcon(plugin.PluginInterfacePub, alignment);
+            TargetWindow.personalityImg1 = Constants.PersonalityIcon(plugin.PluginInterfacePub, personality_1);
+            TargetWindow.personalityImg2 = Constants.PersonalityIcon(plugin.PluginInterfacePub, personality_2);
+            TargetWindow.personalityImg3 = Constants.PersonalityIcon(plugin.PluginInterfacePub, personality_3);
+
             var (text, desc) = Constants.AlignmentVals[alignment];
+            var (textpers1, descpers1) = Constants.PersonalityValues[personality_1];
+            var (textpers2, descpers2) = Constants.PersonalityValues[personality_2];
+            var (textpers3, descpers3) = Constants.PersonalityValues[personality_3];
             TargetWindow.alignmentTooltip = text + ": " + desc;
+            TargetWindow.personality1Tooltip = textpers1 + ": " + descpers1;
+            TargetWindow.personality2Tooltip = textpers2 + ": " + descpers2;
+            TargetWindow.personality3Tooltip = textpers3 + ": " + descpers3;
 
             currentTargetAvatar = avatarBytes;
             ExistingTargetBioData = true;

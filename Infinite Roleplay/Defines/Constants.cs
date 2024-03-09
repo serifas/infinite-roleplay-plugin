@@ -10,6 +10,7 @@ using System.Net;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using static FFXIVClientStructs.FFXIV.Client.UI.Misc.GroupPoseModule;
 using static System.Net.Mime.MediaTypeNames;
 using Bitmap = System.Drawing.Bitmap;
 
@@ -48,32 +49,32 @@ namespace InfiniteRoleplay.Scripts.Misc
 
         public enum Personalities
         {
-            Abrasive = 1,
-            AbsentMinded = 2,
-            Aggressive = 3,
-            Artistic = 4,
-            Cautious = 5,
-            Charming = 6,
-            Compassionate = 7,
-            Daredevil = 8,
-            Dishonest = 9,
-            Dutiful = 10,
-            Easygoing = 11,
-            Eccentric = 12,
-            Honest = 13,
-            Knowledgable = 14,
-            Optimistic = 15,
-            Polite = 16,
-            Relentless = 17,
-            Resentful = 18,
-            Reserved = 19,
-            Romantic = 20,
-            Spiritual = 21,
-            Superior = 22,
-            Tormented = 23,
-            Tough = 24,
-            Wild = 25,
-            Worldly = 26,
+            Abrasive = 0,
+            AbsentMinded = 1,
+            Aggressive = 2,
+            Artistic = 3,
+            Cautious = 4,
+            Charming = 5,
+            Compassionate = 6,
+            Daredevil = 7,
+            Dishonest = 8,
+            Dutiful = 9,
+            Easygoing = 10,
+            Eccentric = 11,
+            Honest = 12,
+            Knowledgable = 13,
+            Optimistic = 14,
+            Polite = 15,
+            Relentless = 16,
+            Resentful = 17,
+            Reserved = 18,
+            Romantic = 19,
+            Spiritual = 20,
+            Superior = 21,
+            Tormented = 22,
+            Tough = 23,
+            Wild = 24,
+            Worldly = 25,
         }
         public enum BodyForms
         {
@@ -162,160 +163,7 @@ namespace InfiniteRoleplay.Scripts.Misc
             };
             return bodyFormValues;
         }
-        public static SortedList<int, Tuple<string, string>> PersonalityValues()
-        {
-            SortedList<int, Tuple<string, string>> personalityValues = new SortedList<int, Tuple<string, string>>
-            {
-                //Abrasive
-                { (int)Personalities.Abrasive, Tuple.Create(PersonalityNames((int)Personalities.Abrasive), "• I am usually hostile or offensive in social interactions \n " +
-                                                                                                           "• I am very standoffish and do not like being approached. \n" +
-                                                                                                           "• I do not respond kindly to advice and especially orders.")},
-                //Absent-Minded
-                { (int)Personalities.AbsentMinded, Tuple.Create(PersonalityNames((int)Personalities.AbsentMinded), "• I’m easily distracted and always have a string of unfinished \n" +
-                                                                                                                   "   tasks on my to-do list. \n" +
-                                                                                                                   "• I’m pretty oblivious to my surroundings.\n" +
-                                                                                                                   "• I’m always wandering off to look at inconsequential \n" +
-                                                                                                                   "   things and get lost easily.\n" +
-                                                                                                                   "• I flake out on promises a lot. I don’t mean to…I just forget!\n" +
-                                                                                                                   "• If there’s a plan, I’ll forget it. If I don’t forget it… \n" +
-                                                                                                                   "   I usually end up ignoring it.")},
-                //Agressive
-                { (int)Personalities.Aggressive, Tuple.Create(PersonalityNames((int)Personalities.Aggressive),     "• I feel the most peaceful in the heat of battle as I vanquish my foes.\n" +
-                                                                                                                   "• I’m always the first to run into battle.\n" +
-                                                                                                                   "• I’ll start a fight over anything. I’ll even do it just because I’m bored!\n" +
-                                                                                                                   "• Violence is my first response to any challenge.\n" +
-                                                                                                                   "• I get unreasonably angry at the slightest insult.\n" +
-                                                                                                                   "• I use language so foul that I can make sailors blush—and not afraid to give someone a tongue lashing.")},
-                //Artistic
-                { (int)Personalities.Artistic, Tuple.Create(PersonalityNames((int)Personalities.Artistic),  "• I’m always doodling on the margins of my spellbook.\n" +
-                                                                                                            "• I paint all the fascinating flora and fauna I see in my travel journal.\n" +
-                                                                                                            "• I can see the true beauty in anything…even a beholder!\n" +
-                                                                                                            "• I love to improvise new songs, but not everyone appreciates the fact that I’m always humming under my breath.")},
-                //Cautious
-                { (int)Personalities.Cautious, Tuple.Create(PersonalityNames((int)Personalities.Cautious),  "• I’m slow to trust and often assume the worst of people, but once they win me over, I’m a friend for life.\n" +
-                                                                                                            "• I never trust anyone other than myself and don’t intend to change that.\n" +
-                                                                                                            "• I make sure to know my enemy before I act, lest I bite off more than I can chew.\n" +
-                                                                                                            "• I’m the first one to panic (or advocate a speedy retreat) when a threat arises.")},
-                //Charming
-                { (int)Personalities.Charming, Tuple.Create(PersonalityNames((int)Personalities.Charming),  "• I can (and do) sweet-talk just about anyone. Flattery gets me everywhere!\n" +
-                                                                                                            "• I absolutely adore a well-crafted insult, even one that’s directed at me.\n" +
-                                                                                                            "• I make witty jokes and quips at all the worst moments.\n" +
-                                                                                                            "• I love gossip and know how to pry the juicy details out of anyone’s mouth.")},
-                //Compassionate
-                { (int)Personalities.Compassionate, Tuple.Create(PersonalityNames((int)Personalities.Compassionate),  "• I can empathize and find common ground between even the most hostile enemies.\n" +
-                                                                                                                      "• I fight for those who can’t fight for themselves.\n" +
-                                                                                                                      "• I go out of my way to help people, even if it puts me in danger.\n" +
-                                                                                                                      "• I can never say “no” when someone asks me for a favor.\n" +
-                                                                                                                      "• I watch over my friends like a protective mother, whether they want me to or not.")},
-                //Daredevil
-                { (int)Personalities.Daredevil, Tuple.Create(PersonalityNames((int)Personalities.Daredevil),  "• I like helping people…but I also like the rush I get from throwing myself into danger.\n" +
-                                                                                                              "• I’ve always wanted to be an adventurer. Travel and constant danger sound fun!\n" +
-                                                                                                              "• I’ll say “yes” to anything—it doesn’t matter what I’m asked to do.\n" +
-                                                                                                              "• I'm a gambler. I can't resist the thrill of taking a risk for a possible payoff.")},
-                //Dishonest
-                { (int)Personalities.Dishonest, Tuple.Create(PersonalityNames((int)Personalities.Dishonest),  "• I lie about almost everything, even when there's no reason to do it.\n" +
-                                                                                                              "• I have a false identity and will tell any lie to protect it.\n" +
-                                                                                                              "• I steal anything I see that might have some value.\n" +
-                                                                                                              "• I love swindling people who are more powerful than me!\n" +
-                                                                                                              "• I don’t consider it “stealing” when I need something more than the person who has it.")},
-                //Dutiful
-                { (int)Personalities.Dutiful, Tuple.Create(PersonalityNames((int)Personalities.Dutiful),  "• I would lay down my life for my comrades in a heartbeat.\n" +
-                                                                                                          "• I feel obligated to fulfill a mission given to me by my order, even though I don’t want to.\n" +
-                                                                                                          "• I tend to judge people who forsake their duties harshly.\n" +
-                                                                                                          "• My parent taught me a sense of duty, and I’ll always uphold it, even when the odds are against me.")},
-                //Easygoing
-                { (int)Personalities.Easygoing, Tuple.Create(PersonalityNames((int)Personalities.Easygoing),  "• I’m always on the lookout for new friends—I love introducing myself to people wherever I go.\n" +
-                                                                                                              "• I’m pretty likable, so I tend to assume everyone wants to be friends with me.\n" +
-                                                                                                              "• I tend to let other people do all the planning. I prefer to go with the flow.\n" +
-                                                                                                              "• I’m comfortable in any social situation, no matter how tense it gets.")},
-                //Eccentric
-                { (int)Personalities.Eccentric, Tuple.Create(PersonalityNames((int)Personalities.Eccentric),  "• I always leave a calling card, no matter where I go.\n" +
-                                                                                                              "• Sometimes I mutter about myself in the third person…even when others can hear me.\n" +
-                                                                                                              "• I change my mood or my mind as quickly as the wind changes directions.\n" +
-                                                                                                              "• I always dress in formal clothes, even when I’m slogging through a cave or exploring a dungeon.\n" +
-                                                                                                              "• I can’t control my reaction when surprised or afraid. One time I burned down a building that had a spider in it!")},
-                //Honest
-                { (int)Personalities.Honest, Tuple.Create(PersonalityNames((int)Personalities.Honest),  "• I’m very earnest and unusually direct. Sometimes people are taken aback by my bluntness.\n" +
-                                                                                                        "• It’s hard to conceal my emotions. I always wear my heart on my sleeve!\n" +
-                                                                                                        "• I made a vow never to tell a lie, and I intend to keep it.\n" +
-                                                                                                        "• I’m bad at keeping secrets. I always end up blurting out the truth!")},
-                //Knowledgable
-                { (int)Personalities.Knowledgable, Tuple.Create(PersonalityNames((int)Personalities.Knowledgable),  "• I read every book I can get my hands on and travel with a dozen in my pack.\n" +
-                                                                                                                    "• I love a good puzzle! Once I get wind of a mystery, I’ll stop at nothing to solve it.\n" +
-                                                                                                                    "• I would risk life and limb (my own or someone else’s) to obtain new knowledge.\n" +
-                                                                                                                    "• I don’t believe in “forbidden” knowledge. What matters is what you do with it, right?\n" +
-                                                                                                                    "• I tend to assume I know more about a particular subject than anyone else around me.\n" +
-                                                                                                                    "• I have a single obscure hobby and will eagerly discuss it in detail.")},
-                //Optimistic
-                { (int)Personalities.Optimistic, Tuple.Create(PersonalityNames((int)Personalities.Optimistic),  "• Absolutely nothing can shake my sunny disposition!\n" +
-                                                                                                                "• In a bad situation, I’m the one telling everyone to look on the bright side.\n" +
-                                                                                                                "• I’m more likely to laugh or crack a joke than cry, which sometimes rubs people the wrong way.\n" +
-                                                                                                                "• I encourage everyone to be the best version of themselves that they can be.")},
-                //Polite
-                { (int)Personalities.Polite, Tuple.Create(PersonalityNames((int)Personalities.Polite),  "• I genuinely believe that manners are important, no matter my situation.\n" +
-                                                                                                                "• My elegance and refinement are tools I use to avoid arousing suspicion from others.\n" +
-                                                                                                                "• No one can fake a smile, a handshake, or an interested nod like me!\n" +
-                                                                                                                "• I was raised to have the manners of a noble, and I can’t imagine a world where I don’t use them.")},
-                //Relentless
-                { (int)Personalities.Relentless, Tuple.Create(PersonalityNames((int)Personalities.Relentless),  "• I’m convinced I’ll find riches beyond my imagination if I keep looking for it.\n" +
-                                                                                                                "• I fail often, but I’ll never, ever give up.\n" +
-                                                                                                                "• I will stop at nothing to achieve my goals, even if I make a few enemies along the way.\n" +
-                                                                                                                "• If someone questions my courage, I’ll never back down, no matter how dangerous the situation is.\n" +
-                                                                                                                "• I’m going to recover something that was taken from me if it’s the last thing I do, and I have no time for distractions…or friends.")},
-                //Resentful
-                { (int)Personalities.Resentful, Tuple.Create(PersonalityNames((int)Personalities.Resentful),  "• I always remember an insult, no matter how inconsequential.\n" +
-                                                                                                              "• I never show my anger—but I do plot my revenge.\n" +
-                                                                                                              "• I get upset when I’m not the center of attention.\n" +
-                                                                                                              "• I’m slow to forgive when I feel like someone has slighted me.\n" +
-                                                                                                              "• I’ll never forget the crushing defeat I suffered at my enemy’s hands, and I’ll pay them back dearly for it.")},
-                //Reserved
-                { (int)Personalities.Reserved, Tuple.Create(PersonalityNames((int)Personalities.Reserved),  "• I speak very slowly and carefully like I’m choosing each word before I say it.\n" +
-                                                                                                            "• I’m more likely to communicate with a grunt or hand gesture than with actual words.\n" +
-                                                                                                            "• I’d rather stand back and observe people than get involved.\n" +
-                                                                                                            "• I endure any injury or insult with quiet, steely discipline.\n" +
-                                                                                                            "• I always wait for the other person to talk first. There’s no such thing as an awkward silence!")},
-                //Romantic
-                { (int)Personalities.Romantic, Tuple.Create(PersonalityNames((int)Personalities.Romantic),  "• I'm a hopeless romantic. Wherever I go, I’m always looking for “the one.”\n" +
-                                                                                                            "• I fall in love in the blink of an eye…and fall out of love just as quickly.\n" +
-                                                                                                            "• I have a weakness for great beauty—from breathtaking landscapes to pretty faces.\n" +
-                                                                                                            "• I got rejected by someone I’m convinced is the love of my life, and I hope to prove myself worthy of them through my daring adventures!")},
-                //Spiritual
-                { (int)Personalities.Spiritual, Tuple.Create(PersonalityNames((int)Personalities.Spiritual),  "• I put too much trust in my religious institution and its hierarchy.\n" +
-                                                                                                              "• I constantly quote (or misquote) sacred texts and proverbs.\n" +
-                                                                                                              "• I idolize a particular hero of my faith and constantly revisit their deeds.\n" +
-                                                                                                              "• I believe everything that happens to me is part of a greater divine plan.\n" +
-                                                                                                              "• I keep holy symbols from every pantheon with me. Who knows which one I’ll need next?\n" +
-                                                                                                              "• I see omens—both good and bad—everywhere. The gods are speaking to us, and we must listen.")},
-                //Superior
-                { (int)Personalities.Superior, Tuple.Create(PersonalityNames((int)Personalities.Superior),  "• I never settle for anything less than perfection.\n" +
-                                                                                                            "• I never admit to any mistakes because I’m scared they’ll be used against me.\n" +
-                                                                                                            "• I'm used to the very best in life, so I don’t appreciate the rustic adventuring life.\n" +
-                                                                                                            "• I’d kill to get a noble title (and the respect that comes with it).")},
-                //Tormented
-                { (int)Personalities.Tormented, Tuple.Create(PersonalityNames((int)Personalities.Tormented),  "• I have awful visions of the future, but I don’t know how to prevent them from happening.\n" +
-                                                                                                              "• I’m plagued by bloodthirsty urges that won’t let up no matter what I do.\n" +
-                                                                                                              "• I’m haunted by my past and wake at night frightened by horrors I can barely remember.\n" +
-                                                                                                              "• I faced the worst a vampire could throw at me and survived. I’m fearless, and my resolve is unwavering.")},
-                //Tough
-                { (int)Personalities.Tough, Tuple.Create(PersonalityNames((int)Personalities.Tough),  "• I feel the need to prove that I’m the toughest person in the room.\n" +
-                                                                                                      "• I’m thick-skinned. It’s very hard to get a rise out of me!\n" +
-                                                                                                      "• It’s hard for me to respect anyone unless they’re a proven warrior (like me).\n" +
-                                                                                                      "• Anyone who wants to earn my trust has to spar with me first.\n" +
-                                                                                                      "• I have an iron stomach. I’ve never entered a drinking contest that I haven’t won!")},
-                //Wild
-                { (int)Personalities.Wild, Tuple.Create(PersonalityNames((int)Personalities.Wild),  "• I prefer animals to people by a long shot.\n" +
-                                                                                                    "• I’m always learning how to be among others—when to stay quiet and when to crack a joke.\n" +
-                                                                                                    "• My personal hygiene is nonexistent, and so are my manners.\n" +
-                                                                                                    "• I’m a forest-dweller who grew up in a tent in the woods, so I’m totally ignorant of city life.\n" +
-                                                                                                    "• I was actually raised by wolves (or some other wild animal).")},
-                //Worldly
-                { (int)Personalities.Worldly, Tuple.Create(PersonalityNames((int)Personalities.Worldly),  "• I'm tolerant of people different from me, and I love exploring other cultures.\n" +
-                                                                                                          "• I love to tell stories of my travels to faraway lands…even if I tend to embellish a little!\n" +
-                                                                                                          "• I’m filled with glee at the idea of seeing things most people don’t. The more unsettling, the better.\n" +
-                                                                                                          "• I’m desperately trying to escape my past and never stay in one place—so I’ve been everywhere.")},
-            };
-            return personalityValues;
-        }
+        
         public static IDalamudTextureWrap AlignementIcon(DalamudPluginInterface pluginInterface, int id)
         {
             IDalamudTextureWrap alignmentIcon = null;
@@ -330,6 +178,36 @@ namespace InfiniteRoleplay.Scripts.Misc
             if (id == (int)Alignments.ChaoticEvil) { alignmentIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil.png")); }
             return alignmentIcon;
         }
+        public static IDalamudTextureWrap PersonalityIcon(DalamudPluginInterface pluginInterface, int id)
+        {
+            IDalamudTextureWrap personalityIcon = null;
+            if (id == (int)Personalities.Abrasive) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/abrasive.png")); }
+            if (id == (int)Personalities.AbsentMinded) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/absentminded.png")); }
+            if (id == (int)Personalities.Artistic) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/artistic.png")); }
+            if (id == (int)Personalities.Cautious) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/cuatious.png")); }
+            if (id == (int)Personalities.Charming) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/charming.png")); }
+            if (id == (int)Personalities.Compassionate) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/compassionate.png")); }
+            if (id == (int)Personalities.Daredevil) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/daredevil.png")); }
+            if (id == (int)Personalities.Dishonest) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/dishonest.png")); }
+            if (id == (int)Personalities.Dutiful) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/dutiful.png")); }
+            if (id == (int)Personalities.Easygoing) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/easygoing.png")); }
+            if (id == (int)Personalities.Eccentric) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/eccentric.png")); }
+            if (id == (int)Personalities.Honest) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/honest.png")); }
+            if (id == (int)Personalities.Knowledgable) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/knowledgable.png")); }
+            if (id == (int)Personalities.Optimistic) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/optimistic.png")); }
+            if (id == (int)Personalities.Polite) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/polite.png")); }
+            if (id == (int)Personalities.Relentless) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/relentless.png")); }
+            if (id == (int)Personalities.Resentful) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/resentful.png")); }
+            if (id == (int)Personalities.Reserved) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/reserved.png")); }
+            if (id == (int)Personalities.Romantic) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/romantic.png")); }
+            if (id == (int)Personalities.Spiritual) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/spiritual.png")); }
+            if (id == (int)Personalities.Superior) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/superior.png")); }
+            if (id == (int)Personalities.Tormented) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/tormented.png")); }
+            if (id == (int)Personalities.Tough) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/tough.png")); }
+            if (id == (int)Personalities.Wild) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/wild.png")); }
+            if (id == (int)Personalities.Worldly) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/worldly.png")); }
+            return personalityIcon;
+        }
 
         public static readonly (string, string, string, InputTypes)[] BioFieldVals =
         {
@@ -338,11 +216,166 @@ namespace InfiniteRoleplay.Scripts.Misc
             ("Name:   ", "##playername",  $"Character Name (The name or nickname of the character you are currently playing as)",  InputTypes.single),
             ("Race:    ", "##race", $"The IC Race of your character", InputTypes.single),
             ("Gender: ", "##gender", $"The IC gender of your character", InputTypes.single),
-            ("Age:   ", "##age", $"If not 18+, do not put nsfw images in your gallery (numbers only)", InputTypes.single),
-            ("Height:", "##height", $"Character Name (The name or nickname of the character you are currently playing as)", InputTypes.single),
-            ("Weight:", "##weight", $"Character Name (The name or nickname of the character you are currently playing as)", InputTypes.single),
-            ("At First Glance:", "##afg", $"Character Name (The name or nickname of the character you are currently playing as)", InputTypes.multiline),
+            ("Age:   ", "##age", $"If not 18+, do not put nsfw images in your gallery", InputTypes.single),
+            ("Height:", "##height", $"You're OC's IC Height", InputTypes.single),
+            ("Weight:", "##weight", $"You're OC's IC Weight", InputTypes.single),
+            ("At First Glance:", "##afg", $"What people see when they first glance at your character", InputTypes.multiline),
         
+        };
+
+
+        public static readonly (string, string)[] PersonalityValues =
+        {
+            
+           
+                //Abrasive
+                (PersonalityNames((int)Personalities.Abrasive), "• I am usually hostile or offensive in social interactions \n " +
+                                                                                                           "• I am very standoffish and do not like being approached. \n" +
+                                                                                                           "• I do not respond kindly to advice and especially orders."),
+                //Absent-Minded
+                (PersonalityNames((int)Personalities.AbsentMinded), "• I’m easily distracted and always have a string of unfinished \n" +
+                                                                                                                   "   tasks on my to-do list. \n" +
+                                                                                                                   "• I’m pretty oblivious to my surroundings.\n" +
+                                                                                                                   "• I’m always wandering off to look at inconsequential \n" +
+                                                                                                                   "   things and get lost easily.\n" +
+                                                                                                                   "• I flake out on promises a lot. I don’t mean to…I just forget!\n" +
+                                                                                                                   "• If there’s a plan, I’ll forget it. If I don’t forget it… \n" +
+                                                                                                                   "   I usually end up ignoring it."),
+                //Agressive
+                (PersonalityNames((int)Personalities.Aggressive),     "• I feel the most peaceful in the heat of battle as I vanquish my foes.\n" +
+                                                                                                                   "• I’m always the first to run into battle.\n" +
+                                                                                                                   "• I’ll start a fight over anything. I’ll even do it just because I’m bored!\n" +
+                                                                                                                   "• Violence is my first response to any challenge.\n" +
+                                                                                                                   "• I get unreasonably angry at the slightest insult.\n" +
+                                                                                                                   "• I use language so foul that I can make sailors blush—and not afraid to give someone a tongue lashing."),
+                //Artistic
+                (PersonalityNames((int)Personalities.Artistic),  "• I’m always doodling on the margins of my spellbook.\n" +
+                                                                                                            "• I paint all the fascinating flora and fauna I see in my travel journal.\n" +
+                                                                                                            "• I can see the true beauty in anything…even a beholder!\n" +
+                                                                                                            "• I love to improvise new songs, but not everyone appreciates the fact that I’m always humming under my breath."),
+                //Cautious
+                (PersonalityNames((int)Personalities.Cautious),  "• I’m slow to trust and often assume the worst of people, but once they win me over, I’m a friend for life.\n" +
+                                                                                                            "• I never trust anyone other than myself and don’t intend to change that.\n" +
+                                                                                                            "• I make sure to know my enemy before I act, lest I bite off more than I can chew.\n" +
+                                                                                                            "• I’m the first one to panic (or advocate a speedy retreat) when a threat arises."),
+                //Charming
+                (PersonalityNames((int)Personalities.Charming),  "• I can (and do) sweet-talk just about anyone. Flattery gets me everywhere!\n" +
+                                                                                                            "• I absolutely adore a well-crafted insult, even one that’s directed at me.\n" +
+                                                                                                            "• I make witty jokes and quips at all the worst moments.\n" +
+                                                                                                            "• I love gossip and know how to pry the juicy details out of anyone’s mouth."),
+                //Compassionate
+                (PersonalityNames((int)Personalities.Compassionate),  "• I can empathize and find common ground between even the most hostile enemies.\n" +
+                                                                                                                      "• I fight for those who can’t fight for themselves.\n" +
+                                                                                                                      "• I go out of my way to help people, even if it puts me in danger.\n" +
+                                                                                                                      "• I can never say “no” when someone asks me for a favor.\n" +
+                                                                                                                      "• I watch over my friends like a protective mother, whether they want me to or not."),
+                //Daredevil
+                (PersonalityNames((int)Personalities.Daredevil),  "• I like helping people…but I also like the rush I get from throwing myself into danger.\n" +
+                                                                                                              "• I’ve always wanted to be an adventurer. Travel and constant danger sound fun!\n" +
+                                                                                                              "• I’ll say “yes” to anything—it doesn’t matter what I’m asked to do.\n" +
+                                                                                                              "• I'm a gambler. I can't resist the thrill of taking a risk for a possible payoff."),
+                //Dishonest
+                (PersonalityNames((int)Personalities.Dishonest),  "• I lie about almost everything, even when there's no reason to do it.\n" +
+                                                                                                              "• I have a false identity and will tell any lie to protect it.\n" +
+                                                                                                              "• I steal anything I see that might have some value.\n" +
+                                                                                                              "• I love swindling people who are more powerful than me!\n" +
+                                                                                                              "• I don’t consider it “stealing” when I need something more than the person who has it."),
+                //Dutiful
+                (PersonalityNames((int)Personalities.Dutiful),  "• I would lay down my life for my comrades in a heartbeat.\n" +
+                                                                                                          "• I feel obligated to fulfill a mission given to me by my order, even though I don’t want to.\n" +
+                                                                                                          "• I tend to judge people who forsake their duties harshly.\n" +
+                                                                                                          "• My parent taught me a sense of duty, and I’ll always uphold it, even when the odds are against me."),
+                //Easygoing
+                (PersonalityNames((int)Personalities.Easygoing),  "• I’m always on the lookout for new friends—I love introducing myself to people wherever I go.\n" +
+                                                                                                              "• I’m pretty likable, so I tend to assume everyone wants to be friends with me.\n" +
+                                                                                                              "• I tend to let other people do all the planning. I prefer to go with the flow.\n" +
+                                                                                                              "• I’m comfortable in any social situation, no matter how tense it gets."),
+                //Eccentric
+                (PersonalityNames((int)Personalities.Eccentric),  "• I always leave a calling card, no matter where I go.\n" +
+                                                                                                              "• Sometimes I mutter about myself in the third person…even when others can hear me.\n" +
+                                                                                                              "• I change my mood or my mind as quickly as the wind changes directions.\n" +
+                                                                                                              "• I always dress in formal clothes, even when I’m slogging through a cave or exploring a dungeon.\n" +
+                                                                                                              "• I can’t control my reaction when surprised or afraid. One time I burned down a building that had a spider in it!"),
+                //Honest
+                (PersonalityNames((int)Personalities.Honest),  "• I’m very earnest and unusually direct. Sometimes people are taken aback by my bluntness.\n" +
+                                                                                                        "• It’s hard to conceal my emotions. I always wear my heart on my sleeve!\n" +
+                                                                                                        "• I made a vow never to tell a lie, and I intend to keep it.\n" +
+                                                                                                        "• I’m bad at keeping secrets. I always end up blurting out the truth!"),
+                //Knowledgable
+                (PersonalityNames((int)Personalities.Knowledgable),  "• I read every book I can get my hands on and travel with a dozen in my pack.\n" +
+                                                                                                                    "• I love a good puzzle! Once I get wind of a mystery, I’ll stop at nothing to solve it.\n" +
+                                                                                                                    "• I would risk life and limb (my own or someone else’s) to obtain new knowledge.\n" +
+                                                                                                                    "• I don’t believe in “forbidden” knowledge. What matters is what you do with it, right?\n" +
+                                                                                                                    "• I tend to assume I know more about a particular subject than anyone else around me.\n" +
+                                                                                                                    "• I have a single obscure hobby and will eagerly discuss it in detail."),
+                //Optimistic
+                (PersonalityNames((int)Personalities.Optimistic),  "• Absolutely nothing can shake my sunny disposition!\n" +
+                                                                                                                "• In a bad situation, I’m the one telling everyone to look on the bright side.\n" +
+                                                                                                                "• I’m more likely to laugh or crack a joke than cry, which sometimes rubs people the wrong way.\n" +
+                                                                                                                "• I encourage everyone to be the best version of themselves that they can be."),
+                //Polite
+                (PersonalityNames((int)Personalities.Polite),  "• I genuinely believe that manners are important, no matter my situation.\n" +
+                                                                                                                "• My elegance and refinement are tools I use to avoid arousing suspicion from others.\n" +
+                                                                                                                "• No one can fake a smile, a handshake, or an interested nod like me!\n" +
+                                                                                                                "• I was raised to have the manners of a noble, and I can’t imagine a world where I don’t use them."),
+                //Relentless
+                (PersonalityNames((int)Personalities.Relentless),  "• I’m convinced I’ll find riches beyond my imagination if I keep looking for it.\n" +
+                                                                                                                "• I fail often, but I’ll never, ever give up.\n" +
+                                                                                                                "• I will stop at nothing to achieve my goals, even if I make a few enemies along the way.\n" +
+                                                                                                                "• If someone questions my courage, I’ll never back down, no matter how dangerous the situation is.\n" +
+                                                                                                                "• I’m going to recover something that was taken from me if it’s the last thing I do, and I have no time for distractions…or friends."),
+                //Resentful
+                (PersonalityNames((int)Personalities.Resentful),  "• I always remember an insult, no matter how inconsequential.\n" +
+                                                                                                              "• I never show my anger—but I do plot my revenge.\n" +
+                                                                                                              "• I get upset when I’m not the center of attention.\n" +
+                                                                                                              "• I’m slow to forgive when I feel like someone has slighted me.\n" +
+                                                                                                              "• I’ll never forget the crushing defeat I suffered at my enemy’s hands, and I’ll pay them back dearly for it."),
+                //Reserved
+                (PersonalityNames((int)Personalities.Reserved),  "• I speak very slowly and carefully like I’m choosing each word before I say it.\n" +
+                                                                                                            "• I’m more likely to communicate with a grunt or hand gesture than with actual words.\n" +
+                                                                                                            "• I’d rather stand back and observe people than get involved.\n" +
+                                                                                                            "• I endure any injury or insult with quiet, steely discipline.\n" +
+                                                                                                            "• I always wait for the other person to talk first. There’s no such thing as an awkward silence!"),
+                //Romantic
+                (PersonalityNames((int)Personalities.Romantic),  "• I'm a hopeless romantic. Wherever I go, I’m always looking for “the one.”\n" +
+                                                                                                            "• I fall in love in the blink of an eye…and fall out of love just as quickly.\n" +
+                                                                                                            "• I have a weakness for great beauty—from breathtaking landscapes to pretty faces.\n" +
+                                                                                                            "• I got rejected by someone I’m convinced is the love of my life, and I hope to prove myself worthy of them through my daring adventures!"),
+                //Spiritual
+                (PersonalityNames((int)Personalities.Spiritual),  "• I put too much trust in my religious institution and its hierarchy.\n" +
+                                                                                                              "• I constantly quote (or misquote) sacred texts and proverbs.\n" +
+                                                                                                              "• I idolize a particular hero of my faith and constantly revisit their deeds.\n" +
+                                                                                                              "• I believe everything that happens to me is part of a greater divine plan.\n" +
+                                                                                                              "• I keep holy symbols from every pantheon with me. Who knows which one I’ll need next?\n" +
+                                                                                                              "• I see omens—both good and bad—everywhere. The gods are speaking to us, and we must listen."),
+                //Superior
+                (PersonalityNames((int)Personalities.Superior),  "• I never settle for anything less than perfection.\n" +
+                                                                                                            "• I never admit to any mistakes because I’m scared they’ll be used against me.\n" +
+                                                                                                            "• I'm used to the very best in life, so I don’t appreciate the rustic adventuring life.\n" +
+                                                                                                            "• I’d kill to get a noble title (and the respect that comes with it)."),
+                //Tormented
+                (PersonalityNames((int)Personalities.Tormented),  "• I have awful visions of the future, but I don’t know how to prevent them from happening.\n" +
+                                                                                                              "• I’m plagued by bloodthirsty urges that won’t let up no matter what I do.\n" +
+                                                                                                              "• I’m haunted by my past and wake at night frightened by horrors I can barely remember.\n" +
+                                                                                                              "• I faced the worst a vampire could throw at me and survived. I’m fearless, and my resolve is unwavering."),
+                //Tough
+                (PersonalityNames((int)Personalities.Tough),  "• I feel the need to prove that I’m the toughest person in the room.\n" +
+                                                                                                      "• I’m thick-skinned. It’s very hard to get a rise out of me!\n" +
+                                                                                                      "• It’s hard for me to respect anyone unless they’re a proven warrior (like me).\n" +
+                                                                                                      "• Anyone who wants to earn my trust has to spar with me first.\n" +
+                                                                                                      "• I have an iron stomach. I’ve never entered a drinking contest that I haven’t won!"),
+                //Wild
+                (PersonalityNames((int)Personalities.Wild),  "• I prefer animals to people by a long shot.\n" +
+                                                                                                    "• I’m always learning how to be among others—when to stay quiet and when to crack a joke.\n" +
+                                                                                                    "• My personal hygiene is nonexistent, and so are my manners.\n" +
+                                                                                                    "• I’m a forest-dweller who grew up in a tent in the woods, so I’m totally ignorant of city life.\n" +
+                                                                                                    "• I was actually raised by wolves (or some other wild animal)."),
+                //Worldly
+                (PersonalityNames((int)Personalities.Worldly),  "• I'm tolerant of people different from me, and I love exploring other cultures.\n" +
+                                                                                                          "• I love to tell stories of my travels to faraway lands…even if I tend to embellish a little!\n" +
+                                                                                                          "• I’m filled with glee at the idea of seeing things most people don’t. The more unsettling, the better.\n" +
+                                                                                                          "• I’m desperately trying to escape my past and never stay in one place—so I’ve been everywhere."),
+
         };
 
         public static readonly (string, string)[] AlignmentVals =
