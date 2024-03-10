@@ -260,7 +260,6 @@ namespace InfiniteRoleplay
         {
             profileWindow.IsOpen = false;
             loginWindow.IsOpen = false;
-            optionsWindow.IsOpen = false;
             bookmarksWindow.IsOpen = false;
             imagePreview.IsOpen = false;
             targetMenu.IsOpen = false;

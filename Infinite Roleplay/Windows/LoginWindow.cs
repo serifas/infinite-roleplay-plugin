@@ -9,6 +9,10 @@ using Networking;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Kernel;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
+using Dalamud.Interface.Internal;
+using Dalamud.Logging;
+using Dalamud.Utility;
 
 namespace InfiniteRoleplay.Windows;
 
@@ -29,6 +33,7 @@ public class LoginWindow : Window, IDisposable
     public static bool loginRequest = false;
     public bool register = false;
     public bool agree = false;
+    public static IDalamudTextureWrap kofiBtnImg;
     private PlayerCharacter playerCharacter;
     public string status = "status...";
     public Vector4 statusColor = new Vector4(255, 255, 255, 255);
@@ -45,6 +50,8 @@ public class LoginWindow : Window, IDisposable
         this.username = this.Configuration.username;
         this.password = this.Configuration.password;
 
+        string kofiImg = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/kofi_btn.png");
+        kofiBtnImg = plugin.PluginInterfacePub.UiBuilder.LoadImage(kofiImg);
         this.playerCharacter = playerCharacter;
     }
 
@@ -87,6 +94,13 @@ public class LoginWindow : Window, IDisposable
                     login = false;
                     register = true;
                 }
+                if(Configuration.showKofi == true)
+                {
+                    if (ImGui.ImageButton(kofiBtnImg.ImGuiHandle, new Vector2(172, 27)))
+                    {
+                        Util.OpenLink("https://ko-fi.com/infiniteroleplay");
+                    }
+                }    
             }
             else
             {

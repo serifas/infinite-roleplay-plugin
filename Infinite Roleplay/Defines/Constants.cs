@@ -75,6 +75,7 @@ namespace InfiniteRoleplay.Scripts.Misc
             Tough = 23,
             Wild = 24,
             Worldly = 25,
+            None = 26,
         }
         public enum BodyForms
         {
@@ -130,6 +131,7 @@ namespace InfiniteRoleplay.Scripts.Misc
             if (personality == (int)Personalities.Tough) { personalityName = "Tough"; };//Tough
             if (personality == (int)Personalities.Wild) { personalityName = "Wild"; };//Wild
             if (personality == (int)Personalities.Worldly) { personalityName = "Worldly"; };//Worldly
+            if (personality == (int)Personalities.None) { personalityName = "None"; };//None
             return personalityName;
         }
 
@@ -206,6 +208,7 @@ namespace InfiniteRoleplay.Scripts.Misc
             if (id == (int)Personalities.Tough) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/tough.png")); }
             if (id == (int)Personalities.Wild) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/wild.png")); }
             if (id == (int)Personalities.Worldly) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/worldly.png")); }
+            if (id == (int)Personalities.None) { personalityIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/none.png")); }
             return personalityIcon;
         }
 
@@ -375,6 +378,8 @@ namespace InfiniteRoleplay.Scripts.Misc
                                                                                                           "• I love to tell stories of my travels to faraway lands…even if I tend to embellish a little!\n" +
                                                                                                           "• I’m filled with glee at the idea of seeing things most people don’t. The more unsettling, the better.\n" +
                                                                                                           "• I’m desperately trying to escape my past and never stay in one place—so I’ve been everywhere."),
+                //None
+                (PersonalityNames((int)Personalities.None),  "• Not Specified."),
 
         };
 
@@ -443,6 +448,8 @@ namespace InfiniteRoleplay.Scripts.Misc
                                 "They harm others out of anger or just for fun.\n" +
                                 "Characters aligned with Chaotic Evil usually operate alone\n" +
                                 "because they do not work well with others."),
+
+            ("None",            "Not Specified"),
         };
 
 

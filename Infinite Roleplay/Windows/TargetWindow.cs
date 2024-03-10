@@ -81,7 +81,7 @@ namespace InfiniteRoleplay.Windows
         private GameFontHandle _nameFont;
         private GameFontHandle _secionFont;
         public static Misc misc = new Misc();
-
+        public static bool showAlignment, showPersonality;
         public static IDalamudTextureWrap loaderAnimInd;
         public static int loaderIndex;
         public static string[] hooks;
@@ -251,48 +251,57 @@ namespace InfiniteRoleplay.Windows
                             ImGui.Spacing();
                             ImGui.Text("NAME:   " + characterEditName);
                             ImGui.Spacing();
-                            ImGui.Text("RACE:    " + characterEditRace);
+                            ImGui.Text("RACE:   " + characterEditRace);
                             ImGui.Spacing();
-                            ImGui.Text("GENDER: " + characterEditGender);
+                            ImGui.Text("GENDER:   " + characterEditGender);
                             ImGui.Spacing();
-                            ImGui.Text("AGE:    " + characterEditAge);
+                            ImGui.Text("AGE:   " + characterEditAge);
                             ImGui.Spacing();
-                            ImGui.Text("HEIGHT:" + characterEditHeight);
+                            ImGui.Text("HEIGHT:   " + characterEditHeight);
                             ImGui.Spacing();
-                            ImGui.Text("WEIGHT:" + characterEditWeight);
+                            ImGui.Text("WEIGHT:   " + characterEditWeight);
                             ImGui.Spacing();
                             ImGui.Text("AT FIRST GLANCE: \n" + characterEditAfg);
                             ImGui.Spacing();
-                            ImGui.TextColored(new Vector4(1, 1, 1, 1), "ALIGNMENT:");
+                            if(showAlignment == true)
+                            {
 
-                            ImGui.Image(alignmentImg.ImGuiHandle, new Vector2(32, 32));
+                                ImGui.TextColored(new Vector4(1, 1, 1, 1), "ALIGNMENT:");
+
+                                ImGui.Image(alignmentImg.ImGuiHandle, new Vector2(32, 32));
                             
-                            if (ImGui.IsItemHovered())
-                            {
-                                ImGui.SetTooltip(alignmentTooltip);
+                                if (ImGui.IsItemHovered())
+                                {
+                                    ImGui.SetTooltip(alignmentTooltip);
+                                }
                             }
-                            ImGui.Spacing();
-                            ImGui.TextColored(new Vector4(1, 1, 1, 1), "PERSONALITY TRAITS:");
+                            if(showPersonality == true)
+                            {
+                                ImGui.Spacing();
+
+                                ImGui.TextColored(new Vector4(1, 1, 1, 1), "PERSONALITY TRAITS:");
                             
-                            ImGui.Image(personalityImg1.ImGuiHandle, new Vector2(32, 42));
+                                ImGui.Image(personalityImg1.ImGuiHandle, new Vector2(32, 42));
 
-                            if (ImGui.IsItemHovered())
-                            {
-                                ImGui.SetTooltip(personality1Tooltip);
-                            }
-                            ImGui.SameLine();
-                            ImGui.Image(personalityImg2.ImGuiHandle, new Vector2(32, 42));
+                                if (ImGui.IsItemHovered())
+                                {
+                                    ImGui.SetTooltip(personality1Tooltip);
+                                }
+                                ImGui.SameLine();
+                                ImGui.Image(personalityImg2.ImGuiHandle, new Vector2(32, 42));
 
-                            if (ImGui.IsItemHovered())
-                            {
-                                ImGui.SetTooltip(personality2Tooltip);
-                            }
-                            ImGui.SameLine();
-                            ImGui.Image(personalityImg3.ImGuiHandle, new Vector2(32, 42));
+                                if (ImGui.IsItemHovered())
+                                {
+                                    ImGui.SetTooltip(personality2Tooltip);
+                                }
+                                ImGui.SameLine();
+                                ImGui.Image(personalityImg3.ImGuiHandle, new Vector2(32, 42));
 
-                            if (ImGui.IsItemHovered())
-                            {
-                                ImGui.SetTooltip(personality3Tooltip);
+                                if (ImGui.IsItemHovered())
+                                {
+                                    ImGui.SetTooltip(personality3Tooltip);
+                                }
+
                             }
 
 

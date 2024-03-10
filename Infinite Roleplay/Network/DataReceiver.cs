@@ -449,6 +449,7 @@ namespace Networking
                 Imaging.DownloadProfileImage(false, url, profileID, nsfw, plugin, i);             
                 plugin.chatGUI.Print(i.ToString());
             }
+            TargetMenu.DisableInput = false;
             TargetWindow.existingGalleryImageCount = imageCount;
             ExistingTargetGalleryData = true;
             BookmarksWindow.DisableBookmarkSelection = false;
@@ -513,6 +514,23 @@ namespace Networking
             int personality_1 = buffer.ReadInt();
             int personality_2 = buffer.ReadInt();
             int personality_3 = buffer.ReadInt();
+
+            if(alignment != 9)
+            {
+                TargetWindow.showAlignment = true;
+            }
+            else
+            {
+                TargetWindow.showAlignment = false;
+            }
+            if(personality_1 == 26 && personality_2 == 26 && personality_3 == 26){
+                TargetWindow.showPersonality = false;
+            }
+            else
+            {
+                TargetWindow.showPersonality= true;
+            }
+
             TargetWindow.characterEditName = name; TargetWindow.characterEditRace = race; TargetWindow.characterEditGender = gender;
             TargetWindow.characterEditAge = age.ToString(); TargetWindow.characterEditHeight = height; TargetWindow.characterEditWeight = weight.ToString();
             TargetWindow.characterEditAfg = atFirstGlance;
@@ -556,6 +574,22 @@ namespace Networking
             int personality_2 = buffer.ReadInt();
             int personality_3 = buffer.ReadInt();
             ExistingBioData = true;
+            if(alignment == 9)
+            {
+                ProfileWindow.alignmentHidden = true;
+            }
+            else
+            {
+                ProfileWindow.alignmentHidden = false;
+            }
+            if(personality_1 == 26 && personality_2 == 26 && personality_3 == 26)
+            {
+                ProfileWindow.personalityHidden = true;
+            }
+            else
+            {
+                ProfileWindow.personalityHidden = false;
+            }
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.name] = name.Replace("''", "'");
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.race] = race.Replace("''", "'");
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.gender] = gender.Replace("''", "'");

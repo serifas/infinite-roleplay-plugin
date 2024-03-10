@@ -15,6 +15,7 @@ namespace InfiniteRoleplay
         public string password { get; set; } = "";
         //Config options
         public bool showWIP { get; set; } = true;
+        public bool showKofi { get; set; } = true;
         public bool showTargetOptions { get; set; } = false;
 
         // the below exist just to make saving less cumbersome

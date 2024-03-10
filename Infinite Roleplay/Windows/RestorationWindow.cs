@@ -39,8 +39,8 @@ namespace InfiniteRoleplay.Windows
         {
             this.SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(350, 400),
-                MaximumSize = new Vector2(350,400)
+                MinimumSize = new Vector2(400, 350),
+                MaximumSize = new Vector2(400, 350)
             };
             pg = plugin;
             this._nameFont = plugin.PluginInterfacePub.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));

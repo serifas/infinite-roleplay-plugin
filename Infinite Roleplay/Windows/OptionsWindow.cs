@@ -31,13 +31,14 @@ namespace InfiniteRoleplay.Windows
         public static Plugin pg;
         public static bool showTargetOptions;
         public static bool showWIP;
+        public static bool showKofi;
         public OptionsWindow(Plugin plugin, DalamudPluginInterface Interface) : base(
        "OPTIONS", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
             this.SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(300, 150),
-                MaximumSize = new Vector2(300, 150)
+                MinimumSize = new Vector2(300, 180),
+                MaximumSize = new Vector2(300, 180)
             };
             pg = plugin;
             this._nameFont = plugin.PluginInterfacePub.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
@@ -65,9 +66,14 @@ namespace InfiniteRoleplay.Windows
                 pg.Configuration.showTargetOptions = showTargetOptions;
                 pg.Configuration.Save();
             }
-            if(ImGui.Checkbox("Show WIP modules", ref showWIP))
+            if (ImGui.Checkbox("Show WIP modules", ref showWIP))
             {
                 pg.Configuration.showWIP = showWIP;
+                pg.Configuration.Save();
+            }
+            if (ImGui.Checkbox("Show Ko-fi Button", ref showKofi))
+            {
+                pg.Configuration.showKofi = showKofi;
                 pg.Configuration.Save();
             }
         }

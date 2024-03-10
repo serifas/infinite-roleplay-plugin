@@ -27,6 +27,12 @@
             <Visible>false</Visible>
         </Content>
 
+        <None Update="UI\common\kofi_btn.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="UI\personalities\none.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="UI\personalities\abrasive.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>

@@ -86,6 +86,8 @@ namespace InfiniteRoleplay.Windows
         public static bool addHooks = false;
         public static bool editHooks = false;
         public static bool addStory = false;
+        public static bool alignmentHidden = false;
+        public static bool personalityHidden = false;
         public static bool galleryTableAdded = false;
         public static Timer timer;
         public static bool resetHooks;
@@ -243,8 +245,6 @@ namespace InfiniteRoleplay.Windows
                         {
                             editAvatar = true;
                         }
-                        ImGui.SameLine();
-                        ImGui.TextColored(new Vector4(255, 0, 0, 255), "All fields are required including the avatar... If you wish to have a text field empty, just put a blank space in the field.");
                         ImGui.Spacing();
                         for (int i = 0; i < Constants.BioFieldVals.Length; i++)
                         {
@@ -266,13 +266,34 @@ namespace InfiniteRoleplay.Windows
                         }
                         ImGui.Spacing();
                         ImGui.Spacing();
-                        ImGui.TextColored(new Vector4(1, 1, 1, 1), "ALIGNMENT:");                       
-                        AddAlignmentSelection();
+                        ImGui.TextColored(new Vector4(1, 1, 1, 1), "ALIGNMENT:");
+                        ImGui.SameLine();
+                        ImGui.Checkbox("Hidden", ref alignmentHidden);
+                        if(alignmentHidden == true)
+                        {
+                            currentAlignment = 9;
+                        }
+                        else
+                        {
+                            AddAlignmentSelection();
+                        }
+                       
                         ImGui.Spacing();
+
                         ImGui.TextColored(new Vector4(1, 1, 1, 1), "PERSONALITY TRAITS:");
-                        AddPersonalitySelection_1();
-                        AddPersonalitySelection_2();
-                        AddPersonalitySelection_3();
+                        ImGui.Checkbox("Hidded", ref personalityHidden);
+                        if(personalityHidden == true)
+                        {
+                            currentPersonality_1 = 26;
+                            currentPersonality_2 = 26;
+                            currentPersonality_3 = 26;
+                        }
+                        else
+                        { 
+                            AddPersonalitySelection_1();
+                            AddPersonalitySelection_2();
+                            AddPersonalitySelection_3();
+                        }
                         if (ImGui.Button("Save Bio"))
                         {
                             DataSender.SubmitProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
@@ -549,7 +570,7 @@ namespace InfiniteRoleplay.Windows
                         DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
                                                     NSFW[i], imageURLs[i], i);
                     }
-                    ImGui.InputText("##ImageURL" + i, ref imageURLs[i], 300);
+                    ImGui.InputTextWithHint("##ImageURL" + i, "Image URL", ref imageURLs[i], 300);
                     try
                     {
                         ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
