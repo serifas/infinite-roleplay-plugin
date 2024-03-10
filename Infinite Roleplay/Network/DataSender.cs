@@ -50,6 +50,8 @@ namespace Networking
         CReportProfile = 30,
         CSendProfileNotes = 31,
         SSubmitVerificationKey = 32,
+        SSubmitRestorationRequest = 33,
+        SSubmitRestorationKey = 34,
     }
     public class DataSender
     {
@@ -439,6 +441,27 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
 
+        }
+
+        internal static void SendRestorationRequest(string restorationEmail)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.SSubmitRestorationRequest);
+            buffer.WriteString(restorationEmail);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+
+        internal static void SendRestoration(string username, string email, string password, string restorationKey)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.SSubmitRestorationKey);
+            buffer.WriteString(username);
+            buffer.WriteString(password);
+            buffer.WriteString(restorationKey);
+            buffer.WriteString(email);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
         }
 
         /*

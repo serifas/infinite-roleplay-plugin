@@ -65,6 +65,8 @@ namespace Networking
         SSendNoProfileNotes = 46,
         SSendNoAuthorization = 47,
         SSendVerificationMessage = 48,
+        SSendVerified = 49,
+        SSendPasswordModificationForm = 50,
     }
     class DataReceiver
     {
@@ -433,25 +435,24 @@ namespace Networking
         }
 
 
-        public static void ReceiveTargetProfileGallery(byte[] data)
+        public static void ReceiveTargetGalleryImage(byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
-            int profileID = buffer.ReadInt();
             int imageCount = buffer.ReadInt();
-            ExistingTargetGalleryData = true;
+            int profileID = buffer.ReadInt();
             for (int i = 0; i < imageCount; i++)
             {
                 string url = buffer.ReadString();
                 bool nsfw = buffer.ReadBool();
-                Imaging.DownloadTargetProfileImage(url, profileID, nsfw, plugin, i);
+                Imaging.DownloadProfileImage(false, url, profileID, nsfw, plugin, i);             
                 plugin.chatGUI.Print(i.ToString());
-                //ProfileWindow.ReorderNoSend = true;
             }
+            TargetWindow.existingGalleryImageCount = imageCount;
+            ExistingTargetGalleryData = true;
             BookmarksWindow.DisableBookmarkSelection = false;
-            TargetMenu.DisableInput = false;
-            
+
             TargetGalleryLoadStatus = 1;
             buffer.Dispose();
 
@@ -482,7 +483,7 @@ namespace Networking
             {
                 string url = buffer.ReadString();
                 bool nsfw = buffer.ReadBool();
-                Imaging.DownloadProfileImage(url, profileID, nsfw, plugin.PluginInterfacePub, plugin, i);
+                Imaging.DownloadProfileImage(true, url, profileID, nsfw,  plugin, i);
                 ProfileWindow.imageIndex = i + 2;
                 ProfileWindow.ImageExists[i] = true;
                 plugin.chatGUI.Print(i.ToString());
@@ -733,5 +734,16 @@ namespace Networking
             plugin.verificationWindow.IsOpen = true;
             buffer.Dispose();
         }
+        public static void ReceivePasswordModificationForm(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            string email = buffer.ReadString();
+            RestorationWindow.restorationEmail = email;
+            plugin.restorationWindow.IsOpen = true;
+            buffer.Dispose();
+        }
+
     }
 }

@@ -101,8 +101,10 @@ namespace InfiniteRoleplay.Windows
         private GameFontHandle _Font;
         //BIO VARS
         public static IDalamudTextureWrap alignmentImg, personalityImg1, personalityImg2, personalityImg3;
-        public static IDalamudTextureWrap[] galleryImages, galleryThumbs;         
-        
+        public static IDalamudTextureWrap[] galleryImages, galleryThumbs = new IDalamudTextureWrap[30];
+        public static List<IDalamudTextureWrap> galleryThumbsList = new List<IDalamudTextureWrap>();
+        public static List<IDalamudTextureWrap> galleryImagesList = new List<IDalamudTextureWrap>();
+
         private IDalamudTextureWrap avatarImg, currentAvatarImg;
         public static string    characterEditName = "",
                                 characterEditRace = "",
@@ -142,6 +144,8 @@ namespace InfiniteRoleplay.Windows
             timer.Elapsed += misc.OnEventExecution;
             this._nameFont = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
+            string pictureTabPath = Path.Combine(pg.AssemblyLocation.Directory?.FullName!, @"UI/common/picturetab.png");
+            IDalamudTextureWrap pictureTab = plugin.PluginInterfacePub.UiBuilder.LoadImage(File.ReadAllBytes(pictureTabPath));
             this.avatarBytes = ImageToByteArray(image1);
             //alignment icons
              this.chatGui = chatGui;
@@ -152,7 +156,12 @@ namespace InfiniteRoleplay.Windows
                 ChapterTitle[i] = string.Empty;
                 HookContent[i] = string.Empty;
                 HookEditContent[i] = string.Empty;
+                galleryImagesList.Add(pictureTab);
+                galleryThumbsList.Add(pictureTab);
+                
             }       
+            galleryImages = galleryImagesList.ToArray();
+            galleryThumbs = galleryThumbsList.ToArray();
             //bars
              this._Font = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
              this.alignmentNames = new string[9] { "lawfulgood", "neutralgood", "chaoticgood", "lawfulneutral", "trueneutral", "chaoticneutral", "lawfulevil", "neutralevil", "chaoticevil" };
@@ -193,12 +202,12 @@ namespace InfiniteRoleplay.Windows
                         if (ImGui.Button("Story", new Vector2(100, 20))) { ClearUI(); viewStory = true; }
                         if (ImGui.IsItemHovered()) { ImGui.SetTooltip("View story section to your profile."); }
                     }
-                   /* if (ExistingGallery == true)
+                    if (ExistingGallery == true)
                     {
                         ImGui.SameLine();
                         if (ImGui.Button("Gallery", new Vector2(100, 20))) { ClearUI(); viewGallery = true; }
                         if (ImGui.IsItemHovered()) { ImGui.SetTooltip("View gallery section of this profile."); }
-                    }*/
+                    }
                     if (ExistingOOC == true)
                     {
                         ImGui.SameLine();
@@ -319,7 +328,7 @@ namespace InfiniteRoleplay.Windows
 
 
                     }
-                   /* if (viewGallery == true)
+                    if (viewGallery == true)
                     {
 
                         Misc.SetTitle(plugin, "Gallery");
@@ -334,11 +343,7 @@ namespace InfiniteRoleplay.Windows
 
                                     // you might normally want to embed resources and load them from the manifest stream
                                     //this.imageTextures.Add(goatImage);
-                                    if (existingGalleryThumbBytes.Length > 0 && existingGalleryImgBytes.Length > 0 && galleryExists[i] == false)
-                                    {
-                                        DrawImage(i, plugin);
-                                        galleryExists[i] = true;
-                                    }
+                                   
 
                                     ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
                                     if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
@@ -357,11 +362,7 @@ namespace InfiniteRoleplay.Windows
 
                                     // you might normally want to embed resources and load them from the manifest stream
                                     //this.imageTextures.Add(goatImage);
-                                    if (existingGalleryThumbBytes.Length > 0 && existingGalleryImgBytes.Length > 0 && galleryExists[i] == false)
-                                    {
-                                        DrawImage(i, plugin);
-                                        galleryExists[i] = true;
-                                    }
+                                   
 
                                     ImGui.Image(galleryThumbs[i].ImGuiHandle, new Vector2(galleryThumbs[i].Width, galleryThumbs[i].Height));
                                     if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Click to enlarge"); }
@@ -383,7 +384,7 @@ namespace InfiniteRoleplay.Windows
 
                         }
                     }
-                   */
+                   
                     if(addNotes == true)
                     {
 
@@ -456,7 +457,7 @@ namespace InfiniteRoleplay.Windows
             ExistingHooks = DataReceiver.ExistingTargetHooksData;
             ExistingOOC = DataReceiver.ExistingTargetOOCData;
             existingAvatarBytes = DataReceiver.currentTargetAvatar;
-            //ExistingGallery = DataReceiver.ExistingTargetGalleryData;
+            ExistingGallery = DataReceiver.ExistingTargetGalleryData;
             hookEditCount = DataReceiver.targetHookEditCount;
             if (viewBio == true)
             {

@@ -61,6 +61,7 @@ namespace InfiniteRoleplay
         public AdminWindow adminWindow;
         public ReportWindow reportWindow;
         public VerificationWindow verificationWindow;
+        public RestorationWindow restorationWindow;
         public static Misc misc = new Misc();
         public IDalamudTextureWrap[] images;
         public string Name => "Infinite Roleplay";
@@ -205,6 +206,7 @@ namespace InfiniteRoleplay
 
                 loginWindow = new LoginWindow(this, this.clientState.LocalPlayer);
                 profileWindow = new ProfileWindow(this, this.pluginInterface, chatGUI, this.Configuration);
+                restorationWindow = new RestorationWindow(this, this.pluginInterface);
                 verificationWindow = new VerificationWindow(this, this.pluginInterface);
                 // this.WindowSystem.AddWindow(new Loader(this.pluginInterface, this));
                 // this.WindowSystem.AddWindow(new SystemsWindow(this));
@@ -223,6 +225,7 @@ namespace InfiniteRoleplay
                 this.WindowSystem.AddWindow(imagePreview);
                 this.WindowSystem.AddWindow(reportWindow);
                 this.WindowSystem.AddWindow(verificationWindow);
+                this.WindowSystem.AddWindow(restorationWindow);
                 uiLoaded = true;
 
             }
@@ -263,6 +266,8 @@ namespace InfiniteRoleplay
             targetMenu.IsOpen = false;
             targetWindow.IsOpen = false;
             panelWindow.IsOpen = false;
+            restorationWindow.IsOpen = false;
+            verificationWindow.IsOpen = false;
         }
 
 

@@ -50,9 +50,10 @@ namespace Networking
                 packets.Add((int)ServerPackets.SRecGalleryImageLoaded, DataReceiver.ImageLoaded);
                 //packets.Add((int)ServerPackets.SRecImageDeletionStatus, DataReceiver.ReceiveImageDeletionStatus);
                 packets.Add((int)ServerPackets.SRecNoTargetGallery, DataReceiver.NoTargetGallery);
-                packets.Add((int)ServerPackets.SRecTargetGallery, DataReceiver.ReceiveTargetProfileGallery);
+                packets.Add((int)ServerPackets.SRecTargetGallery, DataReceiver.ReceiveTargetGalleryImage);
                 packets.Add((int)ServerPackets.SSendNoAuthorization, DataReceiver.ReceiveNoAuthorization);
                 packets.Add((int)ServerPackets.SSendVerificationMessage, DataReceiver.ReceiveVerificationMessage);
+                packets.Add((int)ServerPackets.SSendPasswordModificationForm, DataReceiver.ReceivePasswordModificationForm);
             }
             else
             {

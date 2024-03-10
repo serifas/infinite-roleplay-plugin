@@ -21,9 +21,11 @@ public class LoginWindow : Window, IDisposable
     public string registerPassword = string.Empty;
     public string registerVerPassword = string.Empty;
     public string email = string.Empty;
+    public string restorationEmail = string.Empty;
     public bool attemptedLogin = false;
     public bool updateWindow = false;
     public bool login = true;
+    public bool forgot = false;
     public static bool loginRequest = false;
     public bool register = false;
     public bool agree = false;
@@ -36,7 +38,7 @@ public class LoginWindow : Window, IDisposable
         ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
         ImGuiWindowFlags.NoScrollWithMouse)
     {
-        this.Size = new Vector2(232, 200);
+        this.Size = new Vector2(232, 250);
         this.SizeCondition = ImGuiCond.Always;
         this.plugin = plugin;
         this.Configuration = plugin.Configuration;
@@ -73,6 +75,13 @@ public class LoginWindow : Window, IDisposable
                     this.Configuration.Save();
                     DataSender.Login(username, password, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString());
                 }
+                ImGui.SameLine();
+                if (ImGui.Button("Forgot"))
+                {
+                    login = false;
+                    register = false;
+                    forgot = true;
+                }
                 if (ImGui.Button("Register"))
                 {
                     login = false;
@@ -83,6 +92,22 @@ public class LoginWindow : Window, IDisposable
             {
                 ImGui.Text("Loading...");
             }
+        }
+        if(forgot == true)
+        {
+            ImGui.InputTextWithHint("##RegisteredEmail", $"Email", ref this.restorationEmail, 100);
+            if(ImGui.Button("Submit Request"))
+            {
+                DataSender.SendRestorationRequest(this.restorationEmail);
+            }
+
+            if (ImGui.Button("Back"))
+            {
+                login = true;
+                register = false;
+                forgot = false;
+            }
+
         }
         if (register == true)
         {// Get the game client state
