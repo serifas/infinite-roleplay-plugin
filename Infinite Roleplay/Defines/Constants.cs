@@ -45,6 +45,7 @@ namespace InfiniteRoleplay.Scripts.Misc
             LawfulEvil = 6,
             NeutralEvil = 7,
             ChaoticEvil = 8,
+            None = 9,
         }
 
         public enum Personalities
@@ -178,6 +179,7 @@ namespace InfiniteRoleplay.Scripts.Misc
             if (id == (int)Alignments.LawfulEvil) { alignmentIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_evil.png")); }
             if (id == (int)Alignments.NeutralEvil) { alignmentIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_evil.png")); }
             if (id == (int)Alignments.ChaoticEvil) { alignmentIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil.png")); }
+            if (id == (int)Alignments.None) { alignmentIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/none.png")); }
             return alignmentIcon;
         }
         public static IDalamudTextureWrap PersonalityIcon(DalamudPluginInterface pluginInterface, int id)
@@ -378,9 +380,10 @@ namespace InfiniteRoleplay.Scripts.Misc
                                                                                                           "• I love to tell stories of my travels to faraway lands…even if I tend to embellish a little!\n" +
                                                                                                           "• I’m filled with glee at the idea of seeing things most people don’t. The more unsettling, the better.\n" +
                                                                                                           "• I’m desperately trying to escape my past and never stay in one place—so I’ve been everywhere."),
-                //None
-                (PersonalityNames((int)Personalities.None),  "• Not Specified."),
 
+
+                //Worldly
+                (PersonalityNames((int)Personalities.None),  "• Unspecified."),
         };
 
         public static readonly (string, string)[] AlignmentVals =

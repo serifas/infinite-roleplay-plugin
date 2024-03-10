@@ -469,6 +469,8 @@ namespace Networking
                 ProfileWindow.galleryImages[i] = ProfileWindow.pictureTab;
                 ProfileWindow.imageURLs[i] = string.Empty;
             }
+            ProfileWindow.ImageExists[0] = true;
+            ProfileWindow.imageIndex = 2;
             GalleryLoadStatus = 0;
             ExistingGalleryData = false;
         }
@@ -487,7 +489,6 @@ namespace Networking
                 Imaging.DownloadProfileImage(true, url, profileID, nsfw,  plugin, i);
                 ProfileWindow.imageIndex = i + 2;
                 ProfileWindow.ImageExists[i] = true;
-                plugin.chatGUI.Print(i.ToString());
             }
             ExistingGalleryData = true;
        
