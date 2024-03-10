@@ -33,14 +33,13 @@ namespace InfiniteRoleplay.Windows
         public static string restorationPass = string.Empty;
         public static string restorationPassConfirm = string.Empty;
         public static string restorationEmail = string.Empty;
-        public static string restorationUsername = string.Empty;
         public RestorationWindow(Plugin plugin, DalamudPluginInterface Interface) : base(
        "RESTORATION", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
             this.SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(400, 350),
-                MaximumSize = new Vector2(400, 350)
+                MinimumSize = new Vector2(420, 350),
+                MaximumSize = new Vector2(420, 350)
             };
             pg = plugin;
             this._nameFont = plugin.PluginInterfacePub.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
@@ -61,16 +60,15 @@ namespace InfiniteRoleplay.Windows
             ImGui.Spacing();
             //now for some simple toggles
             ImGui.InputText("Restoration Key", ref restorationKey, 10);
-            ImGui.InputText("New Username", ref restorationUsername, 25);
             ImGui.InputText("New Password", ref restorationPass, 30, ImGuiInputTextFlags.Password);
             ImGui.InputText("New Password Confirmation", ref restorationPassConfirm, 30, ImGuiInputTextFlags.Password);
             if (ImGui.Button("Submit"))
             {
-                if(restorationKey != string.Empty && restorationUsername != string.Empty && restorationPass != string.Empty && restorationPassConfirm != string.Empty)
+                if(restorationKey != string.Empty && restorationPass != string.Empty && restorationPassConfirm != string.Empty)
                 {
                     if (restorationPass == restorationPassConfirm)
                     {
-                        DataSender.SendRestoration(restorationUsername, restorationEmail, restorationPass, restorationKey);
+                        DataSender.SendRestoration(restorationEmail, restorationPass, restorationKey);
                     }
                    
 

@@ -452,11 +452,10 @@ namespace Networking
             buffer.Dispose();
         }
 
-        internal static void SendRestoration(string username, string email, string password, string restorationKey)
+        internal static void SendRestoration(string email, string password, string restorationKey)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.SSubmitRestorationKey);
-            buffer.WriteString(username);
             buffer.WriteString(password);
             buffer.WriteString(restorationKey);
             buffer.WriteString(email);
