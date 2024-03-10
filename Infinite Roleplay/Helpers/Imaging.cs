@@ -302,6 +302,15 @@ namespace InfiniteRoleplay.Helpers
                 return img;
             }
         }
-        
+
+        internal static void RemoveAllImages(Plugin plugin)
+        {
+            string GalleryPath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/Galleries/");
+            if (Directory.Exists(GalleryPath))
+            {
+                Directory.Delete(GalleryPath, true);
+            }
+            
+        }
     }
 }

@@ -243,6 +243,7 @@ namespace InfiniteRoleplay
             {
                 DisconnectFromServer();
             }
+            Imaging.RemoveAllImages(this);
             //TargetWindow.timer.Dispose();
             //ProfileWindow.timer.Dispose();
             //if(images != null && images.Length > 0)
