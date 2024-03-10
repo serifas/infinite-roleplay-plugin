@@ -140,30 +140,43 @@ namespace InfiniteRoleplay.Helpers
         }
         public static void DownloadTargetProfileImage(string url, int profileID, bool nsfw, Plugin plugin, int index)
         {
-            WebClient webClient = new WebClient();
-            string GalleryPath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/Galleries/");
-            string imagePath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + "gallery_" + profileID + "_" + index + ".png"); // Create a folder named 'Images' in your root directory
-            if (!Directory.Exists(GalleryPath))
+            if (IsImageUrl(url))
             {
-                Directory.CreateDirectory(GalleryPath);
-            }
-            webClient.DownloadFile(url, imagePath);
-            IDalamudTextureWrap galleryImage = plugin.PluginInterfacePub.UiBuilder.LoadImage(imagePath);
-            IDalamudTextureWrap nsfwThumb = plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/nsfw.png"));
+                WebClient webClient = new WebClient();
+                string extension = GetImageFileExtension(url);
+                string GalleryPath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + profileID + "/");
+                string imagePath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + profileID + "/" + "gallery_" + profileID + "_" + index + "." + extension); // Create a folder named 'Images' in your root directory
+                if (!Directory.Exists(GalleryPath))
+                {
+                    Directory.CreateDirectory(GalleryPath);
+                }
+                webClient.DownloadFile(url, imagePath);
+
+                System.Drawing.Image baseImage = System.Drawing.Image.FromFile(imagePath);
+                System.Drawing.Image scaledImage = ScaleImage(baseImage, 1000, 800);
+                SaveImage(scaledImage, GalleryPath, "gallery_scaled_" + profileID + "_" + index + "." + extension);
+                string scaledImagePath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + profileID + "/" + "gallery_scaled_" + profileID + "_" + index + "." + extension);
+
+                IDalamudTextureWrap galleryImage = plugin.PluginInterfacePub.UiBuilder.LoadImage(scaledImagePath);
+                IDalamudTextureWrap nsfwThumb = plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/nsfw.png"));
 
 
-            TargetWindow.galleryImages[index] = galleryImage;
-            if (nsfw == true)
-            {
-                TargetWindow.galleryThumbs[index] = nsfwThumb;
-            }
-            else
-            {
-                System.Drawing.Image thumb = System.Drawing.Image.FromFile(imagePath);
-                System.Drawing.Image img = ScaleImage(thumb, 120, 120);
-                SaveImage(img, GalleryPath, "gallery_thumb_" + profileID + "_" + index + ".png");
-                IDalamudTextureWrap imgThumb = plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/Galleries/gallery_thumb_" + profileID + "_" + index + ".png"));
-                TargetWindow.galleryThumbs[index] = imgThumb;
+                TargetWindow.galleryImages[index] = galleryImage;
+                if (nsfw == true)
+                {
+                    TargetWindow.galleryThumbs[index] = nsfwThumb;
+                }
+                else
+                {
+                    System.Drawing.Image thumb = System.Drawing.Image.FromFile(imagePath);
+                    System.Drawing.Image img = ScaleImage(thumb, 120, 120);
+                    SaveImage(img, GalleryPath, "gallery_thumb_" + profileID + "_" + index + "." + extension);
+                    IDalamudTextureWrap imgThumb = plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + profileID + "/gallery_thumb_" + profileID + "_" + index + "." + extension));
+                    TargetWindow.galleryThumbs[index] = imgThumb;
+                }
+                plugin.chatGUI.Print(index + " Added");
+
+
             }
         }
 

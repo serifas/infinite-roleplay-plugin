@@ -124,7 +124,7 @@ namespace InfiniteRoleplay.Windows
                 }
                 if (ImGui.IsItemHovered())
                 {
-                    ImGui.SetTooltip("Connections - Comming Soon");
+                    ImGui.SetTooltip("Connections - Coming Soon");
                 }
                 if (ImGui.ImageButton(this.systemsImage.ImGuiHandle, new Vector2(100, 50)))
                 {
@@ -142,7 +142,7 @@ namespace InfiniteRoleplay.Windows
                 }
                 if (ImGui.IsItemHovered())
                 {
-                    ImGui.SetTooltip("Events - Comming Soon");
+                    ImGui.SetTooltip("Events - Coming Soon");
                 }
             }
             else

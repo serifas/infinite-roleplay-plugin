@@ -446,6 +446,7 @@ namespace Networking
                 string url = buffer.ReadString();
                 bool nsfw = buffer.ReadBool();
                 Imaging.DownloadTargetProfileImage(url, profileID, nsfw, plugin, i);
+                plugin.chatGUI.Print(i.ToString());
                 //ProfileWindow.ReorderNoSend = true;
             }
             BookmarksWindow.DisableBookmarkSelection = false;

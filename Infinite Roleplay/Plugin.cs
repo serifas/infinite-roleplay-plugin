@@ -222,6 +222,7 @@ namespace InfiniteRoleplay
                 this.WindowSystem.AddWindow(bookmarksWindow);
                 this.WindowSystem.AddWindow(imagePreview);
                 this.WindowSystem.AddWindow(reportWindow);
+                this.WindowSystem.AddWindow(verificationWindow);
                 uiLoaded = true;
 
             }

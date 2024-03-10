@@ -35,8 +35,8 @@ namespace InfiniteRoleplay.Windows
         {
             this.SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(300, 150),
-                MaximumSize = new Vector2(300, 150)
+                MinimumSize = new Vector2(350, 200),
+                MaximumSize = new Vector2(350, 200)
             };
             pg = plugin;
             this._nameFont = plugin.PluginInterfacePub.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
@@ -53,7 +53,7 @@ namespace InfiniteRoleplay.Windows
             using var defStyle = ImRaii.DefaultStyle();
             using var defFont = ImRaii.DefaultFont();
             //okay that's done.
-            ImGui.Text("We sent a verification key to the email provided upon registration. \nPlease provide it below...");
+            ImGui.Text("We sent a verification key to the email provided. \nPlease provide it below...");
             ImGui.Spacing();
             //now for some simple toggles
             ImGui.InputText("Key", ref verificationKey, 10);
