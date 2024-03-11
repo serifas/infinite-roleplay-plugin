@@ -54,6 +54,9 @@ namespace Networking
                 packets.Add((int)ServerPackets.SSendNoAuthorization, DataReceiver.ReceiveNoAuthorization);
                 packets.Add((int)ServerPackets.SSendVerificationMessage, DataReceiver.ReceiveVerificationMessage);
                 packets.Add((int)ServerPackets.SSendPasswordModificationForm, DataReceiver.ReceivePasswordModificationForm);
+                packets.Add((int)ServerPackets.SSendNoOOCInfo, DataReceiver.ReceiveNoOOCInfo);
+                packets.Add((int)ServerPackets.SSendOOC, DataReceiver.ReceiveProfileOOC);
+                packets.Add((int)ServerPackets.SSendTargetOOC, DataReceiver.ReceiveTargetOOCInfo);
             }
             else
             {

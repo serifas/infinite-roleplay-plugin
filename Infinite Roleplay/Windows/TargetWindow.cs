@@ -91,7 +91,7 @@ namespace InfiniteRoleplay.Windows
         public static bool ExistingProfile;
         public static bool loadSize = false;
         public static string storyTitle = "";
-        public static string alignmentTooltip, personality1Tooltip, personality2Tooltip, personality3Tooltip = "";
+        public static string alignmentTooltip, personality1Tooltip, personality2Tooltip, personality3Tooltip, oocInfo = "";
         public static int[] alignmentVals, alignmentEditVals = new int[] { };
         private float[] alignmentWidthVals = new float[] { };
         private string[] alignmentNames = new string[]{};
@@ -336,6 +336,11 @@ namespace InfiniteRoleplay.Windows
                         }
 
 
+                    }
+                    if(viewOOC == true)
+                    {
+                        Misc.SetTitle(plugin, "OOC Information");
+                        ImGui.Text(oocInfo);
                     }
                     if (viewGallery == true)
                     {

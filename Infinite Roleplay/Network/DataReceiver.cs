@@ -67,6 +67,9 @@ namespace Networking
         SSendVerificationMessage = 48,
         SSendVerified = 49,
         SSendPasswordModificationForm = 50,
+        SSendOOC = 51,
+        SSendTargetOOC = 52,
+        SSendNoOOCInfo = 53,
     }
     class DataReceiver
     {
@@ -495,7 +498,6 @@ namespace Networking
                 bool nsfw = buffer.ReadBool();
                 bool trigger = buffer.ReadBool();
                 Imaging.DownloadProfileImage(false, url, profileID, nsfw, trigger, plugin, i);             
-                plugin.chatGUI.Print(i.ToString());
             }
             TargetMenu.DisableInput = false;
             TargetWindow.existingGalleryImageCount = imageCount;
@@ -826,6 +828,35 @@ namespace Networking
             string email = buffer.ReadString();
             RestorationWindow.restorationEmail = email;
             plugin.restorationWindow.IsOpen = true;
+            buffer.Dispose();
+        }
+        public static void ReceiveProfileOOC(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            string ooc = buffer.ReadString();
+            ProfileWindow.oocInfo = ooc;
+            buffer.Dispose();
+            OOCLoadStatus = -1;
+        }
+        public static void ReceiveNoOOCInfo(byte[] data)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            ProfileWindow.oocInfo = "";
+            buffer.Dispose();
+        }
+        public static void ReceiveTargetOOCInfo(byte[] data)
+        {
+
+            var buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            var packetID = buffer.ReadInt();
+            string ooc = buffer.ReadString();
+            TargetWindow.oocInfo = ooc;
+            ExistingTargetOOCData = true;
             buffer.Dispose();
         }
 

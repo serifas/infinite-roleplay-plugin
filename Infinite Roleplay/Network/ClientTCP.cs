@@ -23,7 +23,7 @@ namespace Networking
         public static TcpClient clientSocket;
         private static NetworkStream myStream;
         private static byte[] recBuffer;
-        private static string server = "47.158.180.196";
+        private static string server = "89.116.49.85";
         private static int port = 25565;
         public static Timer timer;
         public static Plugin plugin;
@@ -87,7 +87,6 @@ namespace Networking
                     {
                         DataSender.SendHelloServer(internalIpString, externalIpString.ToString());
                     }
-                    plugin.chatGUI.PrintError("Callback Loaded");
 
                 }
                 if (plugin.uiLoaded == false)
@@ -117,7 +116,6 @@ namespace Networking
             InitializingNetworking(true);
             loadCallback = true;
             CheckStatus();
-            plugin.chatGUI.PrintError("We connected and are checking status");
         }
 
         public static void InitializingNetworking(bool start)

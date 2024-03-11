@@ -107,6 +107,7 @@ namespace InfiniteRoleplay.Windows
         public static int hookEditCount;
         public static int chapterCount = 0;
         public static int chapterEditCount;
+        public static string oocInfo;
         public static byte[] picBytes;
         public static int imageIndexVal = 0;
         public bool ExistingProfile;
@@ -225,7 +226,7 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (this.ExistingStory == true) { if (ImGui.Button("Edit Story", new Vector2(100, 20))) { ClearUI(); editStory = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Story."); } } else { if (ImGui.Button("Add Story", new Vector2(100, 20))) { ClearUI(); editStory = true; } }
                     ImGui.SameLine();
-                    if (this.ExistingOOC == true) { if (ImGui.Button("Edit OOC Info", new Vector2(100, 20))) { ClearUI(); editOOC = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your OOC Info."); } } else { if (ImGui.Button("Add OOC Info", new Vector2(100, 20))) { ClearUI(); addOOC = true; } }
+                    if (this.ExistingOOC == true) { if (ImGui.Button("Edit OOC Info", new Vector2(100, 20))) { ClearUI(); addOOC = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your OOC Info."); } } else { if (ImGui.Button("Add OOC Info", new Vector2(100, 20))) { ClearUI(); addOOC = true; } }
                     ImGui.SameLine();
                     if (this.ExistingGallery == true) { if (ImGui.Button("Edit Gallery", new Vector2(100, 20))) { ClearUI(); addGallery = true; } if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Edit your Gallery."); } } else { if (ImGui.Button("Add Gallery", new Vector2(100, 20))) { ClearUI(); addGallery = true; } }
 
@@ -234,6 +235,7 @@ namespace InfiniteRoleplay.Windows
                 bool success = false;
                 if (ImGui.BeginChild("PROFILE"))
                 {
+                    #region BIO
                     if (editBio == true)
                     {
                         this.currentAvatarImg = pg.UiBuilder.LoadImage(existingAvatarBytes);
@@ -308,6 +310,8 @@ namespace InfiniteRoleplay.Windows
 
                         }
                     }
+                    #endregion
+                    #region HOOKS
                     if (editHooks == true)
                     {
                         if (resetHooks == true)
@@ -354,6 +358,8 @@ namespace InfiniteRoleplay.Windows
                             DataSender.SendHooks(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), hookMsg);
                         }
                     }
+                    #endregion
+                    #region STORY
                     if (editStory == true)
                     {
                         if (resetStory == true)
@@ -414,6 +420,9 @@ namespace InfiniteRoleplay.Windows
                             DataSender.SendStory(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(), storyEditTitle, chapterMessage);
                         }
                     }
+                    #endregion
+                    #region GALLERY
+
                     if (addGallery == true)
                     {
                         if (ImGui.Button("Add Image"))
@@ -437,7 +446,18 @@ namespace InfiniteRoleplay.Windows
                         addGalleryImageGUI = true;
                         ImageExists[imageIndex] = true;
                     }
+                    #endregion
+                    #region OOC
 
+                    if (addOOC)
+                    {
+                        ImGui.InputTextMultiline("OOC Info", ref oocInfo, 50000, new Vector2(500, 600));  
+                        if(ImGui.Button("Submit OOC"))
+                        {
+                            DataSender.SendOOCInfo(configuration.username, configuration.password, oocInfo);
+                        }
+                    }
+                    #endregion
                     if (addImageToGallery == true)
                     {
                         addImageToGallery = false;
@@ -463,7 +483,7 @@ namespace InfiniteRoleplay.Windows
                         editAvatar = false;
                         EditImage(true, 0);
                     }
-                  
+                    
                     if (Reorder == true)
                     {
                         Reorder = false;
@@ -486,22 +506,7 @@ namespace InfiniteRoleplay.Windows
                         ImageExists[imageIndex] = false;
 
                     }
-                    if (ReorderNoSend == true)
-                    {
-                        ReorderNoSend = false;
-                        bool nextExists = ImageExists[NextAvailableImageIndex() + 1];
-                        int firstOpen = NextAvailableImageIndex();
-                        for (int i = firstOpen; i < imageIndex; i++)
-                        {
-                            ImageExists[firstOpen] = true;
-                            if (nextExists)
-                            {
-                                galleryImages[i] = galleryImages[i + 1];
-                                galleryThumbs[i] = galleryThumbs[i + 1];
-
-                            }
-                        }
-                    }
+                   
 
                 }
             }
@@ -601,7 +606,6 @@ namespace InfiniteRoleplay.Windows
                     }
                     catch(Exception ex)
                     {
-                        plugin.chatGUI.Print(ex.Message);
                     }
             }
 

@@ -52,6 +52,7 @@ namespace Networking
         SSubmitVerificationKey = 32,
         SSubmitRestorationRequest = 33,
         SSubmitRestorationKey = 34,
+        SSendOOC = 35,
     }
     public class DataSender
     {
@@ -459,6 +460,17 @@ namespace Networking
             buffer.WriteString(password);
             buffer.WriteString(restorationKey);
             buffer.WriteString(email);
+            ClientTCP.SendData(buffer.ToArray());
+            buffer.Dispose();
+        }
+
+        internal static void SendOOCInfo(string username, string password, string OOC)
+        {
+            var buffer = new ByteBuffer();
+            buffer.WriteInteger((int)ClientPackets.SSendOOC);
+            buffer.WriteString(username);
+            buffer.WriteString(password);
+            buffer.WriteString(OOC);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }

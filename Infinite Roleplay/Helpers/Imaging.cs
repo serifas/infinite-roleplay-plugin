@@ -24,7 +24,6 @@ namespace InfiniteRoleplay.Helpers
         {
             if(IsImageUrl(url))
             {
-                plugin.chatGUI.Print("It's an image");
                 WebClient webClient = new WebClient();
                 string extension = GetImageFileExtension(url);
                 string GalleryPath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + profileID + "/");
@@ -35,13 +34,11 @@ namespace InfiniteRoleplay.Helpers
                 }
                 webClient.DownloadFile(url, imagePath);
 
-                plugin.chatGUI.Print("downloaded image");
                 System.Drawing.Image baseImage = System.Drawing.Image.FromFile(imagePath);
                 System.Drawing.Image scaledImage = ScaleImage(baseImage, 1000, 800);
                 SaveImage(scaledImage, GalleryPath, "gallery_scaled_" + profileID + "_" + index + "." + extension);
                 string scaledImagePath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/Galleries/" + profileID + "/" + "gallery_scaled_" + profileID + "_" + index + "." + extension);
 
-                plugin.chatGUI.Print("saved scaled image and set path");
 
                 IDalamudTextureWrap galleryImage = plugin.PluginInterfacePub.UiBuilder.LoadImage(scaledImagePath);
                 IDalamudTextureWrap nsfwThumb = plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/nsfw.png"));
@@ -54,12 +51,10 @@ namespace InfiniteRoleplay.Helpers
                     ProfileWindow.imageURLs[index] = url;
                     ProfileWindow.NSFW[index] = nsfw;
                     ProfileWindow.TRIGGER[index] = trigger;
-                    plugin.chatGUI.Print("assigned profile iamge");
                 }
                 else
                 {                    
                     TargetWindow.galleryImages[index] = galleryImage;
-                    plugin.chatGUI.Print("assigned target image");
                 }
                 if(trigger == true && nsfw == false)
                 {
@@ -67,12 +62,10 @@ namespace InfiniteRoleplay.Helpers
                     if(self == true)
                     {
                         ProfileWindow.galleryThumbs[index] = triggerThumb;
-                        plugin.chatGUI.Print("assigned trigger nsfw thumb");
                     }
                     else
                     {
                         TargetWindow.galleryThumbs[index] = triggerThumb;
-                        plugin.chatGUI.Print("assigned target nsfw thumb");
                     }
                 }
                 if(nsfw == true && trigger == false)
@@ -80,12 +73,10 @@ namespace InfiniteRoleplay.Helpers
                     if (self == true)
                     {
                         ProfileWindow.galleryThumbs[index] = nsfwThumb;
-                        plugin.chatGUI.Print("assigned trigger nsfw thumb");
                     }
                     else
                     {
                         TargetWindow.galleryThumbs[index] = nsfwThumb;
-                        plugin.chatGUI.Print("assigned target nsfw thumb");
                     }
 
                 }
@@ -95,13 +86,11 @@ namespace InfiniteRoleplay.Helpers
                     {
                        
                         ProfileWindow.galleryThumbs[index] = nsfwTriggerThumb;
-                        plugin.chatGUI.Print("assigned trigger nsfw thumb");
 
                     }
                     else
                     {
                         TargetWindow.galleryThumbs[index] = nsfwTriggerThumb;
-                        plugin.chatGUI.Print("assigned target nsfw thumb");
                     }
                 }
               
@@ -114,15 +103,12 @@ namespace InfiniteRoleplay.Helpers
                     if(self == true) 
                     {
                         ProfileWindow.galleryThumbs[index] = imgThumb;
-                        plugin.chatGUI.Print("assigned profile thumb");
                     }
                     else
                     {
                         TargetWindow.galleryThumbs[index] = imgThumb;
-                        plugin.chatGUI.Print("assigned target thumb");
                     }
                 }
-                plugin.chatGUI.Print(index + " Added");
 
 
             }
