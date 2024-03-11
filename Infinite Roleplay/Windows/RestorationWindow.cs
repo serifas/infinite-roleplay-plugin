@@ -33,6 +33,8 @@ namespace InfiniteRoleplay.Windows
         public static string restorationPass = string.Empty;
         public static string restorationPassConfirm = string.Empty;
         public static string restorationEmail = string.Empty;
+        public static string restorationStatus = string.Empty;
+        public static Vector4 restorationCol = new Vector4(1, 1, 1, 1);
         public RestorationWindow(Plugin plugin, DalamudPluginInterface Interface) : base(
        "RESTORATION", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
@@ -75,6 +77,7 @@ namespace InfiniteRoleplay.Windows
                 }
                
             }
+            ImGui.TextColored(restorationCol, restorationStatus);
         }
         public void Dispose()
         {
@@ -82,7 +85,6 @@ namespace InfiniteRoleplay.Windows
         }
         public override void Update()
         {
-            
         }
     }
 

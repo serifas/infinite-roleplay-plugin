@@ -70,7 +70,7 @@ namespace Networking
     }
     class DataReceiver
     {
-        public static string accountStatus = "status...";
+        public static string accountStatus, verificationStatus, forgotStatus, restorationStatus = "";
         public static bool LoadedSelf = false;
         public static bool ExistingProfileData, ExistingProfileNotes, ExistingBioData, ExistingHooksData, ExistingStoryData, ExistingOOCData, ExistingGalleryData = false;
         public static int BioLoadStatus = -1, HooksLoadStatus = -1, StoryLoadStatus = -1, OOCLoadStatus = -1, GalleryLoadStatus = -1, BookmarkLoadStatus = -1;
@@ -86,7 +86,7 @@ namespace Networking
                           lawfulEvilEditVal, neutralEvilEditVal, chaoticEvilEditVal;
         public static string currentName, currentRace, currentGender,currentAge, currentHeight,currentWeight,currentAfg;
 
-        public static Vector4 accounStatusColor = new Vector4(255, 255, 255, 255);
+        public static Vector4 accounStatusColor, verificationStatusColor, forgotStatusColor, restorationStatusColor = new Vector4(255, 255, 255, 255);
         public static Plugin plugin;
         public static Dictionary<int, string> characters = new Dictionary<int, string>();
         public static Dictionary<int, string> adminCharacters = new Dictionary<int, string>();
@@ -404,34 +404,81 @@ namespace Networking
             var packetID = buffer.ReadInt();
             buffer.Dispose();
         }
-        public static void LoginAuthenticated(byte[] data)
+        public static void StatusMessage(byte[] data)
         {
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             int status = buffer.ReadInt();
             buffer.Dispose();
-
-             if(status == -1)
+             //account window
+             if(status == (int)Constants.StatusMessages.LOGIN_BANNED)
              {
                 plugin.loggedIn = false;
-                accounStatusColor = new Vector4(255, 0, 0, 255);
-                accountStatus = "Account Banned";
+                LoginWindow.statusColor = new Vector4(255, 0, 0, 255);
+                LoginWindow.status = "Account Banned";
              }
-             if(status == 0)
+             if(status == (int)Constants.StatusMessages.LOGIN_UNVERIFIED)
              {
                 plugin.loggedIn = false;
-                accounStatusColor = new Vector4(255, 255, 0, 255);
-                accountStatus = "Inactive Account";
-             }
-             if (status == 1)
-             {
+                LoginWindow.statusColor = new Vector4(255, 255, 0, 255);
+                LoginWindow.status = "Unverified Account";
+            }
+            if (status == (int)Constants.StatusMessages.LOGIN_VERIFIED)
+            {
                 plugin.loggedIn = true;
                 plugin.CloseAllWindows();
-                plugin.panelWindow.IsOpen = true;                
-                 
-             }
+                plugin.panelWindow.IsOpen = true;
+            }
+            if (status == (int)Constants.StatusMessages.REGISTRATION_DUPLICATE_USERNAME)
+            {
+                LoginWindow.statusColor = new Vector4(255, 255, 0, 255);
+                LoginWindow.status = "Username already in use.";
+            }
 
+            if (status == (int)Constants.StatusMessages.REGISTRATION_DUPLICATE_EMAIL)
+            {
+                LoginWindow.statusColor = new Vector4(255, 255, 0, 255);
+                LoginWindow.status = "Email already in use.";
+            }
+            if (status == (int)Constants.StatusMessages.LOGIN_WRONG_INFORMATION)
+            {
+                plugin.loggedIn = false;
+                LoginWindow.statusColor = new Vector4(255, 255, 0, 255);
+                LoginWindow.status = "Incorrect Account Info";
+            }
+            if (status == (int)Constants.StatusMessages.FORGOT_REQUEST_RECEIVED)
+            {
+                LoginWindow.statusColor = new Vector4(0, 255, 0, 255);
+                LoginWindow.status = "Request received, please stand by...";
+            }
+            if (status == (int)Constants.StatusMessages.FORGOT_REQUEST_INCORRECT)
+            {
+                LoginWindow.statusColor = new Vector4(255, 255, 0, 255);
+                LoginWindow.status = "There is no account with this email.";
+            }
+            //Restoration window
+            if (status == (int)Constants.StatusMessages.PASSCHANGE_INCORRECT_RESTORATION_KEY)
+            {
+                RestorationWindow.restorationCol = new Vector4(255, 0, 0, 255);
+                RestorationWindow.restorationStatus = "Incorrect Key.";
+            }
+            if (status == (int)Constants.StatusMessages.PASSCHANGE_PASSWORD_CHANGED)
+            {
+                RestorationWindow.restorationCol = new Vector4(0, 255, 0, 255);
+                RestorationWindow.restorationStatus = "Password updated, you may close this window.";
+            }
+            //Verification window
+            if (status == (int)Constants.StatusMessages.VERIFICATION_KEY_VERIFIED)
+            {
+                VerificationWindow.verificationCol = new Vector4(0, 255, 0, 255);
+                VerificationWindow.verificationStatus = "Account Verified! you may now log in.";
+            }
+            if (status == (int)Constants.StatusMessages.VERIFICATION_INCORRECT_KEY)
+            {
+                VerificationWindow.verificationCol = new Vector4(255, 0, 0, 255);
+                VerificationWindow.verificationStatus = "Incorrect verification key.";
+            }
         }
 
 
@@ -507,7 +554,7 @@ namespace Networking
             string name = buffer.ReadString();
             string race = buffer.ReadString();
             string gender = buffer.ReadString();
-            int age = buffer.ReadInt();
+            string age = buffer.ReadString();
             string height = buffer.ReadString();
             string weight = buffer.ReadString();
             string atFirstGlance = buffer.ReadString();
@@ -532,9 +579,9 @@ namespace Networking
                 TargetWindow.showPersonality= true;
             }
 
-            TargetWindow.characterEditName = name; TargetWindow.characterEditRace = race; TargetWindow.characterEditGender = gender;
-            TargetWindow.characterEditAge = age.ToString(); TargetWindow.characterEditHeight = height; TargetWindow.characterEditWeight = weight.ToString();
-            TargetWindow.characterEditAfg = atFirstGlance;
+            TargetWindow.characterEditName = name.Replace("''", "'"); TargetWindow.characterEditRace = race.Replace("''", "'"); TargetWindow.characterEditGender = gender.Replace("''", "'");
+            TargetWindow.characterEditAge = age.Replace("''", "'"); TargetWindow.characterEditHeight = height.Replace("''", "'"); TargetWindow.characterEditWeight = weight.Replace("''", "'");
+            TargetWindow.characterEditAfg = atFirstGlance.Replace("''", "'");
             TargetWindow.alignmentImg = Constants.AlignementIcon(plugin.PluginInterfacePub, alignment);
             TargetWindow.personalityImg1 = Constants.PersonalityIcon(plugin.PluginInterfacePub, personality_1);
             TargetWindow.personalityImg2 = Constants.PersonalityIcon(plugin.PluginInterfacePub, personality_2);
@@ -566,7 +613,7 @@ namespace Networking
             string name = buffer.ReadString();
             string race = buffer.ReadString();
             string gender = buffer.ReadString();
-            int age = buffer.ReadInt();
+            string age = buffer.ReadString();
             string height = buffer.ReadString();
             string weight = buffer.ReadString();
             string atFirstGlance = buffer.ReadString();
@@ -594,7 +641,7 @@ namespace Networking
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.name] = name.Replace("''", "'");
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.race] = race.Replace("''", "'");
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.gender] = gender.Replace("''", "'");
-            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.age] = age.ToString();
+            ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.age] = age.ToString().Replace("''", "'");
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.height] = height.Replace("''", "'");
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.weight] = weight.Replace("''", "'");
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.afg] = atFirstGlance.Replace("''", "'");

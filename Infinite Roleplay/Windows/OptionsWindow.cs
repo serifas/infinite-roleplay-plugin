@@ -44,6 +44,7 @@ namespace InfiniteRoleplay.Windows
             this._nameFont = plugin.PluginInterfacePub.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
             showWIP = plugin.Configuration.showWIP;
             showTargetOptions = plugin.Configuration.showTargetOptions;
+            showKofi = plugin.Configuration.showKofi;
         }
         public override void Draw()
         {

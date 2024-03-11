@@ -301,7 +301,7 @@ namespace InfiniteRoleplay.Windows
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.name].Replace("'", "''"),
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.race].Replace("'", "''"),
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.gender].Replace("'", "''"),
-                                                    int.Parse(bioFieldsArr[(int)Constants.BioFieldTypes.age]),
+                                                    bioFieldsArr[(int)Constants.BioFieldTypes.age].Replace("'", "''"),
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.height].Replace("'", "''"),
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.weight].Replace("'", "''"),
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.afg].Replace("'", "''"),

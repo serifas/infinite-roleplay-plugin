@@ -30,6 +30,8 @@ namespace InfiniteRoleplay.Windows
         private float _modVersionWidth;
         public static Plugin pg;
         public static string verificationKey = string.Empty;
+        public static string verificationStatus = string.Empty;
+        public static Vector4 verificationCol = new Vector4(1, 1, 1, 1);
         public VerificationWindow(Plugin plugin, DalamudPluginInterface Interface) : base(
        "VERIFICATION", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
@@ -61,6 +63,7 @@ namespace InfiniteRoleplay.Windows
             {
                 DataSender.SendVerification(pg.Configuration.username, verificationKey);
             }
+            ImGui.TextColored(verificationCol, verificationStatus);
         }
         public void Dispose()
         {
@@ -68,7 +71,6 @@ namespace InfiniteRoleplay.Windows
         }
         public override void Update()
         {
-            
         }
     }
 

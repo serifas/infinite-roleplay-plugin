@@ -35,8 +35,8 @@ public class LoginWindow : Window, IDisposable
     public bool agree = false;
     public static IDalamudTextureWrap kofiBtnImg;
     private PlayerCharacter playerCharacter;
-    public string status = "status...";
-    public Vector4 statusColor = new Vector4(255, 255, 255, 255);
+    public static string status = "status...";
+    public static Vector4 statusColor = new Vector4(255, 255, 255, 255);
     public Plugin plugin;
     public LoginWindow(Plugin plugin, PlayerCharacter playerCharacter) : base(
         "LOGIN",
@@ -124,12 +124,8 @@ public class LoginWindow : Window, IDisposable
 
         }
         if (register == true)
-        {// Get the game client state
+        {
 
-            // Get the player character object
-            PlayerCharacter player = plugin.clientState.LocalPlayer;
-
-            // Get the player's user ID
             ImGui.InputTextWithHint("##username", $"Username", ref this.registerUser, 100);
             ImGui.InputTextWithHint("##passver", $"Password", ref this.registerPassword, 100, ImGuiInputTextFlags.Password);
             ImGui.InputTextWithHint("##regpassver", $"Verify Password", ref this.registerVerPassword, 100, ImGuiInputTextFlags.Password);
@@ -142,7 +138,7 @@ public class LoginWindow : Window, IDisposable
                     {
                         if (registerPassword == registerVerPassword)
                         {
-                            DataSender.Register(registerUser, registerPassword, email, "");
+                            DataSender.Register(registerUser, registerPassword, email);
                             login = true;
                             register = false;
                         }
@@ -158,7 +154,7 @@ public class LoginWindow : Window, IDisposable
             }
 
         }
-        ImGui.TextColored(this.statusColor, this.status);
+        ImGui.TextColored(statusColor, status);
     }
     public static FileDialogManager SetupFileManager()
     {
@@ -171,8 +167,6 @@ public class LoginWindow : Window, IDisposable
     }
     public override void Update()
     {
-        this.status = DataReceiver.accountStatus;
-        this.statusColor = DataReceiver.accounStatusColor;
     }
 
 

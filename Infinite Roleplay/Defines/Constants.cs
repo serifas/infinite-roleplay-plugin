@@ -18,6 +18,29 @@ namespace InfiniteRoleplay.Scripts.Misc
 {
     internal class Constants
     {
+        public enum StatusMessages
+        {
+            //Login
+            LOGIN_BANNED = -1,
+            LOGIN_UNVERIFIED = 0,
+            LOGIN_VERIFIED = 1,
+            LOGIN_WRONG_INFORMATION = 2,
+            //Forgot Info
+            FORGOT_REQUEST_RECEIVED = 3,
+            FORGOT_REQUEST_INCORRECT = 4,
+            //Registration
+            REGISTRATION_DUPLICATE_EMAIL = 5,
+            REGISTRATION_DUPLICATE_USERNAME = 6,
+            //Password Change
+            PASSCHANGE_PASSWORD_CHANGED = 7,
+            PASSCHANGE_INCORRECT_RESTORATION_KEY = 8,
+            //Verification
+            VERIFICATION_INCORRECT_KEY = 9,
+            VERIFICATION_KEY_VERIFIED = 10,
+            //Gallery
+            GALLERY_INCORRECT_IMAGE = 11,
+
+        }
         public enum BioFieldTypes 
         {
             name = 0,
@@ -179,7 +202,7 @@ namespace InfiniteRoleplay.Scripts.Misc
             if (id == (int)Alignments.LawfulEvil) { alignmentIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_evil.png")); }
             if (id == (int)Alignments.NeutralEvil) { alignmentIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_evil.png")); }
             if (id == (int)Alignments.ChaoticEvil) { alignmentIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil.png")); }
-            if (id == (int)Alignments.None) { alignmentIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/none.png")); }
+            if (id == (int)Alignments.None) { alignmentIcon = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/personalities/none.png")); }
             return alignmentIcon;
         }
         public static IDalamudTextureWrap PersonalityIcon(DalamudPluginInterface pluginInterface, int id)

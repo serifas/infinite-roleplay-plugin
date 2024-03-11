@@ -98,14 +98,13 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void Register(string username, string password, string email, string XIVID)
+        public static void Register(string username, string password, string email)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CRegister);
             buffer.WriteString(username);
             buffer.WriteString(password);
             buffer.WriteString(email);
-            buffer.WriteString(XIVID);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
@@ -311,7 +310,7 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SubmitProfileBio(string playerName, string playerServer, byte[] avatarBytes, string name, string race, string gender, int age, 
+        public static void SubmitProfileBio(string playerName, string playerServer, byte[] avatarBytes, string name, string race, string gender, string age, 
                                             string height, string weight, string atFirstGlance, int alignment, int personality_1, int personality_2, int personality_3)
         {
             var buffer = new ByteBuffer();
@@ -325,7 +324,7 @@ namespace Networking
             buffer.WriteString(name);
             buffer.WriteString(race);
             buffer.WriteString(gender);
-            buffer.WriteInteger(age);
+            buffer.WriteString(age);
             buffer.WriteString(height);
             buffer.WriteString(weight);
             buffer.WriteString(atFirstGlance);
