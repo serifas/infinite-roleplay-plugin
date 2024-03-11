@@ -58,7 +58,6 @@ using Aspose.Imaging.ImageFilters.FilterOptions;
 using System.Timers;
 using Dalamud.Interface.Internal;
 using Dalamud.Plugin.Services;
-using static InfiniteRoleplay.Defines.ProfileDefines;
 using Lumina.Excel.GeneratedSheets2;
 using InfiniteRoleplay.Scripts.Misc;
 using OtterGui;
@@ -91,12 +90,9 @@ namespace InfiniteRoleplay.Windows
         public static bool galleryTableAdded = false;
         public static Timer timer;
         public static bool resetHooks;
-
-        public static bool[] ImageExists = new bool[30];
-      
+        public static bool[] ImageExists = new bool[30];      
         public static int imageIndex = 0;
         public static bool resetStory;
-    
         public static IDalamudTextureWrap loaderAnimInd, pictureTab;
         public static string[] HookContent = new string[30];
         public static string[] HookEditContent = new string[30];
@@ -105,6 +101,7 @@ namespace InfiniteRoleplay.Windows
         public static string[] ChapterTitle = new string[30];
         public static string[] ChapterEditTitle = new string[30];
         public static bool[] NSFW = new bool[30];
+        public static bool[] TRIGGER = new bool[30];
         public static bool editStory, addOOC, editOOC, addGallery, editGallery, addAvatar, editAvatar, addProfile, editProfile, LoadPreview = false;
         public static int hookCount = 0;
         public static int hookEditCount;
@@ -180,6 +177,7 @@ namespace InfiniteRoleplay.Windows
                 HookContent[i] = string.Empty;
                 HookEditContent[i] = string.Empty;
                 NSFW[i] = false;
+                TRIGGER[i] = false;
                 galleryImagesList.Add(pictureTab);
                 galleryThumbsList.Add(pictureTab);
                 imageURLs[i] = string.Empty;
@@ -281,6 +279,7 @@ namespace InfiniteRoleplay.Windows
                         ImGui.Spacing();
 
                         ImGui.TextColored(new Vector4(1, 1, 1, 1), "PERSONALITY TRAITS:");
+                        ImGui.SameLine();
                         ImGui.Checkbox("Hidded", ref personalityHidden);
                         if(personalityHidden == true)
                         {
@@ -419,7 +418,7 @@ namespace InfiniteRoleplay.Windows
                     {
                         if (ImGui.Button("Add Image"))
                         {
-                            if (imageIndex < 30)
+                            if (imageIndex < 29)
                             {
                                 imageIndex++;
                             }
@@ -430,7 +429,7 @@ namespace InfiniteRoleplay.Windows
                             for(int i = 0; i < imageIndex; i++)
                             {
                                 DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
-                                                  NSFW[i], imageURLs[i], i);
+                                                  NSFW[i], TRIGGER[i], imageURLs[i], i);
                             }   
                             
                         }
@@ -562,13 +561,19 @@ namespace InfiniteRoleplay.Windows
             if (ImageExists[i] == true)
             {
                
-                if (ImGui.BeginChild("##GalleryImage" + i, new Vector2(150, 240)))
+                if (ImGui.BeginChild("##GalleryImage" + i, new Vector2(150, 280)))
                 {
                     ImGui.Text("Will this image be 18+ ?");
-                    if (ImGui.Checkbox("Yes", ref NSFW[i]))
+                    if (ImGui.Checkbox("Yes 18+", ref NSFW[i]))
                     {
                         DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
-                                                    NSFW[i], imageURLs[i], i);
+                                                    NSFW[i], TRIGGER[i], imageURLs[i], i);
+                    }
+                    ImGui.Text("Is this a possible trigger ?");
+                    if (ImGui.Checkbox("Yes Triggering", ref TRIGGER[i]))
+                    {
+                        DataSender.SendGalleryImage(configuration.username, playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
+                                                    NSFW[i],TRIGGER[i], imageURLs[i], i);
                     }
                     ImGui.InputTextWithHint("##ImageURL" + i, "Image URL", ref imageURLs[i], 300);
                     try

@@ -7,6 +7,7 @@ using Lumina.Data.Parsing;
 using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -19,7 +20,7 @@ namespace InfiniteRoleplay.Helpers
 {
     internal static class Imaging
     {
-        public static void DownloadProfileImage(bool self, string url, int profileID, bool nsfw, Plugin plugin, int index)
+        public static void DownloadProfileImage(bool self, string url, int profileID, bool nsfw, bool trigger, Plugin plugin, int index)
         {
             if(IsImageUrl(url))
             {
@@ -44,38 +45,67 @@ namespace InfiniteRoleplay.Helpers
 
                 IDalamudTextureWrap galleryImage = plugin.PluginInterfacePub.UiBuilder.LoadImage(scaledImagePath);
                 IDalamudTextureWrap nsfwThumb = plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/nsfw.png"));
-
-                if(self == true)
+                IDalamudTextureWrap triggerThumb = plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/trigger.png"));
+                IDalamudTextureWrap nsfwTriggerThumb = plugin.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/nsfw_trigger.png"));
+                
+                if (self == true)
                 {
-
                     ProfileWindow.galleryImages[index] = galleryImage;
                     ProfileWindow.imageURLs[index] = url;
                     ProfileWindow.NSFW[index] = nsfw;
+                    ProfileWindow.TRIGGER[index] = trigger;
                     plugin.chatGUI.Print("assigned profile iamge");
                 }
                 else
-                {
-                    
+                {                    
                     TargetWindow.galleryImages[index] = galleryImage;
                     plugin.chatGUI.Print("assigned target image");
-
                 }
-                
-                if (nsfw == true)
+                if(trigger == true && nsfw == false)
                 {
+
                     if(self == true)
                     {
+                        ProfileWindow.galleryThumbs[index] = triggerThumb;
+                        plugin.chatGUI.Print("assigned trigger nsfw thumb");
+                    }
+                    else
+                    {
+                        TargetWindow.galleryThumbs[index] = triggerThumb;
+                        plugin.chatGUI.Print("assigned target nsfw thumb");
+                    }
+                }
+                if(nsfw == true && trigger == false)
+                {
+                    if (self == true)
+                    {
                         ProfileWindow.galleryThumbs[index] = nsfwThumb;
-                        plugin.chatGUI.Print("assigned profile nsfw thumb");
+                        plugin.chatGUI.Print("assigned trigger nsfw thumb");
                     }
                     else
                     {
                         TargetWindow.galleryThumbs[index] = nsfwThumb;
                         plugin.chatGUI.Print("assigned target nsfw thumb");
                     }
-                    
+
                 }
-                else
+                if(nsfw == true && trigger == true)
+                {
+                    if (self == true)
+                    {
+                       
+                        ProfileWindow.galleryThumbs[index] = nsfwTriggerThumb;
+                        plugin.chatGUI.Print("assigned trigger nsfw thumb");
+
+                    }
+                    else
+                    {
+                        TargetWindow.galleryThumbs[index] = nsfwTriggerThumb;
+                        plugin.chatGUI.Print("assigned target nsfw thumb");
+                    }
+                }
+              
+                if(nsfw == false && trigger == false)
                 {
                     System.Drawing.Image thumb = System.Drawing.Image.FromFile(imagePath);
                     System.Drawing.Image img = ScaleImage(thumb, 120, 120);

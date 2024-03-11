@@ -16,6 +16,7 @@ namespace InfiniteRoleplay
         //Config options
         public bool showWIP { get; set; } = true;
         public bool showKofi { get; set; } = true;
+        public bool showDisc { get; set; } = true;
         public bool showTargetOptions { get; set; } = false;
 
         // the below exist just to make saving less cumbersome

@@ -493,7 +493,8 @@ namespace Networking
             {
                 string url = buffer.ReadString();
                 bool nsfw = buffer.ReadBool();
-                Imaging.DownloadProfileImage(false, url, profileID, nsfw, plugin, i);             
+                bool trigger = buffer.ReadBool();
+                Imaging.DownloadProfileImage(false, url, profileID, nsfw, trigger, plugin, i);             
                 plugin.chatGUI.Print(i.ToString());
             }
             TargetMenu.DisableInput = false;
@@ -533,7 +534,8 @@ namespace Networking
             {
                 string url = buffer.ReadString();
                 bool nsfw = buffer.ReadBool();
-                Imaging.DownloadProfileImage(true, url, profileID, nsfw,  plugin, i);
+                bool trigger = buffer.ReadBool();
+                Imaging.DownloadProfileImage(true, url, profileID, nsfw, trigger, plugin, i);
                 ProfileWindow.imageIndex = i + 2;
                 ProfileWindow.ImageExists[i] = true;
             }

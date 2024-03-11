@@ -162,7 +162,7 @@ namespace Networking
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SendGalleryImage(string username, string playername, string playerworld, bool NSFW, string url, int index)
+        public static void SendGalleryImage(string username, string playername, string playerworld, bool NSFW, bool TRIGGER, string url, int index)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendGallery);
@@ -170,6 +170,7 @@ namespace Networking
             buffer.WriteString(playerworld);
             buffer.WriteString(url);
             buffer.WriteBool(NSFW);
+            buffer.WriteBool(TRIGGER);
             buffer.WriteInteger(index);
 
             ClientTCP.SendData(buffer.ToArray());

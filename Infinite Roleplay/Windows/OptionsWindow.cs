@@ -32,6 +32,7 @@ namespace InfiniteRoleplay.Windows
         public static bool showTargetOptions;
         public static bool showWIP;
         public static bool showKofi;
+        public static bool showDisc;
         public OptionsWindow(Plugin plugin, DalamudPluginInterface Interface) : base(
        "OPTIONS", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
         {
@@ -45,12 +46,10 @@ namespace InfiniteRoleplay.Windows
             showWIP = plugin.Configuration.showWIP;
             showTargetOptions = plugin.Configuration.showTargetOptions;
             showKofi = plugin.Configuration.showKofi;
+            showDisc = plugin.Configuration.showDisc;
         }
         public override void Draw()
         {
-            
-
-
             using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
             using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
             using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
@@ -75,6 +74,11 @@ namespace InfiniteRoleplay.Windows
             if (ImGui.Checkbox("Show Ko-fi Button", ref showKofi))
             {
                 pg.Configuration.showKofi = showKofi;
+                pg.Configuration.Save();
+            }
+            if (ImGui.Checkbox("Show Discord Button", ref showDisc))
+            {
+                pg.Configuration.showDisc = showDisc;
                 pg.Configuration.Save();
             }
         }

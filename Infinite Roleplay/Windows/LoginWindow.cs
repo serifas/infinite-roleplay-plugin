@@ -33,7 +33,7 @@ public class LoginWindow : Window, IDisposable
     public static bool loginRequest = false;
     public bool register = false;
     public bool agree = false;
-    public static IDalamudTextureWrap kofiBtnImg;
+    public static IDalamudTextureWrap kofiBtnImg, discoBtn;
     private PlayerCharacter playerCharacter;
     public static string status = "status...";
     public static Vector4 statusColor = new Vector4(255, 255, 255, 255);
@@ -52,6 +52,9 @@ public class LoginWindow : Window, IDisposable
 
         string kofiImg = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/kofi_btn.png");
         kofiBtnImg = plugin.PluginInterfacePub.UiBuilder.LoadImage(kofiImg);
+
+        string discordBtn = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/disc_btn.png");
+        discoBtn = plugin.PluginInterfacePub.UiBuilder.LoadImage(discordBtn);
         this.playerCharacter = playerCharacter;
     }
 
@@ -94,13 +97,20 @@ public class LoginWindow : Window, IDisposable
                     login = false;
                     register = true;
                 }
-                if(Configuration.showKofi == true)
+                if (Configuration.showKofi == true)
                 {
                     if (ImGui.ImageButton(kofiBtnImg.ImGuiHandle, new Vector2(172, 27)))
                     {
                         Util.OpenLink("https://ko-fi.com/infiniteroleplay");
                     }
-                }    
+                }
+                if (Configuration.showDisc == true)
+                {
+                    if (ImGui.ImageButton(discoBtn.ImGuiHandle, new Vector2(172, 27)))
+                    {
+                        Util.OpenLink("https://discord.gg/infinite-roleplay");
+                    }
+                }
             }
             else
             {
