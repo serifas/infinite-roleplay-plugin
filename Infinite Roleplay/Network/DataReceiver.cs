@@ -75,14 +75,11 @@ namespace Networking
     {
         public static string accountStatus, verificationStatus, forgotStatus, restorationStatus = "";
         public static bool LoadedSelf = false;
-        public static bool ExistingProfileData, ExistingProfileNotes, ExistingBioData, ExistingHooksData, ExistingStoryData, ExistingOOCData, ExistingGalleryData = false;
         public static int BioLoadStatus = -1, HooksLoadStatus = -1, StoryLoadStatus = -1, OOCLoadStatus = -1, GalleryLoadStatus = -1, BookmarkLoadStatus = -1;
         public static int TargetBioLoadStatus = -1, TargetHooksLoadStatus = -1, TargetStoryLoadStatus = -1, TargetOOCLoadStatus = -1, TargetGalleryLoadStatus = -1, TargetNotesLoadStatus = -1;
-        public static bool ExistingTargetProfileData, ExistingTargetBioData, ExistingTargetHooksData, ExistingTargetStoryData, ExistingTargetOOCData, ExistingTargetGalleryData = false;
         public static string bookmarks;
         public static byte[] currentAvatar , currentTargetAvatar;
         public static byte[][] ExistingTargetGalleryImageBytes, ExistingTargetGalleryThumbBytes;
-        public static int hookEditCount, hookCount;
         public static int targetHookEditCount, ExistingGalleryImageCount, ExistingGalleryThumbCount;
         public static int lawfulGoodEditVal, neutralGoodEditVal, chaoticGoodEditVal, 
                           lawfulNeutralEditVal, trueNeutralEditVal, chaoticNeutralEditVal, 
@@ -238,7 +235,7 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             buffer.Dispose();
-            ExistingTargetProfileData = true;
+            TargetWindow.ExistingProfile = true;
             plugin.targetWindow.IsOpen = true;
             TargetWindow.ClearUI();
             ReportWindow.reportStatus = "";
@@ -275,7 +272,7 @@ namespace Networking
             BookmarkLoadStatus = 0;
             ProfileWindow.addProfile = false;
             ProfileWindow.editProfile = false;
-            ExistingProfileData = false;
+            plugin.profileWindow.ExistingProfile = false;
         }
         public static void NoTargetProfile(byte[] data)
         {
@@ -284,12 +281,12 @@ namespace Networking
             var packetID = buffer.ReadInt();
             buffer.Dispose();
             loggedIn = true;
-            ExistingTargetProfileData = false;
-            ExistingTargetBioData = false;
-            ExistingTargetHooksData = false;
-            ExistingTargetStoryData = false;
-            ExistingTargetOOCData = false;
-            ExistingTargetGalleryData = false;
+            TargetWindow.ExistingProfile = false;
+            TargetWindow.ExistingBio = false;
+            TargetWindow.ExistingHooks = false;
+            TargetWindow.ExistingStory = false;
+            TargetWindow.ExistingOOC = false;
+            TargetWindow.ExistingGallery = false;
             plugin.targetWindow.IsOpen = true;
             TargetBioLoadStatus = 0;
             TargetHooksLoadStatus = 0;
@@ -309,7 +306,7 @@ namespace Networking
             var packetID = buffer.ReadInt();
             buffer.Dispose();
             loggedIn = true;
-            ExistingTargetGalleryData = false;
+            TargetWindow.ExistingGallery = false;
             plugin.targetWindow.IsOpen = true;
             BookmarksWindow.DisableBookmarkSelection = false;
             TargetMenu.DisableInput = false;
@@ -322,7 +319,7 @@ namespace Networking
             var packetID = buffer.ReadInt();
             buffer.Dispose();
             loggedIn = true;
-            ExistingTargetStoryData = false;
+            TargetWindow.ExistingStory = false;
             plugin.targetWindow.IsOpen = true;
             TargetStoryLoadStatus = 0;
         }
@@ -349,7 +346,7 @@ namespace Networking
             ProfileWindow.currentPersonality_2 = 0;
             ProfileWindow.currentPersonality_3 = 0;
             loggedIn = true;
-            ExistingBioData = false;
+            plugin.profileWindow.ExistingBio = false;
             BioLoadStatus = 0;
 
 
@@ -357,7 +354,7 @@ namespace Networking
         }
         public static void NoTargetBio(byte[] data)
         {
-            ExistingTargetBioData = false;
+            TargetWindow.ExistingBio = false;
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
@@ -368,7 +365,7 @@ namespace Networking
        
         public static void NoTargetHooks(byte[] data)
         {
-            ExistingTargetHooksData = false;
+            TargetWindow.ExistingHooks = false;
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
@@ -377,7 +374,7 @@ namespace Networking
         }
         public static void ReceiveProfile(byte[] data)
         {
-            ExistingProfileData = true;
+            plugin.profileWindow.ExistingProfile = true;
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
@@ -501,7 +498,7 @@ namespace Networking
             }
             TargetMenu.DisableInput = false;
             TargetWindow.existingGalleryImageCount = imageCount;
-            ExistingTargetGalleryData = true;
+            TargetWindow.ExistingGallery = true;
             BookmarksWindow.DisableBookmarkSelection = false;
 
             TargetGalleryLoadStatus = 1;
@@ -522,7 +519,7 @@ namespace Networking
             ProfileWindow.ImageExists[0] = true;
             ProfileWindow.imageIndex = 2;
             GalleryLoadStatus = 0;
-            ExistingGalleryData = false;
+            plugin.profileWindow.ExistingGallery = false;
         }
         public static void ReceiveProfileGalleryImage(byte[] data)
         {
@@ -541,7 +538,7 @@ namespace Networking
                 ProfileWindow.imageIndex = i + 2;
                 ProfileWindow.ImageExists[i] = true;
             }
-            ExistingGalleryData = true;
+            plugin.profileWindow.ExistingGallery = true;
        
             GalleryLoadStatus = 1;
             buffer.Dispose();
@@ -600,8 +597,8 @@ namespace Networking
             TargetWindow.personality2Tooltip = textpers2 + ": \n" + descpers2;
             TargetWindow.personality3Tooltip = textpers3 + ": \n" + descpers3;
 
-            currentTargetAvatar = avatarBytes;
-            ExistingTargetBioData = true;
+            plugin.targetWindow.existingAvatarBytes = avatarBytes;
+            TargetWindow.ExistingBio = true;
             buffer.Dispose();
             TargetBioLoadStatus = 1;
             plugin.targetWindow.IsOpen = true;
@@ -625,7 +622,7 @@ namespace Networking
             int personality_1 = buffer.ReadInt();
             int personality_2 = buffer.ReadInt();
             int personality_3 = buffer.ReadInt();
-            ExistingBioData = true;
+            plugin.profileWindow.ExistingBio = true;
             if(alignment == 9)
             {
                 ProfileWindow.alignmentHidden = true;
@@ -655,7 +652,7 @@ namespace Networking
             ProfileWindow.currentPersonality_2 = personality_2;
             ProfileWindow.currentPersonality_3 = personality_3;
             buffer.Dispose();
-            currentAvatar = avatarBytes;
+            plugin.profileWindow.existingAvatarBytes = avatarBytes;
             BioLoadStatus = 1;
         }
         public static void ExistingProfile(byte[] data)
@@ -664,7 +661,7 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             buffer.Dispose();
-            ExistingProfileData = true;
+            plugin.profileWindow.ExistingProfile = true;
 
         }
         public static void ReceiveProfileHooks(byte[] data)
@@ -673,7 +670,7 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             string hooks = buffer.ReadString();
-            ExistingHooksData = true;
+            plugin.profileWindow.ExistingHooks = true;
 
             Regex hookRx = new Regex(@"<hook>(.*?)</hook>");
             string[] hookSplit = hooks.Replace("|||", "~").Split('~');
@@ -697,7 +694,7 @@ namespace Networking
             var packetID = buffer.ReadInt();
             string storyTitle = buffer.ReadString();
             string chaptersMsg = buffer.ReadString();
-            ExistingStoryData = true;
+            plugin.profileWindow.ExistingStory = true;
 
             Regex chapterTitleRx = new Regex(@"<chapter_title>(.*?)</chapter_title>");
             Regex chapterRx = new Regex(@"<chapter>(.*?)</chapter>");
@@ -724,7 +721,7 @@ namespace Networking
             var packetID = buffer.ReadInt();
             string storyTitle = buffer.ReadString();
             string chapters = buffer.ReadString();
-            ExistingTargetStoryData = true;
+            TargetWindow.ExistingStory = true;
             Regex chapterTitleRx = new Regex(@"<chapter_title>(.*?)</chapter_title>");
             Regex chapterRx = new Regex(@"<chapter>(.*?)</chapter>");
             string[] chapterSplit = chapters.Replace("|||", "~").Split('~');
@@ -747,7 +744,7 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             string hooks = buffer.ReadString();
-            ExistingTargetHooksData = true;
+            TargetWindow.ExistingHooks = true;
 
             Regex hookRx = new Regex(@"<hook>(.*?)</hook>");
             string[] hookSplit = hooks.Replace("|||", "~").Split('~');
@@ -755,7 +752,7 @@ namespace Networking
             for (int i = 0; i < hookSplit.Count(); i++)
             {
                 string hookContent = hookRx.Match(hookSplit[i]).Groups[1].Value;
-                targetHookEditCount = i;
+                TargetWindow.hookEditCount = i;
                 TargetWindow.HookEditContent[i] = hookContent;
             }
             buffer.Dispose();
@@ -766,7 +763,7 @@ namespace Networking
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
-            ExistingHooksData = false;
+            plugin.profileWindow.ExistingHooks = false;
 
             buffer.Dispose();
             HooksLoadStatus = 0;
@@ -776,7 +773,7 @@ namespace Networking
             var buffer = new ByteBuffer();
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
-            ExistingStoryData = false;
+            plugin.profileWindow.ExistingStory = false;
             buffer.Dispose();
             StoryLoadStatus = 0;
         }
@@ -786,7 +783,6 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             TargetWindow.profileNotes = string.Empty;
-            ExistingProfileNotes = false;
             TargetNotesLoadStatus = 0;
 
             buffer.Dispose();
@@ -797,7 +793,6 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             string notes = buffer.ReadString();
-            ExistingProfileNotes = true;
             TargetWindow.profileNotes = notes;
             buffer.Dispose();
             TargetNotesLoadStatus = 1;
@@ -856,7 +851,7 @@ namespace Networking
             var packetID = buffer.ReadInt();
             string ooc = buffer.ReadString();
             TargetWindow.oocInfo = ooc;
-            ExistingTargetOOCData = true;
+            TargetWindow.ExistingOOC = true;
             buffer.Dispose();
         }
 

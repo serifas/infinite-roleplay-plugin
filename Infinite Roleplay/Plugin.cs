@@ -28,7 +28,6 @@ using Dalamud.Game.DutyState;
 using FFXIVClientStructs.FFXIV.Client.Game.Event;
 using Lumina.Excel.GeneratedSheets;
 using Networking;
-using InfiniteRP.Windows;
 using InfiniteRoleplay.Helpers;
 using Dalamud.Plugin.Services;
 using Dalamud.Interface.Internal.Windows;

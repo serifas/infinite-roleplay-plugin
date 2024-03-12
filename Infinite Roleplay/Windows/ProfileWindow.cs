@@ -451,7 +451,7 @@ namespace InfiniteRoleplay.Windows
 
                     if (addOOC)
                     {
-                        ImGui.InputTextMultiline("OOC Info", ref oocInfo, 50000, new Vector2(500, 600));  
+                        ImGui.InputTextMultiline("#OOC", ref oocInfo, 50000, new Vector2(500, 600));  
                         if(ImGui.Button("Submit OOC"))
                         {
                             DataSender.SendOOCInfo(configuration.username, configuration.password, oocInfo);
@@ -835,26 +835,8 @@ namespace InfiniteRoleplay.Windows
         }
         public override void Update()
         {
-            ExistingProfile = DataReceiver.ExistingProfileData;
-            ExistingStory = DataReceiver.ExistingStoryData;
-            ExistingBio = DataReceiver.ExistingBioData;
-            ExistingHooks = DataReceiver.ExistingHooksData;
-            ExistingGallery = DataReceiver.ExistingGalleryData;
-            existingAvatarBytes = DataReceiver.currentAvatar;
-            loadedSelf = DataReceiver.LoadedSelf;
             
-
-          
-           
-
-           /* if (editBio == true)
-            {
-                for (int i = 0; i < alignmentWidthVals.Length; i++)
-                {
-                    if (alignmentWidthVals[i] < alignmentVals[i]) { alignmentWidthVals[i] += 0.1f; }
-                    if (alignmentWidthVals[i] > alignmentVals[i]) { alignmentWidthVals[i] -= 0.1f; }
-                }
-            }*/
+            loadedSelf = DataReceiver.LoadedSelf;        
 
             if (DataReceiver.StoryLoadStatus != -1 &&
                DataReceiver.HooksLoadStatus != -1 &&
@@ -881,56 +863,7 @@ namespace InfiniteRoleplay.Windows
             int percentageLeft = availablePercentage - PercentageUsed;
             return percentageLeft;
         }
-       /* public void ModAlignment(string alignmentName, bool add) 
-        {
-            for(int i =0; i < alignmentNames.Length; i++)
-            {
-                if (alignmentNames[i] == alignmentName)
-                {
-                    if(ExistingBio == true)
-                    {
-                        if (add)
-                        {
-                            if(availablePercentage > 0 && alignmentVals[i] < 10)
-                            {
-                                availablePercentage -= 1;
-                                alignmentVals[i] += 1;
-                            }
-                        }
-                        else
-                        {
-                            if (alignmentVals[i] > 0)
-                            {
-                                availablePercentage +=1;
-                                alignmentVals[i] -= 1;
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        if (add)
-                        {
-                            if (availablePercentage > 0 && alignmentVals[i] < 10)
-                            {
-                                availablePercentage -= 1;
-                                alignmentVals[i] += 1;
-                            }
-                        }
-                        else
-                        {
-                            if (alignmentVals[i] > 0)
-                            {
-                                availablePercentage += 1;
-                                alignmentVals[i] -= 1;
-                            }
-                        }
-                    }
-                }
-            }
-
-
-        }*/
+      
       
         public void EditImage(bool avatar, int imageIndex)
         {

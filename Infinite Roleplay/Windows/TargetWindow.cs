@@ -93,7 +93,6 @@ namespace InfiniteRoleplay.Windows
         public static string storyTitle = "";
         public static string alignmentTooltip, personality1Tooltip, personality2Tooltip, personality3Tooltip, oocInfo = "";
         public static int[] alignmentVals, alignmentEditVals = new int[] { };
-        private float[] alignmentWidthVals = new float[] { };
         private string[] alignmentNames = new string[]{};
         public byte[] avatarBytes, existingAvatarBytes;
         public int availablePercentage = 50;
@@ -464,23 +463,7 @@ namespace InfiniteRoleplay.Windows
             }
         }
         public override void Update()
-        {
-            ExistingProfile = DataReceiver.ExistingTargetProfileData;
-            ExistingBio = DataReceiver.ExistingTargetBioData;
-            ExistingStory = DataReceiver.ExistingTargetStoryData;
-            ExistingHooks = DataReceiver.ExistingTargetHooksData;
-            ExistingOOC = DataReceiver.ExistingTargetOOCData;
-            existingAvatarBytes = DataReceiver.currentTargetAvatar;
-            ExistingGallery = DataReceiver.ExistingTargetGalleryData;
-            hookEditCount = DataReceiver.targetHookEditCount;
-            if (viewBio == true)
-            {
-                for (int i = 0; i < alignmentWidthVals.Length; i++)
-                {
-                    if (alignmentWidthVals[i] < alignmentEditVals[i]) { alignmentWidthVals[i] += 0.1f; }
-                    if (alignmentWidthVals[i] > alignmentEditVals[i]) { alignmentWidthVals[i] -= 0.1f; }
-                }
-            }
+        {         
             if (DataReceiver.TargetStoryLoadStatus != -1 &&
                DataReceiver.TargetHooksLoadStatus != -1 &&
                DataReceiver.TargetBioLoadStatus != -1 &&
