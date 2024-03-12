@@ -451,7 +451,7 @@ namespace InfiniteRoleplay.Windows
 
                     if (addOOC)
                     {
-                        ImGui.InputTextMultiline("#OOC", ref oocInfo, 50000, new Vector2(500, 600));  
+                        ImGui.InputTextMultiline("##OOC", ref oocInfo, 50000, new Vector2(500, 600));  
                         if(ImGui.Button("Submit OOC"))
                         {
                             DataSender.SendOOCInfo(configuration.username, configuration.password, oocInfo);
