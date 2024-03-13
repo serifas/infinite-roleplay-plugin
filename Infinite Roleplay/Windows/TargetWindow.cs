@@ -47,6 +47,7 @@ using Dalamud.Interface.Utility;
 using System.Timers;
 using InfiniteRoleplay.Helpers;
 using Dalamud.Plugin.Internal;
+using InfiniteRoleplay.Scripts.Misc;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -103,8 +104,8 @@ namespace InfiniteRoleplay.Windows
         public static IDalamudTextureWrap[] galleryImages, galleryThumbs = new IDalamudTextureWrap[30];
         public static List<IDalamudTextureWrap> galleryThumbsList = new List<IDalamudTextureWrap>();
         public static List<IDalamudTextureWrap> galleryImagesList = new List<IDalamudTextureWrap>();
-
-        private IDalamudTextureWrap avatarImg, currentAvatarImg;
+       
+        private IDalamudTextureWrap avatarImg, currentAvatarImg, pictureTab;
         public static string    characterEditName = "",
                                 characterEditRace = "",
                                 characterEditGender = "",
@@ -144,7 +145,7 @@ namespace InfiniteRoleplay.Windows
             this._nameFont = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
             string pictureTabPath = Path.Combine(pg.AssemblyLocation.Directory?.FullName!, @"UI/common/picturetab.png");
-            IDalamudTextureWrap pictureTab = plugin.PluginInterfacePub.UiBuilder.LoadImage(File.ReadAllBytes(pictureTabPath));
+            pictureTab = plugin.PluginInterfacePub.UiBuilder.LoadImage(File.ReadAllBytes(pictureTabPath));
             this.avatarBytes = ImageToByteArray(image1);
             //alignment icons
              this.chatGui = chatGui;
@@ -445,7 +446,21 @@ namespace InfiniteRoleplay.Windows
         {
             WindowOpen = false;
             this.currentAvatarImg.Dispose();
-            for(int o = 0; o < otherImages.Length; o++)
+            pictureTab.Dispose();
+            alignmentImg.Dispose();
+            personalityImg1.Dispose();
+            personalityImg2.Dispose();
+            personalityImg3.Dispose();
+            loaderAnimInd.Dispose();
+            for (int gt = 0; gt < galleryThumbsList.Count; gt++)
+            {
+                galleryThumbsList[gt].Dispose();
+            }
+            for (int gi = 0; gi < galleryThumbsList.Count; gi++)
+            {
+                galleryImagesList[gi].Dispose();
+            }
+            for (int o = 0; o < otherImages.Length; o++)
             {                
                 otherImages[o].Dispose();
                 Array.Clear(otherImages);

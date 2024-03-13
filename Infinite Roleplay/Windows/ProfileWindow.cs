@@ -127,7 +127,7 @@ namespace InfiniteRoleplay.Windows
         public static string[] imageURLs = new string[30];
         private float _modVersionWidth;
         private GameFontHandle _Font;
-        private IDalamudTextureWrap avatarImg, currentAvatarImg;
+        private IDalamudTextureWrap avatarImg, avatarHolder, currentAvatarImg;
         public static List<IDalamudTextureWrap> galleryThumbsList = new List<IDalamudTextureWrap>();
         public static List<IDalamudTextureWrap> galleryImagesList = new List<IDalamudTextureWrap>();
         public static IDalamudTextureWrap[] galleryImages, galleryThumbs;
@@ -159,7 +159,7 @@ namespace InfiniteRoleplay.Windows
             this.configuration = plugin.Configuration;
             this._fileDialogManager = new FileDialogManager();
             string avatarPath = Path.Combine(pg.AssemblyLocation.Directory?.FullName!, @"UI/common/avatar_holder.png");
-            IDalamudTextureWrap avatarHolder = plugin.PluginInterfacePub.UiBuilder.LoadImage(File.ReadAllBytes(avatarPath));
+            avatarHolder = plugin.PluginInterfacePub.UiBuilder.LoadImage(File.ReadAllBytes(avatarPath));
             string pictureTabPath = Path.Combine(pg.AssemblyLocation.Directory?.FullName!, @"UI/common/picturetab.png");
             pictureTab = plugin.PluginInterfacePub.UiBuilder.LoadImage(File.ReadAllBytes(pictureTabPath));
             this.avatarImg = avatarHolder;
@@ -742,6 +742,19 @@ namespace InfiniteRoleplay.Windows
         }
         public void Dispose()
         {
+            this.persistAvatarHolder.Dispose();
+            avatarHolder.Dispose();
+            pictureTab.Dispose();
+            this.avatarImg.Dispose();
+            this.currentAvatarImg.Dispose();
+            for (int gi = 0; gi < galleryImagesList.Count; gi++)
+            {
+                galleryImagesList[gi].Dispose();
+            }
+            for (int gt= 0; gt < galleryThumbsList.Count; gt++)
+            {
+                galleryThumbsList[gt].Dispose();
+            }
             foreach (IDalamudTextureWrap ti in galleryImages)
             {
                 ti.Dispose();
