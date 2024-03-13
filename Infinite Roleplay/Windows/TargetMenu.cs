@@ -162,9 +162,6 @@ namespace InfiniteRoleplay.Windows
         {
             WindowOpen = false;
         }
-        public override void Update()
-        { 
-        }
 
 
     }

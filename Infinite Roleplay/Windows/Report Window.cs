@@ -65,10 +65,6 @@ namespace InfiniteRoleplay.Windows
             reportCharacterName = string.Empty;
             reportCharacterWorld = string.Empty;
         }
-        public override void Update()
-        {
-            
-        }
     }
 
 }

@@ -203,10 +203,6 @@ namespace InfiniteRoleplay.Windows
         }
         public override void Update()
         {
-
-            isAdmin = DataReceiver.isAdmin;
-            msg = DataReceiver.ConnectionMsg;
-
         }
 
 

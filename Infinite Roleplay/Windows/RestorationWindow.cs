@@ -83,9 +83,6 @@ namespace InfiniteRoleplay.Windows
         {
 
         }
-        public override void Update()
-        {
-        }
     }
 
 }
