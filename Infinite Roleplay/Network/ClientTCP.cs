@@ -120,7 +120,6 @@ namespace Networking
 
         public static void InitializingNetworking(bool start)
         {
-
             if (start == true)
             {
                 EstablishConnection();
@@ -153,15 +152,13 @@ namespace Networking
         {
             try
             {
-                TcpClient client = new TcpClient(_HostURI, _PortNumber);        
+                TcpClient client = new TcpClient(_HostURI, _PortNumber);       
             
             
                 if(client.Connected == true)
                 {
                     client.Close();
                 }
-
-
             }
             catch
             {

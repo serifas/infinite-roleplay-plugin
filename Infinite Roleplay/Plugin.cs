@@ -34,6 +34,7 @@ using Dalamud.Interface.Internal.Windows;
 using Dalamud.Interface.Internal;
 using Aspose.Imaging.MemoryManagement;
 using System.Threading;
+using System;
 
 namespace InfiniteRoleplay
 {

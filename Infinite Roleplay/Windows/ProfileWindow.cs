@@ -165,7 +165,7 @@ namespace InfiniteRoleplay.Windows
             this.avatarImg = avatarHolder;
             this.persistAvatarHolder = avatarHolder;
             this.configuration = configuration;
-            
+            this.existingAvatarBytes = File.ReadAllBytes(avatarPath);
 
             timer = new Timer(30);
             timer.Elapsed += misc.OnEventExecution;
@@ -238,6 +238,7 @@ namespace InfiniteRoleplay.Windows
                     #region BIO
                     if (editBio == true)
                     {
+
                         this.currentAvatarImg = pg.UiBuilder.LoadImage(existingAvatarBytes);
                         ImGui.Image(this.currentAvatarImg.ImGuiHandle, new Vector2(100, 100));
 

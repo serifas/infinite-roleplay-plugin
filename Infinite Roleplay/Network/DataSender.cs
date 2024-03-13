@@ -58,14 +58,16 @@ namespace Networking
     {
         public static int userID;
         public static Plugin plugin;
+        public static string Key = "PLOGON_SECRET_infinite_key";
         // public static LoadCharacter assets = new LoadCharacter();
         public static void SendHelloServer(string internalIP, string externalIP)
-        {                     
+        {
+            string env = Environment.GetEnvironmentVariable(Key);
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CHelloServer);
             buffer.WriteString(internalIP);
             buffer.WriteString(externalIP);
-            buffer.WriteString("===New Connection===");
+            buffer.WriteString(env);
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
