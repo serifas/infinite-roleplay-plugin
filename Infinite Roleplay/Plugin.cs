@@ -171,22 +171,11 @@ namespace InfiniteRoleplay
                 IDalamudTextureWrap neutralEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_evil.png"));
                 IDalamudTextureWrap chaoticEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil.png"));
 
-                //bars
-
-                IDalamudTextureWrap lawfulGoodBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_good_bar.png"));
-                IDalamudTextureWrap neutralGoodBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_good_bar.png"));
-                IDalamudTextureWrap chaoticGoodBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_good_bar.png"));
-                IDalamudTextureWrap lawfulNeutralBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_neutral_bar.png"));
-                IDalamudTextureWrap trueNeutralBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/true_neutral_bar.png"));
-                IDalamudTextureWrap chaoticNeutralBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_neutral_bar.png"));
-                IDalamudTextureWrap lawfulEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_evil_bar.png"));
-                IDalamudTextureWrap neutralEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_evil_bar.png"));
-                IDalamudTextureWrap chaoticEvilBar = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil_bar.png"));
 
 
 
 
-                images = new IDalamudTextureWrap[19] {AvatarHolder, lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil, lawfulGoodBar, neutralGoodBar, chaoticGoodBar, lawfulNeutralBar, trueNeutralBar, chaoticNeutralBar, lawfulEvilBar, neutralEvilBar, chaoticEvilBar };
+                images = new IDalamudTextureWrap[10] {AvatarHolder, lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil };
 
 
                 targetWindow = new TargetWindow(this, this.pluginInterface, AvatarHolder,  lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil);
@@ -242,6 +231,10 @@ namespace InfiniteRoleplay
             if (ClientTCP.IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
                 DisconnectFromServer();
+            }
+            foreach(IDalamudTextureWrap img in images)
+            {
+                img.Dispose();
             }
             Imaging.RemoveAllImages(this);
             //TargetWindow.timer.Dispose();

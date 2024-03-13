@@ -197,6 +197,8 @@ namespace InfiniteRoleplay.Windows
         {
             WindowOpen = false;
             profilesImage.Dispose();
+            profilesNoWIPImage.Dispose();
+            systemsNoWIPImage.Dispose();
             documentImage.Dispose();
             groupsImage.Dispose();
             systemsImage.Dispose();
