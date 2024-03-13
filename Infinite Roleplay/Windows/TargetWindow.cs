@@ -140,8 +140,6 @@ namespace InfiniteRoleplay.Windows
             this.configuration = plugin.Configuration;
             this.avatarImg = avatarHolder;
 
-            timer = new Timer(30);
-            timer.Elapsed += misc.OnEventExecution;
             this._nameFont = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
             string pictureTabPath = Path.Combine(pg.AssemblyLocation.Directory?.FullName!, @"UI/common/picturetab.png");
@@ -179,7 +177,7 @@ namespace InfiniteRoleplay.Windows
         {
             if (AllLoaded == true)
             {
-                Misc.RemoveLoader(timer);
+               
               
                 //LoadFileSelection();
                 //Vector2 addProfileBtnScale = new Vector2(playerCharacter.Name.ToString().Length * 20, 20);
@@ -426,8 +424,7 @@ namespace InfiniteRoleplay.Windows
             }
             else
             {
-                misc.AddLoader(timer);
-                
+               
             }
 
         }

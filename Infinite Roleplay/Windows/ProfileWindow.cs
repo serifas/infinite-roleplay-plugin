@@ -69,7 +69,9 @@ namespace InfiniteRoleplay.Windows
     //changed
     public class ProfileWindow : Window, IDisposable
     {
+        public static string loading;
         public static bool AllLoaded;
+        public static float percentage = 0f;
         public static bool Reorder = false, ReorderNoSend = false;
         private Plugin plugin;
         public static Plugin pluginP;
@@ -93,7 +95,7 @@ namespace InfiniteRoleplay.Windows
         public static bool[] ImageExists = new bool[30];      
         public static int imageIndex = 0;
         public static bool resetStory;
-        public static IDalamudTextureWrap loaderAnimInd, pictureTab;
+        public static IDalamudTextureWrap pictureTab;
         public static string[] HookContent = new string[30];
         public static string[] HookEditContent = new string[30];
         public static string[] ChapterContent = new string[30];
@@ -125,7 +127,7 @@ namespace InfiniteRoleplay.Windows
         public int[] flaggedHookIndexes = new int[] { };
         public static bool addImageToGallery = false;
         public static string[] imageURLs = new string[30];
-        private float _modVersionWidth;
+        public static float _modVersionWidth, loaderInd;
         private GameFontHandle _Font;
         private IDalamudTextureWrap avatarImg, avatarHolder, currentAvatarImg;
         public static List<IDalamudTextureWrap> galleryThumbsList = new List<IDalamudTextureWrap>();
@@ -166,8 +168,6 @@ namespace InfiniteRoleplay.Windows
             this.persistAvatarHolder = avatarHolder;
             this.configuration = configuration;
 
-            timer = new Timer(30);
-            timer.Elapsed += misc.OnEventExecution;
             for(int i = 0; i < 30; i++)
             {
                 ChapterTitle[i] = string.Empty;
@@ -200,10 +200,8 @@ namespace InfiniteRoleplay.Windows
         {
             if (AllLoaded == true)
             {
-
                 _fileDialogManager.Draw();
 
-                Misc.RemoveLoader(timer);
                
                 if (this.ExistingProfile == true)
                 {
@@ -512,8 +510,7 @@ namespace InfiniteRoleplay.Windows
             }
             else
             {
-
-                misc.AddLoader(timer);
+                Misc.StartLoader(percentage, loaderInd, loading);
             }
         }
 

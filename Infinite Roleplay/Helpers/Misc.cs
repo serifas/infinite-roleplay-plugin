@@ -4,6 +4,7 @@ using Dalamud.Interface.Internal;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using Lumina.Excel.GeneratedSheets2;
 using Newtonsoft.Json.Linq;
 using OtterGui;
 using System;
@@ -24,7 +25,15 @@ namespace InfiniteRoleplay.Helpers
         public static GameFontHandle _nameFont;
         public static int loaderIndex = 0;
         public static IDalamudTextureWrap loaderAnimInd;
-        public static Plugin pg;
+        public static Plugin pg; 
+        public static float ConvertToPercentage(float value)
+        {
+            // Clamp the value between 0 and 100
+            value = Math.Max(0f, Math.Min(100f, value));
+
+            // Return the percentage
+            return value / 100f * 100f;
+        }
         public static void SetTitle(Plugin plugin, string title)
         {
             _nameFont = plugin.PluginInterfacePub.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
@@ -50,39 +59,10 @@ namespace InfiniteRoleplay.Helpers
             using var defCol = ImRaii.DefaultColors();
             using var defStyle = ImRaii.DefaultStyle();
         }
-
-        public void OnEventExecution(System.Object? sender, ElapsedEventArgs eventArgs)
+        public static void StartLoader(float value, float max, string loading)
         {
-            loaderIndex++;
-            if (loaderIndex >= 59)
-            {
-                loaderIndex = 1;
-            }
-            loaderAnimInd = pg.PluginInterfacePub.UiBuilder.LoadImage(Path.Combine(pg.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/loader/loader (" + loaderIndex + ").gif"));
-        }
-        public static void RemoveLoader(System.Timers.Timer timer)
-        {
-            timer.Stop();
-        }
-        public void AddLoader(System.Timers.Timer timer)
-        {           
-            StartLoader(timer);
-        }
-        public static void StartLoader(System.Timers.Timer timer)
-        {
-            timer.Start();
-            int LoaderWidth = 360;
-            var decidingWidth = Math.Max(500, ImGui.GetWindowWidth());
-            var offsetWidth = (decidingWidth - LoaderWidth) / 2;
-            var offsetVersion = LoaderWidth > 0
-                ? _modVersionWidth + ImGui.GetStyle().ItemSpacing.X + ImGui.GetStyle().WindowPadding.X
-                : 0;
-            var offset = Math.Max(offsetWidth, offsetVersion);
-            if (offset > 0)
-            {
-                ImGui.SetCursorPosX(offset);
-            }
-            ImGui.Image(loaderAnimInd.ImGuiHandle, new Vector2(340, 180));
+            value = Math.Max(0f, Math.Min(100f, value));
+            ImGui.ProgressBar(value / max, new Vector2(0, 100), "Loading " + loading);
         }
         public static byte[] RemoveBytes(byte[] input, byte[] pattern)
         {

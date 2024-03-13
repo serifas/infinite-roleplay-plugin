@@ -389,26 +389,8 @@ namespace Networking
             loggedIn = true;
            
         }
-        public static void ReceiveVerificationUpdate(byte[] data)
-        {
-            var buffer = new ByteBuffer();
-            buffer.WriteBytes(data);
-            var packetID = buffer.ReadInt();
-            int sheetID = buffer.ReadInt();
-            int status = buffer.ReadInt();
-            buffer.Dispose();
-            if (characters.ContainsKey(sheetID))
-            {
-                characterVerificationStatuses[sheetID] = status;
-            }
-        }
-        public static void SystemCreated(byte[] data)
-        {
-            var buffer = new ByteBuffer();
-            buffer.WriteBytes(data);
-            var packetID = buffer.ReadInt();
-            buffer.Dispose();
-        }
+     
+      
         public static void StatusMessage(byte[] data)
         {
             var buffer = new ByteBuffer();
@@ -533,7 +515,7 @@ namespace Networking
             var packetID = buffer.ReadInt();
             int imageCount = buffer.ReadInt();
             int profileID = buffer.ReadInt();
-          
+            ProfileWindow.percentage = imageCount;
             for (int i = 0; i < imageCount; i++)
             {
                 string url = buffer.ReadString();
@@ -542,6 +524,8 @@ namespace Networking
                 Imaging.DownloadProfileImage(true, url, profileID, nsfw, trigger, plugin, i);
                 ProfileWindow.imageIndex = i + 2;
                 ProfileWindow.ImageExists[i] = true;
+                ProfileWindow.loading = "Gallery Image: " + i;
+                ProfileWindow.loaderInd = i;
             }
             plugin.profileWindow.ExistingGallery = true;
        
