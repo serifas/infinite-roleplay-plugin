@@ -334,7 +334,7 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             buffer.Dispose();
-
+            ProfileWindow.ClearUI();
             string avatarPath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, @"UI/common/avatar_holder.png");
 
             plugin.profileWindow.existingAvatarBytes = File.ReadAllBytes(avatarPath);
@@ -769,7 +769,12 @@ namespace Networking
             buffer.WriteBytes(data);
             var packetID = buffer.ReadInt();
             plugin.profileWindow.ExistingHooks = false;
-
+            ProfileWindow.hookCount = 0;
+            for(int i = 0; i < ProfileWindow.HookContent.Length; i++)
+            {
+                ProfileWindow.HookContent[i] = string.Empty;
+                ProfileWindow.HookEditContent[i] = string.Empty;
+            }
             buffer.Dispose();
             HooksLoadStatus = 0;
         }
