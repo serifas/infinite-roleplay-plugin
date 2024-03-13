@@ -510,7 +510,7 @@ namespace InfiniteRoleplay.Windows
             }
             else
             {
-                Misc.StartLoader(percentage, loaderInd, loading);
+                Misc.StartLoader(loaderInd, percentage, loading);
             }
         }
 

@@ -476,12 +476,15 @@ namespace Networking
             var packetID = buffer.ReadInt();
             int imageCount = buffer.ReadInt();
             int profileID = buffer.ReadInt();
+            TargetWindow.max = imageCount;
             for (int i = 0; i < imageCount; i++)
             {
                 string url = buffer.ReadString();
                 bool nsfw = buffer.ReadBool();
                 bool trigger = buffer.ReadBool();
-                Imaging.DownloadProfileImage(false, url, profileID, nsfw, trigger, plugin, i);             
+                Imaging.DownloadProfileImage(false, url, profileID, nsfw, trigger, plugin, i);
+                TargetWindow.loading = "Gallery Image" + i;
+                TargetWindow.currentInd = i;
             }
             TargetMenu.DisableInput = false;
             TargetWindow.existingGalleryImageCount = imageCount;

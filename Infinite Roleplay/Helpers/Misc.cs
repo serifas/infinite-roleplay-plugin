@@ -62,7 +62,7 @@ namespace InfiniteRoleplay.Helpers
         public static void StartLoader(float value, float max, string loading)
         {
             value = Math.Max(0f, Math.Min(100f, value));
-            ImGui.ProgressBar(value / max, new Vector2(0, 100), "Loading " + loading);
+            ImGui.ProgressBar(value / max, new Vector2(500, 20), "Loading " + loading);
         }
         public static byte[] RemoveBytes(byte[] input, byte[] pattern)
         {

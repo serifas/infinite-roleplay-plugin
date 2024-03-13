@@ -55,7 +55,7 @@ namespace InfiniteRoleplay.Windows
     {
         private readonly ConcurrentDictionary<string, string> _startPaths = new();
         private Plugin plugin;
-
+        public static string loading;
         public static System.Timers.Timer timer;
         private float _modVersionWidth;
         private PlayerCharacter playerCharacter;
@@ -63,7 +63,7 @@ namespace InfiniteRoleplay.Windows
         private DalamudPluginInterface pg;
         public Configuration configuration;
         public static bool WindowOpen;
-    
+        public static float currentInd, max;
         public static string characterNameVal, characterWorldVal;
         public static string[] StoryContent = new string[30];
         public static string[] ChapterContent = new string[30];
@@ -83,7 +83,6 @@ namespace InfiniteRoleplay.Windows
         private GameFontHandle _secionFont;
         public static Misc misc = new Misc();
         public static bool showAlignment, showPersonality;
-        public static IDalamudTextureWrap loaderAnimInd;
         public static int loaderIndex;
         public static string[] hooks;
         public static bool ExistingStory;
@@ -424,7 +423,7 @@ namespace InfiniteRoleplay.Windows
             }
             else
             {
-               
+                Misc.StartLoader(currentInd, max, loading);
             }
 
         }
@@ -448,7 +447,6 @@ namespace InfiniteRoleplay.Windows
             personalityImg1.Dispose();
             personalityImg2.Dispose();
             personalityImg3.Dispose();
-            loaderAnimInd.Dispose();
             for (int gt = 0; gt < galleryThumbsList.Count; gt++)
             {
                 galleryThumbsList[gt].Dispose();
