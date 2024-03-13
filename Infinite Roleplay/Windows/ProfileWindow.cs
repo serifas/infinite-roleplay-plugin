@@ -494,6 +494,7 @@ namespace InfiniteRoleplay.Windows
                             {
                                 galleryImages[i] = galleryImages[i + 1];
                                 galleryThumbs[i] = galleryThumbs[i + 1];
+                                imageURLs[i] = imageURLs[i + 1];
                                
                             }
                         }
