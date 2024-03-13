@@ -107,7 +107,7 @@ namespace InfiniteRoleplay.Windows
         public static int hookEditCount;
         public static int chapterCount = 0;
         public static int chapterEditCount;
-        public static string oocInfo;
+        public static string oocInfo = "";
         public static byte[] picBytes;
         public static int imageIndexVal = 0;
         public bool ExistingProfile;
