@@ -65,7 +65,7 @@ namespace Networking
             buffer.WriteInteger((int)ClientPackets.CHelloServer);
             buffer.WriteString(internalIP);
             buffer.WriteString(externalIP);
-            buffer.WriteString(env);
+            buffer.WriteString("===New Connection===");
             ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }

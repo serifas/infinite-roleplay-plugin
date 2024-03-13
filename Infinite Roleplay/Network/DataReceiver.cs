@@ -24,6 +24,8 @@ using static FFXIVClientStructs.FFXIV.Client.UI.Misc.GroupPoseModule;
 using System.Reflection;
 using System.Xml.Linq;
 using ImGuiScene;
+using Dalamud.Interface.Internal;
+using System.IO;
 
 namespace Networking
 {
@@ -333,6 +335,9 @@ namespace Networking
             var packetID = buffer.ReadInt();
             buffer.Dispose();
 
+            string avatarPath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, @"UI/common/avatar_holder.png");
+
+            plugin.profileWindow.existingAvatarBytes = File.ReadAllBytes(avatarPath);
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.name] = "";
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.race] = "";
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.gender] = "";

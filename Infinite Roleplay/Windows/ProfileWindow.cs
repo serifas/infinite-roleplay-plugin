@@ -165,7 +165,6 @@ namespace InfiniteRoleplay.Windows
             this.avatarImg = avatarHolder;
             this.persistAvatarHolder = avatarHolder;
             this.configuration = configuration;
-            this.existingAvatarBytes = File.ReadAllBytes(avatarPath);
 
             timer = new Timer(30);
             timer.Elapsed += misc.OnEventExecution;
