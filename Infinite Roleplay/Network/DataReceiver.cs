@@ -413,7 +413,7 @@ namespace Networking
             if (status == (int)Constants.StatusMessages.LOGIN_VERIFIED)
             {
                 plugin.loggedIn = true;
-                plugin.CloseAllWindows();
+                plugin.CloseAllWindows(true);
                 plugin.panelWindow.IsOpen = true;
             }
             if (status == (int)Constants.StatusMessages.REGISTRATION_DUPLICATE_USERNAME)

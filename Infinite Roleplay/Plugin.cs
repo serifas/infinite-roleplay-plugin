@@ -34,13 +34,14 @@ using Dalamud.Interface.Internal;
 using Aspose.Imaging.MemoryManagement;
 using System.Threading;
 using System;
+using OtterGui.Log;
 
 namespace InfiniteRoleplay
 {
     public sealed class Plugin : IDalamudPlugin
     {
 
-        public bool loggedIn;
+        public bool loggedIn = false;
         public bool toggleconnection;
         public bool targeted = false;
         public bool targetMenuClosed = true;
@@ -126,7 +127,7 @@ namespace InfiniteRoleplay
             });
             this.pluginInterface.UiBuilder.Draw += DrawUI;
             this.pluginInterface.UiBuilder.OpenConfigUi += LoadOptions;
-            this.pluginInterface.UiBuilder.OpenMainUi += ReloadClient;
+            this.pluginInterface.UiBuilder.OpenMainUi += DrawLoginUI;
             
             DataReceiver.plugin = this;
             this.framework.Update += Update;
@@ -148,8 +149,8 @@ namespace InfiniteRoleplay
             DataReceiver.TargetNotesLoadStatus = -1;
         }
         public void LoadOptions()
-        {
-            ReloadClient();
+        {           
+            LoadUI();
             optionsWindow.IsOpen= true;
         }
         public void ReloadProfile()
@@ -229,7 +230,6 @@ namespace InfiniteRoleplay
                 this.WindowSystem.AddWindow(restorationWindow);
                 this.WindowSystem.AddWindow(termsWindow);
                 uiLoaded = true;
-                DrawLoginUI();
 
             }
         }
@@ -293,10 +293,13 @@ namespace InfiniteRoleplay
             Imaging.RemoveAllImages(this);
 
         }
-        public void CloseAllWindows()
-        {
+        public void CloseAllWindows(bool closeLogin)
+        { 
+            if(closeLogin == true)
+            {
+                loginWindow.IsOpen = false;
+            }
             profileWindow.IsOpen = false;
-            loginWindow.IsOpen = false;
             bookmarksWindow.IsOpen = false;
             imagePreview.IsOpen = false;
             targetMenu.IsOpen = false;
@@ -379,21 +382,24 @@ namespace InfiniteRoleplay
         }
         public void DrawLoginUI()
         {
-            if(uiLoaded == true)
+            LoadUI();            
+            ReloadClient();
+            if (loggedIn == true)
             {
-                if (loggedIn == true)
-                {
-                    panelWindow.IsOpen = true;
-                    loginWindow.IsOpen = false;
-                }
-                else
-                {
-                    CloseAllWindows();
-                    loginWindow.IsOpen = true;
-                }
-
+                panelWindow.IsOpen = true;
+                loginWindow.IsOpen = false;
+            }
+            else
+            {
+                CloseAllWindows(false);
+                loginWindow.IsOpen = true;
+            }
+            if(loginWindow.IsOpen == false)
+            {
+                loginWindow.IsOpen = true;
             }
         }
+        
 
 
 

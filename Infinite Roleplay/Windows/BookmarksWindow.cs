@@ -85,8 +85,6 @@ namespace InfiniteRoleplay.Windows
                     ImGui.SameLine();
                     if (ImGui.Button("Remove##Removal" + i))
                     {
-                        LoginWindow.loginRequest = true;
-                        plugin.ReloadClient();
                         DataSender.RemoveBookmarkedPlayer(plugin.Configuration.username.ToString(), profiles.Keys[i], profiles.Values[i]);
                     }
                     if (DisableBookmarkSelection == true)
