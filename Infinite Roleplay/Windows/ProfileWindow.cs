@@ -91,7 +91,6 @@ namespace InfiniteRoleplay.Windows
         public static bool alignmentHidden = false;
         public static bool personalityHidden = false;
         public static bool galleryTableAdded = false;
-        public static Timer timer;
         public static bool resetHooks;
         public static bool[] ImageExists = new bool[30];      
         public static int imageIndex = 0;

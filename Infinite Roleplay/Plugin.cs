@@ -94,8 +94,7 @@ namespace InfiniteRoleplay
                       [RequiredVersion("1.0")] ITargetManager targetManager,
                       [RequiredVersion("1.0")] IDutyState dutyState,
                       [RequiredVersion("1.0")] ICommandManager commandManager,
-                      [RequiredVersion("1.0")] IChatGui chatG
-                      [RequiredVersion("1.0")] Dalamud dalamud)
+                      [RequiredVersion("1.0")] IChatGui chatG)
         {
             this.pluginInterface = pluginInterface;
             this.CommandManager = commandManager;
@@ -291,17 +290,6 @@ namespace InfiniteRoleplay
                 chaoticEvil.Dispose();
             }
             Imaging.RemoveAllImages(this);
-            //TargetWindow.timer.Dispose();
-            //ProfileWindow.timer.Dispose();
-            //if(images != null && images.Length > 0)
-            //{
-            //   for (int i = 0; i < images.Length; i++)
-            //    {
-            //       images[i].Dispose();
-            //   }
-
-
-            //    }
 
         }
         public void CloseAllWindows()

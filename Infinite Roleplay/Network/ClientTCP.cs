@@ -7,7 +7,6 @@ using System.Net.Sockets;
 using System.Net.NetworkInformation;
 using System.Net;
 using System.Runtime.CompilerServices;
-using System.Timers;
 using InfiniteRoleplay.Windows.Functions;
 using InfiniteRoleplay;
 using System.IO;

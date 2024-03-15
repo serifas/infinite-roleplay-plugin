@@ -55,7 +55,6 @@ namespace InfiniteRoleplay.Windows
         private readonly ConcurrentDictionary<string, string> _startPaths = new();
         private Plugin plugin;
         public static string loading;
-        public static System.Timers.Timer timer;
         private float _modVersionWidth;
         private PlayerCharacter playerCharacter;
         private IChatGui chatGui;
