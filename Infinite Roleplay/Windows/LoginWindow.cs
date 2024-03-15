@@ -44,7 +44,7 @@ public class LoginWindow : Window, IDisposable
         ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
         ImGuiWindowFlags.NoScrollWithMouse)
     {
-        this.Size = new Vector2(250, 250);
+        this.Size = new Vector2(250, 310);
         this.SizeCondition = ImGuiCond.Always;
         this.plugin = plugin;
         this.Configuration = plugin.Configuration;
@@ -143,8 +143,7 @@ public class LoginWindow : Window, IDisposable
             ImGui.InputTextWithHint("##email", $"Email", ref this.email, 100);
             ImGui.Checkbox("I am atleast 18 years of age", ref Agree18);
             ImGui.Checkbox("I agree to the TOS.", ref AgreeTOS);
-            ImGui.SameLine();
-            if (ImGui.Button("View TOS"))
+            if (ImGui.Button("View ToS & Rules"))
             {
                 plugin.termsWindow.IsOpen = true;
             }

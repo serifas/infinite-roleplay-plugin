@@ -215,6 +215,8 @@ namespace InfiniteRoleplay.Windows
                     if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Add personal notes about this profile or the user."); }
                     ImGui.SameLine();
                     if (ImGui.Button("Report!", new Vector2(100, 20))) {
+                        ReportWindow.reportCharacterName = characterNameVal;
+                        ReportWindow.reportCharacterWorld = characterWorldVal;
                         plugin.reportWindow.IsOpen = true;
                     }
                     if (ImGui.IsItemHovered()) { ImGui.SetTooltip("Report this profile for inappropriate use.\n(Repeat false reports may result in your report ability being revoked.)"); }

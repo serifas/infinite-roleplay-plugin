@@ -26,7 +26,7 @@ namespace InfiniteRoleplay.Windows
         public static string verificationKey = string.Empty;
         public static string verificationStatus = string.Empty;
         public static Vector4 verificationCol = new Vector4(1, 1, 1, 1);
-        public static string ToS1, ToS2;
+        public static string ToS1, ToS2, Rules1, Rules2;
         public static bool load;
         public TOS(Plugin plugin, DalamudPluginInterface Interface) : base(
         "TERMS OF SERVICE")
@@ -39,16 +39,18 @@ namespace InfiniteRoleplay.Windows
             pg = plugin;
             this._nameFont = plugin.PluginInterfacePub.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
 
-            load = true; 
+            load = true;
             ToS1 = ReadTOS("https://raw.githubusercontent.com/serifas/infinite-roleplay-plugin/main/TOS1.txt");
             ToS2 = ReadTOS("https://raw.githubusercontent.com/serifas/infinite-roleplay-plugin/main/TOS2.txt");
+            Rules1 = ReadTOS("https://raw.githubusercontent.com/serifas/infinite-roleplay-plugin/main/Rules1.txt");
+            Rules2 = ReadTOS("https://raw.githubusercontent.com/serifas/infinite-roleplay-plugin/main/Rules2.txt");
         }
         public override async void Draw()
         {
            
-            using var col = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
-            using var style = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
-            using var font = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
+            using var colTOS = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
+            using var styleTOS = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+            using var fontTOS = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
             ImGuiUtil.DrawTextButton("Terms of Service", Vector2.Zero, 0);
             //set everything back
             using var defCol = ImRaii.DefaultColors();
@@ -56,9 +58,19 @@ namespace InfiniteRoleplay.Windows
             using var defFont = ImRaii.DefaultFont();
         //okay that's done.
             ImGui.Text(ToS1);
-            ImGui.Text(ToS2);
+            ImGui.Text(ToS2); 
+            using var colRules = ImRaii.PushColor(ImGuiCol.Border, ImGuiColors.DalamudViolet);
+            using var stylelRules = ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 2 * ImGuiHelpers.GlobalScale);
+            using var fontlRules = ImRaii.PushFont(_nameFont.ImFont, _nameFont.Available);
+            ImGuiUtil.DrawTextButton("Rules", Vector2.Zero, 0);
+            //set everything back
+            using var defColRules = ImRaii.DefaultColors();
+            using var defStyleRules = ImRaii.DefaultStyle();
+            using var defFontRules = ImRaii.DefaultFont();
             //now for some simple toggles
-    }
+            ImGui.Text(Rules1);
+            ImGui.Text(Rules2);
+        }
 
         public void Dispose()
         {
