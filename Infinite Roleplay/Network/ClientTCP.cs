@@ -23,7 +23,8 @@ namespace Networking
         private static NetworkStream myStream;
         private static byte[] recBuffer;
         private static string server = "185.33.84.184";
-        private static int port = 25565;
+
+        private static int port = 5392;
         public static Plugin plugin;
       
        
