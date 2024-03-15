@@ -19,14 +19,12 @@ namespace Networking
     public class ClientTCP
     {
         public static bool loadCallback;
-        public float targetTime = 60.0f;
         public static bool Connected;
         public static TcpClient clientSocket;
         private static NetworkStream myStream;
         private static byte[] recBuffer;
         private static string server = "185.33.84.184";
         private static int port = 25565;
-        public static Timer timer;
         public static Plugin plugin;
       
        

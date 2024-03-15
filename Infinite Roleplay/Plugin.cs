@@ -34,7 +34,6 @@ using Dalamud.Interface.Internal;
 using Aspose.Imaging.MemoryManagement;
 using System.Threading;
 using System;
-using System.Threading.Tasks;
 
 namespace InfiniteRoleplay
 {
@@ -79,6 +78,7 @@ namespace InfiniteRoleplay
         private const string CommandName = "/infinite";
         private const string TargetWindowCommandName = "/inftarget";
         private DalamudPluginInterface pluginInterface { get; init; }
+        public Dalamud dalamud { get; init; }
         public ITargetManager targetManager { get; init; }
         public IClientState clientState { get; init; }
         public static IClientState _clientState;
@@ -94,7 +94,8 @@ namespace InfiniteRoleplay
                       [RequiredVersion("1.0")] ITargetManager targetManager,
                       [RequiredVersion("1.0")] IDutyState dutyState,
                       [RequiredVersion("1.0")] ICommandManager commandManager,
-                      [RequiredVersion("1.0")] IChatGui chatG)
+                      [RequiredVersion("1.0")] IChatGui chatG
+                      [RequiredVersion("1.0")] Dalamud dalamud)
         {
             this.pluginInterface = pluginInterface;
             this.CommandManager = commandManager;
@@ -104,6 +105,7 @@ namespace InfiniteRoleplay
             this.targetManager = targetManager;
             this.framework = framework;
             this.chatGUI = chatG;
+            this.dalamud = dalamud;
             this.dutyState = dutyState;
             this.Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(pluginInterface);
@@ -131,12 +133,12 @@ namespace InfiniteRoleplay
             this.framework.Update += Update;
 
         }
-        public void ReloadClient()
+        public async void ReloadClient()
         {
             ProfileWindow.playerCharacter = this.clientState.LocalPlayer;
             PanelWindow.playerCharacter = this.clientState.LocalPlayer;
             PanelWindow.targetManager = this.targetManager;
-            Task.Run(async () => await ClientTCP.CheckStatus()).Wait();
+            await ClientTCP.CheckStatus();
         }
         public void ReloadTarget()
         {

@@ -59,6 +59,7 @@ using System.Timers;
 using Dalamud.Interface.Internal;
 using Dalamud.Plugin.Services;
 using Lumina.Excel.GeneratedSheets2;
+using Dalamud;
 using InfiniteRoleplay.Scripts.Misc;
 using OtterGui;
 using static FFXIVClientStructs.FFXIV.Common.Component.BGCollision.MeshPCB;
@@ -620,6 +621,8 @@ namespace InfiniteRoleplay.Windows
     }
         public async Task ResetGallery(Plugin plugin)
         {
+            try
+            {
             await Task.Run(async () =>
             {
                 for (int g = 0; g < galleryImages.Length; g++)
@@ -640,11 +643,16 @@ namespace InfiniteRoleplay.Windows
                 }
                 //this.imageTextures.Add(goatImage);
             });
+
+            }catch(Exception ex)
+            {
+                 plugin.chatGUI.PrintError("Could not reset gallery. Results may not be correct " +  ex.Message);
+            }
         }
-        public void Reset(Plugin plugin)
+        public async void Reset(Plugin plugin)
         {
             ResetBio(plugin);
-            Task.Run(async () => await ResetGallery(plugin)).Wait();
+            await ResetGallery(plugin);
             ResetHooks();
             ResetStory();
         }

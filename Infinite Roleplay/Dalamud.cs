@@ -39,5 +39,6 @@ public class Dalamud
     [PluginService][RequiredVersion("1.0")] public static IGameGui GameGui { get; private set; } = null!;
     [PluginService][RequiredVersion("1.0")] public static IKeyState KeyState { get; private set; } = null!;
     [PluginService][RequiredVersion("1.0")] public static IDutyState DutyState { get; private set; } = null!;
+    [PluginService][RequiredVersion("1.0")] public static Dalamud dalamud { get; private set; } = null!;
     // @formatter:on
 }
