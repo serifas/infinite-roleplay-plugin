@@ -394,7 +394,7 @@ namespace InfiniteRoleplay
                 CloseAllWindows(false);
                 loginWindow.IsOpen = true;
             }
-            if(loginWindow.IsOpen == false)
+            if(loginWindow.IsOpen == false && loggedIn == false)
             {
                 loginWindow.IsOpen = true;
             }
