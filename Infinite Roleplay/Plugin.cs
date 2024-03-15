@@ -126,7 +126,7 @@ namespace InfiniteRoleplay
             });
             this.pluginInterface.UiBuilder.Draw += DrawUI;
             this.pluginInterface.UiBuilder.OpenConfigUi += LoadOptions;
-            this.pluginInterface.UiBuilder.OpenMainUi += DrawLoginUI;
+            this.pluginInterface.UiBuilder.OpenMainUi += ReloadClient;
             
             DataReceiver.plugin = this;
             this.framework.Update += Update;
@@ -229,6 +229,7 @@ namespace InfiniteRoleplay
                 this.WindowSystem.AddWindow(restorationWindow);
                 this.WindowSystem.AddWindow(termsWindow);
                 uiLoaded = true;
+                DrawLoginUI();
 
             }
         }
@@ -378,7 +379,6 @@ namespace InfiniteRoleplay
         }
         public void DrawLoginUI()
         {
-            ReloadClient();
             if(uiLoaded == true)
             {
                 if (loggedIn == true)
