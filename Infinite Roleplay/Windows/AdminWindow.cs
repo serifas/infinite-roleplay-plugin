@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Dalamud.Interface.GameFonts;
 using Dalamud.Game.Gui.Dtr;
 using Microsoft.VisualBasic;

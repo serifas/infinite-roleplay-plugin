@@ -12,6 +12,7 @@ using InfiniteRoleplay.Windows.Functions;
 using InfiniteRoleplay;
 using System.IO;
 using System.Net.Http;
+using FFXIVClientStructs.Interop;
 
 namespace Networking
 {
@@ -27,15 +28,10 @@ namespace Networking
         private static int port = 25565;
         public static Timer timer;
         public static Plugin plugin;
-        public static void LoadConnectionTimer()
-        {
-            timer = new Timer(3000);
-            timer.Elapsed += OnTick;
-            timer.Start();
-        }
+      
+       
         public static bool IsConnectedToServer(TcpClient _tcpClient)
         {
-
             try
             {
                 if (_tcpClient != null && _tcpClient.Client != null && _tcpClient.Client.Connected)
@@ -62,113 +58,79 @@ namespace Networking
                     return false;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Dalamud.Logging.PluginLog.LogError("Could not run IsConnectedToServer" + ex.ToString());
                 return false;
             }
         }
-        public static void CheckStatus()
-        {
-            if (IsConnectedToServer(ClientTCP.clientSocket) == true)
-            {
-                if (loadCallback == true)
-                {
-                    ClientConnectionCallback();
-                    loadCallback = false;
-                    string internalIpString = GetLocalIPAddress();
-                    var externalIpTask = GetExternalIpAddress();
-                    GetExternalIpAddress().Wait();
-                    var externalIpString = externalIpTask.Result ?? IPAddress.Loopback;
-                    if (internalIpString == string.Empty)
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        DataSender.SendHelloServer(internalIpString, externalIpString.ToString());
-                    }
 
-                }
-                if (plugin.uiLoaded == false)
-                {
-                    plugin.LoadUI();
-                }
-            }
-            else
-            {
-                ConnectToServer();
-            }
-        }
-        public static async Task<IPAddress?> GetExternalIpAddress()
-        {
-            var externalIpString = (await new HttpClient().GetStringAsync("http://icanhazip.com"))
-                .Replace("\\r\\n", "").Replace("\\n", "").Trim();
-            if (!IPAddress.TryParse(externalIpString, out var ipAddress)) return null;
-            return ipAddress;
-        }
-        public static void OnTick(System.Object? sender, ElapsedEventArgs eventArgs)
-        {
-            CheckStatus();
-        }
-        public static void ConnectToServer()
-        {
-            ClientHandleData.InitializePackets(true);
-            InitializingNetworking(true);
-            loadCallback = true;
-            CheckStatus();
-        }
-
-        public static void InitializingNetworking(bool start)
-        {
-            if (start == true)
-            {
-                EstablishConnection();
-            }
-            else
-            {
-                if (clientSocket.Connected == true)
-                {
-                    Disconnect();
-                }
-            }
-        }
-
-
-
-        public static string GetLocalIPAddress()
-        {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-            return string.Empty;
-        }
-
-        public static void PingHost(string _HostURI, int _PortNumber)
+        public static async Task CheckStatus()
         {
             try
             {
-                TcpClient client = new TcpClient(_HostURI, _PortNumber);       
-            
-            
-                if(client.Connected == true)
+                if (IsConnectedToServer(ClientTCP.clientSocket))
                 {
-                    client.Close();
+                    if (loadCallback)
+                    {
+                        ClientConnectionCallback();
+                        loadCallback = false;
+                        DataSender.SendHelloServer("", "");
+                    }
+                    if (!plugin.uiLoaded)
+                    {
+                        plugin.LoadUI();
+                    }
+                }
+                else
+                {
+                    await ConnectToServer();
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                Dalamud.Logging.PluginLog.LogError("Could not check status" + ex.ToString());
             }
-
-
-
         }
-        public static void EstablishConnection()
+
+        public static async Task ConnectToServer()
+        {
+            try
+            {
+                ClientHandleData.InitializePackets(true);
+                await InitializingNetworking(true);
+                loadCallback = true;
+                await CheckStatus();
+            }
+            catch (Exception ex)
+            {
+                Dalamud.Logging.PluginLog.LogError("Could not connect to server " + ex.ToString());
+            }
+        }
+
+        public static async Task InitializingNetworking(bool start)
+        {
+            try
+            {
+                if (start == true)
+                {
+                    await EstablishConnection();
+                }
+                else
+                {
+                    if (clientSocket.Connected == true)
+                    {
+                        Disconnect();
+                }
+                }
+
+            }catch(Exception ex) 
+            {
+                Dalamud.Logging.PluginLog.LogError("Could not Initialize Networking " + ex.ToString());
+            }
+        }
+
+        public static async Task EstablishConnection()
         {
             try
             {
@@ -176,22 +138,29 @@ namespace Networking
                 clientSocket.ReceiveBufferSize = 65535;
                 clientSocket.SendBufferSize = 65535;
                 recBuffer = new byte[65535 * 2];
-                clientSocket.Connect(server, port);
+                await clientSocket.ConnectAsync(server, port);
             }
-            catch
+            catch (Exception ex)
             {
-
+                Dalamud.Logging.PluginLog.LogError("Could not establish connection " + ex.ToString());
             }
-
         }
+
         public static void ClientConnectionCallback()
-        {           
+        {
+            try
+            {
             Connected = true;
             clientSocket.NoDelay = true;
             myStream = clientSocket.GetStream();
             myStream.BeginRead(recBuffer, 0, 4096 * 2, ReceiveCallback, null);
-            
+
+            }catch(Exception ex)
+            {
+                Dalamud.Logging.PluginLog.LogError("ClientConnectionCallback failed " + ex.ToString());
+            }
         }
+
         private static void ReceiveCallback(IAsyncResult result)
         {
             try
@@ -205,35 +174,40 @@ namespace Networking
                 Array.Copy(recBuffer, newBytes, length);
                 ClientHandleData.HandleData(newBytes);
                 myStream.BeginRead(recBuffer, 0, 4096 * 2, ReceiveCallback, null);
-
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return;
+                Dalamud.Logging.PluginLog.LogError("Could not receive callback " + ex.ToString());
             }
         }
-        public static void SendData(byte[] data)
+
+        public static async Task SendData(byte[] data)
         {
             try
             {
                 var buffer = new ByteBuffer();
                 buffer.WriteInteger(data.GetUpperBound(0) - data.GetLowerBound(0) + 1);
                 buffer.WriteBytes(data);
-                myStream.BeginWrite(buffer.ToArray(), 0, buffer.ToArray().Length, null, null);
+                await myStream.WriteAsync(buffer.ToArray(), 0, buffer.ToArray().Length);
                 buffer.Dispose();
             }
-            catch
+            catch (Exception ex)
             {
-
+                Dalamud.Logging.PluginLog.LogError("Could not send data " + ex.ToString());
             }
-                
-           
-
         }
+
         public static void Disconnect()
         {
-            Connected = false; //simply used for scripts to tell if the server is connected
-            clientSocket.Close(); //close the socket on disconnect
+            try
+            {
+                Connected = false;
+                clientSocket.Close();
+            }
+            catch (Exception ex)
+            {
+                Dalamud.Logging.PluginLog.LogError("Could not disconnect " + ex.ToString());
+            }
         }
 
     }

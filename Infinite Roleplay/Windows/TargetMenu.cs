@@ -11,7 +11,6 @@ using System.Net.NetworkInformation;
 using System.Numerics;
 using System.Runtime.Intrinsics.Arm;
 using System.Text;
-using System.Threading.Tasks;
 using static Dalamud.Interface.Windowing.Window;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;

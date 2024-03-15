@@ -11,7 +11,6 @@ using System.Linq;
 using System.Numerics;
 using System.Security.Policy;
 using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace Networking
@@ -59,35 +58,35 @@ namespace Networking
         public static int userID;
         public static Plugin plugin;
         // public static LoadCharacter assets = new LoadCharacter();
-        public static void SendHelloServer(string internalIP, string externalIP)
+        public static async void SendHelloServer(string internalIP, string externalIP)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CHelloServer);
             buffer.WriteString(internalIP);
             buffer.WriteString(externalIP);
             buffer.WriteString("===New Connection===");
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SendLocation(string location)
+        public static async void SendLocation(string location)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendLocation);
             buffer.WriteString(location);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
         
-        public static void SendImagesReceived(string username, string world)
+        public static async void SendImagesReceived(string username, string world)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendGalleryImagesReceived);
             buffer.WriteString(username);
             buffer.WriteString(world);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void Login(string username, string password, string playerName, string playerWorld)
+        public static async void Login(string username, string password, string playerName, string playerWorld)
         {
 
             var buffer = new ByteBuffer();
@@ -96,20 +95,20 @@ namespace Networking
             buffer.WriteString(password);
             buffer.WriteString(playerName);
             buffer.WriteString(playerWorld);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void Register(string username, string password, string email)
+        public static async void Register(string username, string password, string email)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CRegister);
             buffer.WriteString(username);
             buffer.WriteString(password);
             buffer.WriteString(email);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void ReportProfile(string characterName, string characterWorld, string reporterAccountName, string reportInfo)
+        public static async void ReportProfile(string characterName, string characterWorld, string reporterAccountName, string reportInfo)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CReportProfile);
@@ -117,29 +116,29 @@ namespace Networking
             buffer.WriteString(characterWorld);
             buffer.WriteString(reporterAccountName);
             buffer.WriteString(reportInfo);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
 
         }
-        public static void SendSystemStats(string username, string SystemName, string Msg)
+        public static async void SendSystemStats(string username, string SystemName, string Msg)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendSystemStats);
             buffer.WriteString(username);
             buffer.WriteString(SystemName);
             buffer.WriteString(Msg);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void RequestGalleryImage(string imageName)
+        public static async void RequestGalleryImage(string imageName)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendGalleryImageRequest);
             buffer.WriteString(imageName);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void ReorderGallery(string playername, string playerworld, int oldKey, int newKey, int endIndex, int removedIndex)
+        public static async void ReorderGallery(string playername, string playerworld, int oldKey, int newKey, int endIndex, int removedIndex)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CReorderGallery);
@@ -149,10 +148,10 @@ namespace Networking
             buffer.WriteInteger(newKey);
             buffer.WriteInteger(endIndex);
             buffer.WriteInteger(removedIndex);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void MarkImageNSFW(string playerName, string playerWorld, int index, bool nsfw)
+        public static async void MarkImageNSFW(string playerName, string playerWorld, int index, bool nsfw)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendNSFWStatus);
@@ -160,10 +159,10 @@ namespace Networking
             buffer.WriteString(playerWorld);
             buffer.WriteInteger(index);
             buffer.WriteBool(nsfw);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SendGalleryImage(string username, string playername, string playerworld, bool NSFW, bool TRIGGER, string url, int index)
+        public static async void SendGalleryImage(string username, string playername, string playerworld, bool NSFW, bool TRIGGER, string url, int index)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendGallery);
@@ -174,10 +173,10 @@ namespace Networking
             buffer.WriteBool(TRIGGER);
             buffer.WriteInteger(index);
 
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void RemoveGalleryImage(string playername, string playerworld, int index, int imageCount)
+        public static async void RemoveGalleryImage(string playername, string playerworld, int index, int imageCount)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendGalleryRemoveRequest);
@@ -187,10 +186,10 @@ namespace Networking
             buffer.WriteInteger(index);
             buffer.WriteInteger(imageCount);    
 
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SendStory(string username, string worldname, string title, string chapters)
+        public static async void SendStory(string username, string worldname, string title, string chapters)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendStory);
@@ -198,10 +197,10 @@ namespace Networking
             buffer.WriteString(worldname);
             buffer.WriteString(title);
             buffer.WriteString(chapters);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SendNewSystem(string username, string name, string description, byte[] systemImage, int max_stats, int max_stat_points_per_stat, int max_stat_reduction, int max_stat_reduction_per_stat, int stat_allocation_allowed, int stat_reduction_allowed)
+        public static async void SendNewSystem(string username, string name, string description, byte[] systemImage, int max_stats, int max_stat_points_per_stat, int max_stat_reduction, int max_stat_reduction_per_stat, int stat_allocation_allowed, int stat_reduction_allowed)
         {
 
             var buffer = new ByteBuffer();
@@ -218,10 +217,10 @@ namespace Networking
             buffer.WriteInteger(stat_allocation_allowed);
             buffer.WriteInteger(stat_reduction_allowed);
            
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void FetchProfile( string characterName, string world)
+        public static async void FetchProfile( string characterName, string world)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CFetchProfiles);
@@ -229,10 +228,10 @@ namespace Networking
             buffer.WriteString(plugin.Configuration.password);
             buffer.WriteString(characterName);
             buffer.WriteString(world);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void CreateProfile(string username, string playerName, string playerServer)
+        public static async void CreateProfile(string username, string playerName, string playerServer)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CCreateProfile);
@@ -240,48 +239,48 @@ namespace Networking
             buffer.WriteString(plugin.Configuration.password);
             buffer.WriteString(playerName);
             buffer.WriteString(playerServer);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void StrikeAccount(string senderName, string receiverName)
+        public static async void StrikeAccount(string senderName, string receiverName)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CStrikeAccount);
             buffer.WriteString(senderName);
             buffer.WriteString(receiverName);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void BookmarkPlayer(string username, string playerName, string playerWorld)
+        public static async void BookmarkPlayer(string username, string playerName, string playerWorld)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendPlayerBookmark);
             buffer.WriteString(username);
             buffer.WriteString(playerName);
             buffer.WriteString(playerWorld);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }   
-        public static void RemoveBookmarkedPlayer(string username, string playerName, string playerWorld)
+        public static async void RemoveBookmarkedPlayer(string username, string playerName, string playerWorld)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendRemovePlayerBookmark);
             buffer.WriteString(username);
             buffer.WriteString(playerName);
             buffer.WriteString(playerWorld);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
 
-        public static void RequestBookmarks(string username)
+        public static async void RequestBookmarks(string username)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendBookmarkRequest);
             buffer.WriteString(username);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void EditProfileBio(string playerName, string playerServer, byte[] avatarBytes, string name, string race, string gender, int age,
+        public static async void EditProfileBio(string playerName, string playerServer, byte[] avatarBytes, string name, string race, string gender, int age,
                                             string height, string weight, string atFirstGlance,
                                             int lawful_good, int neutral_good, int chaotic_good,
                                             int lawful_neutral, int true_neutral, int chaotic_neutral,
@@ -309,10 +308,10 @@ namespace Networking
             buffer.WriteInteger(lawful_evil);
             buffer.WriteInteger(neutral_evil);
             buffer.WriteInteger(chaotic_evil);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SubmitProfileBio(string playerName, string playerServer, byte[] avatarBytes, string name, string race, string gender, string age, 
+        public static async void SubmitProfileBio(string playerName, string playerServer, byte[] avatarBytes, string name, string race, string gender, string age, 
                                             string height, string weight, string atFirstGlance, int alignment, int personality_1, int personality_2, int personality_3)
         {
             var buffer = new ByteBuffer();
@@ -334,72 +333,72 @@ namespace Networking
             buffer.WriteInteger(personality_1);
             buffer.WriteInteger(personality_2);
             buffer.WriteInteger(personality_3);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
 
-        public static void SendRulebookPage(string username, string title)
+        public static async void SendRulebookPage(string username, string title)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendRulebookPage);
             buffer.WriteString(username);
             buffer.WriteString(title);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SendRulebookPageContent(string username, string title, string content)
+        public static async void SendRulebookPageContent(string username, string title, string content)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendRulebookPageContent);
             buffer.WriteString(username);
             buffer.WriteString(title);
             buffer.WriteString(content);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void RequestTargetProfile(string targetPlayerName, string targetPlayerWorld, string requesterUsername)
+        public static async void RequestTargetProfile(string targetPlayerName, string targetPlayerWorld, string requesterUsername)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.SRequestTargetProfile);
             buffer.WriteString(requesterUsername);
             buffer.WriteString(targetPlayerName);
             buffer.WriteString(targetPlayerWorld);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void SendHooks(string charactername, string characterworld, string hooks)
+        public static async void SendHooks(string charactername, string characterworld, string hooks)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendHooks);
             buffer.WriteString(charactername);
             buffer.WriteString(characterworld);
             buffer.WriteString(hooks);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void DeleteHooks(string charactername, string characterworld, string hookMsg)
+        public static async void DeleteHooks(string charactername, string characterworld, string hookMsg)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CDeleteHook);
             buffer.WriteString(charactername);
             buffer.WriteString(characterworld);
             buffer.WriteString(hookMsg);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
 
         }
         
-        public static void UpdateSheetStatus(int sheetID, int status)
+        public static async void UpdateSheetStatus(int sheetID, int status)
         {
 
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendSheetVerify);
             buffer.WriteInteger(sheetID);
             buffer.WriteInteger(status);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
-        public static void CreateSystem(string username, string name, string description, byte[] systemImage, int max_stats, int max_stat_points_per_stat, int max_stat_reduction, int max_stat_reduction_per_stat, int stat_allocation_allowed, int stat_reduction_allowed,int statCount)
+        public static async void CreateSystem(string username, string name, string description, byte[] systemImage, int max_stats, int max_stat_points_per_stat, int max_stat_reduction, int max_stat_reduction_per_stat, int stat_allocation_allowed, int stat_reduction_allowed,int statCount)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendNewSystem);
@@ -417,11 +416,11 @@ namespace Networking
                 buffer.WriteInteger(statCount);
           
            
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
 
-        public static void AddProfileNotes(string username, string characterNameVal, string characterWorldVal, string notes)
+        public static async void AddProfileNotes(string username, string characterNameVal, string characterWorldVal, string notes)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.CSendProfileNotes);
@@ -429,49 +428,49 @@ namespace Networking
             buffer.WriteString(characterNameVal);
             buffer.WriteString(characterWorldVal);
             buffer.WriteString(notes);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
 
-        internal static void SendVerification(string username, string verificationKey)
+        internal static async void SendVerification(string username, string verificationKey)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.SSubmitVerificationKey);
             buffer.WriteString(username);
             buffer.WriteString(verificationKey);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
 
         }
 
-        internal static void SendRestorationRequest(string restorationEmail)
+        internal static async void SendRestorationRequest(string restorationEmail)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.SSubmitRestorationRequest);
             buffer.WriteString(restorationEmail);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
 
-        internal static void SendRestoration(string email, string password, string restorationKey)
+        internal static async void SendRestoration(string email, string password, string restorationKey)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.SSubmitRestorationKey);
             buffer.WriteString(password);
             buffer.WriteString(restorationKey);
             buffer.WriteString(email);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
 
-        internal static void SendOOCInfo(string username, string password, string OOC)
+        internal static async void SendOOCInfo(string username, string password, string OOC)
         {
             var buffer = new ByteBuffer();
             buffer.WriteInteger((int)ClientPackets.SSendOOC);
             buffer.WriteString(username);
             buffer.WriteString(password);
             buffer.WriteString(OOC);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
 
@@ -485,7 +484,7 @@ namespace Networking
             //buffer.WriteBool(true);
             //buffer.WriteString("Sup");
             //buffer.WriteInteger(1);
-            ClientTCP.SendData(buffer.ToArray());
+            await ClientTCP.SendData(buffer.ToArray());
             buffer.Dispose();
         }
 

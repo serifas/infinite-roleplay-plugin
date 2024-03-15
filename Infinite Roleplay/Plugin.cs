@@ -7,7 +7,6 @@ using Dalamud.Interface.Windowing;
 using InfiniteRoleplay.Windows;
 using System.Net.Http;
 using System.Net.NetworkInformation;
-using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Numerics;
@@ -35,6 +34,7 @@ using Dalamud.Interface.Internal;
 using Aspose.Imaging.MemoryManagement;
 using System.Threading;
 using System;
+using System.Threading.Tasks;
 
 namespace InfiniteRoleplay
 {
@@ -62,9 +62,19 @@ namespace InfiniteRoleplay
         public ReportWindow reportWindow;
         public VerificationWindow verificationWindow;
         public RestorationWindow restorationWindow;
+        public IDalamudTextureWrap AvatarHolder;
+        //Icons
+        public IDalamudTextureWrap lawfulGood;
+        public IDalamudTextureWrap neutralGood;
+        public IDalamudTextureWrap chaoticGood;
+        public IDalamudTextureWrap lawfulNeutral;
+        public IDalamudTextureWrap trueNeutral;
+        public IDalamudTextureWrap chaoticNeutral;
+        public IDalamudTextureWrap lawfulEvil;
+        public IDalamudTextureWrap neutralEvil;
+        public IDalamudTextureWrap chaoticEvil;
         public TOS termsWindow;
         public static Misc misc = new Misc();
-        public IDalamudTextureWrap[] images;
         public string Name => "Infinite Roleplay";
         private const string CommandName = "/infinite";
         private const string TargetWindowCommandName = "/inftarget";
@@ -126,7 +136,7 @@ namespace InfiniteRoleplay
             ProfileWindow.playerCharacter = this.clientState.LocalPlayer;
             PanelWindow.playerCharacter = this.clientState.LocalPlayer;
             PanelWindow.targetManager = this.targetManager;
-            ClientTCP.CheckStatus();
+            Task.Run(async () => await ClientTCP.CheckStatus()).Wait();
         }
         public void ReloadTarget()
         {
@@ -160,23 +170,22 @@ namespace InfiniteRoleplay
         {
             if (uiLoaded == false)
             {
-                IDalamudTextureWrap AvatarHolder = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
-                //Icons
-                IDalamudTextureWrap lawfulGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_good.png"));
-                IDalamudTextureWrap neutralGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_good.png"));
-                IDalamudTextureWrap chaoticGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_good.png"));
-                IDalamudTextureWrap lawfulNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_neutral.png"));
-                IDalamudTextureWrap trueNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/true_neutral.png"));
-                IDalamudTextureWrap chaoticNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_neutral.png"));
-                IDalamudTextureWrap lawfulEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_evil.png"));
-                IDalamudTextureWrap neutralEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_evil.png"));
-                IDalamudTextureWrap chaoticEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil.png"));
+                AvatarHolder = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
+                
+                lawfulGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_good.png"));
+                neutralGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_good.png"));
+                chaoticGood = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_good.png"));
+                lawfulNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_neutral.png"));
+                trueNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/true_neutral.png"));
+                chaoticNeutral = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_neutral.png"));
+                lawfulEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/lawful_evil.png"));
+                neutralEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/neutral_evil.png"));
+                chaoticEvil = pluginInterface.UiBuilder.LoadImage(Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "UI/alignments/chaotic_evil.png"));
 
 
 
 
 
-                images = new IDalamudTextureWrap[10] {AvatarHolder, lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil };
 
 
                 targetWindow = new TargetWindow(this, this.pluginInterface, AvatarHolder,  lawfulGood, neutralGood, chaoticGood, lawfulNeutral, trueNeutral, chaoticNeutral, lawfulEvil, neutralEvil, chaoticEvil);
@@ -230,14 +239,54 @@ namespace InfiniteRoleplay
             this.framework.Update -= Update;
 
             this.CommandManager.RemoveHandler(CommandName);
+            this.CommandManager.RemoveHandler(TargetWindowCommandName);
             this.WindowSystem.RemoveAllWindows();
+            if(ClientHandleData.packets.Count > 0)
+            {
+                ClientHandleData.InitializePackets(false);
+            }
             if (ClientTCP.IsConnectedToServer(ClientTCP.clientSocket) == true)
             {
                 DisconnectFromServer();
             }
-            foreach(IDalamudTextureWrap img in images)
+            if(AvatarHolder!= null) { AvatarHolder.Dispose(); }
+
+
+            if (lawfulGood != null)
             {
-                img.Dispose();
+                lawfulGood.Dispose();
+            }
+            if (neutralGood != null)
+            {
+                neutralGood.Dispose();
+            }
+            if (chaoticGood != null)
+            {
+                chaoticGood.Dispose();
+            }
+            if (lawfulNeutral != null)
+            {
+                lawfulNeutral.Dispose();
+            }
+            if (trueNeutral != null)
+            {
+                trueNeutral.Dispose();
+            }
+            if (chaoticNeutral != null)
+            {
+                chaoticNeutral.Dispose();
+            }
+            if (lawfulEvil != null)
+            {
+                lawfulEvil.Dispose();
+            }
+            if (neutralEvil != null)
+            {
+                neutralEvil.Dispose();
+            }
+            if (chaoticEvil != null)
+            {
+                chaoticEvil.Dispose();
             }
             Imaging.RemoveAllImages(this);
             //TargetWindow.timer.Dispose();
@@ -278,7 +327,7 @@ namespace InfiniteRoleplay
                 }
                 else
                 {
-                    if(targeted == false)
+                    if (targeted == false)
                     {
                         targetMenu.IsOpen = false;
                     }
@@ -328,11 +377,14 @@ namespace InfiniteRoleplay
                 return false;
             }
         }
-       
-        public void DisconnectFromServer()
+
+        public async void DisconnectFromServer()
+        {
+            await ClientTCP.InitializingNetworking(false);
+        }
+        public static void ClearPackets()
         {
             ClientHandleData.InitializePackets(false);
-            ClientTCP.InitializingNetworking(false);
         }
         public void DrawLoginUI()
         {

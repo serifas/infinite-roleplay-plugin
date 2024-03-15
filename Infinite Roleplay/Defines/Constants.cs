@@ -9,7 +9,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
-using System.Threading.Tasks;
 using static FFXIVClientStructs.FFXIV.Client.UI.Misc.GroupPoseModule;
 using static System.Net.Mime.MediaTypeNames;
 using Bitmap = System.Drawing.Bitmap;

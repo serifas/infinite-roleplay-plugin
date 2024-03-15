@@ -618,12 +618,10 @@ namespace InfiniteRoleplay.Windows
 
 
     }
-        public void ResetGallery(Plugin plugin)
+        public async Task ResetGallery(Plugin plugin)
         {
-            Task.Run(async () =>
+            await Task.Run(async () =>
             {
-
-
                 for (int g = 0; g < galleryImages.Length; g++)
                 {
                     imageIndexVal = 0;
@@ -634,12 +632,11 @@ namespace InfiniteRoleplay.Windows
                 {
                     ImageExists[i] = false;
                 }
-                for(int i = 0; i < galleryImages.Length; i++)
+                for (int i = 0; i < galleryImages.Length; i++)
                 {
                     // you might normally want to embed resources and load them from the manifest stream
                     galleryImages[i] = pictureTab;
                     galleryThumbs[i] = pictureTab;
-                   
                 }
                 //this.imageTextures.Add(goatImage);
             });
@@ -647,7 +644,7 @@ namespace InfiniteRoleplay.Windows
         public void Reset(Plugin plugin)
         {
             ResetBio(plugin);
-            ResetGallery(plugin);
+            Task.Run(async () => await ResetGallery(plugin)).Wait();
             ResetHooks();
             ResetStory();
         }
@@ -745,28 +742,33 @@ namespace InfiniteRoleplay.Windows
             pictureTab.Dispose();
             this.avatarImg.Dispose();
             this.currentAvatarImg.Dispose();
-            for (int gi = 0; gi < galleryImagesList.Count; gi++)
+            for (int gil = 0; gil < galleryImagesList.Count; gil++)
             {
-                galleryImagesList[gi].Dispose();
+                galleryImagesList[gil].Dispose();
+                plugin.chatGUI.Print("GalleryList Item Removed" + gil.ToString());
             }
-            for (int gt= 0; gt < galleryThumbsList.Count; gt++)
+            for (int gtl = 0; gtl < galleryThumbsList.Count; gtl++)
             {
-                galleryThumbsList[gt].Dispose();
+                galleryThumbsList[gtl].Dispose();
+                plugin.chatGUI.Print("GalleryThumbList Item Removed" + gtl.ToString());
             }
             foreach (IDalamudTextureWrap ti in galleryImages)
             {
                 ti.Dispose();
                 Array.Clear(galleryImages);
+                plugin.chatGUI.Print("GalleryArrImage Image Removed" + ti.ToString());
             }
             foreach (IDalamudTextureWrap gt in galleryThumbs)
             {
                 gt.Dispose();
                 Array.Clear(galleryThumbs);
+                plugin.chatGUI.Print("GalleryArrThumb Image Removed" + gt.ToString());
             }
             for(int o = 0; o < otherImages.Length; o++)
             {
                 otherImages[o].Dispose();
                 Array.Clear(otherImages);
+                plugin.chatGUI.Print("Other Image Removed" + o.ToString());
             }
            // timer.Dispose();
             storyTitle = "";
