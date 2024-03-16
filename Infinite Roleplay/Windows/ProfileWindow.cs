@@ -910,25 +910,28 @@ namespace InfiniteRoleplay.Windows
        
         public void AddImage(bool avatar, int i)
         {
-            _fileDialogManager.OpenFileDialog("Select Image", "Image{.png,.jpg, .gif}", (s, f) =>
+            _fileDialogManager.OpenFileDialog("Select Image", "Image{.png,.jpg}", async (s, f) =>
             {
                 if (!s)
                     return;
-                _ = Task.Run(async () =>
-                {
-                    if (avatar == true)
-                    {
-                        string AvatarPath = f[0].ToString();
-                        var avatarImage = Path.GetFullPath(AvatarPath);
-
-                        this.avatarImg = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarImage);
-
-                        this.avatarBytes = File.ReadAllBytes(AvatarPath);
-                    }
-                   
-
-                });
+                await AddImageLoad(f);
             }, 0, null, this.configuration.AlwaysOpenDefaultImport);
+        }
+        public async Task AddImageLoad(List<string> file)
+        {
+            try
+            {
+                string AvatarPath = file[0].ToString();
+                var avatarImage = Path.GetFullPath(AvatarPath);
+
+                this.avatarImg = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarImage);
+
+                this.avatarBytes = File.ReadAllBytes(AvatarPath);
+
+            }catch (Exception ex)
+            {
+                plugin.chatGUI.PrintError(ex.Message);
+            }
         }
 
        
