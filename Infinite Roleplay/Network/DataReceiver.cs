@@ -336,7 +336,7 @@ namespace Networking
             ProfileWindow.ClearUI();
             string avatarPath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, @"UI/common/avatar_holder.png");
 
-            plugin.profileWindow.existingAvatarBytes = File.ReadAllBytes(avatarPath);
+            ProfileWindow.currentAvatarImg = plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarPath);
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.name] = "";
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.race] = "";
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.gender] = "";
@@ -555,7 +555,8 @@ namespace Networking
             int personality_2 = buffer.ReadInt();
             int personality_3 = buffer.ReadInt();
 
-            if(alignment != 9)
+            TargetWindow.currentAvatarImg = plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarBytes);
+            if (alignment != 9)
             {
                 TargetWindow.showAlignment = true;
             }
@@ -614,7 +615,9 @@ namespace Networking
             int personality_2 = buffer.ReadInt();
             int personality_3 = buffer.ReadInt();
             plugin.profileWindow.ExistingBio = true;
-            if(alignment == 9)
+
+            ProfileWindow.currentAvatarImg = plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarBytes);
+            if (alignment == 9)
             {
                 ProfileWindow.alignmentHidden = true;
             }

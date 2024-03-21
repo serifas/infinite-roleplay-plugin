@@ -102,7 +102,7 @@ namespace InfiniteRoleplay.Windows
         public static List<IDalamudTextureWrap> galleryThumbsList = new List<IDalamudTextureWrap>();
         public static List<IDalamudTextureWrap> galleryImagesList = new List<IDalamudTextureWrap>();
        
-        private IDalamudTextureWrap avatarImg, currentAvatarImg, pictureTab;
+        public static IDalamudTextureWrap avatarImg, currentAvatarImg, pictureTab;
         public static string    characterEditName = "",
                                 characterEditRace = "",
                                 characterEditGender = "",
@@ -135,7 +135,7 @@ namespace InfiniteRoleplay.Windows
             this.plugin = plugin;
             this.pg = plugin.PluginInterfacePub;
             this.configuration = plugin.Configuration;
-            this.avatarImg = avatarHolder;
+            avatarImg = avatarHolder;
 
             this._nameFont = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(Interface.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
@@ -241,8 +241,7 @@ namespace InfiniteRoleplay.Windows
                         if (viewBio == true)
                         {
                             Misc.SetTitle(plugin, characterEditName);
-                            this.currentAvatarImg = pg.UiBuilder.LoadImage(existingAvatarBytes);
-                            ImGui.Image(this.currentAvatarImg.ImGuiHandle, new Vector2(100, 100));
+                            ImGui.Image(currentAvatarImg.ImGuiHandle, new Vector2(100, 100));
 
 
                             ImGui.Spacing();
@@ -441,7 +440,7 @@ namespace InfiniteRoleplay.Windows
         public void Dispose()
         {
             WindowOpen = false;
-            this.currentAvatarImg.Dispose();
+            currentAvatarImg.Dispose();
             pictureTab.Dispose();
             alignmentImg.Dispose();
             personalityImg1.Dispose();

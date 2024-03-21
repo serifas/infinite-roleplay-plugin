@@ -129,7 +129,7 @@ namespace InfiniteRoleplay.Windows
         public static string[] imageURLs = new string[30];
         public static float _modVersionWidth, loaderInd;
         private GameFontHandle _Font;
-        private IDalamudTextureWrap avatarImg, avatarHolder, currentAvatarImg;
+        public static IDalamudTextureWrap avatarImg, avatarHolder, currentAvatarImg;
         public static List<IDalamudTextureWrap> galleryThumbsList = new List<IDalamudTextureWrap>();
         public static List<IDalamudTextureWrap> galleryImagesList = new List<IDalamudTextureWrap>();
         public static IDalamudTextureWrap[] galleryImages, galleryThumbs;
@@ -164,7 +164,7 @@ namespace InfiniteRoleplay.Windows
             avatarHolder = plugin.PluginInterfacePub.UiBuilder.LoadImage(File.ReadAllBytes(avatarPath));
             string pictureTabPath = Path.Combine(pg.AssemblyLocation.Directory?.FullName!, @"UI/common/picturetab.png");
             pictureTab = plugin.PluginInterfacePub.UiBuilder.LoadImage(File.ReadAllBytes(pictureTabPath));
-            this.avatarImg = avatarHolder;
+            avatarImg = avatarHolder;
             this.persistAvatarHolder = avatarHolder;
             this.configuration = configuration;
 
@@ -236,8 +236,7 @@ namespace InfiniteRoleplay.Windows
                     if (editBio == true)
                     {
 
-                        this.currentAvatarImg = pg.UiBuilder.LoadImage(existingAvatarBytes);
-                        ImGui.Image(this.currentAvatarImg.ImGuiHandle, new Vector2(100, 100));
+                        ImGui.Image(currentAvatarImg.ImGuiHandle, new Vector2(100, 100));
 
                         if (ImGui.Button("Edit Avatar"))
                         {
@@ -660,8 +659,8 @@ namespace InfiniteRoleplay.Windows
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
             this.avatarBytes = Imaging.ImageToByteArray(image1);
             DataReceiver.currentAvatar = avatarBytes;
-            this.avatarImg = this.persistAvatarHolder;
-            this.currentAvatarImg = this.persistAvatarHolder;
+            avatarImg = this.persistAvatarHolder;
+            currentAvatarImg = this.persistAvatarHolder;
            
             
            /* for(int a = 0; a < alignmentWidthVals.Length; a++)
@@ -747,8 +746,8 @@ namespace InfiniteRoleplay.Windows
             this.persistAvatarHolder.Dispose();
             avatarHolder.Dispose();
             pictureTab.Dispose();
-            this.avatarImg.Dispose();
-            this.currentAvatarImg.Dispose();
+            avatarImg.Dispose();
+            currentAvatarImg.Dispose();
             for (int gil = 0; gil < galleryImagesList.Count; gil++)
             {
                 galleryImagesList[gil].Dispose();
@@ -898,7 +897,7 @@ namespace InfiniteRoleplay.Windows
                 {
                     this.existingAvatarBytes = File.ReadAllBytes(imagePath);
                     DataReceiver.currentAvatar = this.existingAvatarBytes;
-                    this.currentAvatarImg = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(image);
+                    currentAvatarImg = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(image);
                 }
                
 
@@ -924,7 +923,7 @@ namespace InfiniteRoleplay.Windows
                 string AvatarPath = file[0].ToString();
                 var avatarImage = Path.GetFullPath(AvatarPath);
 
-                this.avatarImg = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarImage);
+                avatarImg = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarImage);
 
                 this.avatarBytes = File.ReadAllBytes(AvatarPath);
 
