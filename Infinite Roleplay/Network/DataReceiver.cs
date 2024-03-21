@@ -555,8 +555,11 @@ namespace Networking
             int personality_2 = buffer.ReadInt();
             int personality_3 = buffer.ReadInt();
 
+
             TargetWindow.currentAvatarImg = plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarBytes);
             if (alignment != 9)
+
+
             {
                 TargetWindow.showAlignment = true;
             }

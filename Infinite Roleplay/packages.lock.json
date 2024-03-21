@@ -1,6 +1,7 @@
 {
   "version": 1,
   "dependencies": {
+
     "net8.0-windows8.0": {
       "Aspose.Imaging": {
         "type": "Direct",
