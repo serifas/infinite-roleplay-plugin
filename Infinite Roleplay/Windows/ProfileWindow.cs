@@ -2,68 +2,19 @@ using Dalamud.Interface.ImGuiFileDialog;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using ImGuiNET;
-using ImGuiScene;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.NetworkInformation;
 using System.Numerics;
-using System.Runtime.Intrinsics.Arm;
-using System.Text;
-using System.Threading.Tasks;
-using static Dalamud.Interface.Windowing.Window;
-using Dalamud.Interface;
-using Dalamud.Interface.Colors;
-using Dalamud.Interface.GameFonts;
-using Dalamud.Interface.ImGuiFileDialog;
-using ImGuiNET;
-using ImGuiScene;
-using static Lumina.Data.Files.ScdFile;
-using Lumina.Excel.GeneratedSheets;
-using FFXIVClientStructs.FFXIV.Client.Graphics.Render;
-using System.Collections.Concurrent;
 using Dalamud.Utility;
-using System.Reflection;
-using System.Security.Policy;
 using OtterGui.Raii;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Data;
-using System.Windows.Markup;
-using FFXIVClientStructs.FFXIV.Client.Game.UI;
-using System.Threading.Channels;
-using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using Dalamud.Game.ClientState.Objects.SubKinds;
-using System.Drawing;
-using Dalamud.Game;
-using Dalamud.Game.Gui;
-using System.Xml.Linq;
-using Dalamud.Game.ClientState.Objects;
 using Networking;
-using System.Net.Http;
-using System.Net;
-using System.Drawing.Imaging;
-using static System.Net.Mime.MediaTypeNames;
-using System.Xml;
-using System.Diagnostics;
-using System.Collections;
-using System.Drawing.Drawing2D;
-using System.Diagnostics.Metrics;
 using InfiniteRoleplay.Helpers;
-using OtterGui.Table;
-using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using Aspose.Imaging;
-using Aspose.Imaging.ImageFilters.FilterOptions;
-using System.Timers;
 using Dalamud.Interface.Internal;
 using Dalamud.Plugin.Services;
-using Lumina.Excel.GeneratedSheets2;
-using Dalamud;
 using InfiniteRoleplay.Scripts.Misc;
 using OtterGui;
-using static FFXIVClientStructs.FFXIV.Common.Component.BGCollision.MeshPCB;
-using System.Linq.Expressions;
 
 namespace InfiniteRoleplay.Windows
 {
@@ -73,26 +24,19 @@ namespace InfiniteRoleplay.Windows
         public static string loading;
         public static bool AllLoaded;
         public static float percentage = 0f;
-        public static bool Reorder = false, ReorderNoSend = false;
+        public static bool Reorder = false;
         private Plugin plugin;
-        public static Plugin pluginP;
-        public static Misc misc = new Misc();
-        public static bool loadedSelf = false;
         public static PlayerCharacter playerCharacter;
         private DalamudPluginInterface pg;
         public static bool addGalleryImageGUI = false;
         private FileDialogManager _fileDialogManager;
         public Configuration configuration;
-        public static bool addBio = false;
         public static bool editBio = false;
-        public static bool addHooks = false;
         public static bool editHooks = false;
-        public static bool addStory = false;
         public static bool alignmentHidden = false;
         public static bool personalityHidden = false;
         public static bool galleryTableAdded = false;
         public static bool resetHooks;
-        public static bool[] ImageExists = new bool[30];      
         public static int imageIndex = 0;
         public static bool resetStory;
         public static IDalamudTextureWrap pictureTab;
@@ -102,15 +46,16 @@ namespace InfiniteRoleplay.Windows
         public static string[] ChapterEditContent = new string[30];
         public static string[] ChapterTitle = new string[30];
         public static string[] ChapterEditTitle = new string[30];
+        public static string[] imageURLs = new string[30];
         public static bool[] NSFW = new bool[30];
         public static bool[] TRIGGER = new bool[30];
+        public static bool[] ImageExists = new bool[30];
         public static bool editStory, addOOC, editOOC, addGallery, editGallery, addAvatar, editAvatar, addProfile, editProfile, LoadPreview = false;
         public static int hookCount = 0;
         public static int hookEditCount;
         public static int chapterCount = 0;
         public static int chapterEditCount;
-        public static string oocInfo = "";
-        public static byte[] picBytes;
+        public static string oocInfo = string.Empty;
         public static int imageIndexVal = 0;
         public bool ExistingProfile;
         public bool ExistingStory;
@@ -118,18 +63,11 @@ namespace InfiniteRoleplay.Windows
         public bool ExistingGallery;
         public bool ExistingBio;
         public bool ExistingHooks;
-        public static byte[] thumbHolder;
-        public string storyTitle = "";
-        public static string storyEditTitle = "";
+        public static string storyEditTitle = string.Empty;
         public static int currentAlignment, currentPersonality_1, currentPersonality_2, currentPersonality_3 = 0;
-        public byte[] avatarBytes, existingAvatarBytes;
-        public static int availablePercentage = 50;
-        public int[] flaggedHookIndexes = new int[] { };
-        public static bool addImageToGallery = false;
-        public static string[] imageURLs = new string[30];
+        public byte[] avatarBytes;
         public static float _modVersionWidth, loaderInd;
-        private GameFontHandle _Font;
-        private IDalamudTextureWrap avatarImg, avatarHolder, currentAvatarImg;
+        public static IDalamudTextureWrap avatarHolder, currentAvatarImg;
         public static List<IDalamudTextureWrap> galleryThumbsList = new List<IDalamudTextureWrap>();
         public static List<IDalamudTextureWrap> galleryImagesList = new List<IDalamudTextureWrap>();
         public static IDalamudTextureWrap[] galleryImages, galleryThumbs;
@@ -141,7 +79,6 @@ namespace InfiniteRoleplay.Windows
         public static System.Drawing.Image bl;
         private IDalamudTextureWrap persistAvatarHolder;
         private IDalamudTextureWrap[] otherImages;
-        public static int alignmentVal;
 
         public ProfileWindow(Plugin plugin,
                              DalamudPluginInterface Interface,
@@ -160,11 +97,9 @@ namespace InfiniteRoleplay.Windows
             this.pg = plugin.PluginInterfacePub;
             this.configuration = plugin.Configuration;
             this._fileDialogManager = new FileDialogManager();
-            string avatarPath = Path.Combine(pg.AssemblyLocation.Directory?.FullName!, @"UI/common/avatar_holder.png");
+            string avatarPath = Path.Combine(pg.AssemblyLocation.Directory?.FullName!, @"UI/common/profiles/avatar_holder.png");
             avatarHolder = plugin.PluginInterfacePub.UiBuilder.LoadImage(File.ReadAllBytes(avatarPath));
-            string pictureTabPath = Path.Combine(pg.AssemblyLocation.Directory?.FullName!, @"UI/common/picturetab.png");
-            pictureTab = plugin.PluginInterfacePub.UiBuilder.LoadImage(File.ReadAllBytes(pictureTabPath));
-            this.avatarImg = avatarHolder;
+            pictureTab = Constants.UICommonImage(Interface, Constants.CommonImageTypes.blankPictureTab);
             this.persistAvatarHolder = avatarHolder;
             this.configuration = configuration;
 
@@ -190,9 +125,6 @@ namespace InfiniteRoleplay.Windows
             }
            
             this.avatarBytes = File.ReadAllBytes(avatarPath) ;
-            //alignment icons
-            
-             this._Font = pg.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
          }
       
 
@@ -236,8 +168,7 @@ namespace InfiniteRoleplay.Windows
                     if (editBio == true)
                     {
 
-                        this.currentAvatarImg = pg.UiBuilder.LoadImage(existingAvatarBytes);
-                        ImGui.Image(this.currentAvatarImg.ImGuiHandle, new Vector2(100, 100));
+                        ImGui.Image(currentAvatarImg.ImGuiHandle, new Vector2(100, 100));
 
                         if (ImGui.Button("Edit Avatar"))
                         {
@@ -296,7 +227,7 @@ namespace InfiniteRoleplay.Windows
                         if (ImGui.Button("Save Bio"))
                         {
                             DataSender.SubmitProfileBio(playerCharacter.Name.ToString(), playerCharacter.HomeWorld.GameData.Name.ToString(),
-                                                    existingAvatarBytes,
+                                                    avatarBytes,
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.name].Replace("'", "''"),
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.race].Replace("'", "''"),
                                                     bioFieldsArr[(int)Constants.BioFieldTypes.gender].Replace("'", "''"),
@@ -456,26 +387,13 @@ namespace InfiniteRoleplay.Windows
                         }
                     }
                     #endregion
-                    if (addImageToGallery == true)
-                    {
-                        addImageToGallery = false;
-                        AddImage(false, imageIndexVal);
-                    }
-
-
-                   
+                                     
                     if (addGalleryImageGUI == true)
                     {
                         AddImageToGallery(plugin, imageIndex);
                     }
 
 
-
-                    if (addAvatar == true)
-                    {
-                        addAvatar = false;
-                        AddImage(true, 0);
-                    }
                     if (editAvatar == true)
                     {
                         editAvatar = false;
@@ -618,12 +536,10 @@ namespace InfiniteRoleplay.Windows
 
 
     }
-        public async Task ResetGallery(Plugin plugin)
+        public async void ResetGallery(Plugin plugin)
         {
             try
-            {
-            await Task.Run(async () =>
-            {
+            {           
                 for (int g = 0; g < galleryImages.Length; g++)
                 {
                     imageIndexVal = 0;
@@ -636,13 +552,9 @@ namespace InfiniteRoleplay.Windows
                 }
                 for (int i = 0; i < galleryImages.Length; i++)
                 {
-                    // you might normally want to embed resources and load them from the manifest stream
                     galleryImages[i] = pictureTab;
                     galleryThumbs[i] = pictureTab;
                 }
-                //this.imageTextures.Add(goatImage);
-            });
-
             }catch(Exception ex)
             {
                  plugin.chatGUI.PrintError("Could not reset gallery. Results may not be correct " +  ex.Message);
@@ -651,7 +563,7 @@ namespace InfiniteRoleplay.Windows
         public async void Reset(Plugin plugin)
         {
             ResetBio(plugin);
-            await ResetGallery(plugin);
+            ResetGallery(plugin);
             ResetHooks();
             ResetStory();
         }
@@ -660,27 +572,7 @@ namespace InfiniteRoleplay.Windows
             System.Drawing.Image image1 = System.Drawing.Image.FromFile(Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, "UI/common/avatar_holder.png"));
             this.avatarBytes = Imaging.ImageToByteArray(image1);
             DataReceiver.currentAvatar = avatarBytes;
-            this.avatarImg = this.persistAvatarHolder;
-            this.currentAvatarImg = this.persistAvatarHolder;
-           
-            
-           /* for(int a = 0; a < alignmentWidthVals.Length; a++)
-            {
-                alignmentWidthVals[a] = 0f;
-            }
-           
-
-           
-            for (int av = 0; av < alignmentVals.Length; av++)
-            {
-                alignmentVals[av] = 0;
-            }
-            for (int al = 0; al < alignmentVals.Length; al++)
-            {
-                alignmentVals[al] = 0;
-            }
-            availablePercentage = 50;
-           */
+            currentAvatarImg = this.persistAvatarHolder;
         }
         public void ResetHooks()
         {
@@ -706,7 +598,6 @@ namespace InfiniteRoleplay.Windows
 
             chapterCount = 0;
             chapterEditCount = 0;
-            storyTitle = string.Empty;
             storyEditTitle = string.Empty;
         }
        
@@ -731,11 +622,8 @@ namespace InfiniteRoleplay.Windows
         }
         public static void ClearUI()
         {
-            addBio = false;
             editBio = false;
-            addHooks = false; 
             editHooks = false;
-            addStory = false;
             editStory = false;
             addOOC = false;
             editOOC = false;
@@ -747,8 +635,7 @@ namespace InfiniteRoleplay.Windows
             this.persistAvatarHolder.Dispose();
             avatarHolder.Dispose();
             pictureTab.Dispose();
-            this.avatarImg.Dispose();
-            this.currentAvatarImg.Dispose();
+            currentAvatarImg.Dispose();
             for (int gil = 0; gil < galleryImagesList.Count; gil++)
             {
                 galleryImagesList[gil].Dispose();
@@ -777,18 +664,7 @@ namespace InfiniteRoleplay.Windows
                 Array.Clear(otherImages);
                 plugin.chatGUI.Print("Other Image Removed" + o.ToString());
             }
-           // timer.Dispose();
-            storyTitle = "";
         }
-        /*  public void UpdateUI()
-          {
-              int usedAlignmentVals = 0;
-              for (int al = 0; al < alignmentVals.Length; al++)
-              {
-                  usedAlignmentVals += alignmentVals[al];
-              }
-              availablePercentage = 50 - usedAlignmentVals;
-          }*/
         public void AddAlignmentSelection()
         {
             var (text, desc) = Constants.AlignmentVals[currentAlignment];
@@ -855,9 +731,6 @@ namespace InfiniteRoleplay.Windows
         }
         public override void Update()
         {
-            
-            loadedSelf = DataReceiver.LoadedSelf;        
-
             if (DataReceiver.StoryLoadStatus != -1 &&
                DataReceiver.HooksLoadStatus != -1 &&
                DataReceiver.BioLoadStatus != -1 &&
@@ -871,19 +744,7 @@ namespace InfiniteRoleplay.Windows
             {
                 AllLoaded = false;
             }
-
-
-
-        }
-        
-      
-        public int AvailablePercentageLeft(int lawful_good, int neutral_good, int chaotic_good, int lawful_neutral, int true_neutral, int chaotic_neutral, int lawful_evil, int neutral_evil, int chaotic_evil)
-        {
-            int PercentageUsed = lawful_good + neutral_good + chaotic_good + lawful_neutral + true_neutral + chaotic_neutral + lawful_evil + neutral_evil + chaotic_evil;
-            int percentageLeft = availablePercentage - PercentageUsed;
-            return percentageLeft;
-        }
-      
+        }    
       
         public void EditImage(bool avatar, int imageIndex)
         {
@@ -896,44 +757,15 @@ namespace InfiniteRoleplay.Windows
                 byte[] imageBytes = File.ReadAllBytes(image);
                 if (avatar == true)
                 {
-                    this.existingAvatarBytes = File.ReadAllBytes(imagePath);
-                    DataReceiver.currentAvatar = this.existingAvatarBytes;
-                    this.currentAvatarImg = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(image);
+                    this.avatarBytes = File.ReadAllBytes(imagePath);
+                    DataReceiver.currentAvatar = this.avatarBytes;
+                    currentAvatarImg = pg.UiBuilder.LoadImage(avatarBytes);
                 }
                
 
 
             }, 0, null, this.configuration.AlwaysOpenDefaultImport);
         }
-
-
-       
-        public void AddImage(bool avatar, int i)
-        {
-            _fileDialogManager.OpenFileDialog("Select Image", "Image{.png,.jpg}", async (s, f) =>
-            {
-                if (!s)
-                    return;
-                await AddImageLoad(f);
-            }, 0, null, this.configuration.AlwaysOpenDefaultImport);
-        }
-        public async Task AddImageLoad(List<string> file)
-        {
-            try
-            {
-                string AvatarPath = file[0].ToString();
-                var avatarImage = Path.GetFullPath(AvatarPath);
-
-                this.avatarImg = this.plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarImage);
-
-                this.avatarBytes = File.ReadAllBytes(AvatarPath);
-
-            }catch (Exception ex)
-            {
-                plugin.chatGUI.PrintError(ex.Message);
-            }
-        }
-
        
     }
 }

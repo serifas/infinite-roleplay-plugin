@@ -334,9 +334,9 @@ namespace Networking
             var packetID = buffer.ReadInt();
             buffer.Dispose();
             ProfileWindow.ClearUI();
-            string avatarPath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, @"UI/common/avatar_holder.png");
+            string avatarPath = Path.Combine(plugin.PluginInterfacePub.AssemblyLocation.Directory?.FullName!, @"UI/common/profiles/avatar_holder.png");
 
-            plugin.profileWindow.existingAvatarBytes = File.ReadAllBytes(avatarPath);
+            plugin.profileWindow.avatarBytes = File.ReadAllBytes(avatarPath);
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.name] = "";
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.race] = "";
             ProfileWindow.bioFieldsArr[(int)Constants.BioFieldTypes.gender] = "";
@@ -570,7 +570,7 @@ namespace Networking
             {
                 TargetWindow.showPersonality= true;
             }
-
+            TargetWindow.currentAvatarImg = plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarBytes);
             TargetWindow.characterEditName = name.Replace("''", "'"); TargetWindow.characterEditRace = race.Replace("''", "'"); TargetWindow.characterEditGender = gender.Replace("''", "'");
             TargetWindow.characterEditAge = age.Replace("''", "'"); TargetWindow.characterEditHeight = height.Replace("''", "'"); TargetWindow.characterEditWeight = weight.Replace("''", "'");
             TargetWindow.characterEditAfg = atFirstGlance.Replace("''", "'");
@@ -614,6 +614,7 @@ namespace Networking
             int personality_2 = buffer.ReadInt();
             int personality_3 = buffer.ReadInt();
             plugin.profileWindow.ExistingBio = true;
+            ProfileWindow.currentAvatarImg = plugin.PluginInterfacePub.UiBuilder.LoadImage(avatarBytes);
             if(alignment == 9)
             {
                 ProfileWindow.alignmentHidden = true;
@@ -643,7 +644,8 @@ namespace Networking
             ProfileWindow.currentPersonality_2 = personality_2;
             ProfileWindow.currentPersonality_3 = personality_3;
             buffer.Dispose();
-            plugin.profileWindow.existingAvatarBytes = avatarBytes;
+            plugin.profileWindow.avatarBytes = avatarBytes;
+            
             BioLoadStatus = 1;
         }
         public static void ExistingProfile(byte[] data)
@@ -722,7 +724,6 @@ namespace Networking
                 string chapterTitle = chapterTitleRx.Match(chapterSplit[i]).Groups[1].Value;
                 string chapterContent = chapterRx.Match(chapterSplit[i]).Groups[1].Value;
                 TargetWindow.chapterCount = i;
-                TargetWindow.resetStory = true;
                 TargetWindow.ChapterTitle[i] = chapterTitle;
                 TargetWindow.ChapterContent[i] = chapterContent;
             }
